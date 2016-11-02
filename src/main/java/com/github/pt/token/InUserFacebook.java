@@ -34,4 +34,5 @@ public class InUserFacebook {
     InUser inUser;
     LocalDateTime created;
     String token;
+    String device_id;
 }
