@@ -1,15 +1,16 @@
 package com.github.pt.token;
 
 import com.github.pt.model.ResourceNotFoundException;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RestController
 @RequestMapping("api/v1/token")
@@ -18,6 +19,12 @@ public class TokenResource {
     @Autowired
     private InUserRepository inUserRepository;
     
+    @Autowired
+    private InUserLoginRepository inUserLoginRepository;
+
+    @Autowired
+    private InUserLogoutRepository inUserLogoutRepository;
+
     @Autowired
     private TokenService tokenService;    
 
@@ -31,27 +38,17 @@ public class TokenResource {
         return tokenService.createOrReadNewToken(tokenRequest);
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.GET)
-    public InUser get(@PathVariable Long id) {
-        InUser found = inUserRepository.findOne(id);
-        if (found == null) {
-            throw new ResourceNotFoundException();
+    @RequestMapping(method = RequestMethod.DELETE)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void delete(@RequestHeader(value = "X-Token") String token) {
+        final List<InUserLogin> inUserLogins = inUserLoginRepository.findByToken(token);
+        if (!inUserLogins.isEmpty()) {
+            InUserLogout inUserLogout = new InUserLogout();
+            inUserLogout.setToken(token);
+            inUserLogout.setInUser(inUserLogins.get(inUserLogins.size() - 1).getInUser());
+            inUserLogoutRepository.saveAndFlush(inUserLogout);
         } else {
-            return found;
+            throw new ResourceNotFoundException("Token not found " + token);
         }
-    }
-
-    @RequestMapping(value = "{id}", method = RequestMethod.PUT)
-    public InUser update(@PathVariable Long id, @RequestBody InUser shipwreck) {
-        InUser existing = inUserRepository.findOne(id);
-        BeanUtils.copyProperties(shipwreck, existing);
-        return inUserRepository.saveAndFlush(existing);
-    }
-
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-    public InUser delete(@PathVariable Long id) {
-        InUser existing = inUserRepository.findOne(id);
-        inUserRepository.delete(id);
-        return existing;
     }
 }
