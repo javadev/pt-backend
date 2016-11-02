@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import org.hibernate.annotations.DynamicInsert;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,6 +24,7 @@ import javax.persistence.Table;
 @Setter
 @Entity
 @Table(name = "in_user_logout", schema = "ptcore")
+@DynamicInsert
 public class InUserLogout {
     @Id
     @SequenceGenerator(name = "InUserLogoutIdSequence", sequenceName = "ptcore.in_user_logout_id_seq",

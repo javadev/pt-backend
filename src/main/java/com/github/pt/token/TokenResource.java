@@ -1,6 +1,7 @@
 package com.github.pt.token;
 
 import com.github.pt.model.ResourceNotFoundException;
+import java.util.Arrays;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +25,20 @@ public class TokenResource {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public InUser create(@RequestBody InUser inUser) {
-        return inUserRepository.saveAndFlush(inUser);
+    public TokenResponseDTO create(@RequestBody TokenRequestDTO tokenRequest) {
+        final InUser inUser = new InUser();
+        final InUserFacebook inUserFacebook = new InUserFacebook();
+        inUserFacebook.setToken(tokenRequest.getFacebook_token());
+        inUserFacebook.setDevice_id(tokenRequest.getDevice_id());
+        inUserFacebook.setInUser(inUser);
+        final InUserLogin inUserLogin = new InUserLogin();
+        inUserLogin.setInUser(inUser);
+        inUser.setInUserFacebooks(Arrays.asList(inUserFacebook));
+        inUser.setInUserLogins(Arrays.asList(inUserLogin)); 
+        inUserRepository.saveAndFlush(inUser);
+        final TokenResponseDTO tokenResponseDTO = new TokenResponseDTO();
+        tokenResponseDTO.setToken(inUserLogin.getToken());
+        return tokenResponseDTO;        
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET)

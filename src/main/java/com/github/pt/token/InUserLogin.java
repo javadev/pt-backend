@@ -1,6 +1,7 @@
 package com.github.pt.token;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import org.hibernate.annotations.DynamicInsert;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,6 +25,7 @@ import javax.persistence.Table;
 @Setter
 @Entity
 @Table(name = "in_user_login", schema = "ptcore")
+@DynamicInsert
 public class InUserLogin {
     @Id
     @SequenceGenerator(name = "InUserLoginIdSequence", sequenceName = "ptcore.in_user_login_id_seq",
@@ -33,6 +36,6 @@ public class InUserLogin {
     @JoinColumn(name="in_user_id")
     InUser inUser;
     LocalDateTime created;
-    String token;
+    String token = "pt-" + UUID.randomUUID().toString().replace("-", "");
     String ip_address;
 }
