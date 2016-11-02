@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import org.hibernate.annotations.DynamicInsert;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,6 +24,7 @@ import javax.persistence.Table;
 @Setter
 @Entity
 @Table (name = "in_user", schema = "ptcore")
+@DynamicInsert
 public class InUser {
     @Id
     @SequenceGenerator(name = "InUserIdSequence", sequenceName = "ptcore.in_user_id_seq",
