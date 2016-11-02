@@ -41,6 +41,13 @@
       <artifactId>h2</artifactId>
     </dependency>
 
+    <!-- PostgreSQL Database -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>9.4-1203-jdbc42</version>
+    </dependency>
+
     <!-- FlyWay DB Migration -->
     <dependency>
       <groupId>org.flywaydb</groupId>
