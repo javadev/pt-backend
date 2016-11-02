@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,9 +19,10 @@ import javax.persistence.SequenceGenerator;
 @Getter
 @Setter
 @Entity
+@Table (name = "SHIPWRECK", schema = "ptcore")
 public class Shipwreck {
     @Id
-    @SequenceGenerator(name = "ShipwreckIdSequence", sequenceName = "SHIPWRECK_ID_seq",
+    @SequenceGenerator(name = "ShipwreckIdSequence", sequenceName = "ptcore.SHIPWRECK_ID_seq",
             allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ShipwreckIdSequence")
     Long id;

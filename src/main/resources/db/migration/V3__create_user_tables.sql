@@ -8,10 +8,8 @@ SET search_path = ptcore;
 SET default_tablespace = '';
 SET default_with_oids = false;
 
-CREATE SCHEMA ptcore;
-
 CREATE TABLE ptcore.in_user (
-    id BIGINT PRIMARY KEY NOT NULL,
+    id BIGSERIAL PRIMARY KEY NOT NULL,
     created TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
     d_sex VARCHAR(45),
     age DECIMAL(9, 2),
@@ -22,15 +20,15 @@ CREATE TABLE ptcore.in_user (
 );
 
 CREATE TABLE ptcore.in_user_facebook (
-    id BIGINT PRIMARY KEY NOT NULL,
+    id BIGSERIAL PRIMARY KEY NOT NULL,
     in_user_id BIGINT NOT NULL,
     created TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
-    token VARCHAR(35),
+    token VARCHAR(300),
     FOREIGN KEY (in_user_id) REFERENCES ptcore.in_user (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE ptcore.in_user_login (
-    id BIGINT PRIMARY KEY NOT NULL,
+    id BIGSERIAL PRIMARY KEY NOT NULL,
     in_user_id BIGINT NOT NULL,
     created TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
     token VARCHAR(35),
@@ -39,9 +37,13 @@ CREATE TABLE ptcore.in_user_login (
 );
 
 CREATE TABLE ptcore.in_user_logout (
-    id BIGINT PRIMARY KEY NOT NULL,
+    id BIGSERIAL PRIMARY KEY NOT NULL,
     in_user_id BIGINT NOT NULL,
     created TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
     token VARCHAR(35),
     FOREIGN KEY (in_user_id) REFERENCES ptcore.in_user (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+CREATE INDEX facebook_token_index ON ptcore.in_user_facebook (token);
+CREATE INDEX login_token_index ON ptcore.in_user_login (token);
+CREATE INDEX logout_token_index ON ptcore.in_user_logout (token);
