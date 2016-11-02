@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,7 +20,9 @@ import javax.persistence.Id;
 @Entity
 public class Shipwreck {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "ShipwreckIdSequence", sequenceName = "SHIPWRECK_ID_seq",
+            allocationSize = 1, initialValue = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ShipwreckIdSequence")
     Long id;
     String name;
     String description;
