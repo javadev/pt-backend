@@ -25,7 +25,7 @@ import org.hibernate.annotations.DynamicInsert;
 @Entity
 @Table(name = "in_user_logout", schema = "ptcore")
 @DynamicInsert
-public class InUserLogout {
+class InUserLogout {
     @Id
     @SequenceGenerator(name = "InUserLogoutIdSequence", sequenceName = "ptcore.in_user_logout_id_seq",
             allocationSize = 1, initialValue = 1)

@@ -1,5 +1,6 @@
 package com.github.pt.token;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +26,7 @@ import org.hibernate.annotations.DynamicInsert;
 @Entity
 @Table(name = "in_user_facebook", schema = "ptcore")
 @DynamicInsert
-public class InUserFacebook {
+class InUserFacebook {
     @Id
     @SequenceGenerator(name = "InUserFacebookIdSequence", sequenceName = "ptcore.in_user_facebook_id_seq",
             allocationSize = 1, initialValue = 1)
@@ -33,6 +34,7 @@ public class InUserFacebook {
     Long id;
     @ManyToOne
     @JoinColumn(name="in_user_id")
+    @JsonBackReference
     InUser inUser;
     LocalDateTime created;
     String token;

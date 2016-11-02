@@ -1,7 +1,6 @@
 package com.github.pt.token;
 
 import com.github.pt.model.ResourceNotFoundException;
-import java.util.Arrays;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,11 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/inuser")
+@RequestMapping("api/v1/token")
 public class TokenResource {
 
     @Autowired
     private InUserRepository inUserRepository;
+    
+    @Autowired
+    private TokenService tokenService;    
 
     @RequestMapping(method = RequestMethod.GET)
     public List<InUser> list() {
@@ -26,19 +28,7 @@ public class TokenResource {
 
     @RequestMapping(method = RequestMethod.POST)
     public TokenResponseDTO create(@RequestBody TokenRequestDTO tokenRequest) {
-        final InUser inUser = new InUser();
-        final InUserFacebook inUserFacebook = new InUserFacebook();
-        inUserFacebook.setToken(tokenRequest.getFacebook_token());
-        inUserFacebook.setDevice_id(tokenRequest.getDevice_id());
-        inUserFacebook.setInUser(inUser);
-        final InUserLogin inUserLogin = new InUserLogin();
-        inUserLogin.setInUser(inUser);
-        inUser.setInUserFacebooks(Arrays.asList(inUserFacebook));
-        inUser.setInUserLogins(Arrays.asList(inUserLogin)); 
-        inUserRepository.saveAndFlush(inUser);
-        final TokenResponseDTO tokenResponseDTO = new TokenResponseDTO();
-        tokenResponseDTO.setToken(inUserLogin.getToken());
-        return tokenResponseDTO;        
+        return tokenService.createOrReadNewToken(tokenRequest);
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET)

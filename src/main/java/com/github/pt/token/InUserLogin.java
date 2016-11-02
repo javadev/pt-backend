@@ -1,5 +1,6 @@
 package com.github.pt.token;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ import org.hibernate.annotations.DynamicInsert;
 @Entity
 @Table(name = "in_user_login", schema = "ptcore")
 @DynamicInsert
-public class InUserLogin {
+class InUserLogin {
     @Id
     @SequenceGenerator(name = "InUserLoginIdSequence", sequenceName = "ptcore.in_user_login_id_seq",
             allocationSize = 1, initialValue = 1)
@@ -34,6 +35,7 @@ public class InUserLogin {
     Long id;
     @ManyToOne
     @JoinColumn(name="in_user_id")
+    @JsonBackReference
     InUser inUser;
     LocalDateTime created;
     String token = "pt-" + UUID.randomUUID().toString().replace("-", "");

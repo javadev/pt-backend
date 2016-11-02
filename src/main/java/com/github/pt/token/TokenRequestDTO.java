@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-public class TokenRequestDTO {
+class TokenRequestDTO {
     String facebook_token;
     String device_id;
 }
