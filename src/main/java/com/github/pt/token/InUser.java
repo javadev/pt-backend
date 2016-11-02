@@ -38,10 +38,10 @@ public class InUser {
     Float weight;
     String d_level;
     LocalDateTime updated;
-    @OneToMany
+    @OneToMany(mappedBy="inUser")
     List<InUserFacebook> inUserFacebooks;
-    @OneToMany
+    @OneToMany(mappedBy="inUser")
     List<InUserLogin> inUserLogins;
-    @OneToMany
+    @OneToMany(mappedBy="inUser")
     List<InUserLogout> inUserLogouts;
 }
