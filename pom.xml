@@ -68,6 +68,12 @@
       <version>5.1.0.Final</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.github.scribejava</groupId>
+      <artifactId>scribejava-apis</artifactId>
+      <version>3.2.0</version>
+    </dependency>
+
     <!-- Devtools -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -81,7 +87,12 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
-
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20140107</version>
+      <type>jar</type>
+    </dependency>
   </dependencies>
 
   <build>
