@@ -47,6 +47,10 @@ public class TokenResource {
     public void delete(@RequestHeader(value = "X-Token") String token) {
         final List<InUserLogin> inUserLogins = inUserLoginRepository.findByToken(token);
         if (!inUserLogins.isEmpty()) {
+            final List<InUserLogout> inUserLogouts = inUserLogoutRepository.findByToken(token);
+            if (!inUserLogouts.isEmpty()) {
+                throw new ResourceNotFoundException("Invalid token");
+            }
             InUserLogout inUserLogout = new InUserLogout();
             inUserLogout.setToken(token);
             inUserLogout.setInUser(inUserLogins.get(inUserLogins.size() - 1).getInUser());
