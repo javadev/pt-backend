@@ -1,6 +1,6 @@
 package com.github.pt.token;
 
-import com.github.pt.model.ResourceNotFoundException;
+import com.github.pt.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,17 +16,21 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequestMapping("api/v1/token")
 public class TokenResource {
 
-    @Autowired
-    private InUserRepository inUserRepository;
+    private final InUserRepository inUserRepository;
+    private final InUserLoginRepository inUserLoginRepository;
+    private final InUserLogoutRepository inUserLogoutRepository;
+    private final TokenService tokenService;
     
     @Autowired
-    private InUserLoginRepository inUserLoginRepository;
-
-    @Autowired
-    private InUserLogoutRepository inUserLogoutRepository;
-
-    @Autowired
-    private TokenService tokenService;    
+    public TokenResource(InUserRepository inUserRepository, 
+            InUserLoginRepository inUserLoginRepository,
+            InUserLogoutRepository inUserLogoutRepository,
+            TokenService tokenService) {
+        this.inUserRepository = inUserRepository;
+        this.inUserLoginRepository = inUserLoginRepository;
+        this.inUserLogoutRepository = inUserLogoutRepository;
+        this.tokenService = tokenService;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public List<InUser> list() {

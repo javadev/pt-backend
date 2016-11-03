@@ -1,4 +1,4 @@
-package com.github.pt.controller;
+package com.github.pt.token;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,12 +20,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 @TestPropertySource("/application-test.properties")
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
-public class ShipwreckControllerWebTest {
+public class TokenResourceWebTest {
 
     @Test
     public void testListAll() throws Exception {
         RestTemplate restTemplate = new TestRestTemplate();
-        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:9090/api/v1/shipwrecks", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:9090/api/v1/token", String.class);
 
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
 

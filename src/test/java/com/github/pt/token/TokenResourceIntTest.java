@@ -1,6 +1,5 @@
-package com.github.pt.controller;
+package com.github.pt.token;
 
-import com.github.pt.model.Shipwreck;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +17,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 @TestPropertySource("/application-test.properties")
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class ShipwreckControllerIntTest {
+public class TokenResourceIntTest {
     
     @Autowired
-    ShipwreckController shipwreckController;
+    TokenResource tokenResource;
 
     @Test
     public void testList() throws Exception {
-        List<Shipwreck> results = shipwreckController.list();
+        List<InUser> results = tokenResource.list();
         assertThat(results.size(), is(greaterThanOrEqualTo(0)));
     }
 

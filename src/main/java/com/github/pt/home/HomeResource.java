@@ -1,10 +1,10 @@
-package com.github.pt.controller;
+package com.github.pt.home;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class HomeController {
+public class HomeResource {
 
     @RequestMapping("/")
     public String home() {

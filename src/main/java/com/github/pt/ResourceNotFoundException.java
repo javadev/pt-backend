@@ -1,4 +1,4 @@
-package com.github.pt.model;
+package com.github.pt;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
