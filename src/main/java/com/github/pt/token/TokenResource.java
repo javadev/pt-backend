@@ -1,6 +1,7 @@
 package com.github.pt.token;
 
 import com.github.pt.ResourceNotFoundException;
+import com.github.pt.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,7 +50,7 @@ public class TokenResource {
         if (!inUserLogins.isEmpty()) {
             final List<InUserLogout> inUserLogouts = inUserLogoutRepository.findByToken(token);
             if (!inUserLogouts.isEmpty()) {
-                throw new ResourceNotFoundException("Invalid token");
+                throw new UnauthorizedException("Invalid token");
             }
             InUserLogout inUserLogout = new InUserLogout();
             inUserLogout.setToken(token);
