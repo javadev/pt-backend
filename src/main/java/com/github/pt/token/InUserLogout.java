@@ -1,6 +1,5 @@
 package com.github.pt.token;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,7 +33,6 @@ class InUserLogout {
     Long id;
     @ManyToOne
     @JoinColumn(name="in_user_id")
-    @JsonBackReference
     InUser inUser;
     LocalDateTime created;
     String token;
