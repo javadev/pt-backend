@@ -14,14 +14,13 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 @Service
 class FacebookService {
     private static final Logger LOG = LoggerFactory.getLogger(FacebookService.class);
     private static final String PICTURE_URL = "https://graph.facebook.com/me/picture?redirect=false&type=large";
-    private static final String NAME_URL = "https://graph.facebook.com/me?fields=name&locale=en_US";
+    private static final String NAME_URL = "https://graph.facebook.com/me?fields=name,gender,birthday&locale=en_US";
     private final OAuth20Service service;
 
     FacebookService() {
@@ -31,7 +30,7 @@ class FacebookService {
                            .build(FacebookApi.instance());
     }
     
-    public Optional<Pair<String, String>> getProfileNameAndId(String accessTokenString) {
+    public Optional<FacebookResponse> getProfileNameAndId(String accessTokenString) {
         try {
             final OAuth2AccessToken accessToken = new OAuth2AccessToken(accessTokenString);
             final OAuthRequest requestPicture = new OAuthRequest(Verb.GET, NAME_URL, service);
@@ -43,7 +42,11 @@ class FacebookService {
             }
             final String pictureBody = response.getBody();
             final JSONObject object = (JSONObject) new JSONTokener(pictureBody).nextValue();
-            return Optional.of(Pair.of(object.getString("name"), object.getString("id")));
+            final FacebookResponse facebookResponse = new FacebookResponse(
+                object.getString("id"),
+                object.getString("name"),
+                object.getString("gender"));
+            return Optional.of(facebookResponse);
         } catch (IOException ex) {
             LOG.error(ex.getMessage(), ex);
             return Optional.empty();

@@ -11,10 +11,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-public class UserResponseDTO {
-    Long id;
+public class FacebookResponse {
+    String id;
     String name;
-    String avatar;    
     String gender;
-    Integer age;
 }
