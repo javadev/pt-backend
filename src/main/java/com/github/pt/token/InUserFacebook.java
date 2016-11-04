@@ -2,6 +2,7 @@ package com.github.pt.token;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.time.LocalDateTime;
+import javax.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,4 +40,8 @@ class InUserFacebook {
     LocalDateTime created;
     String token;
     String device_id;
+    @Column(name="user_id")
+    String userId;
+    String user_name;
+    String picture_url;
 }
