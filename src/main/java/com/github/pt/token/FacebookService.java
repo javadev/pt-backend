@@ -24,7 +24,7 @@ class FacebookService {
     private static final Logger LOG = LoggerFactory.getLogger(FacebookService.class);
     private static final String PICTURE_URL = "https://graph.facebook.com/me/picture?redirect=false&type=large";
     private static final String NAME_URL = "https://graph.facebook.com/me?fields=name,gender,birthday&locale=en_US";
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private final OAuth20Service service;
 
     FacebookService() {
