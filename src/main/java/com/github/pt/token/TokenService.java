@@ -62,6 +62,7 @@ class TokenService {
         user.setName(inUserFacebook.getUser_name());
         user.setAvatar(inUserFacebook.getPicture_url());
         user.setGender(facebookResponse.getGender());
+        user.setAge(facebookResponse.getAge());
         tokenResponseDTO.setUser(user);
         return tokenResponseDTO;        
     }

@@ -16,5 +16,5 @@ public class UserResponseDTO {
     String name;
     String avatar;    
     String gender;
-    Integer age;
+    Long age;
 }

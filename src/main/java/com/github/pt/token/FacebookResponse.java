@@ -15,4 +15,5 @@ public class FacebookResponse {
     String id;
     String name;
     String gender;
+    Long age;
 }

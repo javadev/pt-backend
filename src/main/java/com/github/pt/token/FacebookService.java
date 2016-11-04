@@ -9,6 +9,9 @@ import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import static java.time.temporal.ChronoUnit.YEARS;
 import java.util.Optional;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -21,6 +24,7 @@ class FacebookService {
     private static final Logger LOG = LoggerFactory.getLogger(FacebookService.class);
     private static final String PICTURE_URL = "https://graph.facebook.com/me/picture?redirect=false&type=large";
     private static final String NAME_URL = "https://graph.facebook.com/me?fields=name,gender,birthday&locale=en_US";
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final OAuth20Service service;
 
     FacebookService() {
@@ -42,10 +46,13 @@ class FacebookService {
             }
             final String pictureBody = response.getBody();
             final JSONObject object = (JSONObject) new JSONTokener(pictureBody).nextValue();
+            LocalDate birthday = LocalDate.parse(object.getString("birthday"), FORMATTER);
             final FacebookResponse facebookResponse = new FacebookResponse(
                 object.getString("id"),
                 object.getString("name"),
-                object.getString("gender"));
+                object.getString("gender"),
+                YEARS.between(birthday, LocalDate.now())
+            );
             return Optional.of(facebookResponse);
         } catch (IOException ex) {
             LOG.error(ex.getMessage(), ex);
