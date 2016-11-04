@@ -57,7 +57,10 @@ class TokenService {
         inUserFacebookRepository.saveAndFlush(inUserFacebook);
         final TokenResponseDTO tokenResponseDTO = new TokenResponseDTO();
         tokenResponseDTO.setToken(inUserLogin.getToken());
-        tokenResponseDTO.setUser(inUser);
+        final UserResponseDTO user = new UserResponseDTO();
+        user.setName(inUserFacebook.getUser_name());
+        user.setAvatar(inUserFacebook.getPicture_url());
+        tokenResponseDTO.setUser(user);
         return tokenResponseDTO;        
     }
 }

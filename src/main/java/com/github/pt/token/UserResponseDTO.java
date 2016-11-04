@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-public class TokenResponseDTO {
-    String token;
-    UserResponseDTO user;
+public class UserResponseDTO {
+    String name;
+    String avatar;    
 }

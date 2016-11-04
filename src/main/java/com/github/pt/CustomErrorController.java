@@ -24,10 +24,10 @@ public class CustomErrorController implements ErrorController {
     private ErrorAttributes errorAttributes;
 
     @RequestMapping(value = PATH)
-    ErrorJson error(HttpServletRequest request, HttpServletResponse response) {
+    ErrorDTO error(HttpServletRequest request, HttpServletResponse response) {
         // Appropriate HTTP response code (e.g. 404 or 500) is automatically set by Spring. 
         // Here we just define response body.
-        return new ErrorJson(response.getStatus(), getErrorAttributes(request, loggingLevel));
+        return new ErrorDTO(response.getStatus(), getErrorAttributes(request, loggingLevel));
     }
 
     @Override
