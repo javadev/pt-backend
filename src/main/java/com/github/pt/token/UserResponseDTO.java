@@ -1,5 +1,8 @@
 package com.github.pt.token;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,4 +20,6 @@ public class UserResponseDTO {
     String avatar;    
     String gender;
     Long age;
+    @JsonSerialize(using = LocalDateSerializer.class)
+    LocalDate birthday;
 }
