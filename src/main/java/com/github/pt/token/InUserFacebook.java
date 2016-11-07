@@ -39,7 +39,8 @@ class InUserFacebook {
     InUser inUser;
     LocalDateTime created;
     String token;
-    String device_id;
+    @Column(name="device_id")
+    String deviceId;
     @Column(name="user_id")
     String userId;
     String user_name;

@@ -1,5 +1,6 @@
 package com.github.pt.token;
 
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +12,10 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-public class FacebookResponse {
+class FacebookResponse {
     String id;
     String name;
     String gender;
+    LocalDate birthday;
     Long age;
 }

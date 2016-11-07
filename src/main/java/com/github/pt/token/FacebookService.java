@@ -51,6 +51,7 @@ class FacebookService {
                 object.getString("id"),
                 object.getString("name"),
                 object.getString("gender"),
+                birthday,
                 YEARS.between(birthday, LocalDate.now())
             );
             return Optional.of(facebookResponse);

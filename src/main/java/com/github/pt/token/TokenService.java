@@ -1,6 +1,7 @@
 package com.github.pt.token;
 
 import com.github.pt.ResourceNotFoundException;
+import com.github.pt.UnauthorizedException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -12,25 +13,56 @@ import org.springframework.stereotype.Service;
 class TokenService {
     private final InUserRepository inUserRepository;
     private final InUserLoginRepository inUserLoginRepository;
+    private final InUserLogoutRepository inUserLogoutRepository;
     private final InUserFacebookRepository inUserFacebookRepository;
     private final FacebookService facebookService;
 
     @Autowired
     TokenService(InUserRepository inUserRepository,
             InUserLoginRepository inUserLoginRepository,
+            InUserLogoutRepository inUserLogoutRepository,
             InUserFacebookRepository inUserFacebookRepository,
             FacebookService facebookService) {
         this.inUserRepository = inUserRepository;
         this.inUserLoginRepository = inUserLoginRepository;
+        this.inUserLogoutRepository = inUserLogoutRepository;
         this.inUserFacebookRepository = inUserFacebookRepository;
         this.facebookService = facebookService;
     }
 
+    Pair<Boolean, InUserFacebook> readOrCreateInUserFacebook(TokenRequestDTO tokenRequest) {
+        final InUserFacebook inUserFacebook;
+        final boolean isNewLogin;
+        final List<InUserFacebook> inUserFacebooks = inUserFacebookRepository.findByTokenAndDeviceId(
+            tokenRequest.getFacebook_token(), tokenRequest.getDevice_id());
+        if (inUserFacebooks.isEmpty()) {
+            inUserFacebook = new InUserFacebook();
+            inUserFacebook.setToken(tokenRequest.getFacebook_token());
+            inUserFacebook.setDeviceId(tokenRequest.getDevice_id());
+            isNewLogin = true;
+        } else {
+            final InUserFacebook inUserFacebookOld = inUserFacebooks.get(inUserFacebooks.size() - 1);
+            final List<InUserLogout> inUserLogouts = inUserLogoutRepository.findByToken(
+                    inUserFacebookOld.getInUser().getInUserLogins().get(
+                    inUserFacebookOld.getInUser().getInUserLogins().size() - 1).getToken());
+            if (!inUserLogouts.isEmpty()) {
+                inUserFacebook = new InUserFacebook();
+                inUserFacebook.setToken(tokenRequest.getFacebook_token());
+                inUserFacebook.setDeviceId(tokenRequest.getDevice_id());                
+                isNewLogin = true;
+            } else {
+                inUserFacebook = inUserFacebookOld;
+                isNewLogin = false;
+            }
+        }
+        return Pair.of(isNewLogin, inUserFacebook);
+    }
+
     TokenResponseDTO createOrReadNewToken(TokenRequestDTO tokenRequest) {
         final InUser inUser;
-        final InUserFacebook inUserFacebook = new InUserFacebook();
-        inUserFacebook.setToken(tokenRequest.getFacebook_token());
-        inUserFacebook.setDevice_id(tokenRequest.getDevice_id());
+        final Pair<Boolean, InUserFacebook> inUserFacebookData = readOrCreateInUserFacebook(tokenRequest);
+        final boolean isNewLogin = inUserFacebookData.getFirst();
+        InUserFacebook inUserFacebook = inUserFacebookData.getSecond();
         FacebookResponse facebookResponse =
             facebookService.getProfileNameAndId(tokenRequest.getFacebook_token())
                 .orElseThrow(() -> new ResourceNotFoundException("Can't load data from facebook"));
@@ -39,17 +71,26 @@ class TokenService {
         inUserFacebook.setUserId(facebookResponse.getId());
         inUserFacebook.setUser_name(facebookResponse.getName());
         inUserFacebook.setPicture_url(pictureUrl.orElse(null));
-        List<InUserFacebook> inUserFacebooks = inUserFacebookRepository.findByUserId(facebookResponse.getId());
-        final InUserLogin inUserLogin = new InUserLogin();
-        if (inUserFacebooks.isEmpty()) {
+        final List<InUserFacebook> inUserFacebooksNew = inUserFacebookRepository.findByUserId(
+            facebookResponse.getId());
+        final InUserLogin inUserLogin;
+        if (isNewLogin) {
+            inUserLogin = new InUserLogin();
+        } else {
+            inUserLogin = inUserFacebook.getInUser().getInUserLogins().get(
+                    inUserFacebook.getInUser().getInUserLogins().size() - 1);
+        }
+        if (inUserFacebooksNew.isEmpty()) {
             inUser = new InUser();
             inUser.setInUserFacebooks(Arrays.asList(inUserFacebook));
             inUser.setInUserLogins(Arrays.asList(inUserLogin)); 
         } else {
-            inUser = inUserFacebooks.get(inUserFacebooks.size() - 1).getInUser();
+            inUser = inUserFacebooksNew.get(inUserFacebooksNew.size() - 1).getInUser();
             inUser.getInUserFacebooks().add(inUserFacebook);
             inUser.getInUserLogins().add(inUserLogin);
-        } 
+        }
+        inUser.setD_sex(facebookResponse.getGender());
+        inUser.setAge(facebookResponse.getAge().floatValue());
         final InUser savedInUser = inUserRepository.save(inUser);
         inUserLogin.setInUser(savedInUser);
         inUserLoginRepository.saveAndFlush(inUserLogin);
@@ -65,5 +106,21 @@ class TokenService {
         user.setAge(facebookResponse.getAge());
         tokenResponseDTO.setUser(user);
         return tokenResponseDTO;        
+    }
+
+    void deleteToken(String token) {
+        final List<InUserLogin> inUserLogins = inUserLoginRepository.findByToken(token);
+        if (!inUserLogins.isEmpty()) {
+            final List<InUserLogout> inUserLogouts = inUserLogoutRepository.findByToken(token);
+            if (!inUserLogouts.isEmpty()) {
+                throw new UnauthorizedException("Invalid token");
+            }
+            InUserLogout inUserLogout = new InUserLogout();
+            inUserLogout.setToken(token);
+            inUserLogout.setInUser(inUserLogins.get(inUserLogins.size() - 1).getInUser());
+            inUserLogoutRepository.saveAndFlush(inUserLogout);
+        } else {
+            throw new ResourceNotFoundException("Token not found " + token);
+        }
     }
 }
