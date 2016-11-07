@@ -24,7 +24,7 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 @Setter
 @Entity
-@Table (name = "in_program", schema = "ptcore")
+@Table (name = "in_workout_item", schema = "ptcore")
 @DynamicInsert
 public class InWorkoutItem {
     @Id
@@ -42,5 +42,5 @@ public class InWorkoutItem {
     @ManyToOne
     @JoinColumn(name="in_workout_id")
     @JsonBackReference
-    InProgram inWorkout;
+    InWorkout inWorkout;
 }
