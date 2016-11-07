@@ -1,6 +1,7 @@
 package com.github.pt.token;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,7 @@ class InUser {
     LocalDateTime created;
     String d_sex;
     Float age;
+    LocalDate birthday;
     Float height;
     Float weight;
     String d_level;

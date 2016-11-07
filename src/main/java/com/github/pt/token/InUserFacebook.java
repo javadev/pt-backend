@@ -1,6 +1,7 @@
 package com.github.pt.token;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import lombok.AllArgsConstructor;
@@ -45,4 +46,5 @@ class InUserFacebook {
     String userId;
     String user_name;
     String picture_url;
+    LocalDate birthday;
 }

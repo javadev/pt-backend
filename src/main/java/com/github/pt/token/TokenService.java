@@ -71,6 +71,7 @@ class TokenService {
         inUserFacebook.setUserId(facebookResponse.getId());
         inUserFacebook.setUser_name(facebookResponse.getName());
         inUserFacebook.setPicture_url(pictureUrl.orElse(null));
+        inUserFacebook.setBirthday(facebookResponse.getBirthday());
         final List<InUserFacebook> inUserFacebooksNew = inUserFacebookRepository.findByUserId(
             facebookResponse.getId());
         final InUserLogin inUserLogin;
@@ -91,6 +92,7 @@ class TokenService {
         }
         inUser.setD_sex(facebookResponse.getGender());
         inUser.setAge(facebookResponse.getAge().floatValue());
+        inUser.setBirthday(facebookResponse.getBirthday());
         final InUser savedInUser = inUserRepository.save(inUser);
         inUserLogin.setInUser(savedInUser);
         inUserLoginRepository.saveAndFlush(inUserLogin);
