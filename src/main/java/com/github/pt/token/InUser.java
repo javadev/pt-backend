@@ -1,6 +1,7 @@
 package com.github.pt.token;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.github.pt.programs.InProgram;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +28,7 @@ import org.hibernate.annotations.DynamicInsert;
 @Entity
 @Table (name = "in_user", schema = "ptcore")
 @DynamicInsert
-class InUser {
+public class InUser {
     @Id
     @SequenceGenerator(name = "InUserIdSequence", sequenceName = "ptcore.in_user_id_seq",
             allocationSize = 1, initialValue = 1)
@@ -49,4 +50,6 @@ class InUser {
     List<InUserLogin> inUserLogins;
     @OneToMany(mappedBy="inUser")
     List<InUserLogout> inUserLogouts;
+    @OneToMany(mappedBy="inUser")
+    List<InProgram> inPrograms;
 }
