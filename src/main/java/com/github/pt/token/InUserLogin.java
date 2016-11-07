@@ -27,7 +27,7 @@ import org.hibernate.annotations.DynamicInsert;
 @Entity
 @Table(name = "in_user_login", schema = "ptcore")
 @DynamicInsert
-class InUserLogin {
+public class InUserLogin {
     @Id
     @SequenceGenerator(name = "InUserLoginIdSequence", sequenceName = "ptcore.in_user_login_id_seq",
             allocationSize = 1, initialValue = 1)
