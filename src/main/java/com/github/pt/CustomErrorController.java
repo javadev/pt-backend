@@ -13,7 +13,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 @RestController
-public class CustomErrorController implements ErrorController {
+class CustomErrorController implements ErrorController {
 
     private static final String PATH = "/error";
 

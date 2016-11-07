@@ -50,11 +50,11 @@ class TokenService {
             inUser.getInUserFacebooks().add(inUserFacebook);
             inUser.getInUserLogins().add(inUserLogin);
         } 
-        final InUser savedInUser = inUserRepository.saveAndFlush(inUser);
+        final InUser savedInUser = inUserRepository.save(inUser);
         inUserLogin.setInUser(savedInUser);
         inUserLoginRepository.saveAndFlush(inUserLogin);
         inUserFacebook.setInUser(inUser);
-        inUserFacebookRepository.saveAndFlush(inUserFacebook);
+        inUserFacebookRepository.save(inUserFacebook);
         final TokenResponseDTO tokenResponseDTO = new TokenResponseDTO();
         tokenResponseDTO.setToken(inUserLogin.getToken());
         final UserResponseDTO user = new UserResponseDTO();
