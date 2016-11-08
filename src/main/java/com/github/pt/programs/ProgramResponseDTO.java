@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-public class ProgramResponseDTO {
+class ProgramResponseDTO {
     Long id;
     String name;
     String type;

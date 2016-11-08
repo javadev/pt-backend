@@ -34,7 +34,7 @@ class FacebookService {
                            .build(FacebookApi.instance());
     }
     
-    public Optional<FacebookResponse> getProfileNameAndId(String accessTokenString) {
+    Optional<FacebookResponse> getProfileNameAndId(String accessTokenString) {
         try {
             final OAuth2AccessToken accessToken = new OAuth2AccessToken(accessTokenString);
             final OAuthRequest requestPicture = new OAuthRequest(Verb.GET, NAME_URL, service);
@@ -61,7 +61,7 @@ class FacebookService {
         }
     }
 
-    public Optional<String> getProfilePictureUrl(String accessTokenString) {
+    Optional<String> getProfilePictureUrl(String accessTokenString) {
         try {
             final OAuth2AccessToken accessToken = new OAuth2AccessToken(accessTokenString);
             final OAuthRequest requestPicture = new OAuthRequest(Verb.GET, PICTURE_URL, service);

@@ -10,17 +10,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/programs")
-public class ProgramsResource {
+class ProgramsResource {
 
     private final InProgramRepository inProgramRepository;
     
     @Autowired
-    public ProgramsResource(InProgramRepository inProgramRepository) {
+    ProgramsResource(InProgramRepository inProgramRepository) {
         this.inProgramRepository = inProgramRepository;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<ProgramResponseDTO> list() {
+    List<ProgramResponseDTO> list() {
         InProgram inProgram = new InProgram();
         inProgram.setName("Test program");
         inProgram.setD_program_type("test");

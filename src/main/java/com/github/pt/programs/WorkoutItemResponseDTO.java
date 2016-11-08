@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-public class WorkoutItemResponseDTO {
+class WorkoutItemResponseDTO {
     String exercise_id;
     String exercise_name;
     Integer sets;

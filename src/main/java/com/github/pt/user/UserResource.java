@@ -14,20 +14,20 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RestController
 @RequestMapping("api/v1/user")
-public class UserResource {
+class UserResource {
 
     private final InUserRepository inUserRepository;
     private final UserService userService;
     
     @Autowired
-    public UserResource(InUserRepository inUserRepository,
+    UserResource(InUserRepository inUserRepository,
             UserService userService) {
         this.inUserRepository = inUserRepository;
         this.userService = userService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public UserResponseDTO findOne(@RequestHeader(value = "X-Token") String token) {
+    UserResponseDTO findOne(@RequestHeader(value = "X-Token") String token) {
         InUser inUser = userService.findOne(token);
         UserResponseDTO userResponse = new UserResponseDTO();
         userResponse.setGender(inUser.getD_sex());
@@ -45,7 +45,7 @@ public class UserResource {
 
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@RequestHeader(value = "X-Token") String token,
+    void update(@RequestHeader(value = "X-Token") String token,
             @RequestBody UserRequestDTO userRequest) {
         userService.updateUser(token, userRequest);
     }

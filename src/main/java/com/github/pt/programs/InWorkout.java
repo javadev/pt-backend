@@ -28,7 +28,7 @@ import org.hibernate.annotations.DynamicInsert;
 @Entity
 @Table (name = "in_workout", schema = "ptcore")
 @DynamicInsert
-public class InWorkout {
+class InWorkout {
     @Id
     @SequenceGenerator(name = "InWorkoutIdSequence", sequenceName = "ptcore.in_workout_id_seq",
             allocationSize = 1, initialValue = 1)

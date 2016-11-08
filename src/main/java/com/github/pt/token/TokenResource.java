@@ -13,31 +13,31 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RestController
 @RequestMapping("api/v1/token")
-public class TokenResource {
+class TokenResource {
 
     private final InUserRepository inUserRepository;
     private final TokenService tokenService;
     
     @Autowired
-    public TokenResource(InUserRepository inUserRepository, 
+    TokenResource(InUserRepository inUserRepository, 
             TokenService tokenService) {
         this.inUserRepository = inUserRepository;
         this.tokenService = tokenService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<InUser> list() {
+    List<InUser> list() {
         return inUserRepository.findAll();
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public TokenResponseDTO create(@RequestBody TokenRequestDTO tokenRequest) {
+    TokenResponseDTO create(@RequestBody TokenRequestDTO tokenRequest) {
         return tokenService.createOrReadNewToken(tokenRequest);
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void delete(@RequestHeader(value = "X-Token") String token) {
+    void delete(@RequestHeader(value = "X-Token") String token) {
         tokenService.deleteToken(token);
     }
 }

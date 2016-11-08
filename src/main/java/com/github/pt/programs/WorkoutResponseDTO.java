@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-public class WorkoutResponseDTO {
+class WorkoutResponseDTO {
     Long id;
     String name;
     List<WorkoutItemResponseDTO> items;
