@@ -7,6 +7,7 @@ import com.github.pt.token.InUserLogin;
 import com.github.pt.token.InUserLoginRepository;
 import com.github.pt.token.InUserLogoutRepository;
 import com.github.pt.token.InUserRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,7 @@ class UserService {
         if (userRequest.getWeight() != null) {
             inUser.setWeight(userRequest.getWeight().floatValue());
         }
+        inUser.setUpdated(LocalDateTime.now());
         inUserRepository.save(inUser);
     }
 

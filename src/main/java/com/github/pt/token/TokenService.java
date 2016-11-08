@@ -2,6 +2,7 @@ package com.github.pt.token;
 
 import com.github.pt.ResourceNotFoundException;
 import com.github.pt.UnauthorizedException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -93,6 +94,7 @@ class TokenService {
         inUser.setD_sex(facebookResponse.getGender());
         inUser.setAge(facebookResponse.getAge().floatValue());
         inUser.setBirthday(facebookResponse.getBirthday());
+        inUser.setUpdated(LocalDateTime.now());
         final InUser savedInUser = inUserRepository.save(inUser);
         inUserLogin.setInUser(savedInUser);
         inUserLoginRepository.saveAndFlush(inUserLogin);
