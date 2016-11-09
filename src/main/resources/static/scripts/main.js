@@ -22,9 +22,10 @@ require.config({
 });
 
 define([
-//  'appsetup'
+  'appsetup'
 ],
-function () {
+function (Appsetup) {
   'use strict';
 
 });
+

@@ -1,0 +1,25 @@
+{
+  "name": "pt-admin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seniordevonly/pt-backend.git"
+  },
+  "version": "0.0.1",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-connect": "~0.5.0",
+    "grunt-contrib-jshint": "~0.6.4",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-open": "~0.2.2",
+    "grunt-testem": "~0.5.1",
+    "matchdep": "~0.1.2",
+    "node-static": "~0.7.2",
+    "request": "~2.33.0",
+    "testem": "~0.6.7",
+    "grunt-available-tasks": "~0.4.2"
+  }
+}
