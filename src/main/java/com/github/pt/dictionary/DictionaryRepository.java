@@ -12,7 +12,7 @@ public interface DictionaryRepository extends JpaRepository<DictionaryData, Long
 
     @Query("select d from DictionaryData d where d.dname = ?1 and d.dkey = ?2 "
             + "and d.fromdate <= ?3 and (d.todate is null or d.todate >= ?3)")
-    @Cacheable(value = "dictionaryData", key = "#dname + '_' + #dkey")
+    @Cacheable(value = "dictionaryData", key = "{#p0, #p1}")
     List<DictionaryData> findDictionaryValue(
             String dname, String dkey, LocalDateTime currentdate);
 }
