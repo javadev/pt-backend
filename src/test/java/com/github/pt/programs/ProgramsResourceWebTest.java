@@ -16,6 +16,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @TestPropertySource("/application-test.properties")
@@ -25,8 +28,11 @@ public class ProgramsResourceWebTest {
 
     @Test
     public void testListAll() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-Token", "");
         RestTemplate restTemplate = new TestRestTemplate();
-        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:9090/api/v1/programs", String.class);
+        ResponseEntity<String> response = restTemplate.exchange(
+                "http://localhost:9090/api/v1/programs", HttpMethod.GET, new HttpEntity<>(headers), String.class);
 
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
 
