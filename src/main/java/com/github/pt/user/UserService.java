@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-class UserService {
+public class UserService {
     private final InUserRepository inUserRepository;
     private final InUserLoginRepository inUserLoginRepository;
     private final InUserLogoutRepository inUserLogoutRepository;
@@ -27,7 +27,7 @@ class UserService {
         this.inUserLogoutRepository = inUserLogoutRepository;
     }
 
-    InUserLogin checkUserToken(String token) {
+    public InUserLogin checkUserToken(String token) {
         List<InUserLogin> inUserLogins = inUserLoginRepository.findByToken(token);
         if (!inUserLogins.isEmpty()) {
             if (!inUserLogoutRepository.findByToken(token).isEmpty()) {
