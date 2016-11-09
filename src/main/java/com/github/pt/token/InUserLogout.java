@@ -38,4 +38,5 @@ class InUserLogout {
     InUser inUser;
     LocalDateTime created;
     String token;
+    String ip_address;
 }

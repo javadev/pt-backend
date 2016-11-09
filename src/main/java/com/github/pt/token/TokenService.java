@@ -59,7 +59,7 @@ class TokenService {
         return Pair.of(isNewLogin, inUserFacebook);
     }
 
-    TokenResponseDTO createOrReadNewToken(TokenRequestDTO tokenRequest) {
+    TokenResponseDTO createOrReadNewToken(TokenRequestDTO tokenRequest, String remoteAddr) {
         final InUser inUser;
         final Pair<Boolean, InUserFacebook> inUserFacebookData = readOrCreateInUserFacebook(tokenRequest);
         final boolean isNewLogin = inUserFacebookData.getFirst();
@@ -97,6 +97,7 @@ class TokenService {
         inUser.setUpdated(LocalDateTime.now());
         final InUser savedInUser = inUserRepository.save(inUser);
         inUserLogin.setInUser(savedInUser);
+        inUserLogin.setIp_address(remoteAddr);
         inUserLoginRepository.saveAndFlush(inUserLogin);
         inUserFacebook.setInUser(inUser);
         inUserFacebookRepository.save(inUserFacebook);
@@ -113,7 +114,7 @@ class TokenService {
         return tokenResponseDTO;        
     }
 
-    void deleteToken(String token) {
+    void deleteToken(String token, String remoteAddr) {
         final List<InUserLogin> inUserLogins = inUserLoginRepository.findByToken(token);
         if (!inUserLogins.isEmpty()) {
             final List<InUserLogout> inUserLogouts = inUserLogoutRepository.findByToken(token);
@@ -123,6 +124,7 @@ class TokenService {
             InUserLogout inUserLogout = new InUserLogout();
             inUserLogout.setToken(token);
             inUserLogout.setInUser(inUserLogins.get(inUserLogins.size() - 1).getInUser());
+            inUserLogout.setIp_address(remoteAddr);
             inUserLogoutRepository.saveAndFlush(inUserLogout);
         } else {
             throw new ResourceNotFoundException("Token not found " + token);

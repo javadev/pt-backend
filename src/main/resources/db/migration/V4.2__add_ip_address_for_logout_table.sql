@@ -1,0 +1,1 @@
+ALTER TABLE ptcore.in_user_logout ADD COLUMN ip_address VARCHAR(40);

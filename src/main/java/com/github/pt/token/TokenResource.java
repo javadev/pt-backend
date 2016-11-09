@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -31,13 +32,13 @@ class TokenResource {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    TokenResponseDTO create(@RequestBody TokenRequestDTO tokenRequest) {
-        return tokenService.createOrReadNewToken(tokenRequest);
+    TokenResponseDTO create(@RequestBody TokenRequestDTO tokenRequest, HttpServletRequest request) {
+        return tokenService.createOrReadNewToken(tokenRequest, request.getRemoteAddr());
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    void delete(@RequestHeader(value = "X-Token") String token) {
-        tokenService.deleteToken(token);
+    void delete(@RequestHeader(value = "X-Token") String token, HttpServletRequest request) {
+        tokenService.deleteToken(token, request.getRemoteAddr());
     }
 }

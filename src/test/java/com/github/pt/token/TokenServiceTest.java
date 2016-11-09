@@ -47,7 +47,7 @@ public class TokenServiceTest {
         when(inUserRepository.save(any(InUser.class))).thenReturn(null);
         when(inUserLoginRepository.saveAndFlush(any(InUserLogin.class))).thenReturn(null);
         when(inUserFacebookRepository.save(any(InUserFacebook.class))).thenReturn(null);
-        TokenResponseDTO tokenResponseDTO = tokenService.createOrReadNewToken(tokenRequest);
+        TokenResponseDTO tokenResponseDTO = tokenService.createOrReadNewToken(tokenRequest, "");
         assertThat(tokenResponseDTO.getToken().startsWith("pt-"), equalTo(true));
         verify(facebookService).getProfileNameAndId(same(tokenRequest.getFacebook_token()));
         verify(facebookService).getProfilePictureUrl(same(tokenRequest.getFacebook_token()));
@@ -75,8 +75,8 @@ public class TokenServiceTest {
         inUser.setInUserLogins(Arrays.asList(inUserLogin));
         when(inUserFacebookRepository.findByTokenAndDeviceId(anyString(), anyString())).thenReturn(
                 Arrays.asList(inUserFacebook));
-        TokenResponseDTO tokenResponseDTO = tokenService.createOrReadNewToken(tokenRequest);
-        TokenResponseDTO tokenResponseDTO2 = tokenService.createOrReadNewToken(tokenRequest);
+        TokenResponseDTO tokenResponseDTO = tokenService.createOrReadNewToken(tokenRequest, "");
+        TokenResponseDTO tokenResponseDTO2 = tokenService.createOrReadNewToken(tokenRequest, "");
         assertThat(tokenResponseDTO.getToken(), equalTo(tokenResponseDTO2.getToken()));
         verify(facebookService, times(2)).getProfileNameAndId(same(tokenRequest.getFacebook_token()));
         verify(facebookService, times(2)).getProfilePictureUrl(same(tokenRequest.getFacebook_token()));
@@ -87,14 +87,14 @@ public class TokenServiceTest {
     
     @Test(expected = ResourceNotFoundException.class)
     public void deleteToken_not_found() {
-        tokenService.deleteToken("");
+        tokenService.deleteToken("", "");
     }
 
     @Test
     public void deleteToken_success() {
         when(inUserLoginRepository.findByToken(anyString())).thenReturn(Arrays.asList(new InUserLogin()));
         when(inUserLogoutRepository.saveAndFlush(any(InUserLogout.class))).thenReturn(null);
-        tokenService.deleteToken("");
+        tokenService.deleteToken("", "");
         verify(inUserLogoutRepository).saveAndFlush(any(InUserLogout.class));
     }
 
@@ -103,7 +103,7 @@ public class TokenServiceTest {
         when(inUserLoginRepository.findByToken(anyString())).thenReturn(Arrays.asList(new InUserLogin()));
         when(inUserLogoutRepository.saveAndFlush(any(InUserLogout.class))).thenReturn(null);
         when(inUserLogoutRepository.findByToken(anyString())).thenReturn(Arrays.asList(new InUserLogout()));
-        tokenService.deleteToken("");
+        tokenService.deleteToken("", "");
         verify(inUserLogoutRepository).saveAndFlush(any(InUserLogout.class));
     }
 }
