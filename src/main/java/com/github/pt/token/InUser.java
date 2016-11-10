@@ -2,6 +2,7 @@ package com.github.pt.token;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.github.pt.programs.InProgram;
+import com.github.pt.reportweight.InUserWeight;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -52,4 +53,6 @@ public class InUser {
     List<InUserLogout> inUserLogouts;
     @OneToMany(mappedBy="inUser")
     List<InProgram> inPrograms;
+    @OneToMany(mappedBy="inUser")
+    List<InUserWeight> inUserWeights;
 }
