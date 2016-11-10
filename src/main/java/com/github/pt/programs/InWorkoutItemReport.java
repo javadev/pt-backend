@@ -37,6 +37,9 @@ public class InWorkoutItemReport {
     Integer repetitions;
     Integer weight;
     Boolean bodyweight;
+    Integer time_in_min;
+    Integer speed;
+    Integer resistance;
     @ManyToOne
     @JoinColumn(name="in_workout_item_id")
     @JsonBackReference

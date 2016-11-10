@@ -37,10 +37,14 @@ public class InWorkoutItem {
     LocalDateTime created;
     String d_exercise_id;
     String d_exercise_name;
+    String d_exercise_type;
     Integer sets;
     Integer repetitions;
     Integer weight;
     Boolean bodyweight;
+    Integer time_in_min;
+    Integer speed;
+    Integer resistance;
     @ManyToOne
     @JoinColumn(name="in_workout_id")
     @JsonBackReference
