@@ -9,3 +9,7 @@ Program data store db schema:
 Exercise data store db schema:
 
 ![pt schema](pt-schema-exercise-v1.png)
+
+User data store db schema:
+
+![pt schema](pt-schema-user-data-v1.png)
