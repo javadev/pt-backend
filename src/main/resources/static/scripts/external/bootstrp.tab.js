@@ -7,7 +7,9 @@
  * ======================================================================== */
 
 
-+function ($) {
+define([
+  'jquery',
+], function ($) {
   'use strict';
 
   // TAB CLASS DEFINITION
@@ -122,4 +124,4 @@
     $(this).tab('show')
   })
 
-}(jQuery);
+});
