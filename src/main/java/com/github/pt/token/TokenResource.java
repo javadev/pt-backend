@@ -1,5 +1,6 @@
 package com.github.pt.token;
 
+import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,19 +17,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequestMapping("api/v1/token")
 class TokenResource {
 
-    private final InUserRepository inUserRepository;
     private final TokenService tokenService;
     
     @Autowired
-    TokenResource(InUserRepository inUserRepository, 
-            TokenService tokenService) {
-        this.inUserRepository = inUserRepository;
+    TokenResource(TokenService tokenService) {
         this.tokenService = tokenService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     List<InUser> list() {
-        return inUserRepository.findAll();
+        return Collections.emptyList();
     }
 
     @RequestMapping(method = RequestMethod.POST)

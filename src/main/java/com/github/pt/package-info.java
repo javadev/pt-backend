@@ -1,5 +1,5 @@
 /**
- * <h1>Dispatch api.</h1>
+ * <h1>Personal Trainer api.</h1>
  *
  * <h2>Design guidelines</h2>
  * <ul>

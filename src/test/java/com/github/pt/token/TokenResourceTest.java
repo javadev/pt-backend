@@ -4,25 +4,16 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.runner.RunWith;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TokenResourceTest {
 
-    @Mock
-    private InUserRepository inUserRepository;
-    
-    @Mock
-    private InUserLoginRepository inUserLoginRepository;
-
-    @Mock
-    private InUserLogoutRepository inUserLogoutRepository;
-    
     @Mock
     private TokenService tokenService;    
     
@@ -30,8 +21,13 @@ public class TokenResourceTest {
     private TokenResource tokenResource;
 
     @Test
-    public void testCreate() throws Exception {
-        
+    public void create() {
+        tokenResource.create(new TokenRequestDTO(), new MockHttpServletRequest());
+        verify(tokenService).createOrReadNewToken(any(TokenRequestDTO.class), anyString());
     }
 
+    public void delete() throws Exception {
+        tokenResource.delete("", new MockHttpServletRequest());
+        verify(tokenService).deleteToken(anyString(), anyString());
+    }
 }

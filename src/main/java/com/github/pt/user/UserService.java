@@ -39,6 +39,22 @@ public class UserService {
         return inUserLogins.get(inUserLogins.size() - 1);
     }
 
+    UserResponseDTO findOne(String token) {
+        final InUser inUser = checkUserToken(token).getInUser();
+        UserResponseDTO userResponse = new UserResponseDTO();
+        userResponse.setGender(inUser.getD_sex());
+        if (inUser.getAge() != null) {
+            userResponse.setAge(inUser.getAge().longValue());
+        }
+        if (inUser.getHeight() != null) {
+            userResponse.setHeight(inUser.getHeight().longValue());
+        }
+        if (inUser.getWeight() != null) {
+            userResponse.setWeight(inUser.getWeight().longValue());
+        }
+        return userResponse;        
+    }
+
     void updateUser(String token, UserRequestDTO userRequest) {
         final InUserLogin inUserLogin = checkUserToken(token);
         final InUser inUser = inUserLogin.getInUser();
@@ -56,10 +72,5 @@ public class UserService {
         }
         inUser.setUpdated(LocalDateTime.now());
         inUserRepository.save(inUser);
-    }
-
-    InUser findOne(String token) {
-        final InUserLogin inUserLogin = checkUserToken(token);
-        return inUserLogin.getInUser();
     }
 }

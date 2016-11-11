@@ -1,7 +1,5 @@
 package com.github.pt.user;
 
-import com.github.pt.token.InUser;
-import com.github.pt.token.InUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,31 +14,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequestMapping("api/v1/user")
 class UserResource {
 
-    private final InUserRepository inUserRepository;
     private final UserService userService;
     
     @Autowired
-    UserResource(InUserRepository inUserRepository,
-            UserService userService) {
-        this.inUserRepository = inUserRepository;
+    UserResource(UserService userService) {
         this.userService = userService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     UserResponseDTO findOne(@RequestHeader(value = "X-Token") String token) {
-        InUser inUser = userService.findOne(token);
-        UserResponseDTO userResponse = new UserResponseDTO();
-        userResponse.setGender(inUser.getD_sex());
-        if (inUser.getAge() != null) {
-            userResponse.setAge(inUser.getAge().longValue());
-        }
-        if (inUser.getHeight() != null) {
-            userResponse.setHeight(inUser.getHeight().longValue());
-        }
-        if (inUser.getWeight() != null) {
-            userResponse.setWeight(inUser.getWeight().longValue());
-        }
-        return userResponse;
+        return userService.findOne(token);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
