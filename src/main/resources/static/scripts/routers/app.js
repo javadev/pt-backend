@@ -10,6 +10,7 @@ function(Marionette, App) {
   return Marionette.AppRouter.extend({
     //`index` etc must be a method in AppRouter's controller
     appRoutes: {
+      '': 'index'
     },
     initialize: function (options) {
       var controller = options.controller;
@@ -17,16 +18,6 @@ function(Marionette, App) {
         controller.index();
         this.navigate('');
       }, this);
-
-      App.vent.on('login:required', function() {
-        controller.login();
-        this.navigate('login');
-      }, this);
-
-      App.vent.on('filter:selected', function(params) {
-        this.navigate('filter?' + params);
-      }, this);
-
     }
   });
 });

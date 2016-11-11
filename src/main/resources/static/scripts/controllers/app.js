@@ -3,20 +3,48 @@
 define([
   'jquery',
   'underscore',
-  'backbone',
-  'marionette'
+  'marionette',
+  'app',
+  'models/users',
+  'views/users'
 ],
-  function($, _, Backbone, Marionette) {
+  function($, _, Marionette, App, UsersModels, UsersViews) {
   'use strict';
 
+    function setupApplicationLayout(filterData) {
+      var applicationLayout = new UsersViews.Layout();
+      var users = new UsersModels.Users();
+        var usersView = new UsersViews.Users({
+          collection: users
+        });
+        users.fetch();
+        users.on('user:new', function(model) {
+          var user = new UsersModels.User();
+          if (!_.isUndefined(model)) {
+            user.set({
+              id: model.get('id'),
+              name: model.get('name')
+            });
+          }
+          var userEditView = new UsersViews.NewUserLayout({
+            model: user
+          });
+          user.on('user:back', function() {
+            var usersView = new UsersViews.Users({
+              collection: users
+            });
+            users.fetch();
+            applicationLayout.mainUsers.show(usersView);
+          });
+          applicationLayout.mainUsers.show(userEditView);
+        });
+        App.mainRegion.show(applicationLayout);
+        applicationLayout.mainUsers.show(usersView);
+    }
+    
     return Marionette.Controller.extend({
-      login: function() {
-        // If the user is already logged in,
-        // show the default route.
-        if (App.globals.user.authorized()) {
-          App.vent.trigger('redirect:default');
-          return;
-        }
-      },
+      index: function () {
+        setupApplicationLayout('');
+      }
     });
   });
