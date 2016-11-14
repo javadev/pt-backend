@@ -2,6 +2,7 @@ package com.github.pt.exercises;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.time.LocalDateTime;
+import javax.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,14 +27,15 @@ import org.hibernate.annotations.DynamicInsert;
 @Entity
 @Table (name = "exercise", schema = "ptcore")
 @DynamicInsert
-class Exercise {
+public class Exercise {
     @Id
     @SequenceGenerator(name = "ExerciseIdSequence", sequenceName = "ptcore.exercise_id_seq",
             allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ExerciseIdSequence")
     Long id;
     LocalDateTime created;
-    String d_exercise_name;
+    @Column(name = "d_exercise_name")
+    String dExerciseName;
     @ManyToOne
     @JoinColumn(name="exercise_category_id")
     @JsonBackReference

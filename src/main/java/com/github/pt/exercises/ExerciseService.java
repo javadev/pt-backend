@@ -31,16 +31,16 @@ class ExerciseService {
         List<Exercise> exercises = exerciseRepository.findAll();
         return exercises.stream().map(exercise -> {
             ExerciseDTO exerciseDTO = new ExerciseDTO();
-            exerciseDTO.setId(Long.parseLong(exercise.getD_exercise_name()));
+            exerciseDTO.setId(Long.parseLong(exercise.getDExerciseName()));
             List<DictionaryData> exerciseNames = dictionaryRepository.
-                    findDictionaryValue(DictionaryRepository.EXERCISE_NAME, exercise.getD_exercise_name(),
+                    findDictionaryValue(DictionaryRepository.EXERCISE_NAME, exercise.getDExerciseName(),
                             LocalDateTime.now());
             exerciseDTO.setName(exerciseNames.get(0).getDvalue());
             ExerciseCategoryDTO categoryDTO = new ExerciseCategoryDTO();
-            categoryDTO.setId(Long.parseLong(exercise.getExerciseCategory().getD_exercise_category_name()));
+            categoryDTO.setId(Long.parseLong(exercise.getExerciseCategory().getDExerciseCategoryName()));
             List<DictionaryData> exerciseCategoryNames = dictionaryRepository.
                     findDictionaryValue(DictionaryRepository.EXERCISE_CATEGORY_NAME,
-                            exercise.getExerciseCategory().getD_exercise_category_name(), LocalDateTime.now());
+                            exercise.getExerciseCategory().getDExerciseCategoryName(), LocalDateTime.now());
             categoryDTO.setName(exerciseCategoryNames.get(0).getDvalue());
             exerciseDTO.setCategory(categoryDTO);
             return exerciseDTO;

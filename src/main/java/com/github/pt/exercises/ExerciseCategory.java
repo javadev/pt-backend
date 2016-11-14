@@ -2,6 +2,7 @@ package com.github.pt.exercises;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,14 +26,15 @@ import org.hibernate.annotations.DynamicInsert;
 @Entity
 @Table (name = "exercise_category", schema = "ptcore")
 @DynamicInsert
-class ExerciseCategory {
+public class ExerciseCategory {
     @Id
     @SequenceGenerator(name = "ExerciseCategoryIdSequence", sequenceName = "ptcore.exercise_category_id_seq",
             allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ExerciseCategoryIdSequence")
     Long id;
     LocalDateTime created;
-    String d_exercise_category_name;
+    @Column(name = "d_exercise_category_name")
+    String dExerciseCategoryName;
     @OneToMany(mappedBy="exerciseCategory")
     List<Exercise> exercise;
 }
