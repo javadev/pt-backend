@@ -15,6 +15,7 @@ import lombok.Builder;
 @Builder
 class ExerciseResponseDTO {
     Long id;
+    Long labelId;
     String nameEn;
     String nameNo;
     ExerciseResponseCategoryDTO category;    

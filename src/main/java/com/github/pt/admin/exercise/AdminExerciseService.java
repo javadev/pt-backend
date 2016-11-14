@@ -6,6 +6,7 @@ import com.github.pt.dictionary.DictionaryRepository;
 import com.github.pt.exercises.Exercise;
 import com.github.pt.exercises.ExerciseCategory;
 import com.github.pt.exercises.ExerciseRepository;
+import com.google.common.primitives.Longs;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,6 +55,7 @@ class AdminExerciseService {
                         exercise.getExerciseCategory().getDExerciseCategoryName(), LocalDateTime.now());
         return ExerciseResponseDTO.builder()
                 .id(exercise.getId())
+                .labelId(Longs.tryParse(exercise.getDExerciseName()))
                 .nameEn(exerciseEnNames.isEmpty() ? "" : exerciseEnNames.get(0).getDvalue())
                 .nameNo(exerciseNoNames.isEmpty() ? "" : exerciseNoNames.get(0).getDvalue())
                 .category(ExerciseResponseCategoryDTO.builder()
@@ -77,12 +79,21 @@ class AdminExerciseService {
         }
         final String dataKey = getOrCreateDictionaryDataKey(exerciseRequestDTO.getNameEn(),
                 exerciseRequestDTO.getNameNo());
-        final Exercise exercise;
-        List<Exercise> exercises = exerciseRepository.findByDExerciseName(dataKey);
+        final List<Exercise> exercises = exerciseRepository.findByDExerciseName(dataKey);
         if (!exercises.isEmpty()) {
             exerciseRepository.delete(exercises);
+            for (final Exercise exercise : exercises) {
+                final List<DictionaryData> exerciseEnNames = dictionaryRepository.
+                    findDictionaryByKey(DictionaryRepository.ENG_LANGUAGE, DictionaryRepository.EXERCISE_NAME,
+                            exercise.getDExerciseName(), LocalDateTime.now());
+                dictionaryRepository.delete(exerciseEnNames);
+                final List<DictionaryData> exerciseNoNames = dictionaryRepository.
+                    findDictionaryByKey(DictionaryRepository.NOR_LANGUAGE, DictionaryRepository.EXERCISE_NAME,
+                            exercise.getDExerciseName(), LocalDateTime.now());
+                dictionaryRepository.delete(exerciseNoNames);
+            }
         }
-        exercise = new Exercise();
+        final Exercise exercise = new Exercise();
         exercise.setDExerciseName(dataKey);
         exercise.setExerciseCategory(exerciseCategoryDb);
         return exerciseToDto(exerciseRepository.save(exercise));
