@@ -54,7 +54,7 @@ class AdminExerciseService {
                         exercise.getExerciseCategory().getDExerciseCategoryName(), LocalDateTime.now());
         return ExerciseResponseDTO.builder()
                 .id(exercise.getId())
-                .nameEn(exerciseEnNames.get(0).getDvalue())
+                .nameEn(exerciseEnNames.isEmpty() ? "" : exerciseEnNames.get(0).getDvalue())
                 .nameNo(exerciseNoNames.isEmpty() ? "" : exerciseNoNames.get(0).getDvalue())
                 .category(ExerciseResponseCategoryDTO.builder()
                         .id(exercise.getExerciseCategory().getId())
@@ -83,6 +83,7 @@ class AdminExerciseService {
             exerciseRepository.delete(exercises);
         }
         exercise = new Exercise();
+        exercise.setDExerciseName(dataKey);
         exercise.setExerciseCategory(exerciseCategoryDb);
         return exerciseToDto(exerciseRepository.save(exercise));
     }

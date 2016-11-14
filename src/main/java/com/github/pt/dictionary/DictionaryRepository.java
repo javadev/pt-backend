@@ -26,6 +26,7 @@ public interface DictionaryRepository extends JpaRepository<DictionaryData, Long
             String dlanguage, String dname, String dkey, LocalDateTime currentdate);
     
     @CacheEvict(value = "dictionaryData", key = "{#p0.dlanguage, #p0.dname, #p0.dkey}")
+    @Override
     <S extends DictionaryData> S save(S service);
 
     @Query("select d from DictionaryData d where d.dlanguage = ?1 and d.dname = ?2 "
