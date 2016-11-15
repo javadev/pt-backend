@@ -3,7 +3,9 @@
 require.config({
   paths: {
     jquery: 'external/jquery',
-    bootstrapTab: 'external/bootstrp.tab',
+    bootstrapTab: 'external/bootstrap-tab',
+    bootstrapDropdown: 'external/bootstrap-dropdown',
+    bootstrapSelect: 'external/bootstrap-select',
 
     underscore: 'external/underscore',
     baseBackbone: 'external/backbone',
@@ -14,9 +16,15 @@ require.config({
     'backbone.babysitter': 'external/backbone.babysitter'
 
   },
-  shims: {
+  shim: {
     bootstrapTab: {
       deps: ['jquery']
+    },
+    bootstrapDropdown: {
+      deps: ['jquery']
+    },
+    bootstrapSelect: {
+      deps: ['jquery', 'bootstrapDropdown']
     }
   }
 });

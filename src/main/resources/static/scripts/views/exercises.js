@@ -5,7 +5,8 @@ define([
     'underscore',
     'marionette',
     'app',
-    'bootstrapTab'
+    'bootstrapTab',
+    'bootstrapSelect'
 ],
 function ($, _, Marionette, App) {
   'use strict';
@@ -141,12 +142,12 @@ function ($, _, Marionette, App) {
       inputForm: '#inputForm'
     },
     onShow: function() {
-      this.buttons.show(new NewUserButtons({model: this.model}));
-      this.inputForm.show(new NewUserInputForm({model: this.model}));
+      this.buttons.show(new NewExerciseButtons({model: this.model}));
+      this.inputForm.show(new NewExerciseInputForm({model: this.model}));
     }
   });
 
-  var NewUserButtons = Marionette.ItemView.extend({
+  var NewExerciseButtons = Marionette.ItemView.extend({
     template: _.template([
       '<div class="btn-group">',
         '<button class="btn btn-default js-back" style="margin: 10px 0 0 10px;">',
@@ -200,7 +201,7 @@ function ($, _, Marionette, App) {
     }
   });
 
-  var NewUserInputForm = Marionette.ItemView.extend({
+  var NewExerciseInputForm = Marionette.ItemView.extend({
     className: 'user-input-form',
     template: _.template([
       '<div class="form-group">',
@@ -209,6 +210,14 @@ function ($, _, Marionette, App) {
           '<p class="form-control-static">',
             ' {{ id }}',
           '</p>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Exercise category</label>',
+        '<div class="col-sm-8">',
+          '<select id="exercise-category" class="selectpicker">',
+            '{{ getCategories() }}',
+          '</select>',
         '</div>',
       '</div>',
       '<div class="form-group">',
@@ -236,6 +245,20 @@ function ($, _, Marionette, App) {
         '</div>',
       '</div>'
     ].join('')),
+    templateHelpers: function() {
+      var model = this.model;
+      return {
+        getCategories: function () {
+          var categories = model._categories || [];
+          var result = _.map(categories, function(item) {
+            return '<option value="' + item.id + '"' +
+                (model.get('category').id === item.id ? ' selected' : '') +
+                '>' + item.nameEn + '</option>';
+          });
+          return result;
+        }
+      };
+    },
     modelEvents: {
       'sync': 'render'
     },
@@ -245,6 +268,7 @@ function ($, _, Marionette, App) {
       'input #exercise-nameNo': 'inputNameNo'
     },
     ui: {
+      exerciseCategory: '#exercise-category',
       exerciseId: '#exercise-id',
       nameEn: '#exercise-nameEn',
       nameNo: '#exercise-nameNo'
@@ -257,6 +281,19 @@ function ($, _, Marionette, App) {
     },
     inputNameNo: function() {
       this.model.set('nameNo', this.ui.nameNo.val());
+    },
+    onShow: function() {
+      this.onRender();
+    },
+    onRender: function() {
+      var view = this;
+      $('.selectpicker').selectpicker({
+        style: 'btn-default',
+        size: false
+      });
+      this.ui.exerciseCategory.on('changed.bs.select', function (e) {
+        view.model.set('category', {id: parseInt(e.target.value, 10) });
+      });
     }
   });
 

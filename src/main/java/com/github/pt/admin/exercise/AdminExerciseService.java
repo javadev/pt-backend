@@ -56,7 +56,7 @@ class AdminExerciseService {
                 .exerciseId(exercise.getExercise_id())
                 .nameEn(exerciseEnNames.isEmpty() ? "" : exerciseEnNames.get(0).getDvalue())
                 .nameNo(exerciseNoNames.isEmpty() ? "" : exerciseNoNames.get(0).getDvalue())
-                .category(ExerciseResponseCategoryDTO.builder()
+                .category(ExerciseCategoryResponseDTO.builder()
                         .id(exercise.getExerciseCategory().getId())
                         .nameEn(exerciseCategoryEnNames.get(0).getDvalue())
                         .nameNo(exerciseCategoryNoNames.get(0).getDvalue())

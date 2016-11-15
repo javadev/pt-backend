@@ -13,7 +13,7 @@ define([
   function($, _, Marionette, App, UsersModels, UsersViews, ExercisesModels, ExercisesViews) {
   'use strict';
 
-    function setupApplicationLayout(filterData) {
+    function setupApplicationLayout() {
       var applicationLayout = new UsersViews.Layout();
       var users = new UsersModels.Users();
         var usersView = new UsersViews.Users({
@@ -49,11 +49,17 @@ define([
           collection: exercises
         });
         exercises.fetch();
+        $.get('/api/v1/admin/exercise-category').done(function(data) {
+          exercises._categories = data;
+          exercises.trigger('sync');
+        });
         exercises.on('exercise:new', function(model) {
           var exercise = new ExercisesModels.Exercise();
+          exercise._categories = exercises._categories;
           if (!_.isUndefined(model)) {
             exercise.set({
               id: model.get('id'),
+              category: model.get('category'),
               exerciseId: model.get('exerciseId'),
               nameEn: model.get('nameEn'),
               nameNo: model.get('nameNo')

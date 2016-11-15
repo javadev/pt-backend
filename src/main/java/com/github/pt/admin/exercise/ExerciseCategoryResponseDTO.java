@@ -13,7 +13,7 @@ import lombok.Builder;
 @Getter
 @Setter
 @Builder
-class ExerciseResponseCategoryDTO {
+class ExerciseCategoryResponseDTO {
     Long id;
     String nameEn;
     String nameNo;

@@ -18,5 +18,5 @@ class ExerciseResponseDTO {
     Long exerciseId;
     String nameEn;
     String nameNo;
-    ExerciseResponseCategoryDTO category;    
+    ExerciseCategoryResponseDTO category;    
 }
