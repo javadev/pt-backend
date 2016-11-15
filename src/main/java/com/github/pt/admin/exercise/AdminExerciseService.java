@@ -6,18 +6,14 @@ import com.github.pt.dictionary.DictionaryRepository;
 import com.github.pt.exercises.Exercise;
 import com.github.pt.exercises.ExerciseCategory;
 import com.github.pt.exercises.ExerciseRepository;
-import com.google.common.primitives.Longs;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
 class AdminExerciseService {
-    private static final Logger LOG = LoggerFactory.getLogger(AdminExerciseService.class);    
     private final ExerciseRepository exerciseRepository;
     private final ExerciseCategoryRepository exerciseCategoryRepository;
     private final DictionaryRepository dictionaryRepository;
@@ -139,6 +135,9 @@ class AdminExerciseService {
 
     ExerciseResponseDTO delete(Long id) {
         final Exercise exercise = exerciseRepository.findOne(id);
+        if (exercise == null) {
+            throw new ResourceNotFoundException("Exercise with id " + id + " not found.");
+        }
         final List<DictionaryData> datasEng = dictionaryRepository.findDictionaryByKey(
                 DictionaryRepository.ENG_LANGUAGE, DictionaryRepository.EXERCISE_NAME,
                 exercise.getDExerciseName(), LocalDateTime.now());
