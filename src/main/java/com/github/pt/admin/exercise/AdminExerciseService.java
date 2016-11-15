@@ -10,12 +10,14 @@ import com.google.common.primitives.Longs;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
 class AdminExerciseService {
-    
+    private static final Logger LOG = LoggerFactory.getLogger(AdminExerciseService.class);    
     private final ExerciseRepository exerciseRepository;
     private final ExerciseCategoryRepository exerciseCategoryRepository;
     private final DictionaryRepository dictionaryRepository;
@@ -55,7 +57,7 @@ class AdminExerciseService {
                         exercise.getExerciseCategory().getDExerciseCategoryName(), LocalDateTime.now());
         return ExerciseResponseDTO.builder()
                 .id(exercise.getId())
-                .labelId(Longs.tryParse(exercise.getDExerciseName()))
+                .exerciseId(exercise.getExercise_id())
                 .nameEn(exerciseEnNames.isEmpty() ? "" : exerciseEnNames.get(0).getDvalue())
                 .nameNo(exerciseNoNames.isEmpty() ? "" : exerciseNoNames.get(0).getDvalue())
                 .category(ExerciseResponseCategoryDTO.builder()
@@ -67,7 +69,11 @@ class AdminExerciseService {
     }
 
     ExerciseResponseDTO findOne(Long id) {
-        return exerciseToDto(exerciseRepository.findOne(id));
+        final Exercise exercise = exerciseRepository.findOne(id);
+        if (exercise == null) {
+            throw new ResourceNotFoundException("Exercise with id " + id + " not found.");
+        }
+        return exerciseToDto(exercise);
     }
 
     ExerciseResponseDTO create(ExerciseRequestDTO exerciseRequestDTO) {
@@ -77,24 +83,11 @@ class AdminExerciseService {
             throw new ResourceNotFoundException("Category not found in database: "
                     + exerciseRequestDTO.getCategory().getId());
         }
-        final String dataKey = getOrCreateDictionaryDataKey(exerciseRequestDTO.getNameEn(),
-                exerciseRequestDTO.getNameNo());
-        final List<Exercise> exercises = exerciseRepository.findByDExerciseName(dataKey);
-        if (!exercises.isEmpty()) {
-            exerciseRepository.delete(exercises);
-            for (final Exercise exercise : exercises) {
-                final List<DictionaryData> exerciseEnNames = dictionaryRepository.
-                    findDictionaryByKey(DictionaryRepository.ENG_LANGUAGE, DictionaryRepository.EXERCISE_NAME,
-                            exercise.getDExerciseName(), LocalDateTime.now());
-                dictionaryRepository.delete(exerciseEnNames);
-                final List<DictionaryData> exerciseNoNames = dictionaryRepository.
-                    findDictionaryByKey(DictionaryRepository.NOR_LANGUAGE, DictionaryRepository.EXERCISE_NAME,
-                            exercise.getDExerciseName(), LocalDateTime.now());
-                dictionaryRepository.delete(exerciseNoNames);
-            }
-        }
+        final String dataKey = getNewDictionaryDataKey();
+        createDictionaryDataKey(dataKey, exerciseRequestDTO.getNameEn(), exerciseRequestDTO.getNameNo());
         final Exercise exercise = new Exercise();
         exercise.setDExerciseName(dataKey);
+        exercise.setExercise_id(exerciseRequestDTO.getExerciseId());
         exercise.setExerciseCategory(exerciseCategoryDb);
         return exerciseToDto(exerciseRepository.save(exercise));
     }
@@ -109,38 +102,19 @@ class AdminExerciseService {
         return "" + (Integer.parseInt(biggestKey) + 10);
     }
 
-    private String getOrCreateDictionaryDataKey(String exerciseNameEn, String exerciseNameNo) {
-        final List<DictionaryData> exerciseEnNames = dictionaryRepository.
-                findDictionaryByValue(DictionaryRepository.ENG_LANGUAGE, DictionaryRepository.EXERCISE_NAME,
-                        exerciseNameEn, LocalDateTime.now());
-        final DictionaryData dataEn;
-        if (exerciseEnNames.isEmpty()) {
-            dataEn = new DictionaryData();
-            dataEn.setDlanguage(DictionaryRepository.ENG_LANGUAGE);
-            dataEn.setDname(DictionaryRepository.EXERCISE_NAME);
-            dataEn.setDkey(getNewDictionaryDataKey());
-            dataEn.setDvalue(exerciseNameEn);
-        } else {
-            dataEn = exerciseEnNames.get(0);
-            dataEn.setDvalue(exerciseNameEn);
-        }
+    private void createDictionaryDataKey(String dKey, String exerciseNameEn, String exerciseNameNo) {
+        final DictionaryData dataEn = new DictionaryData();
+        dataEn.setDlanguage(DictionaryRepository.ENG_LANGUAGE);
+        dataEn.setDname(DictionaryRepository.EXERCISE_NAME);
+        dataEn.setDkey(dKey);
+        dataEn.setDvalue(exerciseNameEn);
         dictionaryRepository.save(dataEn);
-        final List<DictionaryData> exerciseNoNames = dictionaryRepository.
-                findDictionaryByKey(DictionaryRepository.NOR_LANGUAGE, DictionaryRepository.EXERCISE_NAME,
-                        dataEn.getDkey(), LocalDateTime.now());
-        final DictionaryData dataNo;
-        if (exerciseNoNames.isEmpty()) {
-            dataNo = new DictionaryData();
-            dataNo.setDlanguage(DictionaryRepository.NOR_LANGUAGE);
-            dataNo.setDname(DictionaryRepository.EXERCISE_NAME);
-            dataNo.setDkey(dataEn.getDkey());
-            dataNo.setDvalue(exerciseNameNo);
-        } else {
-            dataNo = exerciseNoNames.get(0);
-            dataNo.setDvalue(exerciseNameNo);
-        }
+        final DictionaryData dataNo = new DictionaryData();
+        dataNo.setDlanguage(DictionaryRepository.NOR_LANGUAGE);
+        dataNo.setDname(DictionaryRepository.EXERCISE_NAME);
+        dataNo.setDkey(dKey);
+        dataNo.setDvalue(exerciseNameNo);
         dictionaryRepository.save(dataNo);
-        return dataEn.getDkey();
     }
 
     ExerciseResponseDTO update(Long id, ExerciseRequestDTO exerciseRequestDTO) {
@@ -148,8 +122,8 @@ class AdminExerciseService {
         if (existedExercise == null) {
             throw new ResourceNotFoundException("Exercise with id not found: " + id);
         }
-        final String dataKey = getOrCreateDictionaryDataKey(
-                exerciseRequestDTO.getNameEn(), exerciseRequestDTO.getNameNo());
+        final String dataKey = existedExercise.getDExerciseName();
+        createDictionaryDataKey(dataKey, exerciseRequestDTO.getNameEn(), exerciseRequestDTO.getNameNo());
         final ExerciseCategory exerciseCategoryDb = exerciseCategoryRepository
             .findOne(exerciseRequestDTO.getCategory().getId());
         if (exerciseCategoryDb == null) {
@@ -158,12 +132,22 @@ class AdminExerciseService {
         }
         existedExercise.setExerciseCategory(exerciseCategoryDb);
         existedExercise.setDExerciseName(dataKey);
+        existedExercise.setExercise_id(exerciseRequestDTO.getExerciseId());
         final Exercise savedExercise = exerciseRepository.save(existedExercise);
         return exerciseToDto(savedExercise);
     }
 
     ExerciseResponseDTO delete(Long id) {
-        final ExerciseResponseDTO exerciseResponseDTO = exerciseToDto(exerciseRepository.findOne(id));
+        final Exercise exercise = exerciseRepository.findOne(id);
+        final List<DictionaryData> datasEng = dictionaryRepository.findDictionaryByKey(
+                DictionaryRepository.ENG_LANGUAGE, DictionaryRepository.EXERCISE_NAME,
+                exercise.getDExerciseName(), LocalDateTime.now());
+        dictionaryRepository.delete(datasEng);
+        final List<DictionaryData> datasNor = dictionaryRepository.findDictionaryByKey(
+                DictionaryRepository.NOR_LANGUAGE, DictionaryRepository.EXERCISE_NAME,
+                exercise.getDExerciseName(), LocalDateTime.now());
+        dictionaryRepository.delete(datasNor);
+        final ExerciseResponseDTO exerciseResponseDTO = exerciseToDto(exercise);
         exerciseRepository.delete(id);
         return exerciseResponseDTO;
     }

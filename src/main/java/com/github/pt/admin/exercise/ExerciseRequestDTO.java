@@ -12,6 +12,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 class ExerciseRequestDTO {
+    Long exerciseId;
     String nameEn;
     String nameNo;
     ExerciseCategoryRequestDTO category;
