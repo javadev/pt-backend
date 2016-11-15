@@ -6,9 +6,11 @@ define([
   'marionette',
   'app',
   'models/users',
-  'views/users'
+  'views/users',
+  'models/exercises',
+  'views/exercises'
 ],
-  function($, _, Marionette, App, UsersModels, UsersViews) {
+  function($, _, Marionette, App, UsersModels, UsersViews, ExercisesModels, ExercisesViews) {
   'use strict';
 
     function setupApplicationLayout(filterData) {
@@ -39,7 +41,37 @@ define([
           applicationLayout.mainUsers.show(userEditView);
         });
         App.mainRegion.show(applicationLayout);
+
         applicationLayout.mainUsers.show(usersView);
+        
+        var exercises = new ExercisesModels.Exercises();
+        var exercisesView = new ExercisesViews.Exercises({
+          collection: exercises
+        });
+        exercises.fetch();
+        exercises.on('exercise:new', function(model) {
+          var exercise = new ExercisesModels.Exercise();
+          if (!_.isUndefined(model)) {
+            exercise.set({
+              id: model.get('id'),
+              exerciseId: model.get('exerciseId'),
+              nameEn: model.get('nameEn'),
+              nameNo: model.get('nameNo')
+            });
+          }
+          var exerciseEditView = new ExercisesViews.NewExerciseLayout({
+            model: exercise
+          });
+          exercise.on('exercise:back', function() {
+            var exercisesView = new ExercisesViews.Exercises({
+              collection: exercises
+            });
+            exercises.fetch();
+            applicationLayout.mainExercises.show(exercisesView);
+          });
+          applicationLayout.mainExercises.show(exerciseEditView);
+        });
+        applicationLayout.mainExercises.show(exercisesView);
     }
     
     return Marionette.Controller.extend({
