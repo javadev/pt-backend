@@ -50,7 +50,7 @@ define([
         });
         exercises.fetch();
         $.get('/api/v1/admin/exercise-category').done(function(data) {
-          exercises._categories = data;
+          exercises._categories = _.union({id: null, nameEn: ''}, data);
           exercises.trigger('sync');
         });
         exercises.on('exercise:new', function(model) {

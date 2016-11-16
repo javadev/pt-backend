@@ -251,9 +251,12 @@ function ($, _, Marionette, App) {
         getCategories: function () {
           var categories = model._categories || [];
           var result = _.map(categories, function(item) {
+            if (_.isNull(item.id)) {
+              return '<option data-hidden="true"></option>';
+            }
             return '<option value="' + item.id + '"' +
-                (model.get('category').id === item.id ? ' selected' : '') +
-                '>' + item.nameEn + '</option>';
+              (model.get('category').id === item.id ? ' selected' : '') +
+              '>' + item.nameEn + '</option>';
           });
           return result;
         }
