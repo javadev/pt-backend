@@ -1,10 +1,8 @@
 package com.github.pt.exercises;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
@@ -29,28 +27,24 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 @Setter
 @Entity
-@Table (name = "exercise", schema = "ptcore")
+@Table (name = "exercise_type", schema = "ptcore")
 @DynamicInsert
-public class Exercise {
+public class ExerciseType {
     @Id
-    @SequenceGenerator(name = "ExerciseIdSequence", sequenceName = "ptcore.exercise_id_seq",
+    @SequenceGenerator(name = "ExerciseTypeIdSequence", sequenceName = "ptcore.exercise_type_id_seq",
             allocationSize = 1, initialValue = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ExerciseIdSequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ExerciseTypeIdSequence")
     Long id;
     LocalDateTime created;
-    @Column(name = "d_exercise_name")
-    String dExerciseName;
-    Long exercise_id;
-    @ManyToOne
-    @JoinColumn(name="exercise_category_id")
-    @JsonBackReference
-    ExerciseCategory exerciseCategory;
+    String d_exercise_type_name;
     @ManyToMany
     @JoinTable(
             name = "exercise_type_has_exercise",
             schema = "ptcore",
-            joinColumns = { @JoinColumn(name = "exercise_id") },
-            inverseJoinColumns = { @JoinColumn(name = "exercise_type_id") }
+            joinColumns = { @JoinColumn(name = "exercise_type_id") },
+            inverseJoinColumns = { @JoinColumn(name = "exercise_id") }
     )
-    List<ExerciseType> exerciseTypes = new ArrayList<>(0);
+    List<Exercise> exercises = new ArrayList<>(0);
+    @OneToMany(mappedBy="exerciseCategory")
+    List<Exercise> exercise;
 }
