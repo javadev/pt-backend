@@ -53,13 +53,19 @@ define([
           exercises._categories = _.union({id: null, nameEn: ''}, data);
           exercises.trigger('sync');
         });
+        $.get('/api/v1/admin/exercise-type').done(function(data) {
+          exercises._types = _.union({id: null, nameEn: ''}, data);
+          exercises.trigger('sync');
+        });
         exercises.on('exercise:new', function(model) {
           var exercise = new ExercisesModels.Exercise();
           exercise._categories = exercises._categories;
+          exercise._types = exercises._types;
           if (!_.isUndefined(model)) {
             exercise.set({
               id: model.get('id'),
               category: model.get('category'),
+              types: model.get('types'),
               exerciseId: model.get('exerciseId'),
               nameEn: model.get('nameEn'),
               nameNo: model.get('nameNo')

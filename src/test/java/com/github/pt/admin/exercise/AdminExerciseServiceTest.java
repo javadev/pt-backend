@@ -7,6 +7,7 @@ import com.github.pt.exercises.ExerciseCategory;
 import com.github.pt.exercises.ExerciseRepository;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -25,6 +26,8 @@ public class AdminExerciseServiceTest {
     private ExerciseRepository exerciseRepository;
     @Mock
     private ExerciseCategoryRepository exerciseCategoryRepository;
+    @Mock
+    private ExerciseTypeRepository exerciseTypeRepository;
     @Mock
     private DictionaryRepository dictionaryRepository;    
 
@@ -77,6 +80,7 @@ public class AdminExerciseServiceTest {
         exerciseRequestDTO.setCategory(new ExerciseCategoryRequestDTO(1L));
         exerciseRequestDTO.setNameEn("nameEn");
         exerciseRequestDTO.setNameEn("nameNo");
+        exerciseRequestDTO.setTypes(Collections.emptyList());
         DictionaryData dictionaryData = new DictionaryData();
         dictionaryData.setDkey("10");
         when(dictionaryRepository
@@ -124,6 +128,7 @@ public class AdminExerciseServiceTest {
         exerciseRequestDTO.setCategory(new ExerciseCategoryRequestDTO(1L));
         exerciseRequestDTO.setNameEn("nameEn");
         exerciseRequestDTO.setNameEn("nameNo");
+        exerciseRequestDTO.setTypes(Collections.emptyList());
         Exercise existedExercise = new Exercise();
         when(exerciseRepository.findOne(eq(1L))).thenReturn(existedExercise);
         DictionaryData dictionaryData = new DictionaryData();

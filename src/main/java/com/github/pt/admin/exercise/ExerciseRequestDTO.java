@@ -1,5 +1,6 @@
 package com.github.pt.admin.exercise;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,4 +17,5 @@ class ExerciseRequestDTO {
     String nameEn;
     String nameNo;
     ExerciseCategoryRequestDTO category;
+    List<ExerciseTypeRequestDTO> types;
 }

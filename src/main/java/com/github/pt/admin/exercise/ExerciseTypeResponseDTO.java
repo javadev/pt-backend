@@ -1,6 +1,5 @@
 package com.github.pt.admin.exercise;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,11 +13,8 @@ import lombok.Builder;
 @Getter
 @Setter
 @Builder
-class ExerciseResponseDTO {
+class ExerciseTypeResponseDTO {
     Long id;
-    Long exerciseId;
     String nameEn;
     String nameNo;
-    ExerciseCategoryResponseDTO category;
-    List<ExerciseTypeResponseDTO> types;
 }

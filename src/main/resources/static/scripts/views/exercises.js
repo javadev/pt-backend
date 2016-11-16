@@ -221,6 +221,14 @@ function ($, _, Marionette, App) {
         '</div>',
       '</div>',
       '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Exercise types</label>',
+        '<div class="col-sm-8">',
+          '<select id="exercise-types" class="selectpicker show-tick" multiple>',
+            '{{ getTypes() }}',
+          '</select>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
         '<label class="col-sm-3 control-label">Exercise ID</label>',
         '<div class="col-sm-8">',
           '<textarea id="exercise-id" class="form-control" rows="3" placeholder="Please enter exercise id" name="exerciseId" required="true">',
@@ -248,7 +256,7 @@ function ($, _, Marionette, App) {
     templateHelpers: function() {
       var model = this.model;
       return {
-        getCategories: function () {
+        getCategories: function() {
           var categories = model._categories || [];
           var result = _.map(categories, function(item) {
             if (_.isNull(item.id)) {
@@ -259,7 +267,21 @@ function ($, _, Marionette, App) {
               '>' + item.nameEn + '</option>';
           });
           return result;
-        }
+        },
+        getTypes: function() {
+          var types = model._types || [];
+          var modelTypes = _.map(model.get('types'), function(item) {
+             return item.id;
+          });
+          var result = _.map(types, function(item) {
+            if (_.isNull(item.id)) {
+              return '<option data-hidden="true"></option>';
+            }
+            return '<option value="' + item.id + '"' +
+              (_.contains(modelTypes, item.id) ? ' selected' : '') +
+              '>' + item.nameEn + '</option>';
+          });
+          return result;        }
       };
     },
     modelEvents: {
@@ -272,6 +294,7 @@ function ($, _, Marionette, App) {
     },
     ui: {
       exerciseCategory: '#exercise-category',
+      exerciseTypes: '#exercise-types',
       exerciseId: '#exercise-id',
       nameEn: '#exercise-nameEn',
       nameNo: '#exercise-nameNo'
@@ -296,6 +319,12 @@ function ($, _, Marionette, App) {
       });
       this.ui.exerciseCategory.on('changed.bs.select', function (e) {
         view.model.set('category', {id: parseInt(e.target.value, 10) });
+      });
+      this.ui.exerciseTypes.on('changed.bs.select', function (e) {
+        var selectedTypes = _.map(e.target.selectedOptions, function(item) {
+            return {id: parseInt(item.value, 10) };
+        });
+        view.model.set('types', selectedTypes);
       });
     }
   });

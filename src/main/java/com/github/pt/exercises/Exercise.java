@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -45,12 +46,12 @@ public class Exercise {
     @JoinColumn(name="exercise_category_id")
     @JsonBackReference
     ExerciseCategory exerciseCategory;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "exercise_type_has_exercise",
             schema = "ptcore",
             joinColumns = { @JoinColumn(name = "exercise_id") },
             inverseJoinColumns = { @JoinColumn(name = "exercise_type_id") }
     )
-    List<ExerciseType> exerciseTypes = new ArrayList<>(0);
+    List<ExerciseType> exerciseTypes = new ArrayList<>(0);;
 }

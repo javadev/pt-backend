@@ -19,6 +19,8 @@ class CachingConfig {
         final SimpleCacheManager cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(Arrays.asList(
             new ConcurrentMapCache("dictionaryData",
+                CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.DAYS).build().asMap(), false),
+            new ConcurrentMapCache("dictionaryAllData",
                 CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.DAYS).build().asMap(), false)));
         return cacheManager;
    }
