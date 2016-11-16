@@ -1,0 +1,1 @@
+CREATE INDEX dictionary_data_all_index ON ptcore.dictionary_data (dlanguage, dname, dkey, fromdate, todate);
