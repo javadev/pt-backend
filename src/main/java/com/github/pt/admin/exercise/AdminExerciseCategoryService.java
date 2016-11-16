@@ -36,7 +36,9 @@ class AdminExerciseCategoryService {
         return ExerciseCategoryResponseDTO.builder()
                 .id(category.getId())
                 .nameEn(exerciseCategoryEnNames.get(0).getDvalue())
-                .nameNo(exerciseCategoryNoNames.get(0).getDvalue())
+                .nameNo(exerciseCategoryNoNames.isEmpty() ? 
+                        exerciseCategoryEnNames.get(0).getDvalue()
+                        : exerciseCategoryNoNames.get(0).getDvalue())
                 .build();
     }
 }
