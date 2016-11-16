@@ -1,6 +1,5 @@
 package com.github.pt.programs;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,9 +11,11 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-class WorkoutResponseDTO {
+class WarmupWorkoutItemResponseDTO {
     Long id;
-    String name;
-    WarmupWorkoutItemResponseDTO warmup;
-    List<WorkoutItemResponseDTO> items;
+    Long exercise_id;
+    String exercise_name;
+    Integer speed;
+    Integer incline;
+    Integer time_in_min;
 }

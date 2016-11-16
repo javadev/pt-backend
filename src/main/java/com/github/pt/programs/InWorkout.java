@@ -41,5 +41,7 @@ public class InWorkout {
     @JsonBackReference
     InProgram inProgram;
     @OneToMany(mappedBy="inWorkout")
+    List<InWarmupWorkoutItem> inWarmupWorkoutItem;
+    @OneToMany(mappedBy="inWorkout")
     List<InWorkoutItem> inWorkoutItems;
 }

@@ -35,6 +35,13 @@ class ProgramService {
         inWorkout12.setId(2L);
         inWorkout12.setD_workout_name("Test workout 2");
         inProgram1.setInWorkouts(Arrays.asList(inWorkout11, inWorkout12));
+        InWarmupWorkoutItem inWarmupWorkoutItem111 = new InWarmupWorkoutItem();
+        inWarmupWorkoutItem111.setId(1L);
+        inWarmupWorkoutItem111.setD_exercise_id("810");
+        inWarmupWorkoutItem111.setD_exercise_name("Treadmill 11");
+        inWarmupWorkoutItem111.setIncline(4);
+        inWarmupWorkoutItem111.setTime_in_min(10);
+        inWorkout11.setInWarmupWorkoutItem(Arrays.asList(inWarmupWorkoutItem111));
         InWorkoutItem inWorkoutItem111 = new InWorkoutItem();
         inWorkoutItem111.setId(1L);
         inWorkoutItem111.setD_exercise_id("20");
@@ -50,6 +57,13 @@ class ProgramService {
         inWorkoutItem112.setRepetitions(6);
         inWorkoutItem112.setWeight(11);
         inWorkout11.setInWorkoutItems(Arrays.asList(inWorkoutItem111, inWorkoutItem112));
+        InWarmupWorkoutItem inWarmupWorkoutItem121 = new InWarmupWorkoutItem();
+        inWarmupWorkoutItem121.setId(1L);
+        inWarmupWorkoutItem121.setD_exercise_id("810");
+        inWarmupWorkoutItem121.setD_exercise_name("Treadmill 12");
+        inWarmupWorkoutItem121.setIncline(4);
+        inWarmupWorkoutItem121.setTime_in_min(10);
+        inWorkout12.setInWarmupWorkoutItem(Arrays.asList(inWarmupWorkoutItem121));
         InWorkoutItem inWorkoutItem121 = new InWorkoutItem();
         inWorkoutItem121.setId(3L);
         inWorkoutItem121.setD_exercise_id("40");
@@ -168,6 +182,17 @@ class ProgramService {
             workout.setName(inWorkout.getD_workout_name());
             workout.setItems(new ArrayList<>());
             program.getWorkouts().add(workout);
+            if (inWorkout.getInWarmupWorkoutItem() != null && !inWorkout.getInWarmupWorkoutItem().isEmpty()) {
+                InWarmupWorkoutItem inWarmupWorkoutItem = inWorkout.getInWarmupWorkoutItem().get(0);
+                WarmupWorkoutItemResponseDTO warmupWorkoutItem = new WarmupWorkoutItemResponseDTO();
+                warmupWorkoutItem.setId(inWarmupWorkoutItem.getId());
+                warmupWorkoutItem.setExercise_id(Long.parseLong(inWarmupWorkoutItem.getD_exercise_id()));
+                warmupWorkoutItem.setExercise_name(inWarmupWorkoutItem.getD_exercise_name());
+                warmupWorkoutItem.setSpeed(inWarmupWorkoutItem.getSpeed());
+                warmupWorkoutItem.setIncline(inWarmupWorkoutItem.getIncline());
+                warmupWorkoutItem.setTime_in_min(inWarmupWorkoutItem.getTime_in_min());
+                workout.setWarmup(warmupWorkoutItem);
+            }
             for (InWorkoutItem inWorkoutItem : inWorkout.getInWorkoutItems()) {
                 WorkoutItemResponseDTO workoutItem = new WorkoutItemResponseDTO();
                 workoutItem.setId(inWorkoutItem.getId());

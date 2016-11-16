@@ -2,6 +2,7 @@ package com.github.pt.programs;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,24 +25,22 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 @Setter
 @Entity
-@Table (name = "in_workout_item_report", schema = "ptcore")
+@Table (name = "in_warmup_workout_item", schema = "ptcore")
 @DynamicInsert
-public class InWorkoutItemReport {
+public class InWarmupWorkoutItem {
     @Id
-    @SequenceGenerator(name = "InWorkoutItemReportIdSequence", sequenceName = "ptcore.in_workout_item_report_id_seq",
+    @SequenceGenerator(name = "InWarmupWorkoutItemIdSequence", sequenceName = "ptcore.in_warmup_workout_item_id_seq",
             allocationSize = 1, initialValue = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "InWorkoutItemReportIdSequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "InWarmupWorkoutItemIdSequence")
     Long id;
     LocalDateTime created;
-    Integer sets;
-    Integer repetitions;
-    Integer weight;
-    Boolean bodyweight;
-    Integer time_in_min;
+    String d_exercise_id;
+    String d_exercise_name;
     Integer speed;
-    Integer resistance;
+    Integer incline;
+    Integer time_in_min;
     @ManyToOne
-    @JoinColumn(name="in_workout_item_id")
+    @JoinColumn(name="in_workout_id")
     @JsonBackReference
-    InWorkoutItem inWorkoutItem;
+    InWorkout inWorkout;
 }
