@@ -215,7 +215,7 @@ function ($, _, Marionette, App) {
       '<div class="form-group">',
         '<label class="col-sm-3 control-label">Exercise category</label>',
         '<div class="col-sm-8">',
-          '<select id="exercise-category" class="selectpicker">',
+          '<select id="exercise-category" class="selectpicker show-tick">',
             '{{ getCategories() }}',
           '</select>',
         '</div>',
