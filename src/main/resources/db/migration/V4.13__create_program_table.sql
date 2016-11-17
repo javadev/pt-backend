@@ -1,0 +1,8 @@
+CREATE TABLE ptcore.program (
+    id BIGSERIAL PRIMARY KEY NOT NULL,
+    created TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
+    name VARCHAR(200),
+    data_url TEXT,
+    updated TIMESTAMP WITHOUT TIME ZONE,
+    active BOOLEAN NOT NULL DEFAULT TRUE
+);
