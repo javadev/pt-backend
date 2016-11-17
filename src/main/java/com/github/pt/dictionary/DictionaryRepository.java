@@ -12,6 +12,7 @@ public interface DictionaryRepository extends JpaRepository<DictionaryData, Long
     String ENG_LANGUAGE = "en";
     String NOR_LANGUAGE = "nb";
     String EXERCISE_NAME = "exercise_name";
+    String EXERCISE_DESCRIPTION = "exercise_name";
     String EXERCISE_CATEGORY_NAME = "exercise_category_name";
     String EXERCISE_TYPE_NAME = "exercise_type_name";
 

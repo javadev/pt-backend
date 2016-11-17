@@ -19,6 +19,8 @@ class ExerciseResponseDTO {
     Long exerciseId;
     String nameEn;
     String nameNo;
+    String descriptionEn;
+    String descriptionNo;
     ExerciseCategoryResponseDTO category;
     List<ExerciseTypeResponseDTO> types;
 }

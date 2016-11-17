@@ -40,17 +40,25 @@ class AdminExerciseService {
     }
 
     private ExerciseResponseDTO exerciseToDto(Exercise exercise) {
-        List<DictionaryData> exerciseEnNames = dictionaryRepository.
+        final List<DictionaryData> exerciseEnNames = dictionaryRepository.
                 findDictionaryValue(DictionaryRepository.ENG_LANGUAGE,
                         DictionaryRepository.EXERCISE_NAME, exercise.getDExerciseName(),
+                        LocalDateTime.now());
+        final List<DictionaryData> exerciseNoNames = dictionaryRepository.
+                findDictionaryValue(DictionaryRepository.NOR_LANGUAGE,
+                        DictionaryRepository.EXERCISE_NAME, exercise.getDExerciseName(),
+                        LocalDateTime.now());
+        final List<DictionaryData> exerciseEnDescriptions = dictionaryRepository.
+                findDictionaryValue(DictionaryRepository.ENG_LANGUAGE,
+                        DictionaryRepository.EXERCISE_DESCRIPTION, exercise.getDExerciseDescription(),
+                        LocalDateTime.now());
+        final List<DictionaryData> exerciseNoDescriptions = dictionaryRepository.
+                findDictionaryValue(DictionaryRepository.NOR_LANGUAGE,
+                        DictionaryRepository.EXERCISE_DESCRIPTION, exercise.getDExerciseDescription(),
                         LocalDateTime.now());
         List<DictionaryData> exerciseCategoryEnNames = dictionaryRepository.
                 findDictionaryValue(DictionaryRepository.ENG_LANGUAGE, DictionaryRepository.EXERCISE_CATEGORY_NAME,
                         exercise.getExerciseCategory().getDExerciseCategoryName(), LocalDateTime.now());
-        List<DictionaryData> exerciseNoNames = dictionaryRepository.
-                findDictionaryValue(DictionaryRepository.NOR_LANGUAGE,
-                        DictionaryRepository.EXERCISE_NAME, exercise.getDExerciseName(),
-                        LocalDateTime.now());
         List<DictionaryData> exerciseCategoryNoNames = dictionaryRepository.
                 findDictionaryValue(DictionaryRepository.NOR_LANGUAGE, DictionaryRepository.EXERCISE_CATEGORY_NAME,
                         exercise.getExerciseCategory().getDExerciseCategoryName(), LocalDateTime.now());
@@ -62,6 +70,8 @@ class AdminExerciseService {
                 .exerciseId(exercise.getExercise_id())
                 .nameEn(exerciseEnNames.isEmpty() ? "" : exerciseEnNames.get(0).getDvalue())
                 .nameNo(exerciseNoNames.isEmpty() ? "" : exerciseNoNames.get(0).getDvalue())
+                .descriptionEn(exerciseEnDescriptions.isEmpty() ? "" : exerciseEnDescriptions.get(0).getDvalue())
+                .descriptionNo(exerciseNoDescriptions.isEmpty() ? "" : exerciseNoDescriptions.get(0).getDvalue())
                 .category(ExerciseCategoryResponseDTO.builder()
                         .id(exercise.getExerciseCategory().getId())
                         .nameEn(exerciseCategoryEnNames.get(0).getDvalue())
@@ -97,8 +107,12 @@ class AdminExerciseService {
         }
         final String dataKey = getNewDictionaryDataKey();
         createDictionaryDataKey(dataKey, exerciseRequestDTO.getNameEn(), exerciseRequestDTO.getNameNo());
+        final String dataDescriptionKey = getNewDictionaryDataKey();
+        createDictionaryDataKey(dataDescriptionKey, exerciseRequestDTO.getDescriptionEn(),
+            exerciseRequestDTO.getDescriptionNo());
         final Exercise exercise = new Exercise();
         exercise.setDExerciseName(dataKey);
+        exercise.setDExerciseDescription(dataDescriptionKey);
         exercise.setExercise_id(exerciseRequestDTO.getExerciseId());
         exercise.setExerciseCategory(exerciseCategoryDb);
         exercise.setExerciseTypes(exerciseTypeRepository.findAll(
@@ -138,6 +152,9 @@ class AdminExerciseService {
         }
         final String dataKey = existedExercise.getDExerciseName();
         createDictionaryDataKey(dataKey, exerciseRequestDTO.getNameEn(), exerciseRequestDTO.getNameNo());
+        final String dataDescriptionKey = existedExercise.getDExerciseDescription();
+        createDictionaryDataKey(dataDescriptionKey, exerciseRequestDTO.getDescriptionEn(),
+                exerciseRequestDTO.getDescriptionNo());
         final ExerciseCategory exerciseCategoryDb = exerciseCategoryRepository
             .findOne(exerciseRequestDTO.getCategory().getId());
         if (exerciseCategoryDb == null) {
@@ -146,6 +163,7 @@ class AdminExerciseService {
         }
         existedExercise.setExerciseCategory(exerciseCategoryDb);
         existedExercise.setDExerciseName(dataKey);
+        existedExercise.setDExerciseDescription(dataDescriptionKey);
         existedExercise.setExercise_id(exerciseRequestDTO.getExerciseId());
         existedExercise.setExerciseTypes(exerciseTypeRepository.findAll(
                 exerciseRequestDTO.getTypes().stream().map(type -> type.getId()).collect(Collectors.toList())));
@@ -166,6 +184,14 @@ class AdminExerciseService {
                 DictionaryRepository.NOR_LANGUAGE, DictionaryRepository.EXERCISE_NAME,
                 exercise.getDExerciseName(), LocalDateTime.now());
         dictionaryRepository.delete(datasNor);
+        final List<DictionaryData> datasDescEng = dictionaryRepository.findDictionaryByKey(
+                DictionaryRepository.ENG_LANGUAGE, DictionaryRepository.EXERCISE_DESCRIPTION,
+                exercise.getDExerciseName(), LocalDateTime.now());
+        dictionaryRepository.delete(datasDescEng);
+        final List<DictionaryData> datasDescNor = dictionaryRepository.findDictionaryByKey(
+                DictionaryRepository.NOR_LANGUAGE, DictionaryRepository.EXERCISE_DESCRIPTION,
+                exercise.getDExerciseName(), LocalDateTime.now());
+        dictionaryRepository.delete(datasDescNor);
         final ExerciseResponseDTO exerciseResponseDTO = exerciseToDto(exercise);
         exerciseRepository.delete(id);
         return exerciseResponseDTO;

@@ -16,6 +16,8 @@ class ExerciseRequestDTO {
     Long exerciseId;
     String nameEn;
     String nameNo;
+    String descriptionEn;
+    String descriptionNo;
     ExerciseCategoryRequestDTO category;
     List<ExerciseTypeRequestDTO> types;
 }

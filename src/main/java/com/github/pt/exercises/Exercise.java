@@ -41,6 +41,8 @@ public class Exercise {
     LocalDateTime created;
     @Column(name = "d_exercise_name")
     String dExerciseName;
+    @Column(name = "d_exercise_description")
+    String dExerciseDescription;
     Long exercise_id;
     @ManyToOne
     @JoinColumn(name="exercise_category_id")
