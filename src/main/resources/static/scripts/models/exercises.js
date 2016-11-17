@@ -14,6 +14,8 @@ define([
         'exerciseId': null,
         'nameEn': null,
         'nameNo': null,
+        'descriptionEn': null,
+        'descriptionNo': null,
         'category': {
           'id' : null
         }

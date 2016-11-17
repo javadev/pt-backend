@@ -255,6 +255,22 @@ function ($, _, Marionette, App) {
             '{{ nameNo }}',
           '</textarea>',
         '</div>',
+      '</div>',
+      '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Description in English</label>',
+        '<div class="col-sm-8">',
+          '<textarea id="exercise-descriptionEn" class="form-control" rows="3" placeholder="Please enter description in English" name="descriptionEn" required="true">',
+            '{{ descriptionEn }}',
+          '</textarea>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Description in Norwegian</label>',
+        '<div class="col-sm-8">',
+          '<textarea id="exercise-descriptionEn" class="form-control" rows="3" placeholder="Please enter description in Norwegian" name="descriptionNo" required="true">',
+            '{{ descriptionNo }}',
+          '</textarea>',
+        '</div>',
       '</div>'
     ].join('')),
     templateHelpers: function() {
@@ -294,14 +310,18 @@ function ($, _, Marionette, App) {
     events: {
       'input #exercise-id': 'inputId',
       'input #exercise-nameEn': 'inputNameEn',
-      'input #exercise-nameNo': 'inputNameNo'
+      'input #exercise-nameNo': 'inputNameNo',
+      'input #exercise-descriptionEn': 'inputDescriptionEn',
+      'input #exercise-descriptionNo': 'inputDescriptionNo'
     },
     ui: {
       exerciseCategory: '#exercise-category',
       exerciseTypes: '#exercise-types',
       exerciseId: '#exercise-id',
       nameEn: '#exercise-nameEn',
-      nameNo: '#exercise-nameNo'
+      nameNo: '#exercise-nameNo',
+      descriptionEn: '#exercise-descriptionEn',
+      descriptionNo: '#exercise-descriptionNo'
     },
     inputId: function() {
       this.model.set('exerciseId', this.ui.exerciseId.val());
@@ -311,6 +331,12 @@ function ($, _, Marionette, App) {
     },
     inputNameNo: function() {
       this.model.set('nameNo', this.ui.nameNo.val());
+    },
+    inputDescriptionEn: function() {
+      this.model.set('descriptionEn', this.ui.descriptionEn.val());
+    },
+    inputDescriptionNo: function() {
+      this.model.set('descriptionNo', this.ui.descriptionNo.val());
     },
     onShow: function() {
       this.onRender();

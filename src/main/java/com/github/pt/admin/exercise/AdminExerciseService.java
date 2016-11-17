@@ -105,11 +105,12 @@ class AdminExerciseService {
             throw new ResourceNotFoundException("Category not found in database: "
                     + exerciseRequestDTO.getCategory().getId());
         }
-        final String dataKey = getNewDictionaryDataKey();
-        createDictionaryDataKey(dataKey, exerciseRequestDTO.getNameEn(), exerciseRequestDTO.getNameNo());
-        final String dataDescriptionKey = getNewDictionaryDataKey();
-        createDictionaryDataKey(dataDescriptionKey, exerciseRequestDTO.getDescriptionEn(),
-            exerciseRequestDTO.getDescriptionNo());
+        final String dataKey = getNewDictionaryDataKey(DictionaryRepository.EXERCISE_NAME);
+        createDictionaryDataKey(DictionaryRepository.EXERCISE_NAME, dataKey,
+                exerciseRequestDTO.getNameEn(), exerciseRequestDTO.getNameNo());
+        final String dataDescriptionKey = getNewDictionaryDataKey(DictionaryRepository.EXERCISE_DESCRIPTION);
+        createDictionaryDataKey(DictionaryRepository.EXERCISE_DESCRIPTION, dataDescriptionKey,
+                exerciseRequestDTO.getDescriptionEn(), exerciseRequestDTO.getDescriptionNo());
         final Exercise exercise = new Exercise();
         exercise.setDExerciseName(dataKey);
         exercise.setDExerciseDescription(dataDescriptionKey);
@@ -120,26 +121,31 @@ class AdminExerciseService {
         return exerciseToDto(exerciseRepository.save(exercise));
     }
 
-    private String getNewDictionaryDataKey() {
+    private String getNewDictionaryDataKey(String dName) {
         final List<DictionaryData> allExerciseEnNames = dictionaryRepository.
                 findDictionaryAllValues(DictionaryRepository.ENG_LANGUAGE,
-                        DictionaryRepository.EXERCISE_NAME, LocalDateTime.now());
-        final String biggestKey =  allExerciseEnNames.stream().sorted((d1, d2) ->
-                Integer.compare(Integer.parseInt(d2.getDkey()), Integer.parseInt(d1.getDkey())))
+                        dName, LocalDateTime.now());
+        if (allExerciseEnNames == null) {
+            return "10";
+        }
+        final String biggestKey =  allExerciseEnNames.stream()
+                .filter(data -> data.getDkey() != null && data.getDkey().matches("\\d+"))
+                .sorted((d1, d2) ->
+                        Integer.compare(Integer.parseInt(d2.getDkey()), Integer.parseInt(d1.getDkey())))
                     .findFirst().get().getDkey();
         return "" + (Integer.parseInt(biggestKey) + 10);
     }
 
-    private void createDictionaryDataKey(String dKey, String exerciseNameEn, String exerciseNameNo) {
+    private void createDictionaryDataKey(String dName, String dKey, String exerciseNameEn, String exerciseNameNo) {
         final DictionaryData dataEn = new DictionaryData();
         dataEn.setDlanguage(DictionaryRepository.ENG_LANGUAGE);
-        dataEn.setDname(DictionaryRepository.EXERCISE_NAME);
+        dataEn.setDname(dName);
         dataEn.setDkey(dKey);
         dataEn.setDvalue(exerciseNameEn);
         dictionaryRepository.save(dataEn);
         final DictionaryData dataNo = new DictionaryData();
         dataNo.setDlanguage(DictionaryRepository.NOR_LANGUAGE);
-        dataNo.setDname(DictionaryRepository.EXERCISE_NAME);
+        dataNo.setDname(dName);
         dataNo.setDkey(dKey);
         dataNo.setDvalue(exerciseNameNo);
         dictionaryRepository.save(dataNo);
@@ -151,9 +157,13 @@ class AdminExerciseService {
             throw new ResourceNotFoundException("Exercise with id not found: " + id);
         }
         final String dataKey = existedExercise.getDExerciseName();
-        createDictionaryDataKey(dataKey, exerciseRequestDTO.getNameEn(), exerciseRequestDTO.getNameNo());
-        final String dataDescriptionKey = existedExercise.getDExerciseDescription();
-        createDictionaryDataKey(dataDescriptionKey, exerciseRequestDTO.getDescriptionEn(),
+        createDictionaryDataKey(DictionaryRepository.EXERCISE_NAME, dataKey,
+                exerciseRequestDTO.getNameEn(), exerciseRequestDTO.getNameNo());
+        final String dataDescriptionKey = existedExercise.getDExerciseDescription() == null
+                ? getNewDictionaryDataKey(DictionaryRepository.EXERCISE_DESCRIPTION)
+                : existedExercise.getDExerciseDescription();
+        createDictionaryDataKey(DictionaryRepository.EXERCISE_DESCRIPTION,
+                dataDescriptionKey, exerciseRequestDTO.getDescriptionEn(),
                 exerciseRequestDTO.getDescriptionNo());
         final ExerciseCategory exerciseCategoryDb = exerciseCategoryRepository
             .findOne(exerciseRequestDTO.getCategory().getId());

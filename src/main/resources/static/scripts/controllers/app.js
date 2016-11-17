@@ -71,7 +71,9 @@ define([
               types: model.get('types'),
               exerciseId: model.get('exerciseId'),
               nameEn: model.get('nameEn'),
-              nameNo: model.get('nameNo')
+              nameNo: model.get('nameNo'),
+              descriptionEn: model.get('descriptionEn'),
+              descriptionNo: model.get('descriptionNo')
             });
           }
           var exerciseEditView = new ExercisesViews.NewExerciseLayout({
