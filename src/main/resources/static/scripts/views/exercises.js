@@ -13,7 +13,7 @@ function ($, _, Marionette, App) {
 
   var EmptyView = Marionette.ItemView.extend({
         tagName: 'tr',
-        template: _.template('<td colspan="6">There are no exercises available.</td>')
+        template: _.template('<td colspan="7">There are no exercises available.</td>')
   });
 
   var User = Marionette.ItemView.extend({
@@ -30,6 +30,9 @@ function ($, _, Marionette, App) {
       '</td>',
       '<td>',
         '{{ category.nameEn }}',
+      '</td>',
+      '<td>',
+        '{{ _.map(types, function(item) {return item.nameEn;}).join(", ") }}',
       '</td>',
       '<td>',
         '<button type="button" class="btn btn-default btn-sm js-edit-value">',
@@ -98,6 +101,7 @@ function ($, _, Marionette, App) {
             '<th>Name in English</th>',
             '<th>Name in Norwegian</th>',
             '<th>Category</th>',
+            '<th>Types</th>',
             '<th></th>',
             '<th></th>',
           '</tr>',
