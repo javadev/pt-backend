@@ -1,0 +1,1 @@
+ALTER TABLE ptcore.exercise ADD COLUMN d_exercise_description VARCHAR(45);
