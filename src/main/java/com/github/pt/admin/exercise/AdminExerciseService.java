@@ -125,7 +125,7 @@ class AdminExerciseService {
         final List<DictionaryData> allExerciseEnNames = dictionaryRepository.
                 findDictionaryAllValues(DictionaryRepository.ENG_LANGUAGE,
                         dName, LocalDateTime.now());
-        if (allExerciseEnNames == null) {
+        if (allExerciseEnNames == null || allExerciseEnNames.isEmpty()) {
             return "10";
         }
         final String biggestKey =  allExerciseEnNames.stream()
