@@ -2,6 +2,7 @@ package com.github.pt.exercises;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import lombok.AllArgsConstructor;
@@ -52,5 +53,5 @@ public class Exercise {
             joinColumns = { @JoinColumn(name = "exercise_id") },
             inverseJoinColumns = { @JoinColumn(name = "exercise_type_id") }
     )
-    List<ExerciseType> exerciseTypes;
+    List<ExerciseType> exerciseTypes = new ArrayList<>(0);
 }
