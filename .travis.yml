@@ -16,6 +16,10 @@ before_script:
   - psql -c "CREATE USER ptcoretest WITH PASSWORD 'ptCoreTest101';"
   - psql -c 'create database ptcoretest;' -U postgres
   - psql -c 'GRANT ALL PRIVILEGES ON DATABASE ptcoretest to ptcoretest;'
+  - pip install --user codecov
 
 script:
-  - mvn clean package
+  - mvn clean package jacoco:report
+
+after_success:
+  - codecov
