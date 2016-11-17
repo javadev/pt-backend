@@ -16,7 +16,7 @@ function ($, _, Marionette, App) {
         template: _.template('<td colspan="7">There are no exercises available.</td>')
   });
 
-  var User = Marionette.ItemView.extend({
+  var Exercise = Marionette.ItemView.extend({
     tagName: 'tr',
     template: _.template([
       '<td>',
@@ -74,7 +74,7 @@ function ($, _, Marionette, App) {
 
   var Exercises = Marionette.CompositeView.extend({
     itemViewContainer: 'tbody',
-    itemView: User,
+    itemView: Exercise,
     emptyView: EmptyView,
     tagName: 'div',
     className: 'js-users-mapping-config',

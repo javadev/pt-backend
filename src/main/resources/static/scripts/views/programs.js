@@ -10,40 +10,12 @@ define([
 function ($, _, Marionette, App) {
   'use strict';
 
-  var Layout = Marionette.Layout.extend({
-    regions: {
-      mainUsers: '#usersMappingConfig',
-      mainExercises: '#exercisesMappingConfig',
-      mainPrograms: '#programsMappingConfig'
-    },
-    template: _.template([
-      '<!-- Nav tabs -->',
-      '<ul class="nav nav-tabs">',
-      '  <li class="active"><a href="#user" data-toggle="tab">Users</a></li>',
-      '  <li><a href="#exercise" data-toggle="tab">Exercises</a></li>',
-      '  <li><a href="#program" data-toggle="tab" class="js-admin-config">Programs</a></li>',
-      '</ul>',
-      '<!-- Tab panes -->',
-      '<div class="tab-content">',
-      '  <div class="tab-pane active" id="user">',
-      '    <div id="usersMappingConfig"></div>',
-      '  </div>',
-      '  <div class="tab-pane" id="exercise">',
-      '    <div id="exercisesMappingConfig"></div>',
-      '  </div>',
-      '  <div class="tab-pane" id="program">',
-      '    <div id="programsMappingConfig"></div>',
-      '  </div>',
-      '</div>'
-    ].join(''))
-  });
-  
   var EmptyView = Marionette.ItemView.extend({
         tagName: 'tr',
-        template: _.template('<td colspan="4">There are no users available.</td>')
+        template: _.template('<td colspan="4">There are no programs available.</td>')
   });
 
-  var User = Marionette.ItemView.extend({
+  var Program = Marionette.ItemView.extend({
     tagName: 'tr',
     template: _.template([
       '<td>',
@@ -68,13 +40,13 @@ function ($, _, Marionette, App) {
       this.collection = options.collection;
     },
     events: {
-      'click .js-edit-value': 'editUser',
-      'click .js-delete-value': 'deleteUser'
+      'click .js-edit-value': 'editProgram',
+      'click .js-delete-value': 'deleteProgram'
     },
-    editUser: function() {
-      this.collection.trigger('user:new', this.model);
+    editProgram: function() {
+      this.collection.trigger('program:new', this.model);
     },
-    deleteUser: function() {
+    deleteProgram: function() {
       event.preventDefault();
       var model = this.model;
       var collection = this.collection;
@@ -82,7 +54,7 @@ function ($, _, Marionette, App) {
         .done(function() {
         })
         .fail(function (xhr) {
-          App.vent.trigger('xhr:error', 'User ' + model.get('id') + ' delete was failed');
+          App.vent.trigger('xhr:error', 'Program ' + model.get('id') + ' delete was failed');
         })
         .always(function() {
           collection.fetch();
@@ -90,9 +62,9 @@ function ($, _, Marionette, App) {
     }
   });
 
-  var Users = Marionette.CompositeView.extend({
+  var Programs = Marionette.CompositeView.extend({
     itemViewContainer: 'tbody',
-    itemView: User,
+    itemView: Program,
     emptyView: EmptyView,
     tagName: 'div',
     className: 'js-users-mapping-config',
@@ -107,10 +79,10 @@ function ($, _, Marionette, App) {
     template: _.template([
     '<div class="panel panel-primary">',
       '<div class="panel-heading">',
-        '<h3 class="panel-title"> Users </h3>',
+        '<h3 class="panel-title"> Programs </h3>',
       '</div>',
-      '<button class="btn btn-primary js-new-user" style="margin: 10px;">',
-        'New user',
+      '<button class="btn btn-primary js-new-program" style="margin: 10px;">',
+        'New program',
       '</button>',
       '<table class="table">',
         '<thead>',
@@ -129,14 +101,14 @@ function ($, _, Marionette, App) {
       'sync': 'render'
     },
     events: {
-      'click .js-new-user': 'newUser'
+      'click .js-new-program': 'newProgram'
     },
-    newUser: function() {
-      this.collection.trigger('user:new');
+    newProgram: function() {
+      this.collection.trigger('program:new');
     }
   });
 
-  var NewUserLayout = Marionette.Layout.extend({
+  var NewProgramLayout = Marionette.Layout.extend({
     template: _.template([
       '<div class="panel panel-primary">',
         '<div class="panel-heading">',
@@ -150,7 +122,7 @@ function ($, _, Marionette, App) {
       var model = this.model;
       return {
         getHeader: function () {
-          return model.isNew() ? 'New user' : 'Edit user';
+          return model.isNew() ? 'New program' : 'Edit program';
         }
       };
     },
@@ -161,12 +133,12 @@ function ($, _, Marionette, App) {
       inputForm: '#inputForm'
     },
     onShow: function() {
-      this.buttons.show(new NewUserButtons({model: this.model}));
-      this.inputForm.show(new NewUserInputForm({model: this.model}));
+      this.buttons.show(new NewProgramButtons({model: this.model}));
+      this.inputForm.show(new NewProgramInputForm({model: this.model}));
     }
   });
 
-  var NewUserButtons = Marionette.ItemView.extend({
+  var NewProgramButtons = Marionette.ItemView.extend({
     template: _.template([
       '<div class="btn-group">',
         '<button class="btn btn-default js-back" style="margin: 10px 0 0 10px;">',
@@ -201,16 +173,16 @@ function ($, _, Marionette, App) {
     },
     back: function() {
       event.preventDefault();
-      this.model.trigger('user:back');
+      this.model.trigger('program:back');
     },
     save: function() {
       event.preventDefault();
       var model = this.model;
       this.model.save().done(function() {
-        model.trigger('user:back');
+        model.trigger('program:back');
       })
       .fail(function (xhr) {
-        App.vent.trigger('xhr:error', 'User save was failed');
+        App.vent.trigger('xhr:error', 'Program save was failed');
       });
     },
     discard: function(event) {
@@ -220,7 +192,7 @@ function ($, _, Marionette, App) {
     }
   });
 
-  var NewUserInputForm = Marionette.ItemView.extend({
+  var NewProgramInputForm = Marionette.ItemView.extend({
     className: 'user-input-form',
     template: _.template([
       '<div class="form-group">',
@@ -234,21 +206,20 @@ function ($, _, Marionette, App) {
       '<div class="form-group">',
         '<label class="col-sm-3 control-label">Name</label>',
         '<div class="col-sm-8">',
-          '<textarea id="user-name" class="form-control" rows="3" placeholder="Please enter name" name="address" required="true">',
+          '<textarea id="program-name" class="form-control" rows="3" placeholder="Please enter program name" name="programName" required="true">',
             '{{ name }}',
           '</textarea>',
         '</div>',
       '</div>'
     ].join('')),
     modelEvents: {
-      'sync': 'render',
-      'technicians:load': 'render'
+      'sync': 'render'
     },
     events: {
-      'input #user-name': 'inputName'
+      'input #program-name': 'inputName'
     },
     ui: {
-      name: '#user-name'
+      name: '#program-name'
     },
     inputName: function() {
       this.model.set('name', this.ui.name.val());
@@ -256,9 +227,8 @@ function ($, _, Marionette, App) {
   });
 
   return {
-    Users: Users,
-    NewUserLayout: NewUserLayout,
-    Layout: Layout
+    Programs: Programs,
+    NewProgramLayout: NewProgramLayout
   };
 
 });

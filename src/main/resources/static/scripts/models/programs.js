@@ -1,38 +1,39 @@
 /*jshint browser: true*/
 /*global define*/
 define([
+    'jquery',
     'underscore',
     'backbone'
   ],
-  function (_, Backbone) {
+  function ($, _, Backbone) {
     'use strict';
 
-    var User = Backbone.Model.extend({
+    var Program = Backbone.Model.extend({
       defaults: {
         'id': null,
         'name': null
       },
       url: function() {
-        return '/api/v1/admin/user' + (this.isNew() ? '' : '/' + this.get('id'));
+        return '/api/v1/admin/program' + (this.isNew() ? '' : '/' + this.get('id'));
       },
       validate: function (attrs) {
         var errors = [];
-        if (_.isNull(attrs.name) || _.isEmpty(attrs.name)) {
+        if (_.isNull(attrs.name) || _.isEmpty($.trim(attrs.name))) {
           errors.push({name: 'name', message: 'Please fill name field.'});
         }
         return errors.length > 0 ? errors : false;
       }
     });
 
-    var Users = Backbone.Collection.extend({
-      model: User,
+    var Programs = Backbone.Collection.extend({
+      model: Program,
       initialize: function (models, options) {
       },
-      url: '/api/v1/admin/user'
+      url: '/api/v1/admin/program'
     });
 
     return {
-      User: User,
-      Users: Users
+      Program: Program,
+      Programs: Programs
     };
   });

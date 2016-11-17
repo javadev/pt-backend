@@ -5,7 +5,7 @@ define([
     'underscore',
     'backbone'
   ],
-  function ($, _, Backbone, moment) {
+  function ($, _, Backbone) {
     'use strict';
 
     var Exercise = Backbone.Model.extend({

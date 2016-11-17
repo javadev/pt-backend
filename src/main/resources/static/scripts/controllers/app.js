@@ -8,9 +8,12 @@ define([
   'models/users',
   'views/users',
   'models/exercises',
-  'views/exercises'
+  'views/exercises',
+  'models/programs',
+  'views/programs'
 ],
-  function($, _, Marionette, App, UsersModels, UsersViews, ExercisesModels, ExercisesViews) {
+  function($, _, Marionette, App, UsersModels, UsersViews, ExercisesModels, ExercisesViews,
+    ProgramsModels, ProgramsViews) {
   'use strict';
 
     function setupApplicationLayout() {
@@ -84,6 +87,33 @@ define([
           applicationLayout.mainExercises.show(exerciseEditView);
         });
         applicationLayout.mainExercises.show(exercisesView);
+
+        var programs = new ProgramsModels.Programs();
+        var programsView = new ProgramsViews.Programs({
+          collection: programs
+        });
+        programs.fetch();
+        programs.on('program:new', function(model) {
+          var program = new ProgramsModels.Program();
+          if (!_.isUndefined(model)) {
+            program.set({
+              id: model.get('id'),
+              name: model.get('name')
+            });
+          }
+          var programEditView = new ProgramsViews.NewProgramLayout({
+            model: program
+          });
+          program.on('program:back', function() {
+            var programsView = new ProgramsViews.Programs({
+              collection: programs
+            });
+            programs.fetch();
+            applicationLayout.mainPrograms.show(programsView);
+          });
+          applicationLayout.mainPrograms.show(programEditView);
+        });
+        applicationLayout.mainPrograms.show(programsView);
     }
     
     return Marionette.Controller.extend({
