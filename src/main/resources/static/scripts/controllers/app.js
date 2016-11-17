@@ -65,16 +65,8 @@ define([
           exercise._categories = exercises._categories;
           exercise._types = exercises._types;
           if (!_.isUndefined(model)) {
-            exercise.set({
-              id: model.get('id'),
-              category: model.get('category'),
-              types: model.get('types'),
-              exerciseId: model.get('exerciseId'),
-              nameEn: model.get('nameEn'),
-              nameNo: model.get('nameNo'),
-              descriptionEn: model.get('descriptionEn'),
-              descriptionNo: model.get('descriptionNo')
-            });
+            exercise.set('id', model.get('id'));
+            exercise.fetch();
           }
           var exerciseEditView = new ExercisesViews.NewExerciseLayout({
             model: exercise

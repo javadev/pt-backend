@@ -267,7 +267,7 @@ function ($, _, Marionette, App) {
       '<div class="form-group">',
         '<label class="col-sm-3 control-label">Description in Norwegian</label>',
         '<div class="col-sm-8">',
-          '<textarea id="exercise-descriptionEn" class="form-control" rows="3" placeholder="Please enter description in Norwegian" name="descriptionNo" required="true">',
+          '<textarea id="exercise-descriptionNo" class="form-control" rows="3" placeholder="Please enter description in Norwegian" name="descriptionNo" required="true">',
             '{{ descriptionNo }}',
           '</textarea>',
         '</div>',
