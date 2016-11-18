@@ -3,8 +3,10 @@ package com.github.pt.admin.program;
 import com.github.pt.ResourceNotFoundException;
 import com.github.pt.programs.Program;
 import com.github.pt.programs.ProgramRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,8 +19,12 @@ class AdminProgramService {
     }
 
     List<ProgramResponseDTO> findAll() {
-        return programRepository.findAll().stream().map(program -> programToDto(program))
+        return programRepository.findAll(sortByIdAsc()).stream().map(program -> programToDto(program))
         .collect(Collectors.toList());
+    }
+
+    private Sort sortByIdAsc() {
+        return new Sort(Sort.Direction.ASC, "id");
     }
 
     private ProgramResponseDTO programToDto(Program program) {
@@ -29,6 +35,7 @@ class AdminProgramService {
                 .fileSize(program.getFile_size())
                 .fileType(program.getFile_type())
                 .dataUrl(program.getData_url())
+                .updated(program.getUpdated())
                 .build();
     }
 
@@ -60,6 +67,7 @@ class AdminProgramService {
         program.setFile_size(programRequestDTO.getFileSize());
         program.setFile_type(programRequestDTO.getFileType());
         program.setData_url(programRequestDTO.getDataUrl());
+        program.setUpdated(LocalDateTime.now());
         return programToDto(programRepository.save(program));
     }
 

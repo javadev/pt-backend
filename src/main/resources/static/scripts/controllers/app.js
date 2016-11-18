@@ -117,6 +117,9 @@ define([
             programs.fetch();
             applicationLayout.mainPrograms.show(programsView);
           });
+          program.on('program:parseFile', function() {
+            console.log(this.get('fileName'));
+          });
           applicationLayout.mainPrograms.show(programEditView);
         });
         applicationLayout.mainPrograms.show(programsView);

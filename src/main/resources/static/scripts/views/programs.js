@@ -12,7 +12,7 @@ function ($, _, Marionette, App) {
 
   var EmptyView = Marionette.ItemView.extend({
         tagName: 'tr',
-        template: _.template('<td colspan="4">There are no programs available.</td>')
+        template: _.template('<td colspan="6">There are no programs available.</td>')
   });
 
   var Program = Marionette.ItemView.extend({
@@ -23,6 +23,12 @@ function ($, _, Marionette, App) {
       '</td>',
       '<td>',
         '{{ name }}',
+      '</td>',
+      '<td>',
+        '{{ fileName }}',
+      '</td>',
+      '<td>',
+        '{{ updated }}',
       '</td>',
       '<td>',
         '<button type="button" class="btn btn-default btn-sm js-edit-value">',
@@ -89,6 +95,8 @@ function ($, _, Marionette, App) {
           '<tr>',
             '<th>ID</th>',
             '<th>Name</th>',
+            '<th>File name</th>',
+            '<th>Updated</th>',
             '<th></th>',
             '<th></th>',
           '</tr>',
@@ -225,6 +233,12 @@ function ($, _, Marionette, App) {
            '<button class="btn btn-default js-file-upload">Upload file</button>',
            '<input type="file" id="addFile" name="files[]" multiple />',
         '</div>',
+      '</div>',
+      '<div class="form-group">',
+        '<label class="col-sm-3 control-label"></label>',
+        '<div class="col-sm-8">',
+           '<button class="btn btn-default js-parse-file" {{ _.isNull(dataUrl) ? " disabled" : "" }}>Parse file and transfer data</button>',
+        '</div>',
       '</div>'
     ].join('')),
     ui: {
@@ -234,7 +248,8 @@ function ($, _, Marionette, App) {
     events: {
       'input #program-name': 'inputName',
       'click .js-file-upload': 'redirectFileUploading',
-      'change #addFile': 'handleFileSelect'
+      'change #addFile': 'handleFileSelect',
+      'click .js-parse-file': 'parseFile'
     },
     modelEvents: {
       'sync': 'render'
@@ -245,6 +260,10 @@ function ($, _, Marionette, App) {
     redirectFileUploading: function(evt) {
       evt.preventDefault();
       this.ui.fileButton.click();
+    },
+    parseFile: function(evt) {
+      evt.preventDefault();
+      this.model.trigger('program:parseFile');
     },
     _filerFiles: function(files) {
       return _.filter(files, function(file) {
@@ -269,6 +288,7 @@ function ($, _, Marionette, App) {
         reader.onload = (function () {
           return function (e) {
             view.model.set('dataUrl', e.target.result);
+            view.model.trigger('sync');
           };
         })();
         // Read in the image file as a data URL.

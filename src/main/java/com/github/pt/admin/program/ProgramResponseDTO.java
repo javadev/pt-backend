@@ -1,5 +1,7 @@
 package com.github.pt.admin.program;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,4 +22,6 @@ class ProgramResponseDTO {
     Long fileSize;
     String fileType;
     String dataUrl;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    LocalDateTime updated;
 }
