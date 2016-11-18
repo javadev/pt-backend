@@ -6,6 +6,7 @@ import com.github.pt.token.InUserFacebookRepository;
 import com.github.pt.token.InUserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,10 +22,14 @@ class AdminUserService {
     }
     
     List<UserResponseDTO> findAll() {
-        return inUserRepository.findAll().stream().map(inUser ->
+        return inUserRepository.findAll(sortByIdAsc()).stream().map(inUser ->
                 new UserResponseDTO(inUser.getId(), inUser.getInUserFacebooks().isEmpty() ?
                         "?" : inUser.getInUserFacebooks().get(0).getUser_name())
         ).collect(Collectors.toList());
+    }
+    
+    private Sort sortByIdAsc() {
+        return new Sort(Sort.Direction.ASC, "id");
     }
 
     UserResponseDTO findOne(Long id) {

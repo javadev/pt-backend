@@ -1,6 +1,5 @@
 package com.github.pt.token;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;

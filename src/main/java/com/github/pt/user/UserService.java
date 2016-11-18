@@ -29,12 +29,12 @@ public class UserService {
 
     public InUserLogin checkUserToken(String token) {
         List<InUserLogin> inUserLogins = inUserLoginRepository.findByToken(token);
-        if (!inUserLogins.isEmpty()) {
+        if (inUserLogins.isEmpty()) {
+            throw new ResourceNotFoundException("Token not found " + token);
+        } else {
             if (!inUserLogoutRepository.findByToken(token).isEmpty()) {
                 throw new UnauthorizedException("Invalid token");
             }
-        } else {
-            throw new ResourceNotFoundException("Token not found " + token);
         }
         return inUserLogins.get(inUserLogins.size() - 1);
     }
