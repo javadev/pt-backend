@@ -16,7 +16,8 @@ define([
         'fileSize': 0,
         'fileType': '',
         'dataUrl': null,
-        'updated': null
+        'updated': null,
+        'parseResult': []
       },
       url: function() {
         return '/api/v1/admin/program' + (this.isNew() ? '' : '/' + this.get('id'));

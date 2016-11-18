@@ -36,6 +36,13 @@ class AdminProgramService {
                 .fileType(program.getFile_type())
                 .dataUrl(program.getData_url())
                 .updated(program.getUpdated())
+                .parseResults(program.getParseResults().stream().map(result -> ParseResultDTO.builder()
+                    .id(result.getId())
+                    .userName(result.getUser_name())
+                    .workouts(result.getWorkouts())
+                    .errors(result.getErrors())
+                    .build()
+                ).collect(Collectors.toList()))
                 .build();
     }
 

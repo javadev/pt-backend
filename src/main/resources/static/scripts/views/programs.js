@@ -11,8 +11,13 @@ function ($, _, Marionette, App) {
   'use strict';
 
   var EmptyView = Marionette.ItemView.extend({
-        tagName: 'tr',
-        template: _.template('<td colspan="6">There are no programs available.</td>')
+    tagName: 'tr',
+    template: _.template('<td colspan="6">There are no programs available.</td>')
+  });
+
+  var EmptyParseView = Marionette.ItemView.extend({
+    tagName: 'tr',
+    template: _.template('<td colspan="4">There are no parse result available.</td>')
   });
 
   var Program = Marionette.ItemView.extend({
@@ -124,6 +129,7 @@ function ($, _, Marionette, App) {
         '</div>',
         '<div id="buttons"/>',
         '<div id="inputForm"/>',
+        '<div id="parseResultTable"/>',
       '</div>'
     ].join('')),
     templateHelpers: function() {
@@ -138,11 +144,13 @@ function ($, _, Marionette, App) {
     className: 'form-horizontal',
     regions: {
       buttons: '#buttons',
-      inputForm: '#inputForm'
+      inputForm: '#inputForm',
+      parseResultTable: '#parseResultTable'
     },
     onShow: function() {
       this.buttons.show(new NewProgramButtons({model: this.model}));
       this.inputForm.show(new NewProgramInputForm({model: this.model}));
+      this.parseResultTable.show(new ParseResultForm({model: this.model}));
     }
   });
 
@@ -197,6 +205,53 @@ function ($, _, Marionette, App) {
       event.preventDefault();
       this.model.set(this._model.toJSON());
       this.model.trigger('sync');
+    }
+  });
+
+  var ParseResultForm = Marionette.CompositeView.extend({
+    itemViewContainer: 'tbody',
+    itemView: Program,
+    emptyView: EmptyParseView,
+    tagName: 'div',
+    className: 'js-users-mapping-config',
+    ui: {
+      table: '.table'
+    },
+    itemViewOptions : function () {
+      return { collection: this.collection };
+    },
+    initialize: function() {
+    },
+    template: _.template([
+    '<div class="panel panel-primary">',
+      '<div class="panel-heading">',
+        '<h3 class="panel-title"> Parse result </h3>',
+      '</div>',
+      '<button class="btn btn-primary js-parse-file" style="margin: 10px;">',
+        'Reparse',
+      '</button>',
+      '<table class="table">',
+        '<thead>',
+          '<tr>',
+            '<th>ID</th>',
+            '<th>User name</th>',
+            '<th>Workouts</th>',
+            '<th>Errors</th>',
+          '</tr>',
+        '</thead>',
+        '<tbody></tbody>',
+      '</table>',
+    '</div>'
+    ].join('')),
+    collectionEvents: {
+      'sync': 'render'
+    },
+    events: {
+      'click .js-parse-file': 'parseFile'
+    },
+    parseFile: function(event) {
+      event.preventDefault();
+      this.model.trigger('program:parseFile');
     }
   });
 

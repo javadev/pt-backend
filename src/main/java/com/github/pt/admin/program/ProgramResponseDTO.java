@@ -2,6 +2,7 @@ package com.github.pt.admin.program;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,4 +25,5 @@ class ProgramResponseDTO {
     String dataUrl;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     LocalDateTime updated;
+    List<ParseResultDTO> parseResults;
 }
