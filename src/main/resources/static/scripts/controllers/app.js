@@ -104,7 +104,8 @@ define([
               fileName: model.get('fileName'),
               fileSize: model.get('fileSize'),
               fileType: model.get('fileType'),
-              dataUrl: model.get('dataUrl')
+              dataUrl: model.get('dataUrl'),
+              parseResults: model.get('parseResults')
             });
           }
           var programEditView = new ProgramsViews.NewProgramLayout({

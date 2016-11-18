@@ -1,9 +1,15 @@
 package com.github.pt.admin.program;
 
 import com.github.pt.ResourceNotFoundException;
+import com.github.pt.programs.ParseResult;
+import com.github.pt.programs.ParseResultRepository;
 import com.github.pt.programs.Program;
 import com.github.pt.programs.ProgramRepository;
+import com.github.pt.xlsx.ExcelUser;
+import com.github.pt.xlsx.XlsxParser;
+import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Sort;
@@ -12,10 +18,15 @@ import org.springframework.stereotype.Service;
 @Service
 class AdminProgramService {
     
+    private static final String BASE64_PREFIX = ";base64,";
+    private static final int BASE64_PREFIX_LENGTH = 8;
     private final ProgramRepository programRepository;
+    private final ParseResultRepository parseResultRepository;
 
-    AdminProgramService(ProgramRepository programRepository) {
+    AdminProgramService(ProgramRepository programRepository,
+            ParseResultRepository parseResultRepository) {
         this.programRepository = programRepository;
+        this.parseResultRepository = parseResultRepository;
     }
 
     List<ProgramResponseDTO> findAll() {
@@ -61,7 +72,9 @@ class AdminProgramService {
         program.setFile_size(programRequestDTO.getFileSize());
         program.setFile_type(programRequestDTO.getFileType());
         program.setData_url(programRequestDTO.getDataUrl());
-        return programToDto(programRepository.save(program));
+        final Program savedProgram = programRepository.save(program);
+        program.setParseResults(parseResultRepository.save(parseDataUrl(programRequestDTO, savedProgram)));
+        return programToDto(program);
     }
 
     ProgramResponseDTO update(Long id, ProgramRequestDTO programRequestDTO) {
@@ -75,7 +88,29 @@ class AdminProgramService {
         program.setFile_type(programRequestDTO.getFileType());
         program.setData_url(programRequestDTO.getDataUrl());
         program.setUpdated(LocalDateTime.now());
+        parseResultRepository.delete(program.getParseResults());
+        program.setParseResults(parseResultRepository.save(parseDataUrl(programRequestDTO, program)));
         return programToDto(programRepository.save(program));
+    }
+    
+    private List<ParseResult> parseDataUrl(ProgramRequestDTO programRequestDTO, final Program program) {
+        final ByteArrayInputStream arrayInputStream = dataUrlToInputStream(programRequestDTO.getDataUrl());
+        final XlsxParser xlsxParser = XlsxParser.of(arrayInputStream);
+        final List<ExcelUser> excelUsers = xlsxParser.getExcelUsers();
+        return excelUsers.stream().map(user -> {
+            final ParseResult parseResult = new ParseResult();
+            parseResult.setUser_name(user.getName());
+            parseResult.setWorkouts(user.getWorkouts().stream()
+                    .map(workout -> workout.getName()).collect(Collectors.joining(", ")));
+            parseResult.setErrors(user.getErrors().stream().collect(Collectors.joining(", ")));
+            parseResult.setProgram(program);
+            return parseResult;
+        }).collect(Collectors.toList());
+    }
+    
+    private ByteArrayInputStream dataUrlToInputStream(String dataUrl) {
+        final String encodedString = dataUrl.substring(dataUrl.indexOf(BASE64_PREFIX) + BASE64_PREFIX_LENGTH);
+        return new ByteArrayInputStream(Base64.getDecoder().decode(encodedString));
     }
 
     ProgramResponseDTO delete(Long id) {

@@ -13,7 +13,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-class Input {
+public class Input {
     String exercise;
     Float sets;
     Float repetitions;

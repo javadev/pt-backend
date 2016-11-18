@@ -3,11 +3,12 @@
 define([
     'jquery',
     'underscore',
+    'backbone',
     'marionette',
     'app',
     'bootstrapTab'
 ],
-function ($, _, Marionette, App) {
+function ($, _, Backbone, Marionette, App) {
   'use strict';
 
   var EmptyView = Marionette.ItemView.extend({
@@ -71,6 +72,24 @@ function ($, _, Marionette, App) {
           collection.fetch();
         });
     }
+  });
+
+  var ParseResult = Marionette.ItemView.extend({
+    tagName: 'tr',
+    template: _.template([
+      '<td>',
+        '{{ id }}',
+      '</td>',
+      '<td>',
+        '{{ userName }}',
+      '</td>',
+      '<td>',
+        '{{ workouts }}',
+      '</td>',
+      '<td>',
+        '{{ errors }}',
+      '</td>'
+    ].join(''))
   });
 
   var Programs = Marionette.CompositeView.extend({
@@ -150,7 +169,8 @@ function ($, _, Marionette, App) {
     onShow: function() {
       this.buttons.show(new NewProgramButtons({model: this.model}));
       this.inputForm.show(new NewProgramInputForm({model: this.model}));
-      this.parseResultTable.show(new ParseResultForm({model: this.model}));
+      this.parseResultTable.show(new ParseResultForm({model: this.model,
+          collection: new Backbone.Collection(this.model.get('parseResults'))}));
     }
   });
 
@@ -210,7 +230,7 @@ function ($, _, Marionette, App) {
 
   var ParseResultForm = Marionette.CompositeView.extend({
     itemViewContainer: 'tbody',
-    itemView: Program,
+    itemView: ParseResult,
     emptyView: EmptyParseView,
     tagName: 'div',
     className: 'js-users-mapping-config',
@@ -227,7 +247,7 @@ function ($, _, Marionette, App) {
       '<div class="panel-heading">',
         '<h3 class="panel-title"> Parse result </h3>',
       '</div>',
-      '<button class="btn btn-primary js-parse-file" style="margin: 10px;">',
+      '<button class="btn btn-primary js-parse-file" style="margin: 10px;" {{ getReparseDisabled() }}>',
         'Reparse',
       '</button>',
       '<table class="table">',
@@ -243,6 +263,17 @@ function ($, _, Marionette, App) {
       '</table>',
     '</div>'
     ].join('')),
+    templateHelpers: function() {
+      var view = this;
+      return {
+        getReparseDisabled: function () {
+          return view.model.isValid() ? '' : 'disabled';
+        }
+      };
+    },
+    modelEvents: {
+      'change': 'render'
+    },
     collectionEvents: {
       'sync': 'render'
     },
@@ -251,7 +282,15 @@ function ($, _, Marionette, App) {
     },
     parseFile: function(event) {
       event.preventDefault();
-      this.model.trigger('program:parseFile');
+      var model = this.model;
+      var view = this;
+      this.model.save().done(function() {
+        view.collection.reset();
+        view.collection.set(model.get('parseResults'));
+      })
+      .fail(function (xhr) {
+        App.vent.trigger('xhr:error', 'Program save was failed');
+      });
     }
   });
 
@@ -288,12 +327,6 @@ function ($, _, Marionette, App) {
            '<button class="btn btn-default js-file-upload">Upload file</button>',
            '<input type="file" id="addFile" name="files[]" multiple />',
         '</div>',
-      '</div>',
-      '<div class="form-group">',
-        '<label class="col-sm-3 control-label"></label>',
-        '<div class="col-sm-8">',
-           '<button class="btn btn-default js-parse-file" {{ _.isNull(dataUrl) ? " disabled" : "" }}>Parse file and transfer data</button>',
-        '</div>',
       '</div>'
     ].join('')),
     ui: {
@@ -303,8 +336,7 @@ function ($, _, Marionette, App) {
     events: {
       'input #program-name': 'inputName',
       'click .js-file-upload': 'redirectFileUploading',
-      'change #addFile': 'handleFileSelect',
-      'click .js-parse-file': 'parseFile'
+      'change #addFile': 'handleFileSelect'
     },
     modelEvents: {
       'sync': 'render'
@@ -315,10 +347,6 @@ function ($, _, Marionette, App) {
     redirectFileUploading: function(evt) {
       evt.preventDefault();
       this.ui.fileButton.click();
-    },
-    parseFile: function(evt) {
-      evt.preventDefault();
-      this.model.trigger('program:parseFile');
     },
     _filerFiles: function(files) {
       return _.filter(files, function(file) {

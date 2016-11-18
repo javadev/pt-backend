@@ -15,7 +15,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-class ExcelUser {
+public class ExcelUser {
     String name;
     List<Workout> workouts = new ArrayList<>();
+    List<String> errors = new ArrayList<>();
 }

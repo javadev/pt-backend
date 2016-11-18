@@ -3,7 +3,6 @@ package com.github.pt.xlsx;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -12,8 +11,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class XlsxParser {
+    private static final Logger LOG = LoggerFactory.getLogger(XlsxParser.class);
     private final InputStream inputStream;
 
     private XlsxParser(InputStream inputStream) {
@@ -24,33 +26,38 @@ public class XlsxParser {
         return new XlsxParser(inputStream);
     }
 
-    public List<ExcelUser> getExcelUsers() throws IOException, InvalidFormatException {
-        final Workbook workbook = WorkbookFactory.create(inputStream);
-        List<ExcelUser> excelUsers = new ArrayList<>();
-        for (int index = 0; index < workbook.getNumberOfSheets(); index += 1) {
-            final Sheet sheet = workbook.getSheetAt(index);
-            if (sheet == null) {
-                continue;
-            }
-            final ExcelUser excelUser = new ExcelUser();
-            excelUser.setName(sheet.getSheetName());
-            for (int workoutIndex = 0; workoutIndex < 10; workoutIndex += 1) {
-                final String workoutName = (String) getCellData(sheet, 3, 2 + workoutIndex);
-                if (workoutName == null) {
-                    break;
+    public List<ExcelUser> getExcelUsers() {
+        final List<ExcelUser> excelUsers = new ArrayList<>();
+        final Workbook workbook;
+        try {
+            workbook = WorkbookFactory.create(inputStream);
+            for (int index = 0; index < workbook.getNumberOfSheets(); index += 1) {
+                final Sheet sheet = workbook.getSheetAt(index);
+                if (sheet == null) {
+                    continue;
                 }
-                final Workout workout = new Workout();
-                workout.setName(workoutName);
-                for (int workoutItemIndex = 0; workoutItemIndex < 10; workoutItemIndex += 1) {
-                    if (!(getCellData(sheet, 5 + workoutItemIndex * 7, 2 + workoutIndex) instanceof Number)) {
+                final ExcelUser excelUser = new ExcelUser();
+                excelUser.setName(sheet.getSheetName());
+                for (int workoutIndex = 0; workoutIndex < 10; workoutIndex += 1) {
+                    final String workoutName = (String) getCellData(sheet, 3, 2 + workoutIndex);
+                    if (workoutName == null) {
                         break;
                     }
-                    final WorkoutItem workoutItem = extractWorkoutItem(sheet, workoutItemIndex, workoutIndex);
-                    workout.getWorkoutItems().add(workoutItem);
+                    final Workout workout = new Workout();
+                    workout.setName(workoutName);
+                    for (int workoutItemIndex = 0; workoutItemIndex < 10; workoutItemIndex += 1) {
+                        if (!(getCellData(sheet, 5 + workoutItemIndex * 7, 2 + workoutIndex) instanceof Number)) {
+                            break;
+                        }
+                        final WorkoutItem workoutItem = extractWorkoutItem(sheet, workoutItemIndex, workoutIndex);
+                        workout.getWorkoutItems().add(workoutItem);
+                    }
+                    excelUser.getWorkouts().add(workout);
                 }
-                excelUser.getWorkouts().add(workout);
+                excelUsers.add(excelUser);
             }
-            excelUsers.add(excelUser);
+        } catch (IOException | InvalidFormatException ex) {
+            LOG.error(ex.getMessage(), ex);
         }
         return excelUsers;
     }
