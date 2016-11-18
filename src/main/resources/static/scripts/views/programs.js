@@ -210,19 +210,70 @@ function ($, _, Marionette, App) {
             '{{ name }}',
           '</textarea>',
         '</div>',
+      '</div>',
+      '<div class="form-group">',
+        '<label class="col-sm-3 control-label">File name</label>',
+        '<div class="col-sm-8">',
+          '<p class="form-control-static">',
+            ' {{ fileName }}',
+          '</p>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Excel file (xlsx)</label>',
+        '<div class="col-sm-8">',
+           '<button class="btn btn-default js-file-upload">Upload file</button>',
+           '<input type="file" id="addFile" name="files[]" multiple />',
+        '</div>',
       '</div>'
     ].join('')),
+    ui: {
+      name: '#program-name',
+      fileButton: '#addFile'
+    },
+    events: {
+      'input #program-name': 'inputName',
+      'click .js-file-upload': 'redirectFileUploading',
+      'change #addFile': 'handleFileSelect'
+    },
     modelEvents: {
       'sync': 'render'
     },
-    events: {
-      'input #program-name': 'inputName'
-    },
-    ui: {
-      name: '#program-name'
-    },
     inputName: function() {
       this.model.set('name', this.ui.name.val());
+    },
+    redirectFileUploading: function(evt) {
+      evt.preventDefault();
+      this.ui.fileButton.click();
+    },
+    _filerFiles: function(files) {
+      return _.filter(files, function(file) {
+        return file.type.match(/.*vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet/);
+      });
+    },
+    handleFileSelect: function(evt) {
+      // FileList object
+      var files = evt.target.files;
+      var view = this;
+      // Only process excel documents.
+      var filteredFiles = this._filerFiles(files);
+      _.each(filteredFiles, function(file) {
+        view.model.set({
+          fileName: file.name,
+          fileSize: file.size,
+          fileType: file.type
+        });
+        view.model.trigger('sync');
+        var reader = new FileReader();
+        // Closure to capture the file information.
+        reader.onload = (function () {
+          return function (e) {
+            view.model.set('dataUrl', e.target.result);
+          };
+        })();
+        // Read in the image file as a data URL.
+        reader.readAsDataURL(file);
+      });
     }
   });
 

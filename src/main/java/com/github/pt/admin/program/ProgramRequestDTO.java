@@ -15,5 +15,8 @@ import lombok.Builder;
 @Builder
 class ProgramRequestDTO {
     String name;
+    String fileName;
+    Long fileSize;
+    String fileType;
     String dataUrl;    
 }

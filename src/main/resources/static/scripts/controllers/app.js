@@ -100,7 +100,11 @@ define([
           if (!_.isUndefined(model)) {
             program.set({
               id: model.get('id'),
-              name: model.get('name')
+              name: model.get('name'),
+              fileName: model.get('fileName'),
+              fileSize: model.get('fileSize'),
+              fileType: model.get('fileType'),
+              dataUrl: model.get('dataUrl')
             });
           }
           var programEditView = new ProgramsViews.NewProgramLayout({

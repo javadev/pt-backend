@@ -25,6 +25,9 @@ class AdminProgramService {
         return ProgramResponseDTO.builder()
                 .id(program.getId())
                 .name(program.getName())
+                .fileName(program.getFile_name())
+                .fileSize(program.getFile_size())
+                .fileType(program.getFile_type())
                 .dataUrl(program.getData_url())
                 .build();
     }
@@ -40,6 +43,9 @@ class AdminProgramService {
     ProgramResponseDTO create(ProgramRequestDTO programRequestDTO) {
         final Program program = new Program();
         program.setName(programRequestDTO.getName());
+        program.setFile_name(programRequestDTO.getFileName());
+        program.setFile_size(programRequestDTO.getFileSize());
+        program.setFile_type(programRequestDTO.getFileType());
         program.setData_url(programRequestDTO.getDataUrl());
         return programToDto(programRepository.save(program));
     }
@@ -50,6 +56,9 @@ class AdminProgramService {
             throw new ResourceNotFoundException("Program with id " + id + " not found");
         }
         program.setName(programRequestDTO.getName());
+        program.setFile_name(programRequestDTO.getFileName());
+        program.setFile_size(programRequestDTO.getFileSize());
+        program.setFile_type(programRequestDTO.getFileType());
         program.setData_url(programRequestDTO.getDataUrl());
         return programToDto(programRepository.save(program));
     }

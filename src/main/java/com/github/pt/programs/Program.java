@@ -31,6 +31,9 @@ public class Program {
     Long id;
     LocalDateTime created;
     String name;
+    String file_name;
+    Long file_size;
+    String file_type;
     String data_url;
     LocalDateTime updated;
     Boolean active;
