@@ -159,7 +159,7 @@ class AdminProgramService {
                             parseWorkoutItem.setRepetitions(workoutItem.getInput().getRepetitions() == null
                                     ? null : workoutItem.getInput().getRepetitions().intValue());
                             parseWorkoutItem.setWeight(workoutItem.getInput().getWeight() == null
-                                    ? null : Integer.parseInt(workoutItem.getInput().getWeight().replace("KG", "").trim()));
+                                    ? null : workoutItem.getInput().getWeight());
                             return parseWorkoutItem;
                         }).collect(Collectors.toList()));
                         return parseWorkout;

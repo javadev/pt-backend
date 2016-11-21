@@ -15,7 +15,10 @@ import lombok.ToString;
 @ToString
 public class Input {
     String exercise;
-    Float sets;
-    Float repetitions;
-    String weight;
+    Integer sets;
+    Integer repetitions;
+    Integer weight;
+    Integer timeInMin;
+    Integer speed;
+    Integer resistance;
 }

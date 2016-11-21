@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -17,6 +18,8 @@ import org.slf4j.LoggerFactory;
 public class XlsxParser {
     private static final Logger LOG = LoggerFactory.getLogger(XlsxParser.class);
     private final InputStream inputStream;
+
+    private enum ScanMode {Strength, Cardio};
 
     private XlsxParser(InputStream inputStream) {
        this.inputStream = inputStream; 
@@ -39,6 +42,19 @@ public class XlsxParser {
                 final ExcelUser excelUser = new ExcelUser();
                 excelUser.setSheetIndex(index);
                 excelUser.setName(sheet.getSheetName());
+                excelUser.setErrors(new ArrayList<>());
+                final int addRows;
+                if ("Warm up".equals(getCellData(sheet, 5, 1))) {
+                    addRows = 1;
+                } else {
+                    addRows = 0;
+                }
+                final ScanMode scanMode;
+                if ("Output".equals(getCellData(sheet, 13 + addRows, 0))) {
+                    scanMode = ScanMode.Cardio;
+                } else {
+                    scanMode = ScanMode.Strength;
+                }
                 for (int workoutIndex = 0; workoutIndex < 10; workoutIndex += 1) {
                     final String workoutName = (String) getCellData(sheet, 3, 2 + workoutIndex);
                     if (workoutName == null) {
@@ -49,10 +65,13 @@ public class XlsxParser {
                     workout.setColumnIndex(2 + workoutIndex);
                     workout.setName(workoutName);
                     for (int workoutItemIndex = 0; workoutItemIndex < 10; workoutItemIndex += 1) {
-                        if (!(getCellData(sheet, 5 + workoutItemIndex * 7, 2 + workoutIndex) instanceof Number)) {
+                        final int multiplyCoeff = scanMode == ScanMode.Strength ? 7 : 9;
+                        if (!(getCellData(sheet, addRows + 9 + workoutItemIndex
+                                * multiplyCoeff, 2 + workoutIndex) instanceof Number)) {
                             break;
                         }
-                        final WorkoutItem workoutItem = extractWorkoutItem(sheet, workoutItemIndex, workoutIndex);
+                        final WorkoutItem workoutItem = extractWorkoutItem(sheet, workoutItemIndex,
+                                workoutIndex, addRows, scanMode, excelUser, workoutName);
                         workout.getWorkoutItems().add(workoutItem);
                     }
                     excelUser.getWorkouts().add(workout);
@@ -65,37 +84,70 @@ public class XlsxParser {
         return excelUsers;
     }
 
-    private WorkoutItem extractWorkoutItem(final Sheet sheet, int workoutItemIndex, int workoutIndex) {
+    private WorkoutItem extractWorkoutItem(final Sheet sheet, int workoutItemIndex,
+            int workoutIndex, int addRows, ScanMode scanMode, ExcelUser excelUser, String workoutName) {
+        final int multiplyCoeff = scanMode == ScanMode.Strength ? 7 : 9;
         WorkoutItem workoutItem = new WorkoutItem();
-        workoutItem.setRowIndex(4 + workoutItemIndex * 7);
+        workoutItem.setRowIndex(4 + addRows + workoutItemIndex * multiplyCoeff);
         workoutItem.setColumnIndex(2 + workoutIndex);
-        String exerciseName = (String) getCellData(sheet, 4 + workoutItemIndex * 7, 2 + workoutIndex);
-        Number setsInp = (Number) getCellData(sheet, 5 + workoutItemIndex * 7, 2 + workoutIndex);
-        Number repetitionsInp = (Number) getCellData(sheet, 6 + workoutItemIndex * 7, 2 + workoutIndex);
-        String weightInp = getCellData(sheet, 7 + workoutItemIndex * 7, 2 + workoutIndex) == null ? null
-                : getCellData(sheet, 7 + workoutItemIndex * 7, 2 + workoutIndex).toString();
-        Number setsOut = (Number) getCellData(sheet, 8 + workoutItemIndex * 7, 2 + workoutIndex);
-        Number repetitionsOut = (Number) getCellData(sheet, 9 + workoutItemIndex * 7, 2 + workoutIndex);
-        String weightOut = getCellData(sheet, 10 + workoutItemIndex * 7, 2 + workoutIndex) == null ? null
-                : getCellData(sheet, 10 + workoutItemIndex * 7, 2 + workoutIndex).toString();
-        workoutItem.getInput().setExercise(exerciseName);
-        workoutItem.getInput().setSets(setsInp.floatValue());
-        workoutItem.getInput().setRepetitions(repetitionsInp.floatValue());
-        workoutItem.getInput().setWeight(weightInp);
-        if (setsOut != null) {
-            workoutItem.getOutput().setSets(setsOut.floatValue());
+        Optional<String> exerciseName = getStringOrEmpty(getCellData(sheet, 4 + 4 + addRows
+                + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+        if (!exerciseName.isPresent()) {
+            excelUser.getErrors().add("Exercise name not found. User " + excelUser.getName() + ", workout " + workoutName + ".");
         }
-        if (repetitionsOut != null) {
-            workoutItem.getOutput().setRepetitions(repetitionsOut.floatValue());
-        }
-        if (weightOut != null) {
-            workoutItem.getOutput().setWeight(weightOut);
+        Number setsInp = getNumberOrNull(getCellData(sheet, 4 + 5 + addRows + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+        if (scanMode == ScanMode.Strength) {
+            Number repetitionsInp = getNumberOrNull(getCellData(sheet, 4 + 6 + addRows + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+            String weightInp = getStringOrNull(getCellData(sheet, 4 + 7 + addRows + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+            workoutItem.getInput().setExercise(exerciseName.orElse(null));
+            workoutItem.getInput().setSets(getIntegerOrNull(setsInp));
+            workoutItem.getInput().setRepetitions(getIntegerOrNull(repetitionsInp));
+            workoutItem.getInput().setWeight(extractNumbers(weightInp));
+        } else {
+            String timeInp = getStringOrNull(getCellData(sheet, 4 + 6 + addRows + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+            Number speedInp = getNumberOrNull(getCellData(sheet, 4 + 7 + addRows + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+            String resistanceInp = getStringOrNull(getCellData(sheet, 4 + 8 + addRows + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+            workoutItem.getInput().setExercise(exerciseName.orElse(null));
+            workoutItem.getInput().setSets(getIntegerOrNull(setsInp));
+            workoutItem.getInput().setTimeInMin(extractNumbers(timeInp));
+            workoutItem.getInput().setSpeed(getIntegerOrNull(speedInp));
+            workoutItem.getInput().setResistance(extractNumbers(resistanceInp));
         }
         return workoutItem;
     }
+
+    private Number getNumberOrNull(Object object) {
+        return object instanceof Number ? (Number) object : null;
+    }
+
+    private Integer extractNumbers(Object object) {
+        if (object instanceof String) {
+            String onlyNumbersValue = ((String) object).replaceAll("[^\\d]+", "");
+            return onlyNumbersValue.isEmpty() ? null : Integer.parseInt(onlyNumbersValue);
+        }
+        return null;
+    }
+
+    private String getStringOrNull(Object object) {
+        return object instanceof String ? (String) object : null;
+    }
+
+    private Integer getIntegerOrNull(Object object) {
+        return object instanceof Number ? ((Number) object).intValue() : null;
+    }
     
+    private Optional<String> getStringOrEmpty(Object object) {
+        if (object instanceof String) {
+            return Optional.of((String) object);
+        }
+        return Optional.empty();
+    }
+
     private Object getCellData(Sheet sheet, int rowIndex, int cellIndex) {
         final Row row = sheet.getRow(rowIndex);
+        if (row == null) {
+            return null;
+        }
         final Cell cell = row.getCell(cellIndex);
         return cell == null ? null : cellToObject(cell);
     }
