@@ -16,4 +16,4 @@ User extra data store db schema:
 
 Admin program data store db schema:
 
-![pt schema](pt-schema-program-data-v2.png)
+![pt schema](pt-schema-program-data-v3.png)
