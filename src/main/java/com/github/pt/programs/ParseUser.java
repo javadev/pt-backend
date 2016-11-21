@@ -24,17 +24,17 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 @Setter
 @Entity
-@Table (name = "parse_result", schema = "ptcore")
+@Table (name = "parse_user", schema = "ptcore")
 @DynamicInsert
-public class ParseResult {
+public class ParseUser {
     @Id
-    @SequenceGenerator(name = "ParseResultIdSequence", sequenceName = "ptcore.parse_result_id_seq",
+    @SequenceGenerator(name = "ParseUserIdSequence", sequenceName = "ptcore.parse_user_id_seq",
             allocationSize = 1, initialValue = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ParseResultIdSequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ParseUserIdSequence")
     Long id;
     LocalDateTime created;
-    String user_name;
-    String workouts;
+    String name;
+    Integer sheet_index;
     String errors;
     @ManyToOne
     @JoinColumn(name="program_id")

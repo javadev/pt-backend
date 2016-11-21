@@ -40,6 +40,6 @@ public class Program {
     LocalDateTime updated;
     Boolean active;
     @OneToMany(mappedBy="program")
-    List<ParseResult> parseResults;
+    List<ParseUser> parseUsers;
 
 }

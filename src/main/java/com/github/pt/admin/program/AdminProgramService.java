@@ -1,8 +1,7 @@
 package com.github.pt.admin.program;
 
 import com.github.pt.ResourceNotFoundException;
-import com.github.pt.programs.ParseResult;
-import com.github.pt.programs.ParseResultRepository;
+import com.github.pt.programs.ParseUser;
 import com.github.pt.programs.Program;
 import com.github.pt.programs.ProgramRepository;
 import com.github.pt.xlsx.ExcelUser;
@@ -14,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import com.github.pt.programs.ParseUserRepository;
 
 @Service
 class AdminProgramService {
@@ -21,12 +21,12 @@ class AdminProgramService {
     private static final String BASE64_PREFIX = ";base64,";
     private static final int BASE64_PREFIX_LENGTH = 8;
     private final ProgramRepository programRepository;
-    private final ParseResultRepository parseResultRepository;
+    private final ParseUserRepository parseUserRepository;
 
     AdminProgramService(ProgramRepository programRepository,
-            ParseResultRepository parseResultRepository) {
+            ParseUserRepository parseResultRepository) {
         this.programRepository = programRepository;
-        this.parseResultRepository = parseResultRepository;
+        this.parseUserRepository = parseResultRepository;
     }
 
     List<ProgramResponseDTO> findAll() {
@@ -47,10 +47,10 @@ class AdminProgramService {
                 .fileType(program.getFile_type())
                 .dataUrl(program.getData_url())
                 .updated(program.getUpdated())
-                .parseResults(program.getParseResults().stream().map(result -> ParseResultDTO.builder()
+                .parseResults(program.getParseUsers().stream().map(result -> ParseResultDTO.builder()
                     .id(result.getId())
-                    .userName(result.getUser_name())
-                    .workouts(result.getWorkouts())
+                    .userName(result.getName())
+//                    .workouts(result.getWorkouts())
                     .errors(result.getErrors())
                     .build()
                 ).collect(Collectors.toList()))
@@ -73,7 +73,7 @@ class AdminProgramService {
         program.setFile_type(programRequestDTO.getFileType());
         program.setData_url(programRequestDTO.getDataUrl());
         final Program savedProgram = programRepository.save(program);
-        program.setParseResults(parseResultRepository.save(parseDataUrl(programRequestDTO, savedProgram)));
+        program.setParseUsers(parseUserRepository.save(parseDataUrl(programRequestDTO, savedProgram)));
         return programToDto(program);
     }
 
@@ -88,20 +88,20 @@ class AdminProgramService {
         program.setFile_type(programRequestDTO.getFileType());
         program.setData_url(programRequestDTO.getDataUrl());
         program.setUpdated(LocalDateTime.now());
-        parseResultRepository.delete(program.getParseResults());
-        program.setParseResults(parseResultRepository.save(parseDataUrl(programRequestDTO, program)));
+        parseUserRepository.delete(program.getParseUsers());
+        program.setParseUsers(parseUserRepository.save(parseDataUrl(programRequestDTO, program)));
         return programToDto(programRepository.save(program));
     }
     
-    private List<ParseResult> parseDataUrl(ProgramRequestDTO programRequestDTO, final Program program) {
+    private List<ParseUser> parseDataUrl(ProgramRequestDTO programRequestDTO, final Program program) {
         final ByteArrayInputStream arrayInputStream = dataUrlToInputStream(programRequestDTO.getDataUrl());
         final XlsxParser xlsxParser = XlsxParser.of(arrayInputStream);
         final List<ExcelUser> excelUsers = xlsxParser.getExcelUsers();
         return excelUsers.stream().map(user -> {
-            final ParseResult parseResult = new ParseResult();
-            parseResult.setUser_name(user.getName());
-            parseResult.setWorkouts(user.getWorkouts().stream()
-                    .map(workout -> workout.getName()).collect(Collectors.joining(", ")));
+            final ParseUser parseResult = new ParseUser();
+            parseResult.setName(user.getName());
+//            parseResult.setWorkouts(user.getWorkouts().stream()
+//                    .map(workout -> workout.getName()).collect(Collectors.joining(", ")));
             parseResult.setErrors(user.getErrors().stream().collect(Collectors.joining(", ")));
             parseResult.setProgram(program);
             return parseResult;
