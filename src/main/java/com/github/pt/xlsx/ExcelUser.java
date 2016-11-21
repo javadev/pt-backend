@@ -17,6 +17,7 @@ import lombok.ToString;
 @ToString
 public class ExcelUser {
     String name;
+    int sheetIndex;
     List<Workout> workouts = new ArrayList<>();
     List<String> errors = new ArrayList<>();
 }

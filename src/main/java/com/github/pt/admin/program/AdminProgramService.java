@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.github.pt.programs.ParseUserRepository;
+import com.github.pt.programs.ParseWorkout;
+import com.github.pt.programs.ParseWorkoutItem;
 
 @Service
 class AdminProgramService {
@@ -47,10 +49,25 @@ class AdminProgramService {
                 .fileType(program.getFile_type())
                 .dataUrl(program.getData_url())
                 .updated(program.getUpdated())
-                .parseResults(program.getParseUsers().stream().map(result -> ParseResultDTO.builder()
+                .parseUsers(program.getParseUsers().stream().map(result -> ParseUserDTO.builder()
                     .id(result.getId())
-                    .userName(result.getName())
-//                    .workouts(result.getWorkouts())
+                    .name(result.getName())
+                    .workouts(result.getParseWorkouts().stream().map(workout -> ParseWorkoutDTO.builder()
+                        .id(workout.getId())
+                        .name(workout.getName())
+                        .workoutItems(workout.getParseWorkoutItems().stream().map(workoutItem -> ParseWorkoutItemDTO.builder()
+                                .id(workoutItem.getId())
+                                .name(workoutItem.getName())
+                                .sets(workoutItem.getSets())
+                                .repetitions(workoutItem.getRepetitions())
+                                .weight(workoutItem.getWeight())
+                                .bodyweight(workoutItem.getBodyweight())
+                                .time_in_min(workoutItem.getTime_in_min())
+                                .speed(workoutItem.getSpeed())
+                                .resistance(workoutItem.getResistance())
+                                .build()).collect(Collectors.toList()))
+                        .build()
+                    ).collect(Collectors.toList()))
                     .errors(result.getErrors())
                     .build()
                 ).collect(Collectors.toList()))
@@ -98,13 +115,30 @@ class AdminProgramService {
         final XlsxParser xlsxParser = XlsxParser.of(arrayInputStream);
         final List<ExcelUser> excelUsers = xlsxParser.getExcelUsers();
         return excelUsers.stream().map(user -> {
-            final ParseUser parseResult = new ParseUser();
-            parseResult.setName(user.getName());
-//            parseResult.setWorkouts(user.getWorkouts().stream()
-//                    .map(workout -> workout.getName()).collect(Collectors.joining(", ")));
-            parseResult.setErrors(user.getErrors().stream().collect(Collectors.joining(", ")));
-            parseResult.setProgram(program);
-            return parseResult;
+            final ParseUser parseUser = new ParseUser();
+            parseUser.setName(user.getName());
+            parseUser.setParseWorkouts(user.getWorkouts().stream()
+                    .map(workout -> {
+                        ParseWorkout parseWorkout = new ParseWorkout();
+                        parseWorkout.setParseUser(parseUser);
+                        parseWorkout.setName(workout.getName());
+                        parseWorkout.setParseWorkoutItems(workout.getWorkoutItems().stream().map(workoutItem -> {
+                            ParseWorkoutItem parseWorkoutItem = new ParseWorkoutItem();
+                            parseWorkoutItem.setParseWorkout(parseWorkout);
+                            parseWorkoutItem.setName(workoutItem.getInput().getExercise());
+                            parseWorkoutItem.setSets(workoutItem.getInput().getSets() == null
+                                    ? null : workoutItem.getInput().getSets().intValue());
+                            parseWorkoutItem.setRepetitions(workoutItem.getInput().getRepetitions() == null
+                                    ? null : workoutItem.getInput().getRepetitions().intValue());
+                            parseWorkoutItem.setWeight(workoutItem.getInput().getWeight() == null
+                                    ? null : Integer.parseInt(workoutItem.getInput().getWeight().replace("KG", "").trim()));
+                            return parseWorkoutItem;
+                        }).collect(Collectors.toList()));
+                        return parseWorkout;
+                    }).collect(Collectors.toList()));
+            parseUser.setErrors(user.getErrors().stream().collect(Collectors.joining(", ")));
+            parseUser.setProgram(program);
+            return parseUser;
         }).collect(Collectors.toList());
     }
     

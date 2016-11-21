@@ -34,9 +34,13 @@ public class ParseWorkoutItem {
     Long id;
     LocalDateTime created;
     String name;
-    Integer speed;
-    Integer incline;
+    Integer sets;
+    Integer repetitions;
+    Integer weight;
+    Boolean bodyweight;
     Integer time_in_min;
+    Integer speed;
+    Integer resistance;
     @ManyToOne
     @JoinColumn(name="parse_workout_id")
     @JsonBackReference

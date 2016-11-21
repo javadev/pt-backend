@@ -1,5 +1,6 @@
 package com.github.pt.admin.program;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +14,8 @@ import lombok.Builder;
 @Getter
 @Setter
 @Builder
-class ParseResultDTO {
+class ParseWorkoutDTO {
     Long id;
-    String userName;
-    String workouts;
-    String errors;
+    String name;
+    List<ParseWorkoutItemDTO> workoutItems;
 }

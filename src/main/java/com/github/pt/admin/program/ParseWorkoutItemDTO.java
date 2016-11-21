@@ -1,23 +1,27 @@
-package com.github.pt.xlsx;
+package com.github.pt.admin.program;
 
-import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.ToString;
+import lombok.Builder;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
 @Getter
 @Setter
-@ToString
-public class Workout {
+@Builder
+class ParseWorkoutItemDTO {
+    Long id;
     String name;
-    int columnIndex;
-    int rowIndex;
-    List<WorkoutItem> workoutItems = new ArrayList<>();
+    Integer sets;
+    Integer repetitions;
+    Integer weight;
+    Boolean bodyweight;
+    Integer time_in_min;
+    Integer speed;
+    Integer resistance;
 }

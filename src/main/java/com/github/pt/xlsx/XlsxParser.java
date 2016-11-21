@@ -37,6 +37,7 @@ public class XlsxParser {
                     continue;
                 }
                 final ExcelUser excelUser = new ExcelUser();
+                excelUser.setSheetIndex(index);
                 excelUser.setName(sheet.getSheetName());
                 for (int workoutIndex = 0; workoutIndex < 10; workoutIndex += 1) {
                     final String workoutName = (String) getCellData(sheet, 3, 2 + workoutIndex);
@@ -44,6 +45,8 @@ public class XlsxParser {
                         break;
                     }
                     final Workout workout = new Workout();
+                    workout.setRowIndex(3);
+                    workout.setColumnIndex(2 + workoutIndex);
                     workout.setName(workoutName);
                     for (int workoutItemIndex = 0; workoutItemIndex < 10; workoutItemIndex += 1) {
                         if (!(getCellData(sheet, 5 + workoutItemIndex * 7, 2 + workoutIndex) instanceof Number)) {
@@ -64,6 +67,8 @@ public class XlsxParser {
 
     private WorkoutItem extractWorkoutItem(final Sheet sheet, int workoutItemIndex, int workoutIndex) {
         WorkoutItem workoutItem = new WorkoutItem();
+        workoutItem.setRowIndex(4 + workoutItemIndex * 7);
+        workoutItem.setColumnIndex(2 + workoutIndex);
         String exerciseName = (String) getCellData(sheet, 4 + workoutItemIndex * 7, 2 + workoutIndex);
         Number setsInp = (Number) getCellData(sheet, 5 + workoutItemIndex * 7, 2 + workoutIndex);
         Number repetitionsInp = (Number) getCellData(sheet, 6 + workoutItemIndex * 7, 2 + workoutIndex);
