@@ -2,6 +2,7 @@ package com.github.pt.programs;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
@@ -40,4 +42,6 @@ public class ParseUser {
     @JoinColumn(name="program_id")
     @JsonBackReference
     Program program;
+    @OneToMany(mappedBy="parseUser")
+    List<ParseWorkout> parseWorkouts;
 }

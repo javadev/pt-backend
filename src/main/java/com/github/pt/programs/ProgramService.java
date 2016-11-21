@@ -41,7 +41,7 @@ class ProgramService {
         inWarmupWorkoutItem111.setD_exercise_name("Treadmill 11");
         inWarmupWorkoutItem111.setIncline(4);
         inWarmupWorkoutItem111.setTime_in_min(10);
-        inWorkout11.setInWarmupWorkoutItem(Arrays.asList(inWarmupWorkoutItem111));
+        inWorkout11.setInWarmupWorkoutItems(Arrays.asList(inWarmupWorkoutItem111));
         InWorkoutItem inWorkoutItem111 = new InWorkoutItem();
         inWorkoutItem111.setId(1L);
         inWorkoutItem111.setD_exercise_id("20");
@@ -63,7 +63,7 @@ class ProgramService {
         inWarmupWorkoutItem121.setD_exercise_name("Treadmill 12");
         inWarmupWorkoutItem121.setIncline(4);
         inWarmupWorkoutItem121.setTime_in_min(10);
-        inWorkout12.setInWarmupWorkoutItem(Arrays.asList(inWarmupWorkoutItem121));
+        inWorkout12.setInWarmupWorkoutItems(Arrays.asList(inWarmupWorkoutItem121));
         InWorkoutItem inWorkoutItem121 = new InWorkoutItem();
         inWorkoutItem121.setId(3L);
         inWorkoutItem121.setD_exercise_id("40");
@@ -182,8 +182,8 @@ class ProgramService {
             workout.setName(inWorkout.getD_workout_name());
             workout.setItems(new ArrayList<>());
             program.getWorkouts().add(workout);
-            if (inWorkout.getInWarmupWorkoutItem() != null && !inWorkout.getInWarmupWorkoutItem().isEmpty()) {
-                InWarmupWorkoutItem inWarmupWorkoutItem = inWorkout.getInWarmupWorkoutItem().get(0);
+            if (inWorkout.getInWarmupWorkoutItems() != null && !inWorkout.getInWarmupWorkoutItems().isEmpty()) {
+                InWarmupWorkoutItem inWarmupWorkoutItem = inWorkout.getInWarmupWorkoutItems().get(0);
                 WarmupWorkoutItemResponseDTO warmupWorkoutItem = new WarmupWorkoutItemResponseDTO();
                 warmupWorkoutItem.setId(inWarmupWorkoutItem.getId());
                 warmupWorkoutItem.setExercise_id(Long.parseLong(inWarmupWorkoutItem.getD_exercise_id()));

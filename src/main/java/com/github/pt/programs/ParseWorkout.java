@@ -26,22 +26,24 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 @Setter
 @Entity
-@Table (name = "in_workout", schema = "ptcore")
+@Table (name = "parse_workout", schema = "ptcore")
 @DynamicInsert
-public class InWorkout {
+public class ParseWorkout {
     @Id
-    @SequenceGenerator(name = "InWorkoutIdSequence", sequenceName = "ptcore.in_workout_id_seq",
+    @SequenceGenerator(name = "ParseWorkoutIdSequence", sequenceName = "ptcore.parse_workout_id_seq",
             allocationSize = 1, initialValue = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "InWorkoutIdSequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ParseWorkoutIdSequence")
     Long id;
     LocalDateTime created;
-    String d_workout_name;
+    String name;
+    Integer column_index;
+    Integer row_index;
     @ManyToOne
-    @JoinColumn(name="in_program_id")
+    @JoinColumn(name="parse_user_id")
     @JsonBackReference
-    InProgram inProgram;
-    @OneToMany(mappedBy="inWorkout")
-    List<InWarmupWorkoutItem> inWarmupWorkoutItems;
-    @OneToMany(mappedBy="inWorkout")
-    List<InWorkoutItem> inWorkoutItems;
+    ParseUser parseUser;
+    @OneToMany(mappedBy="parseWorkout")
+    List<ParseWarmupWorkoutItem> parseWarmupWorkoutItems;
+    @OneToMany(mappedBy="parseWorkout")
+    List<ParseWorkoutItem> parseWorkoutItems;
 }
