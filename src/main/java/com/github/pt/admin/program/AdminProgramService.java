@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import com.github.pt.programs.ParseUserRepository;
 import com.github.pt.programs.ParseWorkout;
 import com.github.pt.programs.ParseWorkoutItem;
+import com.github.pt.programs.ParseWorkoutItemRepository;
+import com.github.pt.programs.ParseWorkoutRepository;
 
 @Service
 class AdminProgramService {
@@ -24,11 +26,17 @@ class AdminProgramService {
     private static final int BASE64_PREFIX_LENGTH = 8;
     private final ProgramRepository programRepository;
     private final ParseUserRepository parseUserRepository;
+    private final ParseWorkoutRepository parseWorkoutRepository;
+    private final ParseWorkoutItemRepository parseWorkoutItemRepository;
 
     AdminProgramService(ProgramRepository programRepository,
-            ParseUserRepository parseResultRepository) {
+            ParseUserRepository parseResultRepository,
+            ParseWorkoutRepository parseWorkoutRepository,
+            ParseWorkoutItemRepository parseWorkoutItemRepository) {
         this.programRepository = programRepository;
         this.parseUserRepository = parseResultRepository;
+        this.parseWorkoutRepository = parseWorkoutRepository;
+        this.parseWorkoutItemRepository = parseWorkoutItemRepository;
     }
 
     List<ProgramResponseDTO> findAll() {
@@ -90,8 +98,28 @@ class AdminProgramService {
         program.setFile_type(programRequestDTO.getFileType());
         program.setData_url(programRequestDTO.getDataUrl());
         final Program savedProgram = programRepository.save(program);
-        program.setParseUsers(parseUserRepository.save(parseDataUrl(programRequestDTO, savedProgram)));
+        List<ParseUser> savedParseUsers = parseDataUrlAndSaveUsers(programRequestDTO, savedProgram);
+        program.setParseUsers(savedParseUsers);
         return programToDto(program);
+    }
+
+    private List<ParseUser> parseDataUrlAndSaveUsers(ProgramRequestDTO programRequestDTO, final Program savedProgram) {
+        final List<ParseUser> savedParseUsers = parseUserRepository.save(parseDataUrl(programRequestDTO, savedProgram));
+        for (final ParseUser parseUser : savedParseUsers) {
+            for (final ParseWorkout parseWorkout : parseUser.getParseWorkouts()) {
+                parseWorkout.setParseUser(parseUser);
+            }
+            final List<ParseWorkout> savedParseWorkouts = parseWorkoutRepository.save(parseUser.getParseWorkouts());
+            parseUser.setParseWorkouts(savedParseWorkouts);
+            for (final ParseWorkout parseWorkout : savedParseWorkouts) {
+                for (final ParseWorkoutItem parseWorkoutItem : parseWorkout.getParseWorkoutItems()) {
+                    parseWorkoutItem.setParseWorkout(parseWorkout);
+                }
+                final List<ParseWorkoutItem> savedParseWorkoutItems = parseWorkoutItemRepository.save(parseWorkout.getParseWorkoutItems());
+                parseWorkout.setParseWorkoutItems(savedParseWorkoutItems);
+            }
+        }
+        return savedParseUsers;
     }
 
     ProgramResponseDTO update(Long id, ProgramRequestDTO programRequestDTO) {
@@ -106,7 +134,7 @@ class AdminProgramService {
         program.setData_url(programRequestDTO.getDataUrl());
         program.setUpdated(LocalDateTime.now());
         parseUserRepository.delete(program.getParseUsers());
-        program.setParseUsers(parseUserRepository.save(parseDataUrl(programRequestDTO, program)));
+        program.setParseUsers(parseDataUrlAndSaveUsers(programRequestDTO, program));
         return programToDto(programRepository.save(program));
     }
     

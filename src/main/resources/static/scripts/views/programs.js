@@ -81,10 +81,10 @@ function ($, _, Backbone, Marionette, App) {
         '{{ id }}',
       '</td>',
       '<td>',
-        '{{ userName }}',
+        '{{ name }}',
       '</td>',
       '<td>',
-        '{{ workouts }}',
+        '{{ _.map(workouts, function(item) {return item.name;}) }}',
       '</td>',
       '<td>',
         '{{ errors }}',
@@ -170,7 +170,7 @@ function ($, _, Backbone, Marionette, App) {
       this.buttons.show(new NewProgramButtons({model: this.model}));
       this.inputForm.show(new NewProgramInputForm({model: this.model}));
       this.parseResultTable.show(new ParseResultForm({model: this.model,
-          collection: new Backbone.Collection(this.model.get('parseResults'))}));
+          collection: new Backbone.Collection(this.model.get('parseUsers'))}));
     }
   });
 
@@ -286,7 +286,7 @@ function ($, _, Backbone, Marionette, App) {
       var view = this;
       this.model.save().done(function() {
         view.collection.reset();
-        view.collection.set(model.get('parseResults'));
+        view.collection.set(model.get('parseUsers'));
       })
       .fail(function (xhr) {
         App.vent.trigger('xhr:error', 'Program save was failed');
