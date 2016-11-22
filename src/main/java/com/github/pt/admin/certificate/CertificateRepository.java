@@ -1,6 +1,10 @@
 package com.github.pt.admin.certificate;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-interface CertificateRepository extends JpaRepository<Certificate, Long> {
+public interface CertificateRepository extends JpaRepository<Certificate, Long> {
+
+    List<Certificate> findByCode(String code);
+
 }

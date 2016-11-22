@@ -1,6 +1,7 @@
 package com.github.pt.token;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.github.pt.activatecertificate.InUserCertificate;
 import com.github.pt.programs.InProgram;
 import com.github.pt.reportweight.InUserWeight;
 import java.time.LocalDate;
@@ -55,4 +56,6 @@ public class InUser {
     List<InProgram> inPrograms;
     @OneToMany(mappedBy="inUser")
     List<InUserWeight> inUserWeights;
+    @OneToMany(mappedBy="inUser")
+    List<InUserCertificate> inUserCertificates;
 }
