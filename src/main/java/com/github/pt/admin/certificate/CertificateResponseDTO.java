@@ -16,6 +16,6 @@ import lombok.Builder;
 class CertificateResponseDTO {
     Long id;
     String code;
-    Integer amount_of_days;
+    Integer amountOfDays;
     Boolean activated;
 }

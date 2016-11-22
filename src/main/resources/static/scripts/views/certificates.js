@@ -9,53 +9,26 @@ define([
 ],
 function ($, _, Marionette, App) {
   'use strict';
-
-  var Layout = Marionette.Layout.extend({
-    regions: {
-      mainUsers: '#usersMappingConfig',
-      mainExercises: '#exercisesMappingConfig',
-      mainPrograms: '#programsMappingConfig',
-      mainCertificates: '#certificatesMappingConfig'
-    },
-    template: _.template([
-      '<!-- Nav tabs -->',
-      '<ul class="nav nav-tabs">',
-      '  <li class="active"><a href="#user" data-toggle="tab">Users</a></li>',
-      '  <li><a href="#exercise" data-toggle="tab">Exercises</a></li>',
-      '  <li><a href="#program" data-toggle="tab" class="js-admin-config">Programs</a></li>',
-      '  <li><a href="#certificate" data-toggle="tab" class="js-admin-config">Certificates</a></li>',
-      '</ul>',
-      '<!-- Tab panes -->',
-      '<div class="tab-content">',
-      '  <div class="tab-pane active" id="user">',
-      '    <div id="usersMappingConfig"></div>',
-      '  </div>',
-      '  <div class="tab-pane" id="exercise">',
-      '    <div id="exercisesMappingConfig"></div>',
-      '  </div>',
-      '  <div class="tab-pane" id="program">',
-      '    <div id="programsMappingConfig"></div>',
-      '  </div>',
-      '  <div class="tab-pane" id="certificate">',
-      '    <div id="certificatesMappingConfig"></div>',
-      '  </div>',
-      '</div>'
-    ].join(''))
-  });
   
   var EmptyView = Marionette.ItemView.extend({
         tagName: 'tr',
-        template: _.template('<td colspan="4">There are no users available.</td>')
+        template: _.template('<td colspan="4">There are no certificates available.</td>')
   });
 
-  var User = Marionette.ItemView.extend({
+  var Certificate = Marionette.ItemView.extend({
     tagName: 'tr',
     template: _.template([
       '<td>',
         '{{ id }}',
       '</td>',
       '<td>',
-        '{{ name }}',
+        '{{ code }}',
+      '</td>',
+      '<td>',
+        '{{ amountOfDays }}',
+      '</td>',
+      '<td>',
+        '{{ activated }}',
       '</td>',
       '<td>',
         '<button type="button" class="btn btn-default btn-sm js-edit-value">',
@@ -73,21 +46,21 @@ function ($, _, Marionette, App) {
       this.collection = options.collection;
     },
     events: {
-      'click .js-edit-value': 'editUser',
-      'click .js-delete-value': 'deleteUser'
+      'click .js-edit-value': 'editCertificate',
+      'click .js-delete-value': 'deleteCertificate'
     },
-    editUser: function() {
-      this.collection.trigger('user:new', this.model);
+    editCertificate: function() {
+      this.collection.trigger('certificate:new', this.model);
     },
-    deleteUser: function() {
-      event.preventDefault();
+    deleteCertificate: function(evt) {
+      evt.preventDefault();
       var model = this.model;
       var collection = this.collection;
       this.model.destroy()
         .done(function() {
         })
         .fail(function (xhr) {
-          App.vent.trigger('xhr:error', 'User ' + model.get('id') + ' delete was failed');
+          App.vent.trigger('xhr:error', 'Certificate ' + model.get('id') + ' delete was failed');
         })
         .always(function() {
           collection.fetch();
@@ -95,9 +68,9 @@ function ($, _, Marionette, App) {
     }
   });
 
-  var Users = Marionette.CompositeView.extend({
+  var Certificates = Marionette.CompositeView.extend({
     itemViewContainer: 'tbody',
-    itemView: User,
+    itemView: Certificate,
     emptyView: EmptyView,
     tagName: 'div',
     className: 'js-users-mapping-config',
@@ -112,16 +85,18 @@ function ($, _, Marionette, App) {
     template: _.template([
     '<div class="panel panel-primary">',
       '<div class="panel-heading">',
-        '<h3 class="panel-title"> Users </h3>',
+        '<h3 class="panel-title"> Certificates </h3>',
       '</div>',
-      '<button class="btn btn-primary js-new-user" style="margin: 10px;">',
-        'New user',
+      '<button class="btn btn-primary js-new-certificate" style="margin: 10px;">',
+        'New certificate',
       '</button>',
       '<table class="table">',
         '<thead>',
           '<tr>',
             '<th>ID</th>',
-            '<th>Name</th>',
+            '<th>Code</th>',
+            '<th>Amount of days</th>',
+            '<th>Activated</th>',
             '<th></th>',
             '<th></th>',
           '</tr>',
@@ -134,14 +109,14 @@ function ($, _, Marionette, App) {
       'sync': 'render'
     },
     events: {
-      'click .js-new-user': 'newUser'
+      'click .js-new-certificate': 'newCertificate'
     },
-    newUser: function() {
-      this.collection.trigger('user:new');
+    newCertificate: function() {
+      this.collection.trigger('certificate:new');
     }
   });
 
-  var NewUserLayout = Marionette.Layout.extend({
+  var NewCertificateLayout = Marionette.Layout.extend({
     template: _.template([
       '<div class="panel panel-primary">',
         '<div class="panel-heading">',
@@ -155,7 +130,7 @@ function ($, _, Marionette, App) {
       var model = this.model;
       return {
         getHeader: function () {
-          return model.isNew() ? 'New user' : 'Edit user';
+          return model.isNew() ? 'New certificate' : 'Edit certificate';
         }
       };
     },
@@ -166,12 +141,12 @@ function ($, _, Marionette, App) {
       inputForm: '#inputForm'
     },
     onShow: function() {
-      this.buttons.show(new NewUserButtons({model: this.model}));
-      this.inputForm.show(new NewUserInputForm({model: this.model}));
+      this.buttons.show(new NewCertificateButtons({model: this.model}));
+      this.inputForm.show(new NewCertificateInputForm({model: this.model}));
     }
   });
 
-  var NewUserButtons = Marionette.ItemView.extend({
+  var NewCertificateButtons = Marionette.ItemView.extend({
     template: _.template([
       '<div class="btn-group">',
         '<button class="btn btn-default js-back" style="margin: 10px 0 0 10px;">',
@@ -206,16 +181,16 @@ function ($, _, Marionette, App) {
     },
     back: function() {
       event.preventDefault();
-      this.model.trigger('user:back');
+      this.model.trigger('certificate:back');
     },
     save: function() {
       event.preventDefault();
       var model = this.model;
       this.model.save().done(function() {
-        model.trigger('user:back');
+        model.trigger('certificate:back');
       })
       .fail(function (xhr) {
-        App.vent.trigger('xhr:error', 'User save was failed');
+        App.vent.trigger('xhr:error', 'Certificate save was failed');
       });
     },
     discard: function(event) {
@@ -225,7 +200,7 @@ function ($, _, Marionette, App) {
     }
   });
 
-  var NewUserInputForm = Marionette.ItemView.extend({
+  var NewCertificateInputForm = Marionette.ItemView.extend({
     className: 'user-input-form',
     template: _.template([
       '<div class="form-group">',
@@ -237,33 +212,44 @@ function ($, _, Marionette, App) {
         '</div>',
       '</div>',
       '<div class="form-group">',
-        '<label class="col-sm-3 control-label">Name</label>',
+        '<label class="col-sm-3 control-label">Code</label>',
         '<div class="col-sm-8">',
-          '<textarea id="user-name" class="form-control" rows="3" placeholder="Please enter name" name="address" required="true">',
-            '{{ name }}',
+          '<textarea id="certificate-code" class="form-control" rows="3" placeholder="Please enter code" name="address" required="true">',
+            '{{ code }}',
+          '</textarea>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Amount of days</label>',
+        '<div class="col-sm-8">',
+          '<textarea id="certificate-amountOfDays" class="form-control" rows="3" placeholder="Please enter amount of days" name="address" required="true">',
+            '{{ amountOfDays }}',
           '</textarea>',
         '</div>',
       '</div>'
     ].join('')),
     modelEvents: {
-      'sync': 'render',
-      'technicians:load': 'render'
+      'sync': 'render'
     },
     events: {
-      'input #user-name': 'inputName'
+      'input #certificate-code': 'inputCode',
+      'input #certificate-amountOfDays': 'inputAmountOfDays'
     },
     ui: {
-      name: '#user-name'
+      code: '#certificate-code',
+      amountOfDays: '#certificate-amountOfDays'
     },
-    inputName: function() {
-      this.model.set('name', this.ui.name.val());
+    inputCode: function() {
+      this.model.set('code', this.ui.code.val());
+    },
+    inputAmountOfDays: function() {
+      this.model.set('amountOfDays', this.ui.amountOfDays.val());
     }
   });
 
   return {
-    Users: Users,
-    NewUserLayout: NewUserLayout,
-    Layout: Layout
+    Certificates: Certificates,
+    NewCertificateLayout: NewCertificateLayout
   };
 
 });

@@ -23,7 +23,7 @@ class AdminCertificateService {
         return CertificateResponseDTO.builder()
                 .id(certificate.getId())
                 .code(certificate.getCode())
-                .amount_of_days(certificate.getAmount_of_days())
+                .amountOfDays(certificate.getAmount_of_days())
                 .activated(certificate.getActivated())
                 .build();
     }
@@ -40,7 +40,7 @@ class AdminCertificateService {
     CertificateResponseDTO create(CertificateRequestDTO certificateRequestDTO) {
         final Certificate certificate = new Certificate();
         certificate.setCode(certificateRequestDTO.getCode());
-        certificate.setAmount_of_days(certificateRequestDTO.getAmount_of_days());
+        certificate.setAmount_of_days(certificateRequestDTO.getAmountOfDays());
         certificate.setActivated(Boolean.FALSE);
         return certifivateToDto(certificateRepository.save(certificate));
     }
@@ -52,7 +52,7 @@ class AdminCertificateService {
                     + id);
         }
         certificate.setCode(certificateRequestDTO.getCode());
-        certificate.setAmount_of_days(certificateRequestDTO.getAmount_of_days());
+        certificate.setAmount_of_days(certificateRequestDTO.getAmountOfDays());
         return certifivateToDto(certificateRepository.save(certificate));
     }
 

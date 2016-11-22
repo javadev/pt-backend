@@ -15,5 +15,5 @@ import lombok.Builder;
 @Builder
 class CertificateRequestDTO {
     String code;
-    Integer amount_of_days;
+    Integer amountOfDays;
 }

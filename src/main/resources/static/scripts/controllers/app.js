@@ -10,10 +10,12 @@ define([
   'models/exercises',
   'views/exercises',
   'models/programs',
-  'views/programs'
+  'views/programs',
+  'models/certificates',
+  'views/certificates'
 ],
   function($, _, Marionette, App, UsersModels, UsersViews, ExercisesModels, ExercisesViews,
-    ProgramsModels, ProgramsViews) {
+    ProgramsModels, ProgramsViews, CertificatesModels, CertificatesViews) {
   'use strict';
 
     function setupApplicationLayout() {
@@ -118,14 +120,40 @@ define([
             programs.fetch();
             applicationLayout.mainPrograms.show(programsView);
           });
-          program.on('program:parseFile', function() {
-            console.log(this.get('fileName'));
-          });
           applicationLayout.mainPrograms.show(programEditView);
         });
         applicationLayout.mainPrograms.show(programsView);
+
+        var certificates = new CertificatesModels.Certificates();
+        var certificatesView = new CertificatesViews.Certificates({
+          collection: certificates
+        });
+        certificates.fetch();
+        certificates.on('certificate:new', function(model) {
+          var certificate = new CertificatesModels.Certificate();
+          if (!_.isUndefined(model)) {
+            certificate.set({
+              id: model.get('id'),
+              code: model.get('code'),
+              amountOfDays: model.get('amountOfDays'),
+              activated: model.get('activated')
+            });
+          }
+          var certificateEditView = new CertificatesViews.NewCertificateLayout({
+            model: certificate
+          });
+          certificate.on('certificate:back', function() {
+            var certificatesView = new CertificatesViews.Certificates({
+              collection: certificates
+            });
+            certificates.fetch();
+            applicationLayout.mainCertificates.show(certificatesView);
+          });
+          applicationLayout.mainCertificates.show(certificateEditView);
+        });
+        applicationLayout.mainCertificates.show(certificatesView);
     }
-    
+
     return Marionette.Controller.extend({
       index: function () {
         setupApplicationLayout('');
