@@ -34,6 +34,7 @@ class ActivateCertificateService {
                 ActivateCertificateResponseDTO.builder()
                     .id(inUserCertificate.getId())
                     .code(inUserCertificate.getCode())
+                    .expiration_date(inUserCertificate.getCreated().toLocalDate().plusDays(inUserCertificate.getAmount_of_days()))
                     .build()
             ).collect(Collectors.toList());
         }
