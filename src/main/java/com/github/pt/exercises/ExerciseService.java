@@ -1,9 +1,8 @@
 package com.github.pt.exercises;
 
-import com.github.pt.dictionary.DictionaryData;
-import com.github.pt.dictionary.DictionaryRepository;
+import com.github.pt.dictionary.DictionaryName;
+import com.github.pt.dictionary.DictionaryService;
 import com.github.pt.user.UserService;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +11,15 @@ import org.springframework.stereotype.Service;
 @Service
 class ExerciseService {
     private final ExerciseRepository exerciseRepository;
-    private final DictionaryRepository dictionaryRepository;
+    private final DictionaryService dictionaryService;
     private final UserService userService;
 
     @Autowired
     ExerciseService(ExerciseRepository exerciseRepository,
-            DictionaryRepository dictionaryRepository,
+            DictionaryService dictionaryService,
             UserService userService) {
         this.exerciseRepository = exerciseRepository;
-        this.dictionaryRepository = dictionaryRepository;
+        this.dictionaryService = dictionaryService;
         this.userService = userService;
     }
 
@@ -32,16 +31,10 @@ class ExerciseService {
         return exercises.stream().map(exercise -> {
             ExerciseDTO exerciseDTO = new ExerciseDTO();
             exerciseDTO.setId(Long.parseLong(exercise.getDExerciseName()));
-            List<DictionaryData> exerciseNames = dictionaryRepository.
-                    findDictionaryValue(DictionaryRepository.EXERCISE_NAME, exercise.getDExerciseName(),
-                            LocalDateTime.now());
-            exerciseDTO.setName(exerciseNames.get(0).getDvalue());
+            exerciseDTO.setName(dictionaryService.getEnValue(DictionaryName.exercise_name.name(), exercise.getDExerciseName(), ""));
             ExerciseCategoryDTO categoryDTO = new ExerciseCategoryDTO();
             categoryDTO.setId(Long.parseLong(exercise.getExerciseCategory().getDExerciseCategoryName()));
-            List<DictionaryData> exerciseCategoryNames = dictionaryRepository.
-                    findDictionaryValue(DictionaryRepository.EXERCISE_CATEGORY_NAME,
-                            exercise.getExerciseCategory().getDExerciseCategoryName(), LocalDateTime.now());
-            categoryDTO.setName(exerciseCategoryNames.get(0).getDvalue());
+            categoryDTO.setName(dictionaryService.getEnValue(DictionaryName.exercise_category_name.name(), exercise.getExerciseCategory().getDExerciseCategoryName(), ""));
             exerciseDTO.setCategory(categoryDTO);
             return exerciseDTO;
         }).collect(Collectors.toList());

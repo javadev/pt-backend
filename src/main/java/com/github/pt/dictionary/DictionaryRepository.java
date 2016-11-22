@@ -11,10 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface DictionaryRepository extends JpaRepository<DictionaryData, Long> {
     String ENG_LANGUAGE = "en";
     String NOR_LANGUAGE = "nb";
-    String EXERCISE_NAME = "exercise_name";
-    String EXERCISE_DESCRIPTION = "exercise_description";
-    String EXERCISE_CATEGORY_NAME = "exercise_category_name";
-    String EXERCISE_TYPE_NAME = "exercise_type_name";
 
     @Query("select d from DictionaryData d where d.dlanguage = 'en' and d.dname = ?1 and d.dkey = ?2 "
             + "and d.fromdate <= ?3 and (d.todate is null or d.todate >= ?3) order by d.id desc")

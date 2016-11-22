@@ -1,12 +1,9 @@
 package com.github.pt.admin.exercise;
 
-import com.github.pt.dictionary.DictionaryData;
-import com.github.pt.dictionary.DictionaryRepository;
+import com.github.pt.dictionary.DictionaryService;
 import com.github.pt.exercises.Exercise;
 import com.github.pt.exercises.ExerciseCategory;
 import com.github.pt.exercises.ExerciseRepository;
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Collections;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +26,7 @@ public class AdminExerciseServiceTest {
     @Mock
     private ExerciseTypeRepository exerciseTypeRepository;
     @Mock
-    private DictionaryRepository dictionaryRepository;    
+    private DictionaryService dictionaryService;
 
     @InjectMocks
     private AdminExerciseService tokenService;
@@ -50,26 +47,6 @@ public class AdminExerciseServiceTest {
         savedExercise.setDExerciseName("10");
         savedExercise.setExerciseCategory(existedExerciseCategory);
         when(exerciseRepository.findOne(eq(1L))).thenReturn(savedExercise);
-        DictionaryData dictionaryData = new DictionaryData();
-        dictionaryData.setDkey("10");
-        when(dictionaryRepository.
-                findDictionaryValue(eq(DictionaryRepository.ENG_LANGUAGE),
-                        eq(DictionaryRepository.EXERCISE_NAME), eq("10"),
-                        any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
-        when(dictionaryRepository.
-                findDictionaryValue(
-                        eq(DictionaryRepository.ENG_LANGUAGE),
-                        eq(DictionaryRepository.EXERCISE_CATEGORY_NAME),
-                         eq("10"), any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
-        when(dictionaryRepository.
-                findDictionaryValue(eq(DictionaryRepository.NOR_LANGUAGE),
-                        eq(DictionaryRepository.EXERCISE_NAME), eq("10"),
-                        any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
-        when(dictionaryRepository.
-                findDictionaryValue(
-                        eq(DictionaryRepository.NOR_LANGUAGE),
-                        eq(DictionaryRepository.EXERCISE_CATEGORY_NAME),
-                         eq("10"), any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
         tokenService.findOne(1L);
         verify(exerciseRepository).findOne(eq(1L));   
     }
@@ -81,16 +58,6 @@ public class AdminExerciseServiceTest {
         exerciseRequestDTO.setNameEn("nameEn");
         exerciseRequestDTO.setNameEn("nameNo");
         exerciseRequestDTO.setTypes(Collections.emptyList());
-        DictionaryData dictionaryData = new DictionaryData();
-        dictionaryData.setDkey("10");
-        when(dictionaryRepository
-            .findDictionaryAllValues(eq(DictionaryRepository.ENG_LANGUAGE),
-                    eq(DictionaryRepository.EXERCISE_NAME),
-                    any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
-        when(dictionaryRepository
-            .findDictionaryAllValues(eq(DictionaryRepository.NOR_LANGUAGE),
-                    eq(DictionaryRepository.EXERCISE_NAME),
-                    any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
         ExerciseCategory existedExerciseCategory = new ExerciseCategory();
         existedExerciseCategory.setId(1L);
         existedExerciseCategory.setDExerciseCategoryName("10");
@@ -100,24 +67,6 @@ public class AdminExerciseServiceTest {
         savedExercise.setDExerciseName("10");
         savedExercise.setExerciseCategory(existedExerciseCategory);
         when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
-        when(dictionaryRepository.
-                findDictionaryValue(eq(DictionaryRepository.ENG_LANGUAGE),
-                        eq(DictionaryRepository.EXERCISE_NAME), eq("10"),
-                        any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
-        when(dictionaryRepository.
-                findDictionaryValue(
-                        eq(DictionaryRepository.ENG_LANGUAGE),
-                        eq(DictionaryRepository.EXERCISE_CATEGORY_NAME),
-                         eq("10"), any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
-        when(dictionaryRepository.
-                findDictionaryValue(eq(DictionaryRepository.NOR_LANGUAGE),
-                        eq(DictionaryRepository.EXERCISE_NAME), eq("10"),
-                        any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
-        when(dictionaryRepository.
-                findDictionaryValue(
-                        eq(DictionaryRepository.NOR_LANGUAGE),
-                        eq(DictionaryRepository.EXERCISE_CATEGORY_NAME),
-                         eq("10"), any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
         tokenService.create(exerciseRequestDTO);
         verify(exerciseRepository).save(any(Exercise.class));
     }
@@ -131,16 +80,6 @@ public class AdminExerciseServiceTest {
         exerciseRequestDTO.setTypes(Collections.emptyList());
         Exercise existedExercise = new Exercise();
         when(exerciseRepository.findOne(eq(1L))).thenReturn(existedExercise);
-        DictionaryData dictionaryData = new DictionaryData();
-        dictionaryData.setDkey("10");
-        when(dictionaryRepository
-            .findDictionaryAllValues(eq(DictionaryRepository.ENG_LANGUAGE),
-                    eq(DictionaryRepository.EXERCISE_NAME),
-                    any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
-        when(dictionaryRepository
-            .findDictionaryAllValues(eq(DictionaryRepository.NOR_LANGUAGE),
-                    eq(DictionaryRepository.EXERCISE_NAME),
-                    any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
         ExerciseCategory existedExerciseCategory = new ExerciseCategory();
         existedExerciseCategory.setId(1L);
         existedExerciseCategory.setDExerciseCategoryName("10");
@@ -150,34 +89,12 @@ public class AdminExerciseServiceTest {
         savedExercise.setDExerciseName("10");
         savedExercise.setExerciseCategory(existedExerciseCategory);
         when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
-        when(dictionaryRepository.
-                findDictionaryValue(eq(DictionaryRepository.ENG_LANGUAGE),
-                        eq(DictionaryRepository.EXERCISE_NAME), eq("10"),
-                        any(LocalDateTime.class)))
-                .thenReturn(Arrays.asList(dictionaryData))
-                .thenReturn(Arrays.asList(dictionaryData));
-        when(dictionaryRepository.
-                findDictionaryValue(
-                        eq(DictionaryRepository.ENG_LANGUAGE),
-                        eq(DictionaryRepository.EXERCISE_CATEGORY_NAME),
-                         eq("10"), any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
-        when(dictionaryRepository.
-                findDictionaryValue(eq(DictionaryRepository.NOR_LANGUAGE),
-                        eq(DictionaryRepository.EXERCISE_NAME), eq("10"),
-                        any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
-        when(dictionaryRepository.
-                findDictionaryValue(
-                        eq(DictionaryRepository.NOR_LANGUAGE),
-                        eq(DictionaryRepository.EXERCISE_CATEGORY_NAME),
-                         eq("10"), any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
         tokenService.update(1L, exerciseRequestDTO);
         verify(exerciseRepository).save(any(Exercise.class));
     }
 
     @Test
     public void delete() {
-        DictionaryData dictionaryData = new DictionaryData();
-        dictionaryData.setDkey("10");
         ExerciseCategory existedExerciseCategory = new ExerciseCategory();
         existedExerciseCategory.setId(1L);
         existedExerciseCategory.setDExerciseCategoryName("10");
@@ -186,24 +103,6 @@ public class AdminExerciseServiceTest {
         savedExercise.setDExerciseName("10");
         savedExercise.setExerciseCategory(existedExerciseCategory);
         when(exerciseRepository.findOne(eq(1L))).thenReturn(savedExercise);
-        when(dictionaryRepository.
-                findDictionaryValue(eq(DictionaryRepository.ENG_LANGUAGE),
-                        eq(DictionaryRepository.EXERCISE_NAME), eq("10"),
-                        any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
-        when(dictionaryRepository.
-                findDictionaryValue(
-                        eq(DictionaryRepository.ENG_LANGUAGE),
-                        eq(DictionaryRepository.EXERCISE_CATEGORY_NAME),
-                         eq("10"), any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
-        when(dictionaryRepository.
-                findDictionaryValue(eq(DictionaryRepository.NOR_LANGUAGE),
-                        eq(DictionaryRepository.EXERCISE_NAME), eq("10"),
-                        any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
-        when(dictionaryRepository.
-                findDictionaryValue(
-                        eq(DictionaryRepository.NOR_LANGUAGE),
-                        eq(DictionaryRepository.EXERCISE_CATEGORY_NAME),
-                         eq("10"), any(LocalDateTime.class))).thenReturn(Arrays.asList(dictionaryData));
         tokenService.delete(1L);
         verify(exerciseRepository).delete(eq(1L));
     }

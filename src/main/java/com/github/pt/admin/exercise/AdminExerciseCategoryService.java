@@ -1,9 +1,8 @@
 package com.github.pt.admin.exercise;
 
-import com.github.pt.dictionary.DictionaryData;
-import com.github.pt.dictionary.DictionaryRepository;
+import com.github.pt.dictionary.DictionaryName;
+import com.github.pt.dictionary.DictionaryService;
 import com.github.pt.exercises.ExerciseCategory;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -12,12 +11,12 @@ import org.springframework.stereotype.Service;
 class AdminExerciseCategoryService {
 
     private final ExerciseCategoryRepository exerciseCategoryRepository;
-    private final DictionaryRepository dictionaryRepository;
+    private final DictionaryService dictionaryService;
 
     AdminExerciseCategoryService(ExerciseCategoryRepository exerciseCategoryRepository,
-            DictionaryRepository dictionaryRepository) {
+            DictionaryService dictionaryService) {
         this.exerciseCategoryRepository = exerciseCategoryRepository;
-        this.dictionaryRepository = dictionaryRepository;
+        this.dictionaryService = dictionaryService;
     }
 
     List<ExerciseCategoryResponseDTO> findAll() {
@@ -27,18 +26,14 @@ class AdminExerciseCategoryService {
     }
     
     private ExerciseCategoryResponseDTO exerciseCategoryToDto(ExerciseCategory category) {
-        final List<DictionaryData> exerciseCategoryEnNames = dictionaryRepository.
-                findDictionaryValue(DictionaryRepository.ENG_LANGUAGE, DictionaryRepository.EXERCISE_CATEGORY_NAME,
-                        category.getDExerciseCategoryName(), LocalDateTime.now());
-        final List<DictionaryData> exerciseCategoryNoNames = dictionaryRepository.
-                findDictionaryValue(DictionaryRepository.NOR_LANGUAGE, DictionaryRepository.EXERCISE_CATEGORY_NAME,
-                        category.getDExerciseCategoryName(), LocalDateTime.now());
+        final String exerciseCategoryEnName = dictionaryService.getEnValue(DictionaryName.exercise_category_name.name(),
+                        category.getDExerciseCategoryName(), "");
+        final String exerciseCategoryNoName = dictionaryService.getNoValue(DictionaryName.exercise_category_name.name(),
+                        category.getDExerciseCategoryName(), exerciseCategoryEnName);
         return ExerciseCategoryResponseDTO.builder()
                 .id(category.getId())
-                .nameEn(exerciseCategoryEnNames.get(0).getDvalue())
-                .nameNo(exerciseCategoryNoNames.isEmpty() ? 
-                        exerciseCategoryEnNames.get(0).getDvalue()
-                        : exerciseCategoryNoNames.get(0).getDvalue())
+                .nameEn(exerciseCategoryEnName)
+                .nameNo(exerciseCategoryNoName)
                 .build();
     }
 }

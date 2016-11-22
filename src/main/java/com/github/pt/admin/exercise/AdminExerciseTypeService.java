@@ -1,9 +1,8 @@
 package com.github.pt.admin.exercise;
 
-import com.github.pt.dictionary.DictionaryData;
-import com.github.pt.dictionary.DictionaryRepository;
+import com.github.pt.dictionary.DictionaryName;
+import com.github.pt.dictionary.DictionaryService;
 import com.github.pt.exercises.ExerciseType;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -12,12 +11,12 @@ import org.springframework.stereotype.Service;
 class AdminExerciseTypeService {
 
     private final ExerciseTypeRepository exerciseTypeRepository;
-    private final DictionaryRepository dictionaryRepository;
+    private final DictionaryService dictionaryService;
 
     AdminExerciseTypeService(ExerciseTypeRepository exerciseTypeRepository,
-            DictionaryRepository dictionaryRepository) {
+            DictionaryService dictionaryService) {
         this.exerciseTypeRepository = exerciseTypeRepository;
-        this.dictionaryRepository = dictionaryRepository;
+        this.dictionaryService = dictionaryService;
     }
 
     List<ExerciseTypeResponseDTO> findAll() {
@@ -27,18 +26,12 @@ class AdminExerciseTypeService {
     }
     
     private ExerciseTypeResponseDTO exerciseTypeToDto(ExerciseType type) {
-        final List<DictionaryData> exerciseTypeEnNames = dictionaryRepository.
-                findDictionaryValue(DictionaryRepository.ENG_LANGUAGE, DictionaryRepository.EXERCISE_TYPE_NAME,
-                        type.getD_exercise_type_name(), LocalDateTime.now());
-        final List<DictionaryData> exerciseTypeNoNames = dictionaryRepository.
-                findDictionaryValue(DictionaryRepository.NOR_LANGUAGE, DictionaryRepository.EXERCISE_TYPE_NAME,
-                        type.getD_exercise_type_name(), LocalDateTime.now());
+        String nameEn = dictionaryService.getEnValue(DictionaryName.exercise_type_name.name(), type.getD_exercise_type_name(), "");
+        String nameNo = dictionaryService.getNoValue(DictionaryName.exercise_type_name.name(), type.getD_exercise_type_name(), nameEn);
         return ExerciseTypeResponseDTO.builder()
                 .id(type.getId())
-                .nameEn(exerciseTypeEnNames.get(0).getDvalue())
-                .nameNo(exerciseTypeNoNames.isEmpty() ? 
-                        exerciseTypeEnNames.get(0).getDvalue()
-                        : exerciseTypeNoNames.get(0).getDvalue())
+                .nameEn(nameEn)
+                .nameNo(nameNo)
                 .build();
     }
 }
