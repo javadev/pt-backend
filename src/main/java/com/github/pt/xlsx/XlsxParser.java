@@ -70,9 +70,11 @@ public class XlsxParser {
                                 * multiplyCoeff, 2 + workoutIndex) instanceof Number)) {
                             break;
                         }
-                        final WorkoutItem workoutItem = extractWorkoutItem(sheet, workoutItemIndex,
+                        final Optional<WorkoutItem> workoutItem = extractWorkoutItem(sheet, workoutItemIndex,
                                 workoutIndex, addRows, scanMode, excelUser, workoutName);
-                        workout.getWorkoutItems().add(workoutItem);
+                        if (workoutItem.isPresent()) {
+                            workout.getWorkoutItems().add(workoutItem.get());
+                        }
                     }
                     excelUser.getWorkouts().add(workout);
                 }
@@ -84,18 +86,23 @@ public class XlsxParser {
         return excelUsers;
     }
 
-    private WorkoutItem extractWorkoutItem(final Sheet sheet, int workoutItemIndex,
+    private Optional<WorkoutItem> extractWorkoutItem(final Sheet sheet, int workoutItemIndex,
             int workoutIndex, int addRows, ScanMode scanMode, ExcelUser excelUser, String workoutName) {
         final int multiplyCoeff = scanMode == ScanMode.Strength ? 7 : 9;
         WorkoutItem workoutItem = new WorkoutItem();
         workoutItem.setRowIndex(4 + addRows + workoutItemIndex * multiplyCoeff);
         workoutItem.setColumnIndex(2 + workoutIndex);
-        Optional<String> exerciseName = getStringOrEmpty(getCellData(sheet, 4 + 4 + addRows
+        final Optional<String> exerciseName = getStringOrEmpty(getCellData(sheet, 4 + 4 + addRows
                 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
         if (!exerciseName.isPresent()) {
             excelUser.getErrors().add("Exercise name not found. User " + excelUser.getName() + ", workout " + workoutName + ".");
+            return Optional.empty();
         }
         Number setsInp = getNumberOrNull(getCellData(sheet, 4 + 5 + addRows + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+        if (getIntegerOrNull(setsInp) == null || getIntegerOrNull(setsInp) == 0) {
+            excelUser.getErrors().add("Amount of sets cannot be 0. User " + excelUser.getName() + ", workout " + workoutName + ".");
+            return Optional.empty();
+        }
         if (scanMode == ScanMode.Strength) {
             Number repetitionsInp = getNumberOrNull(getCellData(sheet, 4 + 6 + addRows + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
             String weightInp = getStringOrNull(getCellData(sheet, 4 + 7 + addRows + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
@@ -113,7 +120,7 @@ public class XlsxParser {
             workoutItem.getInput().setSpeed(getIntegerOrNull(speedInp));
             workoutItem.getInput().setResistance(extractNumbers(resistanceInp));
         }
-        return workoutItem;
+        return Optional.of(workoutItem);
     }
 
     private Number getNumberOrNull(Object object) {

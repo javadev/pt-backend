@@ -28,15 +28,18 @@ class AdminProgramService {
     private final ParseUserRepository parseUserRepository;
     private final ParseWorkoutRepository parseWorkoutRepository;
     private final ParseWorkoutItemRepository parseWorkoutItemRepository;
+    private final AdminProgramAssignService adminProgramAssignService;
 
     AdminProgramService(ProgramRepository programRepository,
             ParseUserRepository parseResultRepository,
             ParseWorkoutRepository parseWorkoutRepository,
-            ParseWorkoutItemRepository parseWorkoutItemRepository) {
+            ParseWorkoutItemRepository parseWorkoutItemRepository,
+            AdminProgramAssignService adminProgramAssignService) {
         this.programRepository = programRepository;
         this.parseUserRepository = parseResultRepository;
         this.parseWorkoutRepository = parseWorkoutRepository;
         this.parseWorkoutItemRepository = parseWorkoutItemRepository;
+        this.adminProgramAssignService = adminProgramAssignService;
     }
 
     List<ProgramResponseDTO> findAll() {
@@ -134,7 +137,7 @@ class AdminProgramService {
         program.setData_url(programRequestDTO.getDataUrl());
         program.setUpdated(LocalDateTime.now());
         parseUserRepository.delete(program.getParseUsers());
-        program.setParseUsers(parseDataUrlAndSaveUsers(programRequestDTO, program));
+        program.setParseUsers(adminProgramAssignService.assign(parseDataUrlAndSaveUsers(programRequestDTO, program)));
         return programToDto(programRepository.save(program));
     }
     
@@ -145,6 +148,7 @@ class AdminProgramService {
         return excelUsers.stream().map(user -> {
             final ParseUser parseUser = new ParseUser();
             parseUser.setName(user.getName());
+            parseUser.setSheet_index(user.getSheetIndex());
             parseUser.setParseWorkouts(user.getWorkouts().stream()
                     .map(workout -> {
                         ParseWorkout parseWorkout = new ParseWorkout();
@@ -153,6 +157,8 @@ class AdminProgramService {
                         parseWorkout.setParseWorkoutItems(workout.getWorkoutItems().stream().map(workoutItem -> {
                             ParseWorkoutItem parseWorkoutItem = new ParseWorkoutItem();
                             parseWorkoutItem.setParseWorkout(parseWorkout);
+                            parseWorkoutItem.setColumn_index(workoutItem.getColumnIndex());
+                            parseWorkoutItem.setRow_index(workoutItem.getRowIndex());
                             parseWorkoutItem.setName(workoutItem.getInput().getExercise());
                             parseWorkoutItem.setSets(workoutItem.getInput().getSets() == null
                                     ? null : workoutItem.getInput().getSets().intValue());
@@ -169,7 +175,7 @@ class AdminProgramService {
             return parseUser;
         }).collect(Collectors.toList());
     }
-    
+
     private ByteArrayInputStream dataUrlToInputStream(String dataUrl) {
         final String encodedString = dataUrl.substring(dataUrl.indexOf(BASE64_PREFIX) + BASE64_PREFIX_LENGTH);
         return new ByteArrayInputStream(Base64.getDecoder().decode(encodedString));

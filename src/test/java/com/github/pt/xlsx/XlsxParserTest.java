@@ -20,9 +20,9 @@ public class XlsxParserTest {
         assertThat(excelUsers.get(0).getName(), equalTo("Styrke, Erfaren, Mann"));
         assertThat(excelUsers.get(0).getWorkouts().size(), equalTo(4));
         assertThat(excelUsers.get(0).getWorkouts().get(0).getName(), equalTo("Workout 3"));
-        assertThat(excelUsers.get(0).getWorkouts().get(0).getWorkoutItems().size(), equalTo(5));
+        assertThat(excelUsers.get(0).getWorkouts().get(0).getWorkoutItems().size(), equalTo(4));
         assertThat(excelUsers.get(0).getWorkouts().get(0).getWorkoutItems()
-                .get(0).getInput().getExercise(), equalTo(null));
+                .get(0).getInput().getExercise(), equalTo("Squat"));
         assertThat(excelUsers.get(0).getWorkouts().get(1).getWorkoutItems().size(), equalTo(5));
         assertThat(excelUsers.get(0).getWorkouts().get(1).getWorkoutItems()
                 .get(0).getInput().getExercise(), equalTo("Deadlift"));
@@ -54,13 +54,13 @@ public class XlsxParserTest {
         assertThat(excelUsers.get(0).getName(), equalTo("Styrke, Erfaren, Mann"));
         assertThat(excelUsers.get(0).getWorkouts().size(), equalTo(4));
         assertThat(excelUsers.get(0).getWorkouts().get(0).getName(), equalTo("Workout 3"));
-        assertThat(excelUsers.get(0).getWorkouts().get(0).getWorkoutItems().size(), equalTo(7));
+        assertThat(excelUsers.get(0).getWorkouts().get(0).getWorkoutItems().size(), equalTo(4));
         assertThat(excelUsers.get(0).getWorkouts().get(0).getWorkoutItems()
-                .get(0).getInput().getExercise(), equalTo(null));
-        assertThat(excelUsers.get(0).getWorkouts().get(1).getWorkoutItems().size(), equalTo(7));
+                .get(0).getInput().getExercise(), equalTo("Squat"));
+        assertThat(excelUsers.get(0).getWorkouts().get(1).getWorkoutItems().size(), equalTo(5));
         assertThat(excelUsers.get(0).getWorkouts().get(1).getWorkoutItems()
                 .get(0).getInput().getExercise(), equalTo("Deadlift"));
-        assertThat(excelUsers.get(0).getWorkouts().get(2).getWorkoutItems().size(), equalTo(7));
+        assertThat(excelUsers.get(0).getWorkouts().get(2).getWorkoutItems().size(), equalTo(5));
         assertThat(excelUsers.get(0).getWorkouts().get(2).getWorkoutItems()
                 .get(0).getInput().getExercise(), equalTo("Deadlift"));
         assertThat(excelUsers.get(0).getWorkouts().get(3).getWorkoutItems().size(), equalTo(5));

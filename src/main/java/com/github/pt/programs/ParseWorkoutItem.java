@@ -34,6 +34,8 @@ public class ParseWorkoutItem {
     Long id;
     LocalDateTime created;
     String name;
+    Integer column_index;
+    Integer row_index;
     Integer sets;
     Integer repetitions;
     Integer weight;
