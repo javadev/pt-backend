@@ -26,8 +26,8 @@ class AdminExerciseTypeService {
     }
     
     private ExerciseTypeResponseDTO exerciseTypeToDto(ExerciseType type) {
-        String nameEn = dictionaryService.getEnValue(DictionaryName.exercise_type_name.name(), type.getD_exercise_type_name(), "");
-        String nameNo = dictionaryService.getNoValue(DictionaryName.exercise_type_name.name(), type.getD_exercise_type_name(), nameEn);
+        String nameEn = dictionaryService.getEnValue(DictionaryName.exercise_type_name, type.getD_exercise_type_name(), "");
+        String nameNo = dictionaryService.getNoValue(DictionaryName.exercise_type_name, type.getD_exercise_type_name(), nameEn);
         return ExerciseTypeResponseDTO.builder()
                 .id(type.getId())
                 .nameEn(nameEn)

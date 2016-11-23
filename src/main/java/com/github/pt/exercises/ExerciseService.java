@@ -31,10 +31,12 @@ class ExerciseService {
         return exercises.stream().map(exercise -> {
             ExerciseDTO exerciseDTO = new ExerciseDTO();
             exerciseDTO.setId(Long.parseLong(exercise.getDExerciseName()));
-            exerciseDTO.setName(dictionaryService.getEnValue(DictionaryName.exercise_name.name(), exercise.getDExerciseName(), ""));
+            exerciseDTO.setName(dictionaryService.getEnValue(DictionaryName.exercise_name,
+                    exercise.getDExerciseName(), ""));
             ExerciseCategoryDTO categoryDTO = new ExerciseCategoryDTO();
             categoryDTO.setId(Long.parseLong(exercise.getExerciseCategory().getDExerciseCategoryName()));
-            categoryDTO.setName(dictionaryService.getEnValue(DictionaryName.exercise_category_name.name(), exercise.getExerciseCategory().getDExerciseCategoryName(), ""));
+            categoryDTO.setName(dictionaryService.getEnValue(DictionaryName.exercise_category_name,
+                    exercise.getExerciseCategory().getDExerciseCategoryName(), ""));
             exerciseDTO.setCategory(categoryDTO);
             return exerciseDTO;
         }).collect(Collectors.toList());

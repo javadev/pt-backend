@@ -2,7 +2,6 @@ package com.github.pt.admin.exercise;
 
 import com.github.pt.ResourceNotFoundException;
 import com.github.pt.dictionary.DictionaryName;
-import com.github.pt.dictionary.DictionaryRepository;
 import com.github.pt.dictionary.DictionaryService;
 import com.github.pt.exercises.Exercise;
 import com.github.pt.exercises.ExerciseCategory;
@@ -43,22 +42,22 @@ class AdminExerciseService {
         return ExerciseResponseDTO.builder()
                 .id(exercise.getId())
                 .exerciseId(exercise.getExercise_id())
-                .nameEn(dictionaryService.getEnValue(DictionaryName.exercise_name.name(), exercise.getDExerciseName(), ""))
-                .nameNo(dictionaryService.getNoValue(DictionaryName.exercise_name.name(), exercise.getDExerciseName(), ""))
-                .descriptionEn(dictionaryService.getEnValue(DictionaryName.exercise_description.name(), exercise.getDExerciseDescription(), ""))
-                .descriptionNo(dictionaryService.getNoValue(DictionaryName.exercise_description.name(), exercise.getDExerciseDescription(), ""))
+                .nameEn(dictionaryService.getEnValue(DictionaryName.exercise_name, exercise.getDExerciseName(), ""))
+                .nameNo(dictionaryService.getNoValue(DictionaryName.exercise_name, exercise.getDExerciseName(), ""))
+                .descriptionEn(dictionaryService.getEnValue(DictionaryName.exercise_description, exercise.getDExerciseDescription(), ""))
+                .descriptionNo(dictionaryService.getNoValue(DictionaryName.exercise_description, exercise.getDExerciseDescription(), ""))
                 .category(ExerciseCategoryResponseDTO.builder()
                         .id(exercise.getExerciseCategory().getId())
                         .nameEn(dictionaryService.getEnValue(
-                                DictionaryName.exercise_category_name.name(), exercise.getExerciseCategory().getDExerciseCategoryName(), ""))
+                                DictionaryName.exercise_category_name, exercise.getExerciseCategory().getDExerciseCategoryName(), ""))
                         .nameNo(dictionaryService.getNoValue(
-                                DictionaryName.exercise_category_name.name(), exercise.getExerciseCategory().getDExerciseCategoryName(), ""))
+                                DictionaryName.exercise_category_name, exercise.getExerciseCategory().getDExerciseCategoryName(), ""))
                         .build())
                 .types(exercise.getExerciseTypes().stream()
                     .map(type -> ExerciseTypeResponseDTO.builder()
                         .id(type.getId())
                         .nameEn(dictionaryService.getEnValue(
-                                DictionaryName.exercise_type_name.name(), type.getD_exercise_type_name(), "")
+                                DictionaryName.exercise_type_name, type.getD_exercise_type_name(), "")
                         )
                         .build())
                         .collect(Collectors.toList()))
@@ -80,11 +79,11 @@ class AdminExerciseService {
             throw new ResourceNotFoundException("Category not found in database: "
                     + exerciseRequestDTO.getCategory().getId());
         }
-        final String dataKey = dictionaryService.getNewDictionaryDataKey(DictionaryName.exercise_name.name());
-        dictionaryService.createDictionaryDataKey(DictionaryName.exercise_name.name(), dataKey,
+        final String dataKey = dictionaryService.getNewDictionaryDataKey(DictionaryName.exercise_name);
+        dictionaryService.createDictionaryDataKey(DictionaryName.exercise_name, dataKey,
                 exerciseRequestDTO.getNameEn(), exerciseRequestDTO.getNameNo());
-        final String dataDescriptionKey = dictionaryService.getNewDictionaryDataKey(DictionaryName.exercise_description.name());
-        dictionaryService.createDictionaryDataKey(DictionaryName.exercise_description.name(), dataDescriptionKey,
+        final String dataDescriptionKey = dictionaryService.getNewDictionaryDataKey(DictionaryName.exercise_description);
+        dictionaryService.createDictionaryDataKey(DictionaryName.exercise_description, dataDescriptionKey,
                 exerciseRequestDTO.getDescriptionEn(), exerciseRequestDTO.getDescriptionNo());
         final Exercise exercise = new Exercise();
         exercise.setDExerciseName(dataKey);
@@ -102,12 +101,12 @@ class AdminExerciseService {
             throw new ResourceNotFoundException("Exercise with id not found: " + id);
         }
         final String dataKey = existedExercise.getDExerciseName();
-        dictionaryService.createDictionaryDataKey(DictionaryName.exercise_name.name(), dataKey,
+        dictionaryService.createDictionaryDataKey(DictionaryName.exercise_name, dataKey,
                 exerciseRequestDTO.getNameEn(), exerciseRequestDTO.getNameNo());
         final String dataDescriptionKey = existedExercise.getDExerciseDescription() == null
-                ? dictionaryService.getNewDictionaryDataKey(DictionaryName.exercise_description.name())
+                ? dictionaryService.getNewDictionaryDataKey(DictionaryName.exercise_description)
                 : existedExercise.getDExerciseDescription();
-        dictionaryService.createDictionaryDataKey(DictionaryName.exercise_description.name(),
+        dictionaryService.createDictionaryDataKey(DictionaryName.exercise_description,
                 dataDescriptionKey, exerciseRequestDTO.getDescriptionEn(),
                 exerciseRequestDTO.getDescriptionNo());
         final ExerciseCategory exerciseCategoryDb = exerciseCategoryRepository
@@ -131,8 +130,8 @@ class AdminExerciseService {
         if (exercise == null) {
             throw new ResourceNotFoundException("Exercise with id " + id + " not found.");
         }
-        dictionaryService.deleteDatas(DictionaryName.exercise_name.name(), exercise.getDExerciseName());
-        dictionaryService.deleteDatas(DictionaryName.exercise_description.name(), exercise.getDExerciseDescription());
+        dictionaryService.deleteDatas(DictionaryName.exercise_name, exercise.getDExerciseName());
+        dictionaryService.deleteDatas(DictionaryName.exercise_description, exercise.getDExerciseDescription());
         final ExerciseResponseDTO exerciseResponseDTO = exerciseToDto(exercise);
         exerciseRepository.delete(id);
         return exerciseResponseDTO;

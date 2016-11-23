@@ -26,9 +26,9 @@ class AdminExerciseCategoryService {
     }
     
     private ExerciseCategoryResponseDTO exerciseCategoryToDto(ExerciseCategory category) {
-        final String exerciseCategoryEnName = dictionaryService.getEnValue(DictionaryName.exercise_category_name.name(),
+        final String exerciseCategoryEnName = dictionaryService.getEnValue(DictionaryName.exercise_category_name,
                         category.getDExerciseCategoryName(), "");
-        final String exerciseCategoryNoName = dictionaryService.getNoValue(DictionaryName.exercise_category_name.name(),
+        final String exerciseCategoryNoName = dictionaryService.getNoValue(DictionaryName.exercise_category_name,
                         category.getDExerciseCategoryName(), exerciseCategoryEnName);
         return ExerciseCategoryResponseDTO.builder()
                 .id(category.getId())

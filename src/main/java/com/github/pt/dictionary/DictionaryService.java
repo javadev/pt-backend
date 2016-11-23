@@ -13,10 +13,10 @@ public class DictionaryService {
         this.dictionaryRepository = dictionaryRepository;
     }
 
-    public String getNewDictionaryDataKey(String dName) {
+    public String getNewDictionaryDataKey(DictionaryName dName) {
         final List<DictionaryData> allExerciseEnNames = dictionaryRepository.
                 findDictionaryAllValues(DictionaryRepository.ENG_LANGUAGE,
-                        dName, LocalDateTime.now());
+                        dName.name(), LocalDateTime.now());
         if (allExerciseEnNames.isEmpty()) {
             return "10";
         }
@@ -28,40 +28,40 @@ public class DictionaryService {
         return "" + (Integer.parseInt(biggestKey) + 10);
     }
 
-    public void createDictionaryDataKey(String dName, String dKey, String dataNameEn, String dataNameNo) {
+    public void createDictionaryDataKey(DictionaryName dName, String dKey, String dataNameEn, String dataNameNo) {
         final DictionaryData dataEn = new DictionaryData();
         dataEn.setDlanguage(DictionaryRepository.ENG_LANGUAGE);
-        dataEn.setDname(dName);
+        dataEn.setDname(dName.name());
         dataEn.setDkey(dKey);
         dataEn.setDvalue(dataNameEn);
         dictionaryRepository.save(dataEn);
         final DictionaryData dataNo = new DictionaryData();
         dataNo.setDlanguage(DictionaryRepository.NOR_LANGUAGE);
-        dataNo.setDname(dName);
+        dataNo.setDname(dName.name());
         dataNo.setDkey(dKey);
         dataNo.setDvalue(dataNameNo);
         dictionaryRepository.save(dataNo);
     }
 
-    public String getEnValue(String dName, String dKey, String defaultValue) {
+    public String getEnValue(DictionaryName dName, String dKey, String defaultValue) {
         final List<DictionaryData> dictionaryDatas = dictionaryRepository.
             findDictionaryValue(DictionaryRepository.ENG_LANGUAGE,
-                dName, dKey, LocalDateTime.now());
+                dName.name(), dKey, LocalDateTime.now());
         return dictionaryDatas.isEmpty() ? defaultValue : dictionaryDatas.get(0).getDvalue();
     }
 
-    public String getNoValue(String dName, String dKey, String defaultValue) {
+    public String getNoValue(DictionaryName dName, String dKey, String defaultValue) {
         final List<DictionaryData> dictionaryDatas = dictionaryRepository.
             findDictionaryValue(DictionaryRepository.NOR_LANGUAGE,
-                dName, dKey, LocalDateTime.now());
+                dName.name(), dKey, LocalDateTime.now());
         return dictionaryDatas.isEmpty() ? defaultValue : dictionaryDatas.get(0).getDvalue();
     }
 
-    public void deleteDatas(String dName, String dKey) {
+    public void deleteDatas(DictionaryName dName, String dKey) {
         dictionaryRepository.delete(dictionaryRepository.findDictionaryByKey(
-                DictionaryRepository.ENG_LANGUAGE, dName, dKey, LocalDateTime.now()));
+                DictionaryRepository.ENG_LANGUAGE, dName.name(), dKey, LocalDateTime.now()));
         dictionaryRepository.delete(dictionaryRepository.findDictionaryByKey(
-                DictionaryRepository.NOR_LANGUAGE, dName, dKey, LocalDateTime.now()));
+                DictionaryRepository.NOR_LANGUAGE, dName.name(), dKey, LocalDateTime.now()));
     }
 
 }
