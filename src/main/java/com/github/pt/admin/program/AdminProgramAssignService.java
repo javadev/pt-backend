@@ -12,10 +12,8 @@ import com.github.pt.programs.ParseWorkoutItem;
 import com.github.pt.reportworkout.InWorkoutItemRepository;
 import com.github.pt.token.InUser;
 import com.github.pt.token.InUserRepository;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringJoiner;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 

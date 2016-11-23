@@ -24,7 +24,7 @@ class AdminUserService {
     List<UserResponseDTO> findAll() {
         return inUserRepository.findAll(sortByIdAsc()).stream().map(inUser ->
                 new UserResponseDTO(inUser.getId(), inUser.getInUserFacebooks().isEmpty() ?
-                        "?" : inUser.getInUserFacebooks().get(0).getUser_name())
+                        "?" : inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1).getUser_name())
         ).collect(Collectors.toList());
     }
     
@@ -35,7 +35,7 @@ class AdminUserService {
     UserResponseDTO findOne(Long id) {
         final InUser inUser = inUserRepository.findOne(id);
         return new UserResponseDTO(inUser.getId(), inUser.getInUserFacebooks().isEmpty() ?
-                        "?" : inUser.getInUserFacebooks().get(0).getUser_name());
+                        "?" : inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1).getUser_name());
     }
 
     UserResponseDTO create(UserRequestDTO userRequestDTO) {
@@ -60,16 +60,16 @@ class AdminUserService {
             inUserFacebook.setInUser(inUser);
             inUser.getInUserFacebooks().add(inUserFacebook);           
         } else {
-            inUser.getInUserFacebooks().get(0).setUser_name(userRequestDTO.getName());
+            inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1).setUser_name(userRequestDTO.getName());
         }
-        inUserFacebookRepository.save(inUser.getInUserFacebooks().get(0));
+        inUserFacebookRepository.save(inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1));
         return new UserResponseDTO(inUser.getId(), userRequestDTO.getName());
     }
 
     UserResponseDTO delete(Long id) {
         final InUser inUser = inUserRepository.findOne(id);
         final String name = inUser.getInUserFacebooks().isEmpty() ?
-                        "?" : inUser.getInUserFacebooks().get(0).getUser_name();
+                        "?" : inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1).getUser_name();
         inUserRepository.delete(id);
         return new UserResponseDTO(inUser.getId(), name);
     }
