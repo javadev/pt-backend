@@ -23,6 +23,7 @@ public class InUserTest {
                 Collections.emptyList(),
                 Collections.emptyList(),
                 Collections.emptyList(),
+                Collections.emptyList(),
                 Collections.emptyList()), notNullValue());
     }
 
