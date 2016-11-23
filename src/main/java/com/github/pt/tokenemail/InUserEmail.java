@@ -41,7 +41,4 @@ public class InUserEmail {
     String login;
     String password;
     String user_name;
-    Boolean is_deleted;
-    LocalDateTime deleted;
-    String deleted_comment;
 }

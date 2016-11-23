@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.Before;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -20,16 +21,23 @@ public class TokenEmailResourceIntTest {
     
     @Autowired
     TokenEmailResource tokenEmailResource;
+    @Autowired
+    InUserEmailRepository inUserEmailRepository;
+
+    @Before
+    public void before() {
+        inUserEmailRepository.deleteAll();
+    }
 
     @Test
     public void create() {
-        TokenEmailResponseDTO user = tokenEmailResource.create(new TokenEmailRequestDTO(),
+        TokenEmailResponseDTO user = tokenEmailResource.create(new TokenEmailRequestDTO("name", "test@mail.com", "test"),
                 new MockHttpServletRequest());
         assertThat(user, notNullValue());
     }
 
-    @Test
+    @Test(expected = ResourceNotFoundException.class)
     public void delete() {
-        tokenEmailResource.delete("1", new MockHttpServletRequest());
+        tokenEmailResource.delete("", new MockHttpServletRequest());
     }
 }
