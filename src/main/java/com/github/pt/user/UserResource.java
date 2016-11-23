@@ -23,7 +23,10 @@ class UserResource {
 
     @RequestMapping(method = RequestMethod.GET)
     UserResponseDTO findOne(@RequestHeader(value = "X-Token") String token) {
-        return userService.findOne(token);
+        if (!token.isEmpty()) {
+            return userService.findOne(token);
+        }
+        return new UserResponseDTO();
     }
 
     @RequestMapping(method = RequestMethod.PUT)
