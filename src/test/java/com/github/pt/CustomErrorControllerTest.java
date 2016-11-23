@@ -1,5 +1,7 @@
 package com.github.pt;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -26,5 +28,10 @@ public class CustomErrorControllerTest {
     public void error() {
         customErrorController.error(new MockHttpServletRequest(), new MockHttpServletResponse());
         verify(errorAttributes).getErrorAttributes(any(RequestAttributes.class), anyBoolean());
+    }
+
+    @Test
+    public void getErrorPath() {
+        assertThat(customErrorController.getErrorPath(), equalTo("/error"));
     }
 }
