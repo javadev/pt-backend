@@ -1,6 +1,6 @@
 User data store db schema:
 
-![pt schema](pt-schema-login-v2.png)
+![pt schema](pt-schema-login-v3.png)
 
 User's program data store db schema:
 
