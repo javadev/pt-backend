@@ -21,3 +21,7 @@ Admin program data store db schema:
 Admin certificate data store db schema:
 
 ![pt schema](pt-schema-certificate-v1.png)
+
+User type data store db schema:
+
+![pt schema](pt-schema-user-type-v1.png)
