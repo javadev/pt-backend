@@ -18,26 +18,29 @@ import org.springframework.validation.MapBindingResult;
 
 @Service
 class TokenEmailService {
-    
+
     private final InUserRepository inUserRepository;
     private final InUserEmailRepository inUserEmailRepository;
     private final InUserLoginRepository inUserLoginRepository;
     private final InUserLogoutRepository inUserLogoutRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailValidator emailValidator;
-    
+    private final SendEmailService sendEmailService;
+
     TokenEmailService(InUserRepository inUserRepository,
             InUserEmailRepository inUserEmailRepository,
             InUserLoginRepository inUserLoginRepository,
             InUserLogoutRepository inUserLogoutRepository,
             PasswordEncoder passwordEncoder,
-            EmailValidator emailValidator) {
+            EmailValidator emailValidator,
+            SendEmailService sendEmailService) {
         this.inUserRepository = inUserRepository;
         this.inUserEmailRepository = inUserEmailRepository;
         this.inUserLoginRepository = inUserLoginRepository;
         this.inUserLogoutRepository = inUserLogoutRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailValidator = emailValidator;
+        this.sendEmailService = sendEmailService;
     }
 
     Pair<Boolean, InUserEmail> readOrCreateInUserEmail(TokenEmailRequestDTO tokenEmailRequest) {
@@ -84,7 +87,10 @@ class TokenEmailService {
         if (inUserEmail.getId() == null) {
             inUser = new InUser();
             inUser.setInUserEmails(Arrays.asList(inUserEmail));
-            inUser.setInUserLogins(Arrays.asList(inUserLogin)); 
+            inUser.setInUserLogins(Arrays.asList(inUserLogin));
+            new Thread(() -> {
+                sendEmailService.send(inUserEmail);
+            }, "Send-email").start();
         } else {
             inUser = inUserEmail.getInUser();
             inUser.getInUserEmails().add(inUserEmail);
