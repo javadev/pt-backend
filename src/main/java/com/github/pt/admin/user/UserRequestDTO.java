@@ -13,5 +13,7 @@ import lombok.experimental.Accessors;
 @Setter
 class UserRequestDTO {
     Long id;
-    String name;    
+    String name;
+    String email;
+    String password;
 }

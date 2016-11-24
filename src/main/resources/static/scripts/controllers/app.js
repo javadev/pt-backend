@@ -30,7 +30,8 @@ define([
           if (!_.isUndefined(model)) {
             user.set({
               id: model.get('id'),
-              name: model.get('name')
+              name: model.get('name'),
+              email: model.get('email')
             });
           }
           var userEditView = new UsersViews.NewUserLayout({

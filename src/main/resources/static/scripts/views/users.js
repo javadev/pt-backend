@@ -58,6 +58,9 @@ function ($, _, Marionette, App) {
         '{{ name }}',
       '</td>',
       '<td>',
+        '{{ email }}',
+      '</td>',
+      '<td>',
         '<button type="button" class="btn btn-default btn-sm js-edit-value">',
           '<i class="glyphicon glyphicon-edit"></i>',
         '</button>',
@@ -122,6 +125,7 @@ function ($, _, Marionette, App) {
           '<tr>',
             '<th>ID</th>',
             '<th>Name</th>',
+            '<th>E-mail</th>',
             '<th></th>',
             '<th></th>',
           '</tr>',
@@ -243,20 +247,32 @@ function ($, _, Marionette, App) {
             '{{ name }}',
           '</textarea>',
         '</div>',
+      '</div>',
+      '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Email</label>',
+        '<div class="col-sm-8">',
+          '<textarea id="user-email" class="form-control" rows="3" placeholder="Please enter email" name="address" required="true">',
+            '{{ email }}',
+          '</textarea>',
+        '</div>',
       '</div>'
     ].join('')),
     modelEvents: {
-      'sync': 'render',
-      'technicians:load': 'render'
+      'sync': 'render'
     },
     events: {
-      'input #user-name': 'inputName'
+      'input #user-name': 'inputName',
+      'input #user-email': 'inputEmail'
     },
     ui: {
-      name: '#user-name'
+      name: '#user-name',
+      email: '#user-email'
     },
     inputName: function() {
       this.model.set('name', this.ui.name.val());
+    },
+    inputEmail: function() {
+      this.model.set('email', this.ui.email.val());
     }
   });
 
