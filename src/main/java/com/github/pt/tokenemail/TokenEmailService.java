@@ -88,9 +88,6 @@ class TokenEmailService {
             inUser = new InUser();
             inUser.setInUserEmails(Arrays.asList(inUserEmail));
             inUser.setInUserLogins(Arrays.asList(inUserLogin));
-            new Thread(() -> {
-                sendEmailService.send(inUserEmail);
-            }, "Send-email").start();
         } else {
             inUser = inUserEmail.getInUser();
             inUser.getInUserEmails().add(inUserEmail);
@@ -101,6 +98,11 @@ class TokenEmailService {
         inUserLogin.setIp_address(remoteAddr);
         inUserLoginRepository.saveAndFlush(inUserLogin);
         inUserEmail.setInUser(savedInUser);
+        if (inUserEmail.getId() == null) {
+            new Thread(() -> {
+                sendEmailService.send(inUserEmail);
+            }, "Send-email").start();
+        }
         inUserEmailRepository.save(inUserEmail);
         final TokenEmailResponseDTO tokenEmailResponseDTO = new TokenEmailResponseDTO();
         tokenEmailResponseDTO.setToken(inUserLogin.getToken());

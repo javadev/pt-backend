@@ -1,7 +1,9 @@
 package com.github.pt.token;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.github.pt.activatecertificate.InUserCertificate;
+import com.github.pt.admin.user.InUserType;
 import com.github.pt.programs.InProgram;
 import com.github.pt.reportweight.InUserWeight;
 import com.github.pt.tokenemail.InUserEmail;
@@ -18,6 +20,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -61,4 +65,8 @@ public class InUser {
     List<InUserCertificate> inUserCertificates;
     @OneToMany(mappedBy="inUser")
     List<InUserEmail> inUserEmails;
+    @ManyToOne
+    @JoinColumn(name="in_user_type_id")
+    @JsonBackReference
+    InUserType inUserType;
 }

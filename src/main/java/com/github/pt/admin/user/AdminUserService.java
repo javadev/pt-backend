@@ -2,6 +2,8 @@ package com.github.pt.admin.user;
 
 import com.github.pt.ResourceNotFoundException;
 import com.github.pt.UnauthorizedException;
+import com.github.pt.dictionary.DictionaryName;
+import com.github.pt.dictionary.DictionaryService;
 import com.github.pt.token.InUser;
 import com.github.pt.token.InUserFacebook;
 import com.github.pt.token.InUserFacebookRepository;
@@ -9,6 +11,7 @@ import com.github.pt.token.InUserRepository;
 import com.github.pt.tokenemail.EmailValidator;
 import com.github.pt.tokenemail.InUserEmail;
 import com.github.pt.tokenemail.InUserEmailRepository;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,31 +26,37 @@ class AdminUserService {
     private final InUserRepository inUserRepository;
     private final InUserEmailRepository inUserEmailRepository;
     private final InUserFacebookRepository inUserFacebookRepository;
+    private final InUserTypeRepository inUserTypeRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailValidator emailValidator;
+    private final DictionaryService dictionaryService;
     
     AdminUserService(InUserRepository inUserRepository,
             InUserEmailRepository inUserEmailRepository,
             InUserFacebookRepository inUserFacebookRepository,
+            InUserTypeRepository inUserTypeRepository,
             PasswordEncoder passwordEncoder,
-            EmailValidator emailValidator) {
+            EmailValidator emailValidator,
+            DictionaryService dictionaryService) {
         this.inUserRepository = inUserRepository;
         this.inUserEmailRepository = inUserEmailRepository;
         this.inUserFacebookRepository = inUserFacebookRepository;
+        this.inUserTypeRepository = inUserTypeRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailValidator = emailValidator;
+        this.dictionaryService = dictionaryService;
     }
 
     List<UserResponseDTO> findAll() {
-        return inUserRepository.findAll(sortByIdAsc()).stream().map(
-                AdminUserService::inUserToDto
+        return inUserRepository.findAll(sortByIdAsc()).stream().map(inUser ->
+                inUserToDto(inUser)
         ).collect(Collectors.toList());
     }
 
-    private static UserResponseDTO inUserToDto(InUser inUser) {
+    private UserResponseDTO inUserToDto(InUser inUser) {
         final String userName;
         final String userEmail;
-        if (inUser.getInUserFacebooks().isEmpty()) {
+        if (inUser.getInUserFacebooks() == null || inUser.getInUserFacebooks().isEmpty()) {
             if (inUser.getInUserEmails().isEmpty()) {
                 userName = "?";
                 userEmail = "?";
@@ -59,10 +68,18 @@ class AdminUserService {
             userName = inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1).getUser_name();
             userEmail = "Facebook user";
         }
+        
         return UserResponseDTO.builder()
                 .id(inUser.getId())
                 .email(userEmail)
                 .name(userName)
+                .type(inUser.getInUserType() == null ? null : UserTypeResponseDTO.builder()
+                    .id(inUser.getInUserType().getId())
+                    .nameEn(dictionaryService.getEnValue(DictionaryName.user_type,
+                            inUser.getInUserType().getD_user_type(), ""))
+                    .nameNo(dictionaryService.getNoValue(DictionaryName.user_type,
+                            inUser.getInUserType().getD_user_type(), ""))
+                    .build())
                 .build();
     }
 
@@ -79,6 +96,8 @@ class AdminUserService {
     }
 
     UserResponseDTO create(UserRequestDTO userRequestDTO) {
+        final InUserType inUserTypeDb = userRequestDTO.getType().getId() == null ? null
+                : inUserTypeRepository.findOne(userRequestDTO.getType().getId());
         final InUser inUser = new InUser();
         final InUserEmail inUserEmail = new InUserEmail();
         final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
@@ -89,14 +108,12 @@ class AdminUserService {
         inUserEmail.setLogin(userRequestDTO.getEmail());
         inUserEmail.setUser_name(userRequestDTO.getName());
         inUserEmail.setPassword(passwordEncoder.encode("Qwerty+1"));
+        inUser.setInUserType(inUserTypeDb);
+        inUser.setInUserEmails(Arrays.asList(inUserEmail));
         final InUser savedInUser = inUserRepository.save(inUser);
         inUserEmail.setInUser(savedInUser);
         inUserEmailRepository.save(inUserEmail);
-        return UserResponseDTO.builder()
-                .id(savedInUser.getId())
-                .email(userRequestDTO.getEmail())
-                .name(userRequestDTO.getName())
-                .build();
+        return inUserToDto(savedInUser);
     }
 
     UserResponseDTO update(Long id, UserRequestDTO userRequestDTO) {
@@ -104,6 +121,10 @@ class AdminUserService {
         if (inUser == null) {
             throw new ResourceNotFoundException("User with id " + id + " not found.");
         }
+        final InUserType inUserTypeDb = userRequestDTO.getType() == null
+                || userRequestDTO.getType().getId() == null ? null
+            : inUserTypeRepository.findOne(userRequestDTO.getType().getId());
+        inUser.setInUserType(inUserTypeDb);
         if (inUser.getInUserEmails().isEmpty()) {
             final InUserFacebook inUserFacebook = inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1);
             inUserFacebook.setUser_name(userRequestDTO.getName());
@@ -118,11 +139,7 @@ class AdminUserService {
             inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1).setLogin(userRequestDTO.getEmail());
             inUserEmailRepository.save(inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1));
         }
-        return UserResponseDTO.builder()
-                .id(inUser.getId())
-                .email(userRequestDTO.getEmail())
-                .name(userRequestDTO.getName())
-                .build();
+        return inUserToDto(inUser);
     }
 
     UserResponseDTO delete(Long id) {
@@ -130,15 +147,8 @@ class AdminUserService {
         if (inUser == null) {
             throw new ResourceNotFoundException("User with id " + id + " not found.");
         }
-        final String name = inUser.getInUserEmails().isEmpty() ?
-                        "?" : inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1).getUser_name();
-        final String email = inUser.getInUserEmails().isEmpty() ?
-                        "?" : inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1).getLogin();
+        final UserResponseDTO userResponseDTO = inUserToDto(inUser);
         inUserRepository.delete(id);
-        return UserResponseDTO.builder()
-                .id(inUser.getId())
-                .email(email)
-                .name(name)
-                .build();
+        return userResponseDTO;
     }
 }

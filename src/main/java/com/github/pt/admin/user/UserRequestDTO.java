@@ -16,4 +16,5 @@ class UserRequestDTO {
     String name;
     String email;
     String password;
+    UserTypeRequestDTO type;
 }

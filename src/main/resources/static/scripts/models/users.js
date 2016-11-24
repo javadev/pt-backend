@@ -12,7 +12,11 @@ define([
         'id': null,
         'name': null,
         'email': null,
-        'password': null
+        'password': null,
+        'type': {
+          'id': null,
+          'nameEn': null
+        }
       },
       url: function() {
         return '/api/v1/admin/user' + (this.isNew() ? '' : '/' + this.get('id'));

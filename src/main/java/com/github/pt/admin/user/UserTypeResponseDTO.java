@@ -13,9 +13,8 @@ import lombok.Builder;
 @Getter
 @Setter
 @Builder
-class UserResponseDTO {
+class UserTypeResponseDTO {
     Long id;
-    String name;
-    String email;
-    UserTypeResponseDTO type;
+    String nameEn;
+    String nameNo;
 }

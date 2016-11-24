@@ -25,13 +25,19 @@ define([
           collection: users
         });
         users.fetch();
+        $.get('/api/v1/admin/user-type').done(function(data) {
+          users._types = _.union({id: null, nameEn: ''}, data);
+          users.trigger('sync');
+        });
         users.on('user:new', function(model) {
           var user = new UsersModels.User();
+          user._types = users._types;
           if (!_.isUndefined(model)) {
             user.set({
               id: model.get('id'),
               name: model.get('name'),
-              email: model.get('email')
+              email: model.get('email'),
+              type: model.get('type')
             });
           }
           var userEditView = new UsersViews.NewUserLayout({

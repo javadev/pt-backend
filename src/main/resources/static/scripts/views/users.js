@@ -61,6 +61,9 @@ function ($, _, Marionette, App) {
         '{{ email }}',
       '</td>',
       '<td>',
+        '{{ type == null ? "" : type.nameEn }}',
+      '</td>',
+      '<td>',
         '<button type="button" class="btn btn-default btn-sm js-edit-value">',
           '<i class="glyphicon glyphicon-edit"></i>',
         '</button>',
@@ -126,6 +129,7 @@ function ($, _, Marionette, App) {
             '<th>ID</th>',
             '<th>Name</th>',
             '<th>E-mail</th>',
+            '<th>Type</th>',
             '<th></th>',
             '<th></th>',
           '</tr>',
@@ -241,6 +245,14 @@ function ($, _, Marionette, App) {
         '</div>',
       '</div>',
       '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Type</label>',
+        '<div class="col-sm-8">',
+          '<select id="user-type" class="selectpicker show-tick">',
+            '{{ getTypes() }}',
+          '</select>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
         '<label class="col-sm-3 control-label">Name</label>',
         '<div class="col-sm-8">',
           '<textarea id="user-name" class="form-control" rows="3" placeholder="Please enter name" name="address" required="true">',
@@ -257,6 +269,23 @@ function ($, _, Marionette, App) {
         '</div>',
       '</div>'
     ].join('')),
+    templateHelpers: function() {
+      var model = this.model;
+      return {
+        getTypes: function() {
+          var types = model._types || [];
+          var result = _.map(types, function(item) {
+            if (_.isNull(item.id)) {
+              return '<option data-hidden="true"></option>';
+            }
+            return '<option value="' + item.id + '"' +
+              (!!model.get('type') && model.get('type').id === item.id ? ' selected' : '') +
+              '>' + item.nameEn + '</option>';
+          });
+          return result;
+        }
+      };
+    },
     modelEvents: {
       'sync': 'render'
     },
@@ -265,6 +294,7 @@ function ($, _, Marionette, App) {
       'input #user-email': 'inputEmail'
     },
     ui: {
+      userType: '#user-type',
       name: '#user-name',
       email: '#user-email'
     },
@@ -273,6 +303,19 @@ function ($, _, Marionette, App) {
     },
     inputEmail: function() {
       this.model.set('email', this.ui.email.val());
+    },
+    onShow: function() {
+      this.onRender();
+    },
+    onRender: function() {
+      var view = this;
+      $('.selectpicker').selectpicker({
+        style: 'btn-default',
+        size: false
+      });
+      this.ui.userType.on('changed.bs.select', function (e) {
+        view.model.set('type', {id: parseInt(e.target.value, 10) });
+      });
     }
   });
 

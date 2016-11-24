@@ -24,7 +24,8 @@ public class InUserTest {
                 Collections.emptyList(),
                 Collections.emptyList(),
                 Collections.emptyList(),
-                Collections.emptyList()), notNullValue());
+                Collections.emptyList(),
+                null), notNullValue());
     }
 
     @Test
@@ -45,6 +46,7 @@ public class InUserTest {
         inUser.setInPrograms(Collections.emptyList());
         inUser.setInUserWeights(Collections.emptyList());
         inUser.setInUserCertificates(Collections.emptyList());
+        inUser.setInUserType(null);
         assertThat(inUser, notNullValue());
     }
 
@@ -66,6 +68,7 @@ public class InUserTest {
         inUser.getInPrograms();
         inUser.getInUserWeights();
         inUser.getInUserCertificates();
+        inUser.getInUserType();
         assertThat(inUser, notNullValue());
     }
 }
