@@ -94,7 +94,7 @@ class TokenEmailService {
         inUserLogin.setInUser(savedInUser);
         inUserLogin.setIp_address(remoteAddr);
         inUserLoginRepository.saveAndFlush(inUserLogin);
-        inUserEmail.setInUser(inUser);
+        inUserEmail.setInUser(savedInUser);
         inUserEmailRepository.save(inUserEmail);
         final TokenEmailResponseDTO tokenEmailResponseDTO = new TokenEmailResponseDTO();
         tokenEmailResponseDTO.setToken(inUserLogin.getToken());
