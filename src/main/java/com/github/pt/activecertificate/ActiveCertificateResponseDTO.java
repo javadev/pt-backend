@@ -1,7 +1,7 @@
 package com.github.pt.activecertificate;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +18,6 @@ import lombok.Builder;
 class ActiveCertificateResponseDTO {
     Long id;
     String code;
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    LocalDateTime expiration_date;
+    @JsonSerialize(using = LocalDateSerializer.class)
+    LocalDate expiration_date;
 }

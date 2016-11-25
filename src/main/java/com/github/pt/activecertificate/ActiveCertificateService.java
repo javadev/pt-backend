@@ -6,8 +6,6 @@ import com.github.pt.admin.certificate.CertificateRepository;
 import com.github.pt.token.InUserLogin;
 import com.github.pt.user.UserService;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +35,7 @@ class ActiveCertificateService {
                 ActiveCertificateResponseDTO.builder()
                     .id(inUserCertificate.getId())
                     .code(inUserCertificate.getCode())
-                    .expiration_date(inUserCertificate.getCreated().truncatedTo(ChronoUnit.DAYS).plusDays(inUserCertificate.getAmount_of_days()))
+                    .expiration_date(inUserCertificate.getCreated().toLocalDate().plusDays(inUserCertificate.getAmount_of_days()))
                     .build()
             ).findFirst().orElse(new ActiveCertificateResponseDTO());
         }
@@ -65,7 +63,7 @@ class ActiveCertificateService {
             return ActiveCertificateResponseDTO.builder()
                     .id(inUserCertificateSaved.getId())
                     .code(inUserCertificateSaved.getCode())
-                    .expiration_date(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).plusDays(inUserCertificateSaved.getAmount_of_days()))
+                    .expiration_date(LocalDate.now().plusDays(inUserCertificateSaved.getAmount_of_days()))
                     .build();
         }
         return new ActiveCertificateResponseDTO();
