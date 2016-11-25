@@ -1,4 +1,4 @@
-package com.github.pt.activatecertificate;
+package com.github.pt.activecertificate;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,14 +17,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 @TestPropertySource("/application-test.properties")
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class ActivateCertificateResourceIntTest {
+public class ActiveCertificateResourceIntTest {
     
     @Autowired
-    ActivateCertificateResource activateCertificateResource;
+    ActiveCertificateResource activeCertificateResource;
 
     @Test
     public void testList() throws Exception {
-        List<ActivateCertificateResponseDTO> results = activateCertificateResource.list("");
+        List<ActiveCertificateResponseDTO> results = activeCertificateResource.list("");
         assertThat(results.size(), is(greaterThanOrEqualTo(0)));
     }
 

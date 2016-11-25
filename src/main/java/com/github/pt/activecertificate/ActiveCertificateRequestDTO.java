@@ -1,4 +1,4 @@
-package com.github.pt.activatecertificate;
+package com.github.pt.activecertificate;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import lombok.NonNull;
 @Accessors(chain = true)
 @Getter
 @Setter
-class ActivateCertificateRequestDTO {
+class ActiveCertificateRequestDTO {
     @NonNull
     String code;
 }

@@ -1,4 +1,4 @@
-package com.github.pt.activatecertificate;
+package com.github.pt.activecertificate;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.time.LocalDate;
@@ -15,7 +15,7 @@ import lombok.Builder;
 @Getter
 @Setter
 @Builder
-class ActivateCertificateResponseDTO {
+class ActiveCertificateResponseDTO {
     Long id;
     String code;
     @JsonSerialize(using = LocalDateSerializer.class)

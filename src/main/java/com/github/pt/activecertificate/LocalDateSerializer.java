@@ -1,4 +1,4 @@
-package com.github.pt.activatecertificate;
+package com.github.pt.activecertificate;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

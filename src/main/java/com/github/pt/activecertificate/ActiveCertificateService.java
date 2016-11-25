@@ -1,4 +1,4 @@
-package com.github.pt.activatecertificate;
+package com.github.pt.activecertificate;
 
 import com.github.pt.ResourceNotFoundException;
 import com.github.pt.admin.certificate.Certificate;
@@ -13,13 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-class ActivateCertificateService {
+class ActiveCertificateService {
     private final InUserCertificateRepository InUserCertificateRepository;
     private final CertificateRepository certificateRepository;
     private final UserService userService;
 
     @Autowired
-    ActivateCertificateService(InUserCertificateRepository inUserCertificateRepository,
+    ActiveCertificateService(InUserCertificateRepository inUserCertificateRepository,
             CertificateRepository certificateRepository,
             UserService userService) {
         this.InUserCertificateRepository = inUserCertificateRepository;
@@ -27,11 +27,11 @@ class ActivateCertificateService {
         this.userService = userService;
     }
 
-    List<ActivateCertificateResponseDTO> findAll(String token) {
+    List<ActiveCertificateResponseDTO> findAll(String token) {
         if (!token.isEmpty()) {
             final InUserLogin inUserLogin = userService.checkUserToken(token);
             return inUserLogin.getInUser().getInUserCertificates().stream().map(inUserCertificate ->
-                ActivateCertificateResponseDTO.builder()
+                ActiveCertificateResponseDTO.builder()
                     .id(inUserCertificate.getId())
                     .code(inUserCertificate.getCode())
                     .expiration_date(inUserCertificate.getCreated().toLocalDate().plusDays(inUserCertificate.getAmount_of_days()))
@@ -41,7 +41,7 @@ class ActivateCertificateService {
         return Collections.emptyList();
     }
 
-    ActivateCertificateResponseDTO create(String token, ActivateCertificateRequestDTO certificateRequestDTO) {
+    ActiveCertificateResponseDTO create(String token, ActiveCertificateRequestDTO certificateRequestDTO) {
         if (!token.isEmpty()) {
             final InUserLogin inUserLogin = userService.checkUserToken(token);
             final List<Certificate> certificates = certificateRepository.findByCode(certificateRequestDTO.getCode());
@@ -59,12 +59,12 @@ class ActivateCertificateService {
             inUserCertificate.setAmount_of_days(notActiveCertificate.getAmount_of_days());
             InUserCertificate inUserCertificateSaved = InUserCertificateRepository.save(inUserCertificate);
             certificateRepository.save(notActiveCertificate);
-            return ActivateCertificateResponseDTO.builder()
+            return ActiveCertificateResponseDTO.builder()
                     .id(inUserCertificateSaved.getId())
                     .code(inUserCertificateSaved.getCode())
                     .expiration_date(LocalDate.now().plusDays(inUserCertificateSaved.getAmount_of_days()))
                     .build();
         }
-        return new ActivateCertificateResponseDTO();
+        return new ActiveCertificateResponseDTO();
     }
 }

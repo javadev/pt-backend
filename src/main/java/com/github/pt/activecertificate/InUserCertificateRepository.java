@@ -1,4 +1,4 @@
-package com.github.pt.activatecertificate;
+package com.github.pt.activecertificate;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

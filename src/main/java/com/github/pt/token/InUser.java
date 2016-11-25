@@ -2,7 +2,7 @@ package com.github.pt.token;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.github.pt.activatecertificate.InUserCertificate;
+import com.github.pt.activecertificate.InUserCertificate;
 import com.github.pt.admin.user.InUserType;
 import com.github.pt.programs.InProgram;
 import com.github.pt.reportweight.InUserWeight;

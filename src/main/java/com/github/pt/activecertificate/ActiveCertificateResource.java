@@ -1,4 +1,4 @@
-package com.github.pt.activatecertificate;
+package com.github.pt.activecertificate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,23 +12,23 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 @RestController
 @RequestMapping("api/v1/activate-certificate")
-class ActivateCertificateResource {
+class ActiveCertificateResource {
 
-    private final ActivateCertificateService certificateService;
+    private final ActiveCertificateService certificateService;
     
     @Autowired
-    ActivateCertificateResource(ActivateCertificateService certificateService) {
+    ActiveCertificateResource(ActiveCertificateService certificateService) {
         this.certificateService = certificateService;
     }
 
     @GetMapping
-    List<ActivateCertificateResponseDTO> list(@RequestHeader(value = "X-Token") String token) {
+    List<ActiveCertificateResponseDTO> list(@RequestHeader(value = "X-Token") String token) {
         return certificateService.findAll(token);
     }
 
     @PostMapping
-    ActivateCertificateResponseDTO create(@RequestHeader(value = "X-Token") String token,
-            @RequestBody ActivateCertificateRequestDTO certificateRequestDTO) {
+    ActiveCertificateResponseDTO create(@RequestHeader(value = "X-Token") String token,
+            @RequestBody ActiveCertificateRequestDTO certificateRequestDTO) {
         return certificateService.create(token, certificateRequestDTO);
     }
 }

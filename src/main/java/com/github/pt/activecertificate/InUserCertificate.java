@@ -1,4 +1,4 @@
-package com.github.pt.activatecertificate;
+package com.github.pt.activecertificate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.github.pt.token.InUser;
