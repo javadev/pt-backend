@@ -1,4 +1,4 @@
-package com.github.pt.admin.program;
+package com.github.pt.admin.ptuser;
 
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -11,22 +11,22 @@ import static org.mockito.Mockito.verify;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AdminProgramResourceTest {
+public class AdminPtUserResourceTest {
 
     @Mock
-    private AdminProgramService adminProgramService;    
+    private AdminPtUserService adminPtUserService;
     
     @InjectMocks
-    private AdminProgramResource adminProgramResource;
+    private AdminPtUserResource adminPtUserResource;
 
     @Test
     public void create() {
-        adminProgramResource.create(new ProgramRequestDTO());
-        verify(adminProgramService).create(any(ProgramRequestDTO.class));
+        adminPtUserResource.create(new PtUserRequestDTO());
+        verify(adminPtUserService).create(any(PtUserRequestDTO.class));
     }
 
     public void delete() throws Exception {
-        adminProgramResource.delete(1L);
-        verify(adminProgramService).delete(anyLong());
+        adminPtUserResource.delete(1L);
+        verify(adminPtUserService).delete(anyLong());
     }
 }
