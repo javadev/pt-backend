@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,8 +25,8 @@ public class ActiveCertificateResourceIntTest {
 
     @Test
     public void testList() throws Exception {
-        List<ActiveCertificateResponseDTO> results = activeCertificateResource.list("");
-        assertThat(results.size(), is(greaterThanOrEqualTo(0)));
+        ActiveCertificateResponseDTO result = activeCertificateResource.firstActive("");
+        assertThat(result, notNullValue());
     }
 
 }

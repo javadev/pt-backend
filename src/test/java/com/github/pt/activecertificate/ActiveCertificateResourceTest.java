@@ -26,7 +26,7 @@ public class ActiveCertificateResourceTest {
     }
 
     public void list() throws Exception {
-        activeCertificateResource.list("");
-        verify(activeCertificateService).findAll(anyString());
+        activeCertificateResource.firstActive("");
+        verify(activeCertificateService).firstActive(anyString());
     }
 }

@@ -27,12 +27,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class ActiveCertificateResourceWebTest {
 
     @Test
-    public void testListAll() throws Exception {
+    public void testFirstActive() throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Token", "");
         RestTemplate restTemplate = new TestRestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(
-            "http://localhost:9090/api/v1/activate-certificate", HttpMethod.GET, new HttpEntity<>(headers), String.class);
+            "http://localhost:9090/api/v1/active-certificate", HttpMethod.GET, new HttpEntity<>(headers), String.class);
 
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
 
@@ -40,6 +40,6 @@ public class ActiveCertificateResourceWebTest {
         JsonNode responseJson = objectMapper.readTree(response.getBody());
 
         assertThat(responseJson.isMissingNode(), is(false));
-        assertThat(responseJson.toString(), startsWith("[]"));
+        assertThat(responseJson.toString(), startsWith("{\"id\":null,\"code\":null,\"expiration_date\":null}"));
     }
 }

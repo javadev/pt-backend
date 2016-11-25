@@ -27,18 +27,21 @@ class ActiveCertificateService {
         this.userService = userService;
     }
 
-    List<ActiveCertificateResponseDTO> findAll(String token) {
+    ActiveCertificateResponseDTO firstActive(String token) {
         if (!token.isEmpty()) {
             final InUserLogin inUserLogin = userService.checkUserToken(token);
-            return inUserLogin.getInUser().getInUserCertificates().stream().map(inUserCertificate ->
+            return inUserLogin.getInUser().getInUserCertificates().stream()
+                    .filter(inUserCertificate -> inUserCertificate.getCreated().toLocalDate()
+                            .plusDays(inUserCertificate.getAmount_of_days()).isAfter(LocalDate.now()))
+                    .map(inUserCertificate ->
                 ActiveCertificateResponseDTO.builder()
                     .id(inUserCertificate.getId())
                     .code(inUserCertificate.getCode())
                     .expiration_date(inUserCertificate.getCreated().toLocalDate().plusDays(inUserCertificate.getAmount_of_days()))
                     .build()
-            ).collect(Collectors.toList());
+            ).findFirst().orElse(new ActiveCertificateResponseDTO());
         }
-        return Collections.emptyList();
+        return new ActiveCertificateResponseDTO();
     }
 
     ActiveCertificateResponseDTO create(String token, ActiveCertificateRequestDTO certificateRequestDTO) {
