@@ -14,6 +14,7 @@ import com.github.pt.token.InUser;
 import com.github.pt.token.InUserRepository;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -46,8 +47,7 @@ class AdminProgramAssignService {
         parseUsers.stream().forEachOrdered(parseUser -> {
             final List<InUser> inUsers = inUserRepository.findAll();
             final List<InUser> inUsersWithName = inUsers.stream().filter(inUser -> 
-                    inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1)
-                            .getUser_name().equals(parseUser.getName())).collect(Collectors.toList());
+                    getUserName(inUser).orElse("").equals(parseUser.getName())).collect(Collectors.toList());
             if (inUsersWithName.isEmpty()) {
                 parseUser.setErrors(Arrays.asList(parseUser.getErrors(),
                     "Cannot assign user " + parseUser.getName() + ". User not found.")
@@ -82,5 +82,19 @@ class AdminProgramAssignService {
             }
         });
         return parseUserRepository.save(parseUsers);
+    }
+    
+    private Optional<String> getUserName(InUser inUser) {
+        final Optional<String> userName;
+        if (inUser.getInUserFacebooks() == null || inUser.getInUserFacebooks().isEmpty()) {
+            if (inUser.getInUserEmails().isEmpty()) {
+                userName = Optional.empty();
+            } else {
+                userName = Optional.of(inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1).getUser_name());
+            }
+        } else {
+            userName = Optional.of(inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1).getUser_name());
+        }
+        return userName;
     }
 }
