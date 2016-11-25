@@ -145,6 +145,8 @@ define([
               amountOfDays: model.get('amountOfDays'),
               activated: model.get('activated')
             });
+          } else {
+            certificate.set('code', certificate.generate());
           }
           var certificateEditView = new CertificatesViews.NewCertificateLayout({
             model: certificate
