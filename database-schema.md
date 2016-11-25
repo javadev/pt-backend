@@ -25,3 +25,7 @@ Admin certificate data store db schema:
 User type data store db schema:
 
 ![pt schema](pt-schema-user-type-v1.png)
+
+PT user and pt role store db schema:
+
+![pt schema](pt-schema-user-and-role-v1.png)
