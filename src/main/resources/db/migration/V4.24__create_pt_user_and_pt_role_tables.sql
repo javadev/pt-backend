@@ -29,8 +29,8 @@ CREATE TABLE ptcore.pt_role (
 );
 
 INSERT INTO ptcore.pt_role (name) VALUES
-('Trainer'),
-('Administrator');
+('Administrator'),
+('Trainer');
 
 CREATE TABLE ptcore.pt_user_has_pt_role (
     pt_user_id BIGINT NOT NULL REFERENCES ptcore.pt_user(id),

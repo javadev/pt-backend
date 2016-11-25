@@ -10,9 +10,12 @@ import org.springframework.stereotype.Service;
 class AdminPtUserService {
 
     private final PtUserRepository ptUserRepository;
+    private final PtRoleRepository ptRoleRepository;
 
-    AdminPtUserService(PtUserRepository ptUserRepository) {
+    AdminPtUserService(PtUserRepository ptUserRepository,
+            PtRoleRepository ptRoleRepository) {
         this.ptUserRepository = ptUserRepository;
+        this.ptRoleRepository = ptRoleRepository;
     }
 
     private static PtUserResponseDTO ptUserToDto(PtUser ptUser) {
@@ -34,6 +37,12 @@ class AdminPtUserService {
                 .description(ptUser.getDescription())
                 .phone(ptUser.getPhone())
                 .phone2(ptUser.getPhone2())
+                .roles(ptUser.getPtRoles().stream()
+                    .map(role -> PtRoleResponseDTO.builder()
+                        .id(role.getId())
+                        .name(role.getName())
+                        .build())
+                        .collect(Collectors.toList()))
                 .build();
     }
 
@@ -100,7 +109,10 @@ class AdminPtUserService {
                 .setIs_default_password(userRequestDTO.getIs_default_password())
                 .setDescription(userRequestDTO.getDescription())
                 .setPhone(userRequestDTO.getPhone())
-                .setPhone2(userRequestDTO.getPhone2());
+                .setPhone2(userRequestDTO.getPhone2())
+                .setPtRoles(ptRoleRepository.findAll(
+                    userRequestDTO.getRoles().stream().map(role -> role.getId())
+                            .collect(Collectors.toList())));
     }
 
 }

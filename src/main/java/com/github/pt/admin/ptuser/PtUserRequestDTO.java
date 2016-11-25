@@ -2,6 +2,7 @@ package com.github.pt.admin.ptuser;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,5 +34,6 @@ class PtUserRequestDTO {
     Boolean is_default_password;
     String description;
     String phone;
-    String phone2;     
+    String phone2;
+    List<PtRoleRequestDTO> roles;
 }
