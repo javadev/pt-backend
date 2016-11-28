@@ -27,6 +27,7 @@ class AdminUserProgramService {
         program.setName(inProgram.getName());
         program.setType(inProgram.getD_program_type());
         program.setWorkouts(new ArrayList<>());
+        program.setCreated(inProgram.getCreated());
         for (InWorkout inWorkout : inProgram.getInWorkouts()) {
             UserWorkoutResponseDTO workout = new UserWorkoutResponseDTO();
             workout.setId(inWorkout.getId());

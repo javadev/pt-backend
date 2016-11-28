@@ -37,7 +37,8 @@ define([
               id: model.get('id'),
               name: model.get('name'),
               email: model.get('email'),
-              type: model.get('type')
+              type: model.get('type'),
+              programs: model.get('programs')
             });
           }
           var userEditView = new UsersViews.NewUserLayout({

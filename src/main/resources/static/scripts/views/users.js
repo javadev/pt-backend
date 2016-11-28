@@ -3,11 +3,13 @@
 define([
     'jquery',
     'underscore',
+    'backbone',
     'marionette',
+    'moment',
     'app',
     'bootstrapTab'
 ],
-function ($, _, Marionette, App) {
+function ($, _, Backbone, Marionette, moment, App) {
   'use strict';
 
   var Layout = Marionette.Layout.extend({
@@ -46,6 +48,11 @@ function ($, _, Marionette, App) {
   var EmptyView = Marionette.ItemView.extend({
         tagName: 'tr',
         template: _.template('<td colspan="4">There are no users available.</td>')
+  });
+  
+  var EmptyTableItemView = Marionette.ItemView.extend({
+        tagName: 'tr',
+        template: _.template('<td colspan="4">There are no programs available.</td>')
   });
 
   var User = Marionette.ItemView.extend({
@@ -157,6 +164,7 @@ function ($, _, Marionette, App) {
         '</div>',
         '<div id="buttons"/>',
         '<div id="inputForm"/>',
+        '<div id="programTable"/>',
       '</div>'
     ].join('')),
     templateHelpers: function() {
@@ -171,11 +179,14 @@ function ($, _, Marionette, App) {
     className: 'form-horizontal',
     regions: {
       buttons: '#buttons',
-      inputForm: '#inputForm'
+      inputForm: '#inputForm',
+      programTable: '#programTable'
     },
     onShow: function() {
       this.buttons.show(new NewUserButtons({model: this.model}));
       this.inputForm.show(new NewUserInputForm({model: this.model}));
+      this.programTable.show(new ProgramTableForm({model: this.model,
+          collection: new Backbone.Collection(this.model.get('programs'))}));
     }
   });
 
@@ -230,6 +241,81 @@ function ($, _, Marionette, App) {
       event.preventDefault();
       this.model.set(this._model.toJSON());
       this.model.trigger('sync');
+    }
+  });
+  
+  var TableItem = Marionette.ItemView.extend({
+    tagName: 'tr',
+    template: _.template([
+      '<td>',
+        '{{ id }}',
+      '</td>',
+      '<td>',
+        '{{ name }}',
+      '</td>',
+      '<td>',
+        '{{ _.map(workouts, function(item) {return item.name;}) }}',
+      '</td>',
+      '<td>',
+        '{{ formatDate(created) }}',
+      '</td>'
+    ].join('')),
+    templateHelpers: function() {
+      return {
+        formatDate: function(dateTime) {
+          return moment(dateTime).format('DD.MM.YYYY HH:mm');
+        }
+      };
+    }
+  });
+
+  var ProgramTableForm = Marionette.CompositeView.extend({
+    itemViewContainer: 'tbody',
+    itemView: TableItem,
+    emptyView: EmptyTableItemView,
+    tagName: 'div',
+    className: 'js-users-mapping-config',
+    ui: {
+      table: '.table'
+    },
+    itemViewOptions : function () {
+      return { collection: this.collection };
+    },
+    initialize: function() {
+    },
+    template: _.template([
+    '<div class="panel panel-primary">',
+      '<div class="panel-heading">',
+        '<h3 class="panel-title"> Assigned programs </h3>',
+      '</div>',
+      '<button class="btn btn-primary js-reload-data" style="margin: 10px;">',
+        'Refresh',
+      '</button>',
+      '<table class="table">',
+        '<thead>',
+          '<tr>',
+            '<th>ID</th>',
+            '<th>Program name</th>',
+            '<th>Workouts</th>',
+            '<th>Created</th>',
+          '</tr>',
+        '</thead>',
+        '<tbody></tbody>',
+      '</table>',
+    '</div>'
+    ].join('')),
+    modelEvents: {
+      'sync': 'render'
+    },
+    collectionEvents: {
+      'sync': 'render'
+    },
+    events: {
+      'click .js-reload-data': 'reloadData'
+    },
+    reloadData: function(evt) {
+        evt.preventDefault();
+        this.model.fetch();
     }
   });
 

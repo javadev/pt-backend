@@ -5,10 +5,11 @@ define([
     'underscore',
     'backbone',
     'marionette',
+    'moment',
     'app',
     'bootstrapTab'
 ],
-function ($, _, Backbone, Marionette, App) {
+function ($, _, Backbone, Marionette, moment, App) {
   'use strict';
 
   var EmptyView = Marionette.ItemView.extend({
@@ -34,7 +35,7 @@ function ($, _, Backbone, Marionette, App) {
         '{{ fileName }}',
       '</td>',
       '<td>',
-        '{{ updated }}',
+        '{{ updated == null ? "" : formatDate(updated) }}',
       '</td>',
       '<td>',
         '<button type="button" class="btn btn-default btn-sm js-edit-value">',
@@ -47,7 +48,13 @@ function ($, _, Backbone, Marionette, App) {
         '</button>',
       '</td>'
     ].join('')),
-
+    templateHelpers: function() {
+      return {
+        formatDate: function(dateTime) {
+          return moment(dateTime).format('DD.MM.YYYY HH:mm');
+        }
+      };
+    },
     initialize: function(options) {
       this.collection = options.collection;
     },

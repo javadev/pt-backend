@@ -28,9 +28,9 @@ define([
         return errors.length > 0 ? errors : false;
       },
       generate: function() {
-        var passwords = [ "ALKJVBPIQYTUIWEBVPQALZVKQRWORTUYOYISHFLKAJMZNXBVMNFGAHKJSDFALAPOQIERIUYTGSFGKMZNXBVJAHGFAKX",
-                "1234567890"];
-        var result = "";
+        var passwords = [ 'ALKJVBPIQYTUIWEBVPQALZVKQRWORTUYOYISHFLKAJMZNXBVMNFGAHKJSDFALAPOQIERIUYTGSFGKMZNXBVJAHGFAKX',
+                '1234567890'];
+        var result = '';
         var passwordLength = 8;
         for (var index = 0; index < passwordLength; index += 1) {
             var passIndex = Math.floor(passwords.length * index / passwordLength);

@@ -1,5 +1,7 @@
 package com.github.pt.admin.user;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,5 +20,7 @@ class UserProgramResponseDTO {
     String name;
     String type;
     List<UserWorkoutResponseDTO> workouts;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    LocalDateTime created;
     
 }

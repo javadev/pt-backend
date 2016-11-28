@@ -80,7 +80,7 @@ class AdminUserService {
                     .nameNo(dictionaryService.getNoValue(DictionaryName.user_type,
                             inUser.getInUserType().getD_user_type(), ""))
                     .build())
-                .programs(inUser.getInPrograms().stream().map(program -> program.getId()).collect(Collectors.toList()))
+                .programs(inUser.getInPrograms().stream().map(AdminUserProgramService::inProgramToDto).collect(Collectors.toList()))
                 .build();
     }
 

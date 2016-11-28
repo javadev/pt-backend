@@ -13,7 +13,8 @@ require.config({
 
     marionette: 'external/backbone.marionette',
     'backbone.wreqr': 'external/backbone.wreqr',
-    'backbone.babysitter': 'external/backbone.babysitter'
+    'backbone.babysitter': 'external/backbone.babysitter',
+    moment: 'external/moment'
 
   },
   shim: {

@@ -19,5 +19,5 @@ class UserResponseDTO {
     String name;
     String email;
     UserTypeResponseDTO type;
-    List<Long> programs;
+    List<UserProgramResponseDTO> programs;
 }
