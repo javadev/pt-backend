@@ -28,4 +28,5 @@ User type data store db schema:
 
 PT user and pt role store db schema:
 
-![pt schema](pt-schema-user-and-role-v1.png)
+![pt schema](pt-schema-user-and-role-v2.png)
+
