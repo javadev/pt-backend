@@ -36,7 +36,7 @@ class ProgramService {
         ProgramResponseDTO program = new ProgramResponseDTO();
         program.setId(inProgram.getId());
         program.setName(inProgram.getName());
-        program.setType(inProgram.getD_program_type());
+        program.setType(inProgram.getD_program_type() == null ? "personal" : inProgram.getD_program_type());
         program.setWorkouts(new ArrayList<>());
         for (InWorkout inWorkout : inProgram.getInWorkouts()) {
             WorkoutResponseDTO workout = new WorkoutResponseDTO();
