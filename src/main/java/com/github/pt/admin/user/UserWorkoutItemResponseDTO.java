@@ -1,23 +1,22 @@
 package com.github.pt.admin.user;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.Builder;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
 @Getter
 @Setter
-@Builder
-class UserResponseDTO {
+class UserWorkoutItemResponseDTO {
     Long id;
-    String name;
-    String email;
-    UserTypeResponseDTO type;
-    List<Long> programs;
+    Long exercise_id;
+    String exercise_name;
+    Integer sets;
+    Integer repetitions;
+    Integer weight;
+    Boolean bodyweight;
 }

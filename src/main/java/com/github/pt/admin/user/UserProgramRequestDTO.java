@@ -6,18 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.Builder;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
 @Getter
 @Setter
-@Builder
-class UserResponseDTO {
-    Long id;
+class UserProgramRequestDTO {
     String name;
-    String email;
-    UserTypeResponseDTO type;
-    List<Long> programs;
+    String type;
+    List<UserWorkoutRequestDTO> workouts;    
 }

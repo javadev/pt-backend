@@ -1,4 +1,4 @@
-package com.github.pt.programs;
+package com.github.pt.admin.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,7 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @TestPropertySource("/application-test.properties")
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
-public class ProgramsResourceWebTest {
+public class AdminUserResourceWebTest {
 
     @Test
     public void testListAll() throws Exception {
@@ -31,7 +31,7 @@ public class ProgramsResourceWebTest {
         headers.add("X-Token", "");
         RestTemplate restTemplate = new TestRestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(
-                "http://localhost:9090/api/v1/programs", HttpMethod.GET, new HttpEntity<>(headers), String.class);
+            "http://localhost:9090/api/v1/admin/user", HttpMethod.GET, new HttpEntity<>(headers), String.class);
 
         assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
 
