@@ -62,8 +62,8 @@ define([
           collection: exercises
         });
         exercises.fetch();
-        $.get('/api/v1/admin/exercise-category').done(function(data) {
-          exercises._categories = _.union({id: null, nameEn: ''}, data);
+        $.get('/api/v1/admin/exercise-bodypart').done(function(data) {
+          exercises._bodyparts = _.union({id: null, nameEn: ''}, data);
           exercises.trigger('sync');
         });
         $.get('/api/v1/admin/exercise-type').done(function(data) {
@@ -72,12 +72,12 @@ define([
         });
         exercises.on('exercise:new', function(model) {
           var exercise = new ExercisesModels.Exercise();
-          exercise._categories = exercises._categories;
+          exercise._bodyparts = exercises._bodyparts;
           exercise._types = exercises._types;
           if (!_.isUndefined(model)) {
             exercise.set({
               id: model.get('id'),
-              category: model.get('category'),
+              bodypart: model.get('bodypart'),
               types: model.get('types'),
               exerciseId: model.get('exerciseId'),
               nameEn: model.get('nameEn'),

@@ -45,9 +45,9 @@ public class Exercise {
     String dExerciseDescription;
     Long exercise_id;
     @ManyToOne
-    @JoinColumn(name="exercise_category_id")
+    @JoinColumn(name="exercise_bodypart_id")
     @JsonBackReference
-    ExerciseCategory exerciseCategory;
+    ExerciseBodypart exerciseBodypart;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "exercise_type_has_exercise",

@@ -20,8 +20,8 @@ class AdminExerciseTypeService {
     }
 
     List<ExerciseTypeResponseDTO> findAll() {
-        return exerciseTypeRepository.findAll().stream().map(category ->
-            exerciseTypeToDto(category)
+        return exerciseTypeRepository.findAll().stream().map(bodypart ->
+            exerciseTypeToDto(bodypart)
         ).collect(Collectors.toList());
     }
     

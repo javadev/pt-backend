@@ -16,7 +16,7 @@ define([
         'nameNo': null,
         'descriptionEn': null,
         'descriptionNo': null,
-        'category': {
+        'bodypart': {
           'id' : null
         }
       },
@@ -31,8 +31,8 @@ define([
           errors.push({name: 'nameNo', message: 'Please fill name in Norwegian field.'});
         } else if (_.isNull(attrs.exerciseId) || _.isEmpty($.trim(attrs.exerciseId))) {
           errors.push({name: 'exerciseId', message: 'Please fill exerciseId field.'});
-        } else if (_.isNull(attrs.category.id)) {
-          errors.push({name: 'category', message: 'Please fill category field.'});
+        } else if (_.isNull(attrs.bodypart.id)) {
+          errors.push({name: 'bodypart', message: 'Please fill bodypart field.'});
         }
         return errors.length > 0 ? errors : false;
       }

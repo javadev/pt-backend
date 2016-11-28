@@ -11,6 +11,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.client.RestTemplate;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,6 +40,6 @@ public class ProgramsResourceWebTest {
         JsonNode responseJson = objectMapper.readTree(response.getBody());
 
         assertThat(responseJson.isMissingNode(), is(false));
-        assertThat(responseJson.toString(), equalTo("[]"));
+        assertThat(responseJson.toString(), startsWith("[{"));
     }
 }

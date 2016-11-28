@@ -2,7 +2,7 @@ package com.github.pt.admin.exercise;
 
 import com.github.pt.dictionary.DictionaryService;
 import com.github.pt.exercises.Exercise;
-import com.github.pt.exercises.ExerciseCategory;
+import com.github.pt.exercises.ExerciseBodypart;
 import com.github.pt.exercises.ExerciseRepository;
 import java.util.Collections;
 import org.junit.Test;
@@ -18,11 +18,11 @@ import org.springframework.data.domain.Sort;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminExerciseServiceTest {
-    
+
     @Mock
     private ExerciseRepository exerciseRepository;
     @Mock
-    private ExerciseCategoryRepository exerciseCategoryRepository;
+    private ExerciseBodypartRepository exerciseBodypartRepository;
     @Mock
     private ExerciseTypeRepository exerciseTypeRepository;
     @Mock
@@ -34,38 +34,38 @@ public class AdminExerciseServiceTest {
     @Test
     public void findAll() {
         tokenService.findAll();
-        verify(exerciseRepository).findAll(any(Sort.class));   
+        verify(exerciseRepository).findAll(any(Sort.class));
     }
 
     @Test
     public void findOne() {
-        ExerciseCategory existedExerciseCategory = new ExerciseCategory();
-        existedExerciseCategory.setId(1L);
-        existedExerciseCategory.setDExerciseCategoryName("10"); 
+        ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();
+        existedExerciseBodypart.setId(1L);
+        existedExerciseBodypart.setDExerciseBodypartName("10");
         Exercise savedExercise = new Exercise();
         savedExercise.setId(1L);
         savedExercise.setDExerciseName("10");
-        savedExercise.setExerciseCategory(existedExerciseCategory);
+        savedExercise.setExerciseBodypart(existedExerciseBodypart);
         when(exerciseRepository.findOne(eq(1L))).thenReturn(savedExercise);
         tokenService.findOne(1L);
-        verify(exerciseRepository).findOne(eq(1L));   
+        verify(exerciseRepository).findOne(eq(1L));
     }
 
     @Test
     public void create() {
         ExerciseRequestDTO exerciseRequestDTO = new ExerciseRequestDTO();
-        exerciseRequestDTO.setCategory(new ExerciseCategoryRequestDTO(1L));
+        exerciseRequestDTO.setBodypart(new ExerciseBodypartRequestDTO(1L));
         exerciseRequestDTO.setNameEn("nameEn");
         exerciseRequestDTO.setNameEn("nameNo");
         exerciseRequestDTO.setTypes(Collections.emptyList());
-        ExerciseCategory existedExerciseCategory = new ExerciseCategory();
-        existedExerciseCategory.setId(1L);
-        existedExerciseCategory.setDExerciseCategoryName("10");
-        when(exerciseCategoryRepository.findOne(eq(1L))).thenReturn(existedExerciseCategory);
+        ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();
+        existedExerciseBodypart.setId(1L);
+        existedExerciseBodypart.setDExerciseBodypartName("10");
+        when(exerciseBodypartRepository.findOne(eq(1L))).thenReturn(existedExerciseBodypart);
         Exercise savedExercise = new Exercise();
         savedExercise.setId(1L);
         savedExercise.setDExerciseName("10");
-        savedExercise.setExerciseCategory(existedExerciseCategory);
+        savedExercise.setExerciseBodypart(existedExerciseBodypart);
         when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
         tokenService.create(exerciseRequestDTO);
         verify(exerciseRepository).save(any(Exercise.class));
@@ -74,20 +74,20 @@ public class AdminExerciseServiceTest {
     @Test
     public void update() {
         ExerciseRequestDTO exerciseRequestDTO = new ExerciseRequestDTO();
-        exerciseRequestDTO.setCategory(new ExerciseCategoryRequestDTO(1L));
+        exerciseRequestDTO.setBodypart(new ExerciseBodypartRequestDTO(1L));
         exerciseRequestDTO.setNameEn("nameEn");
         exerciseRequestDTO.setNameEn("nameNo");
         exerciseRequestDTO.setTypes(Collections.emptyList());
         Exercise existedExercise = new Exercise();
         when(exerciseRepository.findOne(eq(1L))).thenReturn(existedExercise);
-        ExerciseCategory existedExerciseCategory = new ExerciseCategory();
-        existedExerciseCategory.setId(1L);
-        existedExerciseCategory.setDExerciseCategoryName("10");
-        when(exerciseCategoryRepository.findOne(eq(1L))).thenReturn(existedExerciseCategory);
+        ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();
+        existedExerciseBodypart.setId(1L);
+        existedExerciseBodypart.setDExerciseBodypartName("10");
+        when(exerciseBodypartRepository.findOne(eq(1L))).thenReturn(existedExerciseBodypart);
         Exercise savedExercise = new Exercise();
         savedExercise.setId(1L);
         savedExercise.setDExerciseName("10");
-        savedExercise.setExerciseCategory(existedExerciseCategory);
+        savedExercise.setExerciseBodypart(existedExerciseBodypart);
         when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
         tokenService.update(1L, exerciseRequestDTO);
         verify(exerciseRepository).save(any(Exercise.class));
@@ -95,13 +95,13 @@ public class AdminExerciseServiceTest {
 
     @Test
     public void delete() {
-        ExerciseCategory existedExerciseCategory = new ExerciseCategory();
-        existedExerciseCategory.setId(1L);
-        existedExerciseCategory.setDExerciseCategoryName("10");
+        ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();
+        existedExerciseBodypart.setId(1L);
+        existedExerciseBodypart.setDExerciseBodypartName("10");
         Exercise savedExercise = new Exercise();
         savedExercise.setId(1L);
         savedExercise.setDExerciseName("10");
-        savedExercise.setExerciseCategory(existedExerciseCategory);
+        savedExercise.setExerciseBodypart(existedExerciseBodypart);
         when(exerciseRepository.findOne(eq(1L))).thenReturn(savedExercise);
         tokenService.delete(1L);
         verify(exerciseRepository).delete(eq(1L));

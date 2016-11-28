@@ -45,6 +45,4 @@ public class ExerciseType {
             inverseJoinColumns = { @JoinColumn(name = "exercise_id") }
     )
     List<Exercise> exercises = new ArrayList<>(0);
-    @OneToMany(mappedBy="exerciseCategory")
-    List<Exercise> exercise;
 }

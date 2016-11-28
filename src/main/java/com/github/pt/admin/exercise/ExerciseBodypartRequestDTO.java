@@ -11,6 +11,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-class ExerciseCategoryRequestDTO {
+class ExerciseBodypartRequestDTO {
     Long id;
 }

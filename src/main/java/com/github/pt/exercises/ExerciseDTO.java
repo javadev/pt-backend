@@ -14,5 +14,5 @@ import lombok.experimental.Accessors;
 class ExerciseDTO {
     Long id;
     String name;
-    ExerciseCategoryDTO category;
+    ExerciseBodypartDTO bodypart;
 }

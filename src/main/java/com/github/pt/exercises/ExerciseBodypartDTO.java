@@ -1,20 +1,17 @@
-package com.github.pt.admin.exercise;
+package com.github.pt.exercises;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.Builder;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
 @Getter
 @Setter
-@Builder
-class ExerciseCategoryResponseDTO {
+class ExerciseBodypartDTO {
     Long id;
-    String nameEn;
-    String nameNo;
+    String name;
 }

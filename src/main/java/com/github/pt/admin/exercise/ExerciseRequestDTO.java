@@ -18,6 +18,6 @@ class ExerciseRequestDTO {
     String nameNo;
     String descriptionEn;
     String descriptionNo;
-    ExerciseCategoryRequestDTO category;
+    ExerciseBodypartRequestDTO bodypart;
     List<ExerciseTypeRequestDTO> types;
 }

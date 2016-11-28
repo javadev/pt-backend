@@ -24,17 +24,17 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 @Setter
 @Entity
-@Table (name = "exercise_category", schema = "ptcore")
+@Table (name = "exercise_bodypart", schema = "ptcore")
 @DynamicInsert
-public class ExerciseCategory {
+public class ExerciseBodypart {
     @Id
-    @SequenceGenerator(name = "ExerciseCategoryIdSequence", sequenceName = "ptcore.exercise_category_id_seq",
+    @SequenceGenerator(name = "ExerciseBodypartIdSequence", sequenceName = "ptcore.exercise_bodypart_id_seq",
             allocationSize = 1, initialValue = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ExerciseCategoryIdSequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ExerciseBodypartIdSequence")
     Long id;
     LocalDateTime created;
-    @Column(name = "d_exercise_category_name")
-    String dExerciseCategoryName;
-    @OneToMany(mappedBy="exerciseCategory")
+    @Column(name = "d_exercise_bodypart_name")
+    String dExerciseBodypartName;
+    @OneToMany(mappedBy="exerciseBodypart")
     List<Exercise> exercise;
 }

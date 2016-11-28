@@ -4,7 +4,7 @@ import com.github.pt.ResourceNotFoundException;
 import com.github.pt.dictionary.DictionaryName;
 import com.github.pt.dictionary.DictionaryService;
 import com.github.pt.exercises.Exercise;
-import com.github.pt.exercises.ExerciseCategory;
+import com.github.pt.exercises.ExerciseBodypart;
 import com.github.pt.exercises.ExerciseRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,16 +14,16 @@ import org.springframework.stereotype.Service;
 @Service
 class AdminExerciseService {
     private final ExerciseRepository exerciseRepository;
-    private final ExerciseCategoryRepository exerciseCategoryRepository;
+    private final ExerciseBodypartRepository exerciseBodypartRepository;
     private final ExerciseTypeRepository exerciseTypeRepository;
     private final DictionaryService dictionaryService;
     
     AdminExerciseService(ExerciseRepository exerciseRepository,
-            ExerciseCategoryRepository exerciseCategoryRepository,
+            ExerciseBodypartRepository exerciseBodypartRepository,
             ExerciseTypeRepository exerciseTypeRepository,
             DictionaryService dictionaryService) {
         this.exerciseRepository = exerciseRepository;
-        this.exerciseCategoryRepository = exerciseCategoryRepository;
+        this.exerciseBodypartRepository = exerciseBodypartRepository;
         this.exerciseTypeRepository = exerciseTypeRepository;
         this.dictionaryService = dictionaryService;
     }
@@ -46,12 +46,10 @@ class AdminExerciseService {
                 .nameNo(dictionaryService.getNoValue(DictionaryName.exercise_name, exercise.getDExerciseName(), ""))
                 .descriptionEn(dictionaryService.getEnValue(DictionaryName.exercise_description, exercise.getDExerciseDescription(), ""))
                 .descriptionNo(dictionaryService.getNoValue(DictionaryName.exercise_description, exercise.getDExerciseDescription(), ""))
-                .category(ExerciseCategoryResponseDTO.builder()
-                        .id(exercise.getExerciseCategory().getId())
-                        .nameEn(dictionaryService.getEnValue(
-                                DictionaryName.exercise_category_name, exercise.getExerciseCategory().getDExerciseCategoryName(), ""))
-                        .nameNo(dictionaryService.getNoValue(
-                                DictionaryName.exercise_category_name, exercise.getExerciseCategory().getDExerciseCategoryName(), ""))
+                .bodypart(ExerciseBodypartResponseDTO.builder()
+                        .id(exercise.getExerciseBodypart().getId())
+                        .nameEn(dictionaryService.getEnValue(DictionaryName.exercise_bodypart_name, exercise.getExerciseBodypart().getDExerciseBodypartName(), ""))
+                        .nameNo(dictionaryService.getNoValue(DictionaryName.exercise_bodypart_name, exercise.getExerciseBodypart().getDExerciseBodypartName(), ""))
                         .build())
                 .types(exercise.getExerciseTypes().stream()
                     .map(type -> ExerciseTypeResponseDTO.builder()
@@ -73,11 +71,11 @@ class AdminExerciseService {
     }
 
     ExerciseResponseDTO create(ExerciseRequestDTO exerciseRequestDTO) {
-        final ExerciseCategory exerciseCategoryDb = exerciseCategoryRepository
-            .findOne(exerciseRequestDTO.getCategory().getId());
-        if (exerciseCategoryDb == null) {
-            throw new ResourceNotFoundException("Category not found in database: "
-                    + exerciseRequestDTO.getCategory().getId());
+        final ExerciseBodypart exerciseBodypartDb = exerciseBodypartRepository
+            .findOne(exerciseRequestDTO.getBodypart().getId());
+        if (exerciseBodypartDb == null) {
+            throw new ResourceNotFoundException("Bodypart not found in database: "
+                    + exerciseRequestDTO.getBodypart().getId());
         }
         final String dataKey = dictionaryService.getNewDictionaryDataKey(DictionaryName.exercise_name);
         dictionaryService.createDictionaryDataKey(DictionaryName.exercise_name, dataKey,
@@ -89,7 +87,7 @@ class AdminExerciseService {
         exercise.setDExerciseName(dataKey);
         exercise.setDExerciseDescription(dataDescriptionKey);
         exercise.setExercise_id(exerciseRequestDTO.getExerciseId());
-        exercise.setExerciseCategory(exerciseCategoryDb);
+        exercise.setExerciseBodypart(exerciseBodypartDb);
         exercise.setExerciseTypes(exerciseTypeRepository.findAll(
             exerciseRequestDTO.getTypes().stream().map(type -> type.getId()).collect(Collectors.toList())));
         return exerciseToDto(exerciseRepository.save(exercise));
@@ -109,13 +107,13 @@ class AdminExerciseService {
         dictionaryService.createDictionaryDataKey(DictionaryName.exercise_description,
                 dataDescriptionKey, exerciseRequestDTO.getDescriptionEn(),
                 exerciseRequestDTO.getDescriptionNo());
-        final ExerciseCategory exerciseCategoryDb = exerciseCategoryRepository
-            .findOne(exerciseRequestDTO.getCategory().getId());
-        if (exerciseCategoryDb == null) {
-            throw new ResourceNotFoundException("Category not found in database: "
-                    + exerciseRequestDTO.getCategory().getId());
+        final ExerciseBodypart exerciseBodypartDb = exerciseBodypartRepository
+            .findOne(exerciseRequestDTO.getBodypart().getId());
+        if (exerciseBodypartDb == null) {
+            throw new ResourceNotFoundException("Bodypart not found in database: "
+                    + exerciseRequestDTO.getBodypart().getId());
         }
-        existedExercise.setExerciseCategory(exerciseCategoryDb);
+        existedExercise.setExerciseBodypart(exerciseBodypartDb);
         existedExercise.setDExerciseName(dataKey);
         existedExercise.setDExerciseDescription(dataDescriptionKey);
         existedExercise.setExercise_id(exerciseRequestDTO.getExerciseId());

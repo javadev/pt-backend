@@ -33,11 +33,11 @@ class ExerciseService {
             exerciseDTO.setId(Long.parseLong(exercise.getDExerciseName()));
             exerciseDTO.setName(dictionaryService.getEnValue(DictionaryName.exercise_name,
                     exercise.getDExerciseName(), ""));
-            ExerciseCategoryDTO categoryDTO = new ExerciseCategoryDTO();
-            categoryDTO.setId(Long.parseLong(exercise.getExerciseCategory().getDExerciseCategoryName()));
-            categoryDTO.setName(dictionaryService.getEnValue(DictionaryName.exercise_category_name,
-                    exercise.getExerciseCategory().getDExerciseCategoryName(), ""));
-            exerciseDTO.setCategory(categoryDTO);
+            ExerciseBodypartDTO bodypartDTO = new ExerciseBodypartDTO();
+            bodypartDTO.setId(Long.parseLong(exercise.getExerciseBodypart().getDExerciseBodypartName()));
+            bodypartDTO.setName(dictionaryService.getEnValue(DictionaryName.exercise_bodypart_name,
+                    exercise.getExerciseBodypart().getDExerciseBodypartName(), ""));
+            exerciseDTO.setBodypart(bodypartDTO);
             return exerciseDTO;
         }).collect(Collectors.toList());
     }

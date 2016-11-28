@@ -29,7 +29,7 @@ function ($, _, Marionette, App) {
         '{{ nameNo }}',
       '</td>',
       '<td>',
-        '{{ category.nameEn }}',
+        '{{ bodypart.nameEn }}',
       '</td>',
       '<td>',
         '{{ _.map(types, function(item) {return item.nameEn;}).join(", ") }}',
@@ -100,7 +100,7 @@ function ($, _, Marionette, App) {
             '<th>Exercise ID</th>',
             '<th>Name in English</th>',
             '<th>Name in Norwegian</th>',
-            '<th>Category</th>',
+            '<th>Bodypart</th>',
             '<th>Types</th>',
             '<th></th>',
             '<th></th>',
@@ -217,10 +217,10 @@ function ($, _, Marionette, App) {
         '</div>',
       '</div>',
       '<div class="form-group">',
-        '<label class="col-sm-3 control-label">Exercise category</label>',
+        '<label class="col-sm-3 control-label">Exercise bodypart</label>',
         '<div class="col-sm-8">',
-          '<select id="exercise-category" class="selectpicker show-tick">',
-            '{{ getCategories() }}',
+          '<select id="exercise-bodypart" class="selectpicker show-tick">',
+            '{{ getBodyparts() }}',
           '</select>',
         '</div>',
       '</div>',
@@ -276,14 +276,14 @@ function ($, _, Marionette, App) {
     templateHelpers: function() {
       var model = this.model;
       return {
-        getCategories: function() {
-          var categories = model._categories || [];
-          var result = _.map(categories, function(item) {
+        getBodyparts: function() {
+          var bodyparts = model._bodyparts || [];
+          var result = _.map(bodyparts, function(item) {
             if (_.isNull(item.id)) {
               return '<option data-hidden="true"></option>';
             }
             return '<option value="' + item.id + '"' +
-              (model.get('category').id === item.id ? ' selected' : '') +
+              (model.get('bodypart').id === item.id ? ' selected' : '') +
               '>' + item.nameEn + '</option>';
           });
           return result;
@@ -315,7 +315,7 @@ function ($, _, Marionette, App) {
       'input #exercise-descriptionNo': 'inputDescriptionNo'
     },
     ui: {
-      exerciseCategory: '#exercise-category',
+      exerciseBodypart: '#exercise-bodypart',
       exerciseTypes: '#exercise-types',
       exerciseId: '#exercise-id',
       nameEn: '#exercise-nameEn',
@@ -347,8 +347,8 @@ function ($, _, Marionette, App) {
         style: 'btn-default',
         size: false
       });
-      this.ui.exerciseCategory.on('changed.bs.select', function (e) {
-        view.model.set('category', {id: parseInt(e.target.value, 10) });
+      this.ui.exerciseBodypart.on('changed.bs.select', function (e) {
+        view.model.set('bodypart', {id: parseInt(e.target.value, 10) });
       });
       this.ui.exerciseTypes.on('changed.bs.select', function (e) {
         var selectedTypes = _.map(e.target.selectedOptions, function(item) {
