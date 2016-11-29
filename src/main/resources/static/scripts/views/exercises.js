@@ -56,8 +56,8 @@ function ($, _, Marionette, App) {
     editExercise: function() {
       this.collection.trigger('exercise:new', this.model);
     },
-    deleteExercise: function() {
-      event.preventDefault();
+    deleteExercise: function(evt) {
+      evt.preventDefault();
       var model = this.model;
       var collection = this.collection;
       this.model.destroy()
@@ -184,12 +184,12 @@ function ($, _, Marionette, App) {
     initialize: function(options) {
       this._model = options.model.clone();
     },
-    back: function() {
-      event.preventDefault();
+    back: function(evt) {
+      evt.preventDefault();
       this.model.trigger('exercise:back');
     },
-    save: function() {
-      event.preventDefault();
+    save: function(evt) {
+      evt.preventDefault();
       var model = this.model;
       this.model.save().done(function() {
         model.trigger('exercise:back');
@@ -198,8 +198,8 @@ function ($, _, Marionette, App) {
         App.vent.trigger('xhr:error', 'Exercise save was failed');
       });
     },
-    discard: function(event) {
-      event.preventDefault();
+    discard: function(evt) {
+      evt.preventDefault();
       this.model.set(this._model.toJSON());
       this.model.trigger('sync');
     }

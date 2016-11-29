@@ -179,12 +179,12 @@ function ($, _, Marionette, App) {
     initialize: function(options) {
       this._model = options.model.clone();
     },
-    back: function() {
-      event.preventDefault();
+    back: function(evt) {
+      evt.preventDefault();
       this.model.trigger('certificate:back');
     },
-    save: function() {
-      event.preventDefault();
+    save: function(evt) {
+      evt.preventDefault();
       var model = this.model;
       this.model.save().done(function() {
         model.trigger('certificate:back');
@@ -193,8 +193,8 @@ function ($, _, Marionette, App) {
         App.vent.trigger('xhr:error', 'Certificate save was failed');
       });
     },
-    discard: function(event) {
-      event.preventDefault();
+    discard: function(evt) {
+      evt.preventDefault();
       this.model.set(this._model.toJSON());
       this.model.trigger('sync');
     }

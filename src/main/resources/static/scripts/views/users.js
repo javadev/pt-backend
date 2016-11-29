@@ -92,8 +92,8 @@ function ($, _, Backbone, Marionette, moment, App) {
     editUser: function() {
       this.collection.trigger('user:new', this.model);
     },
-    deleteUser: function() {
-      event.preventDefault();
+    deleteUser: function(evt) {
+      evt.preventDefault();
       var model = this.model;
       var collection = this.collection;
       this.model.destroy()
@@ -223,12 +223,12 @@ function ($, _, Backbone, Marionette, moment, App) {
     initialize: function(options) {
       this._model = options.model.clone();
     },
-    back: function() {
-      event.preventDefault();
+    back: function(evt) {
+      evt.preventDefault();
       this.model.trigger('user:back');
     },
-    save: function() {
-      event.preventDefault();
+    save: function(evt) {
+      evt.preventDefault();
       var model = this.model;
       this.model.save().done(function() {
         model.trigger('user:back');
@@ -237,8 +237,8 @@ function ($, _, Backbone, Marionette, moment, App) {
         App.vent.trigger('xhr:error', 'User save was failed');
       });
     },
-    discard: function(event) {
-      event.preventDefault();
+    discard: function(evt) {
+      evt.preventDefault();
       this.model.set(this._model.toJSON());
       this.model.trigger('sync');
     }
