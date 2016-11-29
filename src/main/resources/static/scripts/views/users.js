@@ -310,6 +310,7 @@ function ($, _, Backbone, Marionette, moment, App) {
       evt.preventDefault();
       this._model._programName = this.model.get('name');
       this._model.trigger('refresh:workouts', this.model.get('workouts'));
+      this._model._workoutName = '';
       this._model.trigger('refresh:exercises', []);
     }
   });
@@ -420,6 +421,8 @@ function ($, _, Backbone, Marionette, moment, App) {
       var view = this;
       this.model.clone().fetch().done(function(data) {
         view.collection.set(_.last(data.programs, 3));
+        view.model._programName = '';
+        view.model._workoutName = '';
         view.model.trigger('refresh:workouts', []);
         view.model.trigger('refresh:exercises', []);
       });
