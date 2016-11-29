@@ -22,5 +22,4 @@ class ExerciseResponseDTO {
     String descriptionEn;
     String descriptionNo;
     ExerciseBodypartResponseDTO bodypart;
-    List<ExerciseTypeResponseDTO> types;
 }

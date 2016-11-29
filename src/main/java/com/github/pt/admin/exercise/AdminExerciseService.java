@@ -15,16 +15,13 @@ import org.springframework.stereotype.Service;
 class AdminExerciseService {
     private final ExerciseRepository exerciseRepository;
     private final ExerciseBodypartRepository exerciseBodypartRepository;
-    private final ExerciseTypeRepository exerciseTypeRepository;
     private final DictionaryService dictionaryService;
     
     AdminExerciseService(ExerciseRepository exerciseRepository,
             ExerciseBodypartRepository exerciseBodypartRepository,
-            ExerciseTypeRepository exerciseTypeRepository,
             DictionaryService dictionaryService) {
         this.exerciseRepository = exerciseRepository;
         this.exerciseBodypartRepository = exerciseBodypartRepository;
-        this.exerciseTypeRepository = exerciseTypeRepository;
         this.dictionaryService = dictionaryService;
     }
     
@@ -51,14 +48,6 @@ class AdminExerciseService {
                         .nameEn(dictionaryService.getEnValue(DictionaryName.exercise_bodypart_name, exercise.getExerciseBodypart().getDExerciseBodypartName(), ""))
                         .nameNo(dictionaryService.getNoValue(DictionaryName.exercise_bodypart_name, exercise.getExerciseBodypart().getDExerciseBodypartName(), ""))
                         .build())
-                .types(exercise.getExerciseTypes().stream()
-                    .map(type -> ExerciseTypeResponseDTO.builder()
-                        .id(type.getId())
-                        .nameEn(dictionaryService.getEnValue(
-                                DictionaryName.exercise_type_name, type.getD_exercise_type_name(), "")
-                        )
-                        .build())
-                        .collect(Collectors.toList()))
                 .build();
     }
 
@@ -88,8 +77,6 @@ class AdminExerciseService {
         exercise.setDExerciseDescription(dataDescriptionKey);
         exercise.setExercise_id(exerciseRequestDTO.getExerciseId());
         exercise.setExerciseBodypart(exerciseBodypartDb);
-        exercise.setExerciseTypes(exerciseTypeRepository.findAll(
-            exerciseRequestDTO.getTypes().stream().map(type -> type.getId()).collect(Collectors.toList())));
         return exerciseToDto(exerciseRepository.save(exercise));
     }
 
@@ -117,8 +104,6 @@ class AdminExerciseService {
         existedExercise.setDExerciseName(dataKey);
         existedExercise.setDExerciseDescription(dataDescriptionKey);
         existedExercise.setExercise_id(exerciseRequestDTO.getExerciseId());
-        existedExercise.setExerciseTypes(exerciseTypeRepository.findAll(
-                exerciseRequestDTO.getTypes().stream().map(type -> type.getId()).collect(Collectors.toList())));
         final Exercise savedExercise = exerciseRepository.save(existedExercise);
         return exerciseToDto(savedExercise);
     }

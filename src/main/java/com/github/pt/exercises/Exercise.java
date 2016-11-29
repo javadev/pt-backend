@@ -2,8 +2,6 @@ package com.github.pt.exercises;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,13 +10,10 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -48,12 +43,4 @@ public class Exercise {
     @JoinColumn(name="exercise_bodypart_id")
     @JsonBackReference
     ExerciseBodypart exerciseBodypart;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "exercise_type_has_exercise",
-            schema = "ptcore",
-            joinColumns = { @JoinColumn(name = "exercise_id") },
-            inverseJoinColumns = { @JoinColumn(name = "exercise_type_id") }
-    )
-    List<ExerciseType> exerciseTypes = new ArrayList<>(0);
 }
