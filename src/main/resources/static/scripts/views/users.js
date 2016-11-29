@@ -316,8 +316,8 @@ function ($, _, Backbone, Marionette, moment, App) {
     reloadData: function(evt) {
       evt.preventDefault();
       var view = this;
-      this.model.fetch().done(function() {
-        view.collection.set(view.model.get('programs'));
+      this.model.clone().fetch().done(function(data) {
+        view.collection.set(data.programs);
       });
     }
   });
