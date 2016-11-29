@@ -314,8 +314,11 @@ function ($, _, Backbone, Marionette, moment, App) {
       'click .js-reload-data': 'reloadData'
     },
     reloadData: function(evt) {
-        evt.preventDefault();
-        this.model.fetch();
+      evt.preventDefault();
+      var view = this;
+      this.model.fetch().done(function() {
+        view.collection.set(view.model.get('programs'));
+      });
     }
   });
 
