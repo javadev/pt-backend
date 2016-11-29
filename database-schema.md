@@ -8,7 +8,7 @@ User's program data store db schema:
 
 Exercise data store db schema:
 
-![pt schema](pt-schema-exercise-v3.png)
+![pt schema](pt-schema-exercise-v4.png)
 
 User extra data store db schema:
 

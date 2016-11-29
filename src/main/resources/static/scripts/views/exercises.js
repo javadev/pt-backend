@@ -29,7 +29,10 @@ function ($, _, Marionette, App) {
         '{{ nameNo }}',
       '</td>',
       '<td>',
-        '{{ bodypart.nameEn }}',
+        '{{ bodypart == null ? "" : bodypart.nameEn }}',
+      '</td>',
+      '<td>',
+        '{{ equipmentType == null ? "" : equipmentType.nameEn }}',
       '</td>',
       '<td>',
         '<button type="button" class="btn btn-default btn-sm js-edit-value">',
@@ -98,6 +101,7 @@ function ($, _, Marionette, App) {
             '<th>Name in English</th>',
             '<th>Name in Norwegian</th>',
             '<th>Bodypart</th>',
+            '<th>Equipment type</th>',
             '<th></th>',
             '<th></th>',
           '</tr>',
@@ -221,6 +225,14 @@ function ($, _, Marionette, App) {
         '</div>',
       '</div>',
       '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Exercise equipment type</label>',
+        '<div class="col-sm-8">',
+          '<select id="exercise-equipment-type" class="selectpicker show-tick">',
+            '{{ getEquipmentTypes() }}',
+          '</select>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
         '<label class="col-sm-3 control-label">Exercise ID</label>',
         '<div class="col-sm-8">',
           '<textarea id="exercise-id" class="form-control" rows="3" placeholder="Please enter exercise id" name="exerciseId" required="true">',
@@ -268,10 +280,22 @@ function ($, _, Marionette, App) {
           var bodyparts = model._bodyparts || [];
           var result = _.map(bodyparts, function(item) {
             if (_.isNull(item.id)) {
-              return '<option data-hidden="true"></option>';
+              return '<option></option>';
             }
             return '<option value="' + item.id + '"' +
-              (model.get('bodypart').id === item.id ? ' selected' : '') +
+              (!!model.get('bodypart') && model.get('bodypart').id === item.id ? ' selected' : '') +
+              '>' + item.nameEn + '</option>';
+          });
+          return result;
+        },
+        getEquipmentTypes: function() {
+          var equipmentTypes = model._equipmentTypes || [];
+          var result = _.map(equipmentTypes, function(item) {
+            if (_.isNull(item.id)) {
+              return '<option></option>';
+            }
+            return '<option value="' + item.id + '"' +
+              (!!model.get('equipmentType') && model.get('equipmentType').id === item.id ? ' selected' : '') +
               '>' + item.nameEn + '</option>';
           });
           return result;
@@ -290,6 +314,7 @@ function ($, _, Marionette, App) {
     },
     ui: {
       exerciseBodypart: '#exercise-bodypart',
+      exerciseEquipmentType: '#exercise-equipment-type',
       exerciseId: '#exercise-id',
       nameEn: '#exercise-nameEn',
       nameNo: '#exercise-nameNo',
@@ -321,7 +346,10 @@ function ($, _, Marionette, App) {
         size: false
       });
       this.ui.exerciseBodypart.on('changed.bs.select', function (e) {
-        view.model.set('bodypart', {id: parseInt(e.target.value, 10) });
+        view.model.set('bodypart', _.isEmpty(e.target.value) ? null : {id: parseInt(e.target.value, 10) });
+      });
+      this.ui.exerciseEquipmentType.on('changed.bs.select', function (e) {
+        view.model.set('equipmentType', _.isEmpty(e.target.value) ? null : {id: parseInt(e.target.value, 10) });
       });
     }
   });

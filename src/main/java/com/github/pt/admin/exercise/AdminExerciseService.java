@@ -5,6 +5,7 @@ import com.github.pt.dictionary.DictionaryName;
 import com.github.pt.dictionary.DictionaryService;
 import com.github.pt.exercises.Exercise;
 import com.github.pt.exercises.ExerciseBodypart;
+import com.github.pt.exercises.ExerciseEquipmentType;
 import com.github.pt.exercises.ExerciseRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,13 +16,16 @@ import org.springframework.stereotype.Service;
 class AdminExerciseService {
     private final ExerciseRepository exerciseRepository;
     private final ExerciseBodypartRepository exerciseBodypartRepository;
+    private final ExerciseEquipmentTypeRepository exerciseEquipmentTypeRepository;
     private final DictionaryService dictionaryService;
     
     AdminExerciseService(ExerciseRepository exerciseRepository,
             ExerciseBodypartRepository exerciseBodypartRepository,
+            ExerciseEquipmentTypeRepository exerciseEquipmentTypeRepository,
             DictionaryService dictionaryService) {
         this.exerciseRepository = exerciseRepository;
         this.exerciseBodypartRepository = exerciseBodypartRepository;
+        this.exerciseEquipmentTypeRepository = exerciseEquipmentTypeRepository;
         this.dictionaryService = dictionaryService;
     }
     
@@ -43,10 +47,15 @@ class AdminExerciseService {
                 .nameNo(dictionaryService.getNoValue(DictionaryName.exercise_name, exercise.getDExerciseName(), ""))
                 .descriptionEn(dictionaryService.getEnValue(DictionaryName.exercise_description, exercise.getDExerciseDescription(), ""))
                 .descriptionNo(dictionaryService.getNoValue(DictionaryName.exercise_description, exercise.getDExerciseDescription(), ""))
-                .bodypart(ExerciseBodypartResponseDTO.builder()
+                .bodypart(exercise.getExerciseBodypart() == null ? null : ExerciseBodypartResponseDTO.builder()
                         .id(exercise.getExerciseBodypart().getId())
                         .nameEn(dictionaryService.getEnValue(DictionaryName.exercise_bodypart_name, exercise.getExerciseBodypart().getDExerciseBodypartName(), ""))
                         .nameNo(dictionaryService.getNoValue(DictionaryName.exercise_bodypart_name, exercise.getExerciseBodypart().getDExerciseBodypartName(), ""))
+                        .build())
+                .equipmentType(exercise.getExerciseEquipmentType() == null ? null : ExerciseEquipmentTypeResponseDTO.builder()
+                        .id(exercise.getExerciseEquipmentType().getId())
+                        .nameEn(dictionaryService.getEnValue(DictionaryName.exercise_equipment_type_name, exercise.getExerciseEquipmentType().getDExerciseEquipmentTypeName(), ""))
+                        .nameNo(dictionaryService.getNoValue(DictionaryName.exercise_equipment_type_name, exercise.getExerciseEquipmentType().getDExerciseEquipmentTypeName(), ""))
                         .build())
                 .build();
     }
@@ -60,12 +69,12 @@ class AdminExerciseService {
     }
 
     ExerciseResponseDTO create(ExerciseRequestDTO exerciseRequestDTO) {
-        final ExerciseBodypart exerciseBodypartDb = exerciseBodypartRepository
+        final ExerciseBodypart exerciseBodypartDb =
+                exerciseRequestDTO.getBodypart() == null ? null : exerciseBodypartRepository
             .findOne(exerciseRequestDTO.getBodypart().getId());
-        if (exerciseBodypartDb == null) {
-            throw new ResourceNotFoundException("Bodypart not found in database: "
-                    + exerciseRequestDTO.getBodypart().getId());
-        }
+        final ExerciseEquipmentType exerciseEquipmentTypeDb =
+            exerciseRequestDTO.getEquipmentType() == null ? null : exerciseEquipmentTypeRepository
+            .findOne(exerciseRequestDTO.getEquipmentType().getId());
         final String dataKey = dictionaryService.getNewDictionaryDataKey(DictionaryName.exercise_name);
         dictionaryService.createDictionaryDataKey(DictionaryName.exercise_name, dataKey,
                 exerciseRequestDTO.getNameEn(), exerciseRequestDTO.getNameNo());
@@ -77,6 +86,7 @@ class AdminExerciseService {
         exercise.setDExerciseDescription(dataDescriptionKey);
         exercise.setExercise_id(exerciseRequestDTO.getExerciseId());
         exercise.setExerciseBodypart(exerciseBodypartDb);
+        exercise.setExerciseEquipmentType(exerciseEquipmentTypeDb);
         return exerciseToDto(exerciseRepository.save(exercise));
     }
 
@@ -94,13 +104,14 @@ class AdminExerciseService {
         dictionaryService.createDictionaryDataKey(DictionaryName.exercise_description,
                 dataDescriptionKey, exerciseRequestDTO.getDescriptionEn(),
                 exerciseRequestDTO.getDescriptionNo());
-        final ExerciseBodypart exerciseBodypartDb = exerciseBodypartRepository
+        final ExerciseBodypart exerciseBodypartDb =
+                exerciseRequestDTO.getBodypart() == null ? null : exerciseBodypartRepository
             .findOne(exerciseRequestDTO.getBodypart().getId());
-        if (exerciseBodypartDb == null) {
-            throw new ResourceNotFoundException("Bodypart not found in database: "
-                    + exerciseRequestDTO.getBodypart().getId());
-        }
+        final ExerciseEquipmentType exerciseEquipmentTypeDb =
+            exerciseRequestDTO.getEquipmentType() == null ? null : exerciseEquipmentTypeRepository
+            .findOne(exerciseRequestDTO.getEquipmentType().getId());
         existedExercise.setExerciseBodypart(exerciseBodypartDb);
+        existedExercise.setExerciseEquipmentType(exerciseEquipmentTypeDb);
         existedExercise.setDExerciseName(dataKey);
         existedExercise.setDExerciseDescription(dataDescriptionKey);
         existedExercise.setExercise_id(exerciseRequestDTO.getExerciseId());
