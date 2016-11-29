@@ -1,5 +1,5 @@
 /*jshint browser: true*/
-/*global define, console*/
+/*global define, document*/
 define([
     'jquery',
     'underscore',
@@ -14,7 +14,7 @@ function ($, _, Backbone, Marionette, moment, App) {
 
   var EmptyView = Marionette.ItemView.extend({
     tagName: 'tr',
-    template: _.template('<td colspan="6">There are no programs available.</td>')
+    template: _.template('<td colspan="7">There are no programs available.</td>')
   });
 
   var EmptyParseView = Marionette.ItemView.extend({
@@ -38,6 +38,11 @@ function ($, _, Backbone, Marionette, moment, App) {
         '{{ updated == null ? "" : formatDate(updated) }}',
       '</td>',
       '<td>',
+        '<button type="button" class="btn btn-default btn-sm js-download-file">',
+          '<i class="glyphicon glyphicon-download"></i>',
+        '</button>',
+      '</td>',
+      '<td>',
         '<button type="button" class="btn btn-default btn-sm js-edit-value">',
           '<i class="glyphicon glyphicon-edit"></i>',
         '</button>',
@@ -59,8 +64,21 @@ function ($, _, Backbone, Marionette, moment, App) {
       this.collection = options.collection;
     },
     events: {
+      'click .js-download-file': 'downloadFile',
       'click .js-edit-value': 'editProgram',
       'click .js-delete-value': 'deleteProgram'
+    },
+    downloadFile: function(evt) {
+      evt.preventDefault();
+      this.downloadUri(this.model.get('dataUrl'), this.model.get('fileName'));
+    },
+    downloadUri: function(uri, name) {
+      var link = document.createElement('a');
+      link.download = name;
+      link.href = uri;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     },
     editProgram: function() {
       this.collection.trigger('program:new', this.model);
