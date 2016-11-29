@@ -50,9 +50,19 @@ function ($, _, Backbone, Marionette, moment, App) {
         template: _.template('<td colspan="4">There are no users available.</td>')
   });
   
-  var EmptyTableItemView = Marionette.ItemView.extend({
+  var EmptyProgramTableItemView = Marionette.ItemView.extend({
         tagName: 'tr',
-        template: _.template('<td colspan="4">There are no programs available.</td>')
+        template: _.template('<td colspan="5">There are no programs</td>')
+  });
+
+  var EmptyWorkoutTableItemView = Marionette.ItemView.extend({
+        tagName: 'tr',
+        template: _.template('<td colspan="4">There are no workouts</td>')
+  });
+
+  var EmptyExerciseTableItemView = Marionette.ItemView.extend({
+        tagName: 'tr',
+        template: _.template('<td colspan="3">There are no exercises</td>')
   });
 
   var User = Marionette.ItemView.extend({
@@ -165,6 +175,8 @@ function ($, _, Backbone, Marionette, moment, App) {
         '<div id="buttons"/>',
         '<div id="inputForm"/>',
         '<div id="programTable"/>',
+        '<div id="workoutTable"/>',
+        '<div id="exerciseTable"/>',
       '</div>'
     ].join('')),
     templateHelpers: function() {
@@ -180,13 +192,29 @@ function ($, _, Backbone, Marionette, moment, App) {
     regions: {
       buttons: '#buttons',
       inputForm: '#inputForm',
-      programTable: '#programTable'
+      programTable: '#programTable',
+      workoutTable: '#workoutTable',
+      exerciseTable: '#exerciseTable'
     },
     onShow: function() {
       this.buttons.show(new NewUserButtons({model: this.model}));
       this.inputForm.show(new NewUserInputForm({model: this.model}));
       this.programTable.show(new ProgramTableForm({model: this.model,
-          collection: new Backbone.Collection(this.model.get('programs'))}));
+          collection: new Backbone.Collection(_.last(this.model.get('programs'), 3))}));
+      var workouts = new Backbone.Collection();
+      this.workoutTable.show(new WorkoutTableForm({model: this.model,
+          collection: workouts}));
+      this.model.on('refresh:workouts', function(data) {
+          workouts.set(data);
+          workouts.trigger('sync');
+      });
+      var exercises = new Backbone.Collection();
+      this.exerciseTable.show(new ExerciseTableForm({model: this.model,
+          collection: exercises}));
+      this.model.on('refresh:exercises', function(data) {
+          exercises.set(data);
+          exercises.trigger('sync');
+      });
     }
   });
 
@@ -244,7 +272,7 @@ function ($, _, Backbone, Marionette, moment, App) {
     }
   });
   
-  var TableItem = Marionette.ItemView.extend({
+  var ProgramTableItem = Marionette.ItemView.extend({
     tagName: 'tr',
     template: _.template([
       '<td>',
@@ -258,6 +286,11 @@ function ($, _, Backbone, Marionette, moment, App) {
       '</td>',
       '<td>',
         '{{ formatDate(created) }}',
+      '</td>',
+      '<td>',
+        '<button type="button" class="btn btn-default btn-sm js-view-workouts">',
+          '<i class="glyphicon glyphicon-expand"></i>',
+        '</button>',
       '</td>'
     ].join('')),
     templateHelpers: function() {
@@ -266,20 +299,88 @@ function ($, _, Backbone, Marionette, moment, App) {
           return moment(dateTime).format('DD.MM.YYYY HH:mm');
         }
       };
+    },
+    initialize: function(options) {
+      this._model = options.rootModel;
+    },
+    events: {
+      'click .js-view-workouts': 'reloadData'
+    },
+    reloadData: function(evt) {
+      evt.preventDefault();
+      this._model._programName = this.model.get('name');
+      this._model.trigger('refresh:workouts', this.model.get('workouts'));
+      this._model.trigger('refresh:exercises', []);
+    }
+  });
+
+  var WorkoutTableItem = Marionette.ItemView.extend({
+    tagName: 'tr',
+    template: _.template([
+      '<td>',
+        '{{ id }}',
+      '</td>',
+      '<td>',
+        '{{ name }}',
+      '</td>',
+      '<td>',
+        '{{ _.map(items, function(item) {return item.exercise_name;}) }}',
+      '</td>',
+      '<td>',
+        '<button type="button" class="btn btn-default btn-sm js-view-exercises">',
+          '<i class="glyphicon glyphicon-expand"></i>',
+        '</button>',
+      '</td>'
+    ].join('')),
+    initialize: function(options) {
+      this._model = options.rootModel;
+    },
+    events: {
+      'click .js-view-exercises': 'reloadData'
+    },
+    reloadData: function(evt) {
+      evt.preventDefault();
+      this._model._workoutName = this.model.get('name');
+      this._model.trigger('refresh:exercises', this.model.get('items'));
+    }
+  });
+
+  var ExerciseTableItem = Marionette.ItemView.extend({
+    tagName: 'tr',
+    template: _.template([
+      '<td>',
+        '{{ id }}',
+      '</td>',
+      '<td>',
+        '{{ exercise_name }}',
+      '</td>',
+      '<td>',
+        '{{ getInputs() }}',
+      '</td>'
+    ].join('')),
+    templateHelpers: function() {
+      var model = this.model;
+      return {
+        getInputs: function () {
+          return 'sets ' + model.get('sets') +
+                  (model.get('repetitions') === null ? '' : ', repetitions ' + model.get('repetitions')) +
+                  (model.get('weight') === null ? '' : ', weight ' + model.get('weight'));
+        }
+      };
     }
   });
 
   var ProgramTableForm = Marionette.CompositeView.extend({
     itemViewContainer: 'tbody',
-    itemView: TableItem,
-    emptyView: EmptyTableItemView,
+    itemView: ProgramTableItem,
+    emptyView: EmptyProgramTableItemView,
     tagName: 'div',
     className: 'js-users-mapping-config',
     ui: {
       table: '.table'
     },
     itemViewOptions : function () {
-      return { collection: this.collection };
+      return { collection: this.collection, rootModel: this.model };
     },
     initialize: function() {
     },
@@ -297,7 +398,8 @@ function ($, _, Backbone, Marionette, moment, App) {
             '<th>ID</th>',
             '<th>Program name</th>',
             '<th>Workouts</th>',
-            '<th>Created</th>',
+            '<th>Updated</th>',
+            '<th></th>',
           '</tr>',
         '</thead>',
         '<tbody></tbody>',
@@ -317,8 +419,105 @@ function ($, _, Backbone, Marionette, moment, App) {
       evt.preventDefault();
       var view = this;
       this.model.clone().fetch().done(function(data) {
-        view.collection.set(data.programs);
+        view.collection.set(_.last(data.programs, 3));
+        view.model.trigger('refresh:workouts', []);
+        view.model.trigger('refresh:exercises', []);
       });
+    }
+  });
+
+  var WorkoutTableForm = Marionette.CompositeView.extend({
+    itemViewContainer: 'tbody',
+    itemView: WorkoutTableItem,
+    emptyView: EmptyWorkoutTableItemView,
+    tagName: 'div',
+    className: 'js-users-mapping-config',
+    ui: {
+      table: '.table'
+    },
+    itemViewOptions : function () {
+      return { collection: this.collection, rootModel: this.model };
+    },
+    initialize: function() {
+    },
+    template: _.template([
+    '<div class="panel panel-primary">',
+      '<div class="panel-heading">',
+        '<h3 class="panel-title"> Assigned workouts {{ _.isEmpty(getProgramName()) ? "" : "for " + getProgramName() }}</h3>',
+      '</div>',
+      '<table class="table">',
+        '<thead>',
+          '<tr>',
+            '<th>ID</th>',
+            '<th>Workout name</th>',
+            '<th>Exercises</th>',
+            '<th></th>',
+          '</tr>',
+        '</thead>',
+        '<tbody></tbody>',
+      '</table>',
+    '</div>'
+    ].join('')),
+    templateHelpers: function() {
+      var view = this;
+      return {
+        getProgramName: function () {
+          return view.model._programName;
+        }
+      };
+    },
+    modelEvents: {
+      'sync': 'render'
+    },
+    collectionEvents: {
+      'sync': 'render'
+    }
+  });
+
+  var ExerciseTableForm = Marionette.CompositeView.extend({
+    itemViewContainer: 'tbody',
+    itemView: ExerciseTableItem,
+    emptyView: EmptyExerciseTableItemView,
+    tagName: 'div',
+    className: 'js-users-mapping-config',
+    ui: {
+      table: '.table'
+    },
+    itemViewOptions : function () {
+      return { collection: this.collection };
+    },
+    initialize: function() {
+    },
+    template: _.template([
+    '<div class="panel panel-primary">',
+      '<div class="panel-heading">',
+        '<h3 class="panel-title"> Assigned exercises {{ _.isEmpty(getWorkoutName()) ? "" : "for " + getWorkoutName() }}</h3>',
+      '</div>',
+      '<table class="table">',
+        '<thead>',
+          '<tr>',
+            '<th>ID</th>',
+            '<th>Exercise name</th>',
+            '<th>Inputs</th>',
+          '</tr>',
+        '</thead>',
+        '<tbody></tbody>',
+      '</table>',
+    '</div>'
+    ].join('')),
+    templateHelpers: function() {
+      var view = this;
+      return {
+        getWorkoutName: function () {
+          return view.model._workoutName;
+        }
+      };
+    },
+    modelEvents: {
+      'sync': 'render'
+    },
+    collectionEvents: {
+      'sync': 'render'
     }
   });
 
