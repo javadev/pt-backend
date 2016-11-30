@@ -46,6 +46,7 @@ public class InUserTest {
         inUser.setInPrograms(Collections.emptyList());
         inUser.setInUserWeights(Collections.emptyList());
         inUser.setInUserCertificates(Collections.emptyList());
+        inUser.setInUserEmails(Collections.emptyList());
         inUser.setInUserType(null);
         assertThat(inUser, notNullValue());
     }
@@ -68,6 +69,7 @@ public class InUserTest {
         inUser.getInPrograms();
         inUser.getInUserWeights();
         inUser.getInUserCertificates();
+        inUser.getInUserEmails();
         inUser.getInUserType();
         assertThat(inUser, notNullValue());
     }
