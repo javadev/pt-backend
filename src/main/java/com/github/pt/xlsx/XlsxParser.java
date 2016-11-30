@@ -64,6 +64,9 @@ public class XlsxParser {
                     workout.setRowIndex(3);
                     workout.setColumnIndex(2 + workoutIndex);
                     workout.setName(workoutName);
+                    final Optional<WarmupWorkoutItem> warmupWorkoutItem = extractWarmupWorkoutItem(sheet,
+                            workoutIndex, addRows, scanMode, excelUser, workoutName);
+                    workout.setWarmup(warmupWorkoutItem.orElse(null));
                     for (int workoutItemIndex = 0; workoutItemIndex < 10; workoutItemIndex += 1) {
                         final int multiplyCoeff = scanMode == ScanMode.Strength ? 7 : 9;
                         if (!(getCellData(sheet, addRows + 9 + workoutItemIndex
@@ -84,6 +87,19 @@ public class XlsxParser {
             LOG.error(ex.getMessage(), ex);
         }
         return excelUsers;
+    }
+
+    private Optional<WarmupWorkoutItem> extractWarmupWorkoutItem(Sheet sheet, int workoutIndex, int addRows, ScanMode scanMode, ExcelUser excelUser, String workoutName) {
+        final Optional<String> warmupName = getStringOrEmpty(getCellData(sheet, 4 + addRows, 2 + workoutIndex));
+        if (!warmupName.isPresent()) {
+            excelUser.getErrors().add("Warmup name not found. User " + excelUser.getName() + ", workout " + workoutName + ".");
+            return Optional.empty();
+        }
+        Integer speedInp = getIntegerOrNull(getCellData(sheet, 4 + addRows + 1, 2 + workoutIndex));
+        Integer inclineInp = getIntegerOrNull(getCellData(sheet, 4 + addRows + 2, 2 + workoutIndex));
+        Integer timeInp = extractNumbers(getCellData(sheet, 4 + addRows + 3, 2 + workoutIndex));
+        return Optional.of(new WarmupWorkoutItem().setExercise(warmupName.get())
+            .setSpeed(speedInp).setIncline(inclineInp).setTimeInMin(timeInp));
     }
 
     private Optional<WorkoutItem> extractWorkoutItem(final Sheet sheet, int workoutItemIndex,

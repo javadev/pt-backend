@@ -14,10 +14,13 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.github.pt.programs.ParseUserRepository;
+import com.github.pt.programs.ParseWarmupWorkoutItem;
 import com.github.pt.programs.ParseWorkout;
 import com.github.pt.programs.ParseWorkoutItem;
 import com.github.pt.programs.ParseWorkoutItemRepository;
 import com.github.pt.programs.ParseWorkoutRepository;
+import java.util.Arrays;
+import java.util.Collections;
 
 @Service
 class AdminProgramService {
@@ -154,6 +157,12 @@ class AdminProgramService {
                         ParseWorkout parseWorkout = new ParseWorkout();
                         parseWorkout.setParseUser(parseUser);
                         parseWorkout.setName(workout.getName());
+                        parseWorkout.setParseWarmupWorkoutItems(workout.getWarmup() == null ? Collections.emptyList()
+                                : Arrays.asList(new ParseWarmupWorkoutItem()
+                                        .setName(workout.getWarmup().getExercise())
+                                .setSpeed(workout.getWarmup().getSpeed())
+                                .setIncline(workout.getWarmup().getIncline())
+                                .setTime_in_min(workout.getWarmup().getTimeInMin())));
                         parseWorkout.setParseWorkoutItems(workout.getWorkoutItems().stream().map(workoutItem -> {
                             ParseWorkoutItem parseWorkoutItem = new ParseWorkoutItem();
                             parseWorkoutItem.setParseWorkout(parseWorkout);

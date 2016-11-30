@@ -1,7 +1,5 @@
 package com.github.pt.xlsx;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,10 +13,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Workout {
-    String name;
-    int columnIndex;
-    int rowIndex;
-    WarmupWorkoutItem warmup;
-    List<WorkoutItem> workoutItems = new ArrayList<>();
+public class WarmupWorkoutItem {
+    String exercise;
+    Integer speed;
+    Integer incline;
+    Integer timeInMin;
 }

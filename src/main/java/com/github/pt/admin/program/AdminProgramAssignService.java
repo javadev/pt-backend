@@ -2,11 +2,14 @@ package com.github.pt.admin.program;
 
 import com.github.pt.programs.InProgram;
 import com.github.pt.programs.InProgramRepository;
+import com.github.pt.programs.InWarmupWorkoutItem;
+import com.github.pt.programs.InWarmupWorkoutItemRepository;
 import com.github.pt.programs.InWorkout;
 import com.github.pt.programs.InWorkoutItem;
 import com.github.pt.programs.InWorkoutRepository;
 import com.github.pt.programs.ParseUser;
 import com.github.pt.programs.ParseUserRepository;
+import com.github.pt.programs.ParseWarmupWorkoutItem;
 import com.github.pt.programs.ParseWorkout;
 import com.github.pt.programs.ParseWorkoutItem;
 import com.github.pt.reportworkout.InWorkoutItemRepository;
@@ -26,17 +29,20 @@ class AdminProgramAssignService {
     private final InWorkoutRepository inWorkoutRepository;
     private final InWorkoutItemRepository inWorkoutItemRepository;
     private final ParseUserRepository parseUserRepository;
+    private final InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository;
 
     AdminProgramAssignService(InUserRepository inUserRepository,
             InProgramRepository inProgramRepository,
             InWorkoutRepository inWorkoutRepository,
             InWorkoutItemRepository inWorkoutItemRepository,
-            ParseUserRepository parseUserRepository) {
+            ParseUserRepository parseUserRepository,
+            InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository) {
         this.inUserRepository = inUserRepository;
         this.inProgramRepository = inProgramRepository;
         this.inWorkoutRepository = inWorkoutRepository;
         this.inWorkoutItemRepository = inWorkoutItemRepository;
         this.parseUserRepository = parseUserRepository;
+        this.inWarmupWorkoutItemRepository = inWarmupWorkoutItemRepository;
     }
 
     private static boolean isNotNullOrEmpty (String str) {
@@ -67,6 +73,16 @@ class AdminProgramAssignService {
                     inWorkout.setInProgram(savedInProgram);
                     inWorkout.setD_workout_name(parseWorkout.getName());
                     final InWorkout savedInWorkout = inWorkoutRepository.save(inWorkout);
+                    if (!parseWorkout.getParseWarmupWorkoutItems().isEmpty()) {
+                        final ParseWarmupWorkoutItem parseWarmupWorkoutItem = parseWorkout.getParseWarmupWorkoutItems().get(0);
+                        final InWarmupWorkoutItem inWarmupWorkoutItem = new InWarmupWorkoutItem();
+                        inWarmupWorkoutItem.setInWorkout(savedInWorkout);
+                        inWarmupWorkoutItem.setD_exercise_name(parseWarmupWorkoutItem.getName());
+                        inWarmupWorkoutItem.setSpeed(parseWarmupWorkoutItem.getSpeed());
+                        inWarmupWorkoutItem.setIncline(parseWarmupWorkoutItem.getIncline());
+                        inWarmupWorkoutItem.setTime_in_min(parseWarmupWorkoutItem.getTime_in_min());
+                        inWarmupWorkoutItemRepository.save(inWarmupWorkoutItem);
+                    }
                     for (ParseWorkoutItem parseWorkoutItem : parseWorkout.getParseWorkoutItems()) {
                         final InWorkoutItem inWorkoutItem = new InWorkoutItem();
                         inWorkoutItem.setInWorkout(savedInWorkout);
