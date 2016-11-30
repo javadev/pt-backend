@@ -21,6 +21,9 @@ define([
         },
         'equipmentType': {
           'id' : null
+        },
+        'type': {
+          'id' : null
         }
       },
       url: function() {
@@ -36,6 +39,8 @@ define([
           errors.push({name: 'exerciseId', message: 'Please fill exerciseId field.'});
         } else if (!_.isNull(attrs.bodypart) && _.isNull(attrs.bodypart.id)) {
           errors.push({name: 'bodypart', message: 'Please fill bodypart field.'});
+        } else if (!_.isNull(attrs.type) && _.isNull(attrs.type.id)) {
+          errors.push({name: 'type', message: 'Please fill type field.'});
         }
         return errors.length > 0 ? errors : false;
       }

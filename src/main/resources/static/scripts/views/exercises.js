@@ -13,7 +13,7 @@ function ($, _, Marionette, App) {
 
   var EmptyView = Marionette.ItemView.extend({
         tagName: 'tr',
-        template: _.template('<td colspan="7">There are no exercises available.</td>')
+        template: _.template('<td colspan="8">There are no exercises available.</td>')
   });
 
   var Exercise = Marionette.ItemView.extend({
@@ -33,6 +33,9 @@ function ($, _, Marionette, App) {
       '</td>',
       '<td>',
         '{{ equipmentType == null ? "" : equipmentType.nameEn }}',
+      '</td>',
+      '<td>',
+        '{{ type == null ? "" : type.name }}',
       '</td>',
       '<td>',
         '<button type="button" class="btn btn-default btn-sm js-edit-value">',
@@ -102,6 +105,7 @@ function ($, _, Marionette, App) {
             '<th>Name in Norwegian</th>',
             '<th>Bodypart</th>',
             '<th>Equipment type</th>',
+            '<th>Type</th>',
             '<th></th>',
             '<th></th>',
           '</tr>',
@@ -217,7 +221,7 @@ function ($, _, Marionette, App) {
         '</div>',
       '</div>',
       '<div class="form-group">',
-        '<label class="col-sm-3 control-label">Exercise bodypart</label>',
+        '<label class="col-sm-3 control-label">Bodypart</label>',
         '<div class="col-sm-8">',
           '<select id="exercise-bodypart" class="selectpicker show-tick">',
             '{{ getBodyparts() }}',
@@ -225,10 +229,18 @@ function ($, _, Marionette, App) {
         '</div>',
       '</div>',
       '<div class="form-group">',
-        '<label class="col-sm-3 control-label">Exercise equipment type</label>',
+        '<label class="col-sm-3 control-label">Equipment type</label>',
         '<div class="col-sm-8">',
           '<select id="exercise-equipment-type" class="selectpicker show-tick">',
             '{{ getEquipmentTypes() }}',
+          '</select>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Type</label>',
+        '<div class="col-sm-8">',
+          '<select id="exercise-type" class="selectpicker show-tick">',
+            '{{ getTypes() }}',
           '</select>',
         '</div>',
       '</div>',
@@ -299,6 +311,18 @@ function ($, _, Marionette, App) {
               '>' + item.nameEn + '</option>';
           });
           return result;
+        },
+        getTypes: function() {
+          var types = model._types || [];
+          var result = _.map(types, function(item) {
+            if (_.isNull(item.id)) {
+              return '<option></option>';
+            }
+            return '<option value="' + item.id + '"' +
+              (!!model.get('type') && model.get('type').id === item.id ? ' selected' : '') +
+              '>' + item.name + '</option>';
+          });
+          return result;
         }
       };
     },
@@ -315,6 +339,7 @@ function ($, _, Marionette, App) {
     ui: {
       exerciseBodypart: '#exercise-bodypart',
       exerciseEquipmentType: '#exercise-equipment-type',
+      exerciseType: '#exercise-type',
       exerciseId: '#exercise-id',
       nameEn: '#exercise-nameEn',
       nameNo: '#exercise-nameNo',
@@ -350,6 +375,9 @@ function ($, _, Marionette, App) {
       });
       this.ui.exerciseEquipmentType.on('changed.bs.select', function (e) {
         view.model.set('equipmentType', _.isEmpty(e.target.value) ? null : {id: parseInt(e.target.value, 10) });
+      });
+      this.ui.exerciseType.on('changed.bs.select', function (e) {
+        view.model.set('type', _.isEmpty(e.target.value) ? null : {id: parseInt(e.target.value, 10) });
       });
     }
   });

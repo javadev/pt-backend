@@ -7,6 +7,7 @@ import com.github.pt.exercises.Exercise;
 import com.github.pt.exercises.ExerciseBodypart;
 import com.github.pt.exercises.ExerciseEquipmentType;
 import com.github.pt.exercises.ExerciseRepository;
+import com.github.pt.exercises.ExerciseType;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Sort;
@@ -17,15 +18,18 @@ class AdminExerciseService {
     private final ExerciseRepository exerciseRepository;
     private final ExerciseBodypartRepository exerciseBodypartRepository;
     private final ExerciseEquipmentTypeRepository exerciseEquipmentTypeRepository;
+    private final ExerciseTypeRepository exerciseTypeRepository;
     private final DictionaryService dictionaryService;
     
     AdminExerciseService(ExerciseRepository exerciseRepository,
             ExerciseBodypartRepository exerciseBodypartRepository,
             ExerciseEquipmentTypeRepository exerciseEquipmentTypeRepository,
+            ExerciseTypeRepository exerciseTypeRepository,
             DictionaryService dictionaryService) {
         this.exerciseRepository = exerciseRepository;
         this.exerciseBodypartRepository = exerciseBodypartRepository;
         this.exerciseEquipmentTypeRepository = exerciseEquipmentTypeRepository;
+        this.exerciseTypeRepository = exerciseTypeRepository;
         this.dictionaryService = dictionaryService;
     }
     
@@ -57,6 +61,10 @@ class AdminExerciseService {
                         .nameEn(dictionaryService.getEnValue(DictionaryName.exercise_equipment_type_name, exercise.getExerciseEquipmentType().getDExerciseEquipmentTypeName(), ""))
                         .nameNo(dictionaryService.getNoValue(DictionaryName.exercise_equipment_type_name, exercise.getExerciseEquipmentType().getDExerciseEquipmentTypeName(), ""))
                         .build())
+                .type(exercise.getExerciseType() == null ? null : ExerciseTypeResponseDTO.builder()
+                        .id(exercise.getExerciseType().getId())
+                        .name(exercise.getExerciseType().getName())
+                        .build())
                 .build();
     }
 
@@ -75,6 +83,9 @@ class AdminExerciseService {
         final ExerciseEquipmentType exerciseEquipmentTypeDb =
             exerciseRequestDTO.getEquipmentType() == null ? null : exerciseEquipmentTypeRepository
             .findOne(exerciseRequestDTO.getEquipmentType().getId());
+        final ExerciseType exerciseTypeDb =
+            exerciseRequestDTO.getType() == null ? null : exerciseTypeRepository
+            .findOne(exerciseRequestDTO.getType().getId());
         final String dataKey = dictionaryService.getNewDictionaryDataKey(DictionaryName.exercise_name);
         dictionaryService.createDictionaryDataKey(DictionaryName.exercise_name, dataKey,
                 exerciseRequestDTO.getNameEn(), exerciseRequestDTO.getNameNo());
@@ -87,6 +98,7 @@ class AdminExerciseService {
         exercise.setExercise_id(exerciseRequestDTO.getExerciseId());
         exercise.setExerciseBodypart(exerciseBodypartDb);
         exercise.setExerciseEquipmentType(exerciseEquipmentTypeDb);
+        exercise.setExerciseType(exerciseTypeDb);
         return exerciseToDto(exerciseRepository.save(exercise));
     }
 
@@ -110,8 +122,12 @@ class AdminExerciseService {
         final ExerciseEquipmentType exerciseEquipmentTypeDb =
             exerciseRequestDTO.getEquipmentType() == null ? null : exerciseEquipmentTypeRepository
             .findOne(exerciseRequestDTO.getEquipmentType().getId());
+        final ExerciseType exerciseTypeDb =
+            exerciseRequestDTO.getType() == null ? null : exerciseTypeRepository
+            .findOne(exerciseRequestDTO.getType().getId());
         existedExercise.setExerciseBodypart(exerciseBodypartDb);
         existedExercise.setExerciseEquipmentType(exerciseEquipmentTypeDb);
+        existedExercise.setExerciseType(exerciseTypeDb);
         existedExercise.setDExerciseName(dataKey);
         existedExercise.setDExerciseDescription(dataDescriptionKey);
         existedExercise.setExercise_id(exerciseRequestDTO.getExerciseId());

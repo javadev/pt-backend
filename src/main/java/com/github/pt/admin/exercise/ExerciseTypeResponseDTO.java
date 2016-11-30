@@ -5,19 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.Builder;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
 @Getter
 @Setter
-class ExerciseRequestDTO {
-    Long exerciseId;
-    String nameEn;
-    String nameNo;
-    String descriptionEn;
-    String descriptionNo;
-    ExerciseBodypartRequestDTO bodypart;
-    ExerciseEquipmentTypeRequestDTO equipmentType;
-    ExerciseTypeRequestDTO type;
+@Builder
+class ExerciseTypeResponseDTO {
+    Long id;
+    String name;
 }

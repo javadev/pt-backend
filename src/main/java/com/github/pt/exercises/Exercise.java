@@ -47,4 +47,8 @@ public class Exercise {
     @JoinColumn(name="exercise_equipment_type_id")
     @JsonBackReference
     ExerciseEquipmentType exerciseEquipmentType;
+    @ManyToOne
+    @JoinColumn(name="exercise_type_id")
+    @JsonBackReference
+    ExerciseType exerciseType;
 }

@@ -11,13 +11,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-class ExerciseRequestDTO {
-    Long exerciseId;
-    String nameEn;
-    String nameNo;
-    String descriptionEn;
-    String descriptionNo;
-    ExerciseBodypartRequestDTO bodypart;
-    ExerciseEquipmentTypeRequestDTO equipmentType;
-    ExerciseTypeRequestDTO type;
+class ExerciseTypeRequestDTO {
+    Long id;
 }
