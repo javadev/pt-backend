@@ -23,4 +23,5 @@ class ExerciseResponseDTO {
     ExerciseBodypartResponseDTO bodypart;
     ExerciseEquipmentTypeResponseDTO equipmentType;
     ExerciseTypeResponseDTO type;
+    Integer cardioPercent;
 }

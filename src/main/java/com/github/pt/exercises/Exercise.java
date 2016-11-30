@@ -51,4 +51,5 @@ public class Exercise {
     @JoinColumn(name="exercise_type_id")
     @JsonBackReference
     ExerciseType exerciseType;
+    Integer cardio_percent;
 }

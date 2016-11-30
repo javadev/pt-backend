@@ -85,6 +85,7 @@ define([
               bodypart: model.get('bodypart'),
               equipmentType: model.get('equipmentType'),
               type: model.get('type'),
+              cardioPercent: model.get('cardioPercent'),
               exerciseId: model.get('exerciseId'),
               nameEn: model.get('nameEn'),
               nameNo: model.get('nameNo'),

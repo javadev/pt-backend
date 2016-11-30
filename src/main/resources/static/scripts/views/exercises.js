@@ -253,6 +253,14 @@ function ($, _, Marionette, App) {
         '</div>',
       '</div>',
       '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Cardio percent</label>',
+        '<div class="col-sm-8">',
+          '<textarea id="cardio-percent" class="form-control" rows="3" placeholder="Please enter cardio percent" name="cardioPercent" required="true">',
+            '{{ cardioPercent }}',
+          '</textarea>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
         '<label class="col-sm-3 control-label">Name in English</label>',
         '<div class="col-sm-8">',
           '<textarea id="exercise-nameEn" class="form-control" rows="3" placeholder="Please enter name in English" name="nameEn" required="true">',
@@ -331,6 +339,7 @@ function ($, _, Marionette, App) {
     },
     events: {
       'input #exercise-id': 'inputId',
+      'input #cardio-percent': 'inputCardioPercent',
       'input #exercise-nameEn': 'inputNameEn',
       'input #exercise-nameNo': 'inputNameNo',
       'input #exercise-descriptionEn': 'inputDescriptionEn',
@@ -341,6 +350,7 @@ function ($, _, Marionette, App) {
       exerciseEquipmentType: '#exercise-equipment-type',
       exerciseType: '#exercise-type',
       exerciseId: '#exercise-id',
+      cardioPercent: '#cardio-percent',
       nameEn: '#exercise-nameEn',
       nameNo: '#exercise-nameNo',
       descriptionEn: '#exercise-descriptionEn',
@@ -348,6 +358,9 @@ function ($, _, Marionette, App) {
     },
     inputId: function() {
       this.model.set('exerciseId', this.ui.exerciseId.val());
+    },
+    inputCardioPercent: function() {
+      this.model.set('cardioPercent', this.ui.cardioPercent.val());
     },
     inputNameEn: function() {
       this.model.set('nameEn', this.ui.nameEn.val());

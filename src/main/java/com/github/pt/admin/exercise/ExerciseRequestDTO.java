@@ -20,4 +20,5 @@ class ExerciseRequestDTO {
     ExerciseBodypartRequestDTO bodypart;
     ExerciseEquipmentTypeRequestDTO equipmentType;
     ExerciseTypeRequestDTO type;
+    Integer cardioPercent;
 }

@@ -65,6 +65,7 @@ class AdminExerciseService {
                         .id(exercise.getExerciseType().getId())
                         .name(exercise.getExerciseType().getName())
                         .build())
+                .cardioPercent(exercise.getCardio_percent())
                 .build();
     }
 
@@ -99,6 +100,7 @@ class AdminExerciseService {
         exercise.setExerciseBodypart(exerciseBodypartDb);
         exercise.setExerciseEquipmentType(exerciseEquipmentTypeDb);
         exercise.setExerciseType(exerciseTypeDb);
+        exercise.setCardio_percent(exerciseRequestDTO.getCardioPercent());
         return exerciseToDto(exerciseRepository.save(exercise));
     }
 
@@ -131,6 +133,7 @@ class AdminExerciseService {
         existedExercise.setDExerciseName(dataKey);
         existedExercise.setDExerciseDescription(dataDescriptionKey);
         existedExercise.setExercise_id(exerciseRequestDTO.getExerciseId());
+        existedExercise.setCardio_percent(exerciseRequestDTO.getCardioPercent());
         final Exercise savedExercise = exerciseRepository.save(existedExercise);
         return exerciseToDto(savedExercise);
     }

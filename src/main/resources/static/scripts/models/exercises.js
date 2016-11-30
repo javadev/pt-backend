@@ -41,6 +41,8 @@ define([
           errors.push({name: 'bodypart', message: 'Please fill bodypart field.'});
         } else if (!_.isNull(attrs.type) && _.isNull(attrs.type.id)) {
           errors.push({name: 'type', message: 'Please fill type field.'});
+        } else if (parseInt(attrs.cardioPercent, 10) < 0 || parseInt(attrs.cardioPercent, 10) > 100) {
+          errors.push({name: 'cardioPercent', message: 'Please fill cardio percent field.'});
         }
         return errors.length > 0 ? errors : false;
       }
