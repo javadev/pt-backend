@@ -21,7 +21,7 @@ class ReportWeightResource {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    List<WeightResponseDTO> list(@RequestHeader(value = "X-Token") String token) {
+    List<WeightResponseDTO> findAll(@RequestHeader(value = "X-Token") String token) {
         return reportWeightService.findAll(token);
     }
 

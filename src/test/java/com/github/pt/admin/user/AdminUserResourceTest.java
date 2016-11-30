@@ -1,6 +1,5 @@
 package com.github.pt.admin.user;
 
-import com.github.pt.admin.program.*;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

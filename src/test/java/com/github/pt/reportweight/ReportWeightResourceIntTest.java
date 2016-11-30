@@ -24,7 +24,7 @@ public class ReportWeightResourceIntTest {
 
     @Test
     public void testList() throws Exception {
-        List<WeightResponseDTO> results = reportWeightResource.list("");
+        List<WeightResponseDTO> results = reportWeightResource.findAll("");
         assertThat(results.size(), is(greaterThanOrEqualTo(0)));
     }
 
