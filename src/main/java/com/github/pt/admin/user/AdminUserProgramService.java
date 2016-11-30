@@ -38,7 +38,8 @@ class AdminUserProgramService {
                 InWarmupWorkoutItem inWarmupWorkoutItem = inWorkout.getInWarmupWorkoutItems().get(0);
                 UserWarmupWorkoutItemResponseDTO warmupWorkoutItem = new UserWarmupWorkoutItemResponseDTO();
                 warmupWorkoutItem.setId(inWarmupWorkoutItem.getId());
-                warmupWorkoutItem.setExercise_id(Long.parseLong(inWarmupWorkoutItem.getD_exercise_id()));
+                warmupWorkoutItem.setExercise_id(inWarmupWorkoutItem.getD_exercise_id() == null ? 0L
+                        : Long.parseLong(inWarmupWorkoutItem.getD_exercise_id()));
                 warmupWorkoutItem.setExercise_name(inWarmupWorkoutItem.getD_exercise_name());
                 warmupWorkoutItem.setSpeed(inWarmupWorkoutItem.getSpeed());
                 warmupWorkoutItem.setIncline(inWarmupWorkoutItem.getIncline());
