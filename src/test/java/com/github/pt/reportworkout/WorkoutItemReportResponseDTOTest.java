@@ -18,6 +18,7 @@ public class WorkoutItemReportResponseDTOTest {
         workoutItemReportResponseDTO.setSets(null);
         workoutItemReportResponseDTO.setRepetitions(null);
         workoutItemReportResponseDTO.setWeight(null);
+        workoutItemReportResponseDTO.setBodyweight(null);
         assertThat(workoutItemReportResponseDTO, notNullValue());
     }
 
@@ -28,6 +29,7 @@ public class WorkoutItemReportResponseDTOTest {
         workoutItemReportResponseDTO.getSets();
         workoutItemReportResponseDTO.getRepetitions();
         workoutItemReportResponseDTO.getWeight();
+        workoutItemReportResponseDTO.getBodyweight();
         assertThat(workoutItemReportResponseDTO, notNullValue());
     }
 }
