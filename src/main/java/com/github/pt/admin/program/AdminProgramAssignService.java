@@ -20,13 +20,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 class AdminProgramAssignService {
-    
+
     private final InUserRepository inUserRepository;
     private final InProgramRepository inProgramRepository;
     private final InWorkoutRepository inWorkoutRepository;
     private final InWorkoutItemRepository inWorkoutItemRepository;
     private final ParseUserRepository parseUserRepository;
-    
+
     AdminProgramAssignService(InUserRepository inUserRepository,
             InProgramRepository inProgramRepository,
             InWorkoutRepository inWorkoutRepository,
@@ -57,6 +57,7 @@ class AdminProgramAssignService {
                     "Cannot assign user " + parseUser.getName() + ". More than one user found.")
                         .stream().filter(AdminProgramAssignService::isNotNullOrEmpty).collect(Collectors.joining(", ")));
             } else {
+                parseUser.setIn_user_id(inUsersWithName.get(0).getId());
                 final InProgram inProgram = new InProgram();
                 inProgram.setInUser(inUsersWithName.get(0));
                 inProgram.setName(parseUser.getProgram().getName());
@@ -83,7 +84,7 @@ class AdminProgramAssignService {
         });
         return parseUserRepository.save(parseUsers);
     }
-    
+
     private Optional<String> getUserName(InUser inUser) {
         final Optional<String> userName;
         if (inUser.getInUserFacebooks() == null || inUser.getInUserFacebooks().isEmpty()) {

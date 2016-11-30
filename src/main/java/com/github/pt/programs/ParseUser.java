@@ -46,4 +46,5 @@ public class ParseUser {
     Program program;
     @OneToMany(mappedBy="parseUser")
     List<ParseWorkout> parseWorkouts;
+    Long in_user_id;
 }
