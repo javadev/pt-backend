@@ -176,7 +176,7 @@ class AdminProgramService {
         }).collect(Collectors.toList());
     }
 
-    private ByteArrayInputStream dataUrlToInputStream(String dataUrl) {
+    ByteArrayInputStream dataUrlToInputStream(String dataUrl) {
         final String encodedString = dataUrl.substring(dataUrl.indexOf(BASE64_PREFIX) + BASE64_PREFIX_LENGTH);
         return new ByteArrayInputStream(Base64.getDecoder().decode(encodedString));
     }
