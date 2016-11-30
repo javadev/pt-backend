@@ -23,8 +23,8 @@ public class ReportWorkoutResourceIntTest {
     ReportWorkoutResource reportWorkoutResource;
 
     @Test
-    public void testList() throws Exception {
-        List<WorkoutReportResponseDTO> results = reportWorkoutResource.list("");
+    public void findAll() throws Exception {
+        List<WorkoutReportResponseDTO> results = reportWorkoutResource.findAll("");
         assertThat(results.size(), is(greaterThanOrEqualTo(0)));
     }
 

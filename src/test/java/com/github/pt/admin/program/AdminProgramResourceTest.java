@@ -25,7 +25,8 @@ public class AdminProgramResourceTest {
         verify(adminProgramService).create(any(ProgramRequestDTO.class));
     }
 
-    public void delete() throws Exception {
+    @Test
+    public void delete() {
         adminProgramResource.delete(1L);
         verify(adminProgramService).delete(anyLong());
     }

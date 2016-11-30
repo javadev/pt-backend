@@ -21,7 +21,7 @@ class ReportWorkoutResource {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    List<WorkoutReportResponseDTO> list(@RequestHeader(value = "X-Token") String token) {
+    List<WorkoutReportResponseDTO> findAll(@RequestHeader(value = "X-Token") String token) {
         return reportWorkoutService.findAll(token);
     }
 
