@@ -19,7 +19,7 @@ class ExercisesResource {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    List<ExerciseDTO> list(@RequestHeader(value = "X-Token") String token) {
+    List<ExerciseDTO> findAll(@RequestHeader(value = "X-Token") String token) {
         return exerciseService.findAll(token);
     }
 }

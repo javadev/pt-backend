@@ -20,7 +20,7 @@ class ProgramsResource {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    List<ProgramResponseDTO> list(@RequestHeader(value = "X-Token") String token) {
+    List<ProgramResponseDTO> findAll(@RequestHeader(value = "X-Token") String token) {
         return programService.getExamples(token);
     }
 }

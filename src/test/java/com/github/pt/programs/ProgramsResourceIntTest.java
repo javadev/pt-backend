@@ -24,7 +24,7 @@ public class ProgramsResourceIntTest {
 
     @Test
     public void testList() throws Exception {
-        List<ProgramResponseDTO> results = programsResource.list("");
+        List<ProgramResponseDTO> results = programsResource.findAll("");
         assertThat(results.size(), is(greaterThanOrEqualTo(0)));
     }
 
