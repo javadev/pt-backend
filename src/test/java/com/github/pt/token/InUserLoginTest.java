@@ -1,8 +1,6 @@
 package com.github.pt.token;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
