@@ -40,6 +40,6 @@ public class ProgramsResourceWebTest {
         JsonNode responseJson = objectMapper.readTree(response.getBody());
 
         assertThat(responseJson.isMissingNode(), is(false));
-        assertThat(responseJson.toString(), startsWith("[{"));
+        assertThat(responseJson.toString(), startsWith("[]"));
     }
 }

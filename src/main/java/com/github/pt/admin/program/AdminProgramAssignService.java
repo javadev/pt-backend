@@ -67,6 +67,7 @@ class AdminProgramAssignService {
                 final InProgram inProgram = new InProgram();
                 inProgram.setInUser(inUsersWithName.get(0));
                 inProgram.setName(parseUser.getProgram().getName());
+                inProgram.setD_program_type("personal");
                 final InProgram savedInProgram = inProgramRepository.save(inProgram);
                 for (ParseWorkout parseWorkout : parseUser.getParseWorkouts()) {
                     final InWorkout inWorkout = new InWorkout();
