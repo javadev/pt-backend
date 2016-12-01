@@ -53,7 +53,7 @@ public class Exercise {
     @JsonBackReference
     ExerciseEquipmentType exerciseEquipmentType;
     Integer cardio_percent;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "exercise_type_has_exercise",
             schema = "ptcore",
@@ -61,4 +61,20 @@ public class Exercise {
             inverseJoinColumns = { @JoinColumn(name = "exercise_type_id") }
     )
     List<ExerciseType> exerciseTypes = new ArrayList<>(0);
+    @ManyToMany
+    @JoinTable(
+            name = "exercise_input_has_exercise",
+            schema = "ptcore",
+            joinColumns = { @JoinColumn(name = "exercise_id") },
+            inverseJoinColumns = { @JoinColumn(name = "exercise_input_id") }
+    )
+    List<ExerciseInput> exerciseInputs = new ArrayList<>(0);
+    @ManyToMany
+    @JoinTable(
+            name = "exercise_output_has_exercise",
+            schema = "ptcore",
+            joinColumns = { @JoinColumn(name = "exercise_id") },
+            inverseJoinColumns = { @JoinColumn(name = "exercise_output_id") }
+    )
+    List<ExerciseOutput> exerciseOutputs = new ArrayList<>(0);
 }
