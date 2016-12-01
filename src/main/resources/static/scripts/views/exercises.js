@@ -245,6 +245,22 @@ function ($, _, Marionette, App) {
         '</div>',
       '</div>',
       '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Inputs</label>',
+        '<div class="col-sm-8">',
+          '<select id="exercise-inputs" class="selectpicker show-tick" multiple>',
+            '{{ getInputs() }}',
+          '</select>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Outputs</label>',
+        '<div class="col-sm-8">',
+          '<select id="exercise-outputs" class="selectpicker show-tick" multiple>',
+            '{{ getOutputs() }}',
+          '</select>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
         '<label class="col-sm-3 control-label">Exercise ID</label>',
         '<div class="col-sm-8">',
           '<textarea id="exercise-id" class="form-control" rows="3" placeholder="Please enter exercise id" name="exerciseId" required="true">',
@@ -334,6 +350,36 @@ function ($, _, Marionette, App) {
               '>' + item.name + '</option>';
           });
           return result;
+        },
+        getInputs: function() {
+          var inputs = model._inputs || [];
+          var modelInputs = _.map(model.get('inputs'), function(item) {
+             return item.id;
+          });
+          var result = _.map(inputs, function(item) {
+            if (_.isNull(item.id)) {
+              return '<option data-hidden="true"></option>';
+            }
+            return '<option value="' + item.id + '"' +
+              (_.contains(modelInputs, item.id) ? ' selected' : '') +
+              '>' + item.name + '</option>';
+          });
+          return result;
+        },
+        getOutputs: function() {
+          var outputs = model._outputs || [];
+          var modelOutputs = _.map(model.get('outputs'), function(item) {
+             return item.id;
+          });
+          var result = _.map(outputs, function(item) {
+            if (_.isNull(item.id)) {
+              return '<option data-hidden="true"></option>';
+            }
+            return '<option value="' + item.id + '"' +
+              (_.contains(modelOutputs, item.id) ? ' selected' : '') +
+              '>' + item.name + '</option>';
+          });
+          return result;
         }
       };
     },
@@ -352,6 +398,8 @@ function ($, _, Marionette, App) {
       exerciseBodypart: '#exercise-bodypart',
       exerciseEquipmentType: '#exercise-equipment-type',
       exerciseTypes: '#exercise-types',
+      exerciseInputs: '#exercise-inputs',
+      exerciseOutputs: '#exercise-outputs',
       exerciseId: '#exercise-id',
       cardioPercent: '#cardio-percent',
       nameEn: '#exercise-nameEn',
@@ -397,6 +445,18 @@ function ($, _, Marionette, App) {
             return {id: parseInt(item.value, 10) };
         });
         view.model.set('types', selectedTypes);
+      });
+      this.ui.exerciseInputs.on('changed.bs.select', function (e) {
+        var selectedTypes = _.map(e.target.selectedOptions, function(item) {
+            return {id: parseInt(item.value, 10) };
+        });
+        view.model.set('inputs', selectedTypes);
+      });
+      this.ui.exerciseOutputs.on('changed.bs.select', function (e) {
+        var selectedTypes = _.map(e.target.selectedOptions, function(item) {
+            return {id: parseInt(item.value, 10) };
+        });
+        view.model.set('outputs', selectedTypes);
       });
     }
   });
