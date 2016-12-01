@@ -31,17 +31,18 @@ class ExerciseService {
         List<Exercise> exercises = exerciseRepository.findAll();
         return exercises.stream().map(exercise -> {
             ExerciseDTO exerciseDTO = new ExerciseDTO();
-            exerciseDTO.setId(Long.parseLong(exercise.getDExerciseName()));
+            exerciseDTO.setId(exercise.getExercise_id());
             exerciseDTO.setName(dictionaryService.getEnValue(DictionaryName.exercise_name,
                     exercise.getDExerciseName(), ""));
             exerciseDTO.setCardio_percent(exercise.getCardio_percent());
-            exerciseDTO.setInput_parameters(Arrays.asList("Weight", "Repetitions", "Sets"));
+            exerciseDTO.setInput_parameters(Arrays.asList("weight", "repetitions", "sets"));
 //                    exercise.getExerciseInputs()
 //                    .stream().map(input -> input.getName()).collect(Collectors.toList()));
-            exerciseDTO.setOutput_parameters(Arrays.asList("Weight", "Repetitions"));
+            exerciseDTO.setOutput_parameters(Arrays.asList("weight", "repetitions"));
 //                    exercise.getExerciseOutputs()
 //                    .stream().map(output -> output.getName()).collect(Collectors.toList()));
             return exerciseDTO;
-        }).collect(Collectors.toList());
+        }).sorted((e1, e2) -> e1.getCardio_percent().compareTo(e2.getCardio_percent()))
+                .collect(Collectors.toList());
     }
 }
