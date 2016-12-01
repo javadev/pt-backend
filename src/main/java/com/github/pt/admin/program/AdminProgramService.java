@@ -104,8 +104,7 @@ class AdminProgramService {
         program.setFile_type(programRequestDTO.getFileType());
         program.setData_url(programRequestDTO.getDataUrl());
         final Program savedProgram = programRepository.save(program);
-        List<ParseUser> savedParseUsers = parseDataUrlAndSaveUsers(programRequestDTO, savedProgram);
-        program.setParseUsers(savedParseUsers);
+        program.setParseUsers(adminProgramAssignService.assign(parseDataUrlAndSaveUsers(programRequestDTO, savedProgram)));
         return programToDto(program);
     }
 
