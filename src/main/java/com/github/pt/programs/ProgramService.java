@@ -25,7 +25,7 @@ class ProgramService {
             InUserLogin inUserLogin = userService.checkUserToken(token);
             List<InProgram> inPrograms = inUserLogin.getInUser().getInPrograms();
             if (inPrograms.isEmpty()) {
-                throw new ResourceNotFoundException("There are no programs for user.");
+                return Collections.emptyList();
             }
             return inPrograms.stream().map(ProgramService::createProgramResponseDTO).collect(Collectors.toList());
         }

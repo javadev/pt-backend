@@ -24,5 +24,7 @@ class ExerciseResponseDTO {
     ExerciseBodypartResponseDTO bodypart;
     ExerciseEquipmentTypeResponseDTO equipmentType;
     List<ExerciseTypeResponseDTO> types;
+    List<ExerciseInputResponseDTO> inputs;
+    List<ExerciseOutputResponseDTO> outputs;
     Integer cardioPercent;
 }

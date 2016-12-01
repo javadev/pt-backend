@@ -3,6 +3,7 @@ package com.github.pt.exercises;
 import com.github.pt.dictionary.DictionaryName;
 import com.github.pt.dictionary.DictionaryService;
 import com.github.pt.user.UserService;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +34,13 @@ class ExerciseService {
             exerciseDTO.setId(Long.parseLong(exercise.getDExerciseName()));
             exerciseDTO.setName(dictionaryService.getEnValue(DictionaryName.exercise_name,
                     exercise.getDExerciseName(), ""));
-            ExerciseBodypartDTO bodypartDTO = new ExerciseBodypartDTO();
-            bodypartDTO.setId(Long.parseLong(exercise.getExerciseBodypart().getDExerciseBodypartName()));
-            bodypartDTO.setName(dictionaryService.getEnValue(DictionaryName.exercise_bodypart_name,
-                    exercise.getExerciseBodypart().getDExerciseBodypartName(), ""));
-            exerciseDTO.setBodypart(bodypartDTO);
+            exerciseDTO.setCardio_percent(exercise.getCardio_percent());
+            exerciseDTO.setInput_parameters(Arrays.asList("Weight", "Repetitions", "Sets"));
+//                    exercise.getExerciseInputs()
+//                    .stream().map(input -> input.getName()).collect(Collectors.toList()));
+            exerciseDTO.setOutput_parameters(Arrays.asList("Weight", "Repetitions"));
+//                    exercise.getExerciseOutputs()
+//                    .stream().map(output -> output.getName()).collect(Collectors.toList()));
             return exerciseDTO;
         }).collect(Collectors.toList());
     }

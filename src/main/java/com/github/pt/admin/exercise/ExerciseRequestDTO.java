@@ -21,5 +21,7 @@ class ExerciseRequestDTO {
     ExerciseBodypartRequestDTO bodypart;
     ExerciseEquipmentTypeRequestDTO equipmentType;
     List<ExerciseTypeRequestDTO> types;
+    List<ExerciseInputRequestDTO> inputs;
+    List<ExerciseOutputRequestDTO> outputs;
     Integer cardioPercent;
 }

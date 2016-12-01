@@ -19,17 +19,23 @@ class AdminExerciseService {
     private final ExerciseEquipmentTypeRepository exerciseEquipmentTypeRepository;
     private final ExerciseTypeRepository exerciseTypeRepository;
     private final DictionaryService dictionaryService;
+    private final ExerciseInputRepository exerciseInputRepository;
+    private final ExerciseOutputRepository exerciseOutputRepository;
     
     AdminExerciseService(ExerciseRepository exerciseRepository,
             ExerciseBodypartRepository exerciseBodypartRepository,
             ExerciseEquipmentTypeRepository exerciseEquipmentTypeRepository,
             ExerciseTypeRepository exerciseTypeRepository,
-            DictionaryService dictionaryService) {
+            DictionaryService dictionaryService,
+            ExerciseInputRepository exerciseInputRepository,
+            ExerciseOutputRepository exerciseOutputRepository) {
         this.exerciseRepository = exerciseRepository;
         this.exerciseBodypartRepository = exerciseBodypartRepository;
         this.exerciseEquipmentTypeRepository = exerciseEquipmentTypeRepository;
         this.exerciseTypeRepository = exerciseTypeRepository;
         this.dictionaryService = dictionaryService;
+        this.exerciseInputRepository = exerciseInputRepository;
+        this.exerciseOutputRepository = exerciseOutputRepository;
     }
     
     List<ExerciseResponseDTO> findAll() {
@@ -66,6 +72,18 @@ class AdminExerciseService {
                         .name(type.getName())
                         .build())
                         .collect(Collectors.toList()))
+                .inputs(exercise.getExerciseInputs().stream()
+                    .map(input -> ExerciseInputResponseDTO.builder()
+                        .id(input.getId())
+                        .name(input.getName())
+                        .build())
+                        .collect(Collectors.toList()))
+                .outputs(exercise.getExerciseOutputs().stream()
+                    .map(output -> ExerciseOutputResponseDTO.builder()
+                        .id(output.getId())
+                        .name(output.getName())
+                        .build())
+                        .collect(Collectors.toList()))
                 .cardioPercent(exercise.getCardio_percent())
                 .build();
     }
@@ -99,6 +117,10 @@ class AdminExerciseService {
         exercise.setExerciseEquipmentType(exerciseEquipmentTypeDb);
         exercise.setExerciseTypes(exerciseTypeRepository.findAll(
             exerciseRequestDTO.getTypes().stream().map(type -> type.getId()).collect(Collectors.toList())));
+        exercise.setExerciseInputs(exerciseInputRepository.findAll(
+            exerciseRequestDTO.getInputs().stream().map(input -> input.getId()).collect(Collectors.toList())));
+        exercise.setExerciseOutputs(exerciseOutputRepository.findAll(
+            exerciseRequestDTO.getOutputs().stream().map(output -> output.getId()).collect(Collectors.toList())));
         exercise.setCardio_percent(exerciseRequestDTO.getCardioPercent());
         return exerciseToDto(exerciseRepository.save(exercise));
     }
@@ -131,6 +153,10 @@ class AdminExerciseService {
         existedExercise.setCardio_percent(exerciseRequestDTO.getCardioPercent());
         existedExercise.setExerciseTypes(exerciseTypeRepository.findAll(
                 exerciseRequestDTO.getTypes().stream().map(type -> type.getId()).collect(Collectors.toList())));
+        existedExercise.setExerciseInputs(exerciseInputRepository.findAll(
+            exerciseRequestDTO.getInputs().stream().map(input -> input.getId()).collect(Collectors.toList())));
+        existedExercise.setExerciseOutputs(exerciseOutputRepository.findAll(
+            exerciseRequestDTO.getOutputs().stream().map(output -> output.getId()).collect(Collectors.toList())));
         final Exercise savedExercise = exerciseRepository.save(existedExercise);
         return exerciseToDto(savedExercise);
     }

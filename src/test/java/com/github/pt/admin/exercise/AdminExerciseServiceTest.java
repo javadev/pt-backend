@@ -26,6 +26,10 @@ public class AdminExerciseServiceTest {
     @Mock
     private ExerciseTypeRepository exerciseTypeRepository;
     @Mock
+    private ExerciseInputRepository exerciseInputRepository;
+    @Mock
+    private ExerciseOutputRepository exerciseOutputRepository;
+    @Mock
     private DictionaryService dictionaryService;
 
     @InjectMocks
@@ -58,6 +62,8 @@ public class AdminExerciseServiceTest {
         exerciseRequestDTO.setNameEn("nameEn");
         exerciseRequestDTO.setNameEn("nameNo");
         exerciseRequestDTO.setTypes(Collections.emptyList());
+        exerciseRequestDTO.setInputs(Collections.emptyList());
+        exerciseRequestDTO.setOutputs(Collections.emptyList());
         ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();
         existedExerciseBodypart.setId(1L);
         existedExerciseBodypart.setDExerciseBodypartName("10");
@@ -78,6 +84,8 @@ public class AdminExerciseServiceTest {
         exerciseRequestDTO.setNameEn("nameEn");
         exerciseRequestDTO.setNameEn("nameNo");
         exerciseRequestDTO.setTypes(Collections.emptyList());
+        exerciseRequestDTO.setInputs(Collections.emptyList());
+        exerciseRequestDTO.setOutputs(Collections.emptyList());
         Exercise existedExercise = new Exercise();
         when(exerciseRepository.findOne(eq(1L))).thenReturn(existedExercise);
         ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();

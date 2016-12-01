@@ -1,6 +1,5 @@
-package com.github.pt.exercises;
+package com.github.pt.admin.exercise;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +11,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-class ExerciseDTO {
+class ExerciseOutputRequestDTO {
     Long id;
-    String name;
-    Integer cardio_percent;
-    List<String> input_parameters;
-    List<String> output_parameters;    
 }
