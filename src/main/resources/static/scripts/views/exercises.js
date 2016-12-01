@@ -35,7 +35,7 @@ function ($, _, Marionette, App) {
         '{{ equipmentType == null ? "" : equipmentType.nameEn }}',
       '</td>',
       '<td>',
-        '{{ type == null ? "" : type.name }}',
+        '{{ _.map(types, function(item) {return item.name;}).join(", ") }}',
       '</td>',
       '<td>',
         '<button type="button" class="btn btn-default btn-sm js-edit-value">',
@@ -105,7 +105,7 @@ function ($, _, Marionette, App) {
             '<th>Name in Norwegian</th>',
             '<th>Bodypart</th>',
             '<th>Equipment type</th>',
-            '<th>Type</th>',
+            '<th>Types</th>',
             '<th></th>',
             '<th></th>',
           '</tr>',
@@ -237,9 +237,9 @@ function ($, _, Marionette, App) {
         '</div>',
       '</div>',
       '<div class="form-group">',
-        '<label class="col-sm-3 control-label">Type</label>',
+        '<label class="col-sm-3 control-label">Types</label>',
         '<div class="col-sm-8">',
-          '<select id="exercise-type" class="selectpicker show-tick">',
+          '<select id="exercise-types" class="selectpicker show-tick" multiple>',
             '{{ getTypes() }}',
           '</select>',
         '</div>',
@@ -322,12 +322,15 @@ function ($, _, Marionette, App) {
         },
         getTypes: function() {
           var types = model._types || [];
+          var modelTypes = _.map(model.get('types'), function(item) {
+             return item.id;
+          });
           var result = _.map(types, function(item) {
             if (_.isNull(item.id)) {
-              return '<option></option>';
+              return '<option data-hidden="true"></option>';
             }
             return '<option value="' + item.id + '"' +
-              (!!model.get('type') && model.get('type').id === item.id ? ' selected' : '') +
+              (_.contains(modelTypes, item.id) ? ' selected' : '') +
               '>' + item.name + '</option>';
           });
           return result;
@@ -348,7 +351,7 @@ function ($, _, Marionette, App) {
     ui: {
       exerciseBodypart: '#exercise-bodypart',
       exerciseEquipmentType: '#exercise-equipment-type',
-      exerciseType: '#exercise-type',
+      exerciseTypes: '#exercise-types',
       exerciseId: '#exercise-id',
       cardioPercent: '#cardio-percent',
       nameEn: '#exercise-nameEn',
@@ -389,8 +392,11 @@ function ($, _, Marionette, App) {
       this.ui.exerciseEquipmentType.on('changed.bs.select', function (e) {
         view.model.set('equipmentType', _.isEmpty(e.target.value) ? null : {id: parseInt(e.target.value, 10) });
       });
-      this.ui.exerciseType.on('changed.bs.select', function (e) {
-        view.model.set('type', _.isEmpty(e.target.value) ? null : {id: parseInt(e.target.value, 10) });
+      this.ui.exerciseTypes.on('changed.bs.select', function (e) {
+        var selectedTypes = _.map(e.target.selectedOptions, function(item) {
+            return {id: parseInt(item.value, 10) };
+        });
+        view.model.set('types', selectedTypes);
       });
     }
   });

@@ -1,5 +1,6 @@
 package com.github.pt.admin.exercise;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,6 @@ class ExerciseResponseDTO {
     String descriptionNo;
     ExerciseBodypartResponseDTO bodypart;
     ExerciseEquipmentTypeResponseDTO equipmentType;
-    ExerciseTypeResponseDTO type;
+    List<ExerciseTypeResponseDTO> types;
     Integer cardioPercent;
 }

@@ -7,7 +7,6 @@ import com.github.pt.exercises.Exercise;
 import com.github.pt.exercises.ExerciseBodypart;
 import com.github.pt.exercises.ExerciseEquipmentType;
 import com.github.pt.exercises.ExerciseRepository;
-import com.github.pt.exercises.ExerciseType;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Sort;
@@ -61,10 +60,12 @@ class AdminExerciseService {
                         .nameEn(dictionaryService.getEnValue(DictionaryName.exercise_equipment_type_name, exercise.getExerciseEquipmentType().getDExerciseEquipmentTypeName(), ""))
                         .nameNo(dictionaryService.getNoValue(DictionaryName.exercise_equipment_type_name, exercise.getExerciseEquipmentType().getDExerciseEquipmentTypeName(), ""))
                         .build())
-                .type(exercise.getExerciseType() == null ? null : ExerciseTypeResponseDTO.builder()
-                        .id(exercise.getExerciseType().getId())
-                        .name(exercise.getExerciseType().getName())
+                .types(exercise.getExerciseTypes().stream()
+                    .map(type -> ExerciseTypeResponseDTO.builder()
+                        .id(type.getId())
+                        .name(type.getName())
                         .build())
+                        .collect(Collectors.toList()))
                 .cardioPercent(exercise.getCardio_percent())
                 .build();
     }
@@ -84,9 +85,6 @@ class AdminExerciseService {
         final ExerciseEquipmentType exerciseEquipmentTypeDb =
             exerciseRequestDTO.getEquipmentType() == null ? null : exerciseEquipmentTypeRepository
             .findOne(exerciseRequestDTO.getEquipmentType().getId());
-        final ExerciseType exerciseTypeDb =
-            exerciseRequestDTO.getType() == null ? null : exerciseTypeRepository
-            .findOne(exerciseRequestDTO.getType().getId());
         final String dataKey = dictionaryService.getNewDictionaryDataKey(DictionaryName.exercise_name);
         dictionaryService.createDictionaryDataKey(DictionaryName.exercise_name, dataKey,
                 exerciseRequestDTO.getNameEn(), exerciseRequestDTO.getNameNo());
@@ -99,7 +97,8 @@ class AdminExerciseService {
         exercise.setExercise_id(exerciseRequestDTO.getExerciseId());
         exercise.setExerciseBodypart(exerciseBodypartDb);
         exercise.setExerciseEquipmentType(exerciseEquipmentTypeDb);
-        exercise.setExerciseType(exerciseTypeDb);
+        exercise.setExerciseTypes(exerciseTypeRepository.findAll(
+            exerciseRequestDTO.getTypes().stream().map(type -> type.getId()).collect(Collectors.toList())));
         exercise.setCardio_percent(exerciseRequestDTO.getCardioPercent());
         return exerciseToDto(exerciseRepository.save(exercise));
     }
@@ -124,16 +123,14 @@ class AdminExerciseService {
         final ExerciseEquipmentType exerciseEquipmentTypeDb =
             exerciseRequestDTO.getEquipmentType() == null ? null : exerciseEquipmentTypeRepository
             .findOne(exerciseRequestDTO.getEquipmentType().getId());
-        final ExerciseType exerciseTypeDb =
-            exerciseRequestDTO.getType() == null ? null : exerciseTypeRepository
-            .findOne(exerciseRequestDTO.getType().getId());
         existedExercise.setExerciseBodypart(exerciseBodypartDb);
         existedExercise.setExerciseEquipmentType(exerciseEquipmentTypeDb);
-        existedExercise.setExerciseType(exerciseTypeDb);
         existedExercise.setDExerciseName(dataKey);
         existedExercise.setDExerciseDescription(dataDescriptionKey);
         existedExercise.setExercise_id(exerciseRequestDTO.getExerciseId());
         existedExercise.setCardio_percent(exerciseRequestDTO.getCardioPercent());
+        existedExercise.setExerciseTypes(exerciseTypeRepository.findAll(
+                exerciseRequestDTO.getTypes().stream().map(type -> type.getId()).collect(Collectors.toList())));
         final Exercise savedExercise = exerciseRepository.save(existedExercise);
         return exerciseToDto(savedExercise);
     }

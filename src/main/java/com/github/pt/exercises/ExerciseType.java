@@ -1,6 +1,7 @@
 package com.github.pt.exercises;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +13,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
@@ -33,6 +36,12 @@ public class ExerciseType {
     Long id;
     LocalDateTime created;
     String name;
-    @OneToMany(mappedBy="exerciseType")
-    List<Exercise> exercise;
+    @ManyToMany
+    @JoinTable(
+            name = "exercise_type_has_exercise",
+            schema = "ptcore",
+            joinColumns = { @JoinColumn(name = "exercise_type_id") },
+            inverseJoinColumns = { @JoinColumn(name = "exercise_id") }
+    )
+    List<Exercise> exercises = new ArrayList<>(0);
 }

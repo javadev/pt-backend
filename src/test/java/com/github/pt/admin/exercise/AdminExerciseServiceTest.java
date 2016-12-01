@@ -4,6 +4,7 @@ import com.github.pt.dictionary.DictionaryService;
 import com.github.pt.exercises.Exercise;
 import com.github.pt.exercises.ExerciseBodypart;
 import com.github.pt.exercises.ExerciseRepository;
+import java.util.Collections;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -22,6 +23,8 @@ public class AdminExerciseServiceTest {
     private ExerciseRepository exerciseRepository;
     @Mock
     private ExerciseBodypartRepository exerciseBodypartRepository;
+    @Mock
+    private ExerciseTypeRepository exerciseTypeRepository;
     @Mock
     private DictionaryService dictionaryService;
 
@@ -54,6 +57,7 @@ public class AdminExerciseServiceTest {
         exerciseRequestDTO.setBodypart(new ExerciseBodypartRequestDTO(1L));
         exerciseRequestDTO.setNameEn("nameEn");
         exerciseRequestDTO.setNameEn("nameNo");
+        exerciseRequestDTO.setTypes(Collections.emptyList());
         ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();
         existedExerciseBodypart.setId(1L);
         existedExerciseBodypart.setDExerciseBodypartName("10");
@@ -73,6 +77,7 @@ public class AdminExerciseServiceTest {
         exerciseRequestDTO.setBodypart(new ExerciseBodypartRequestDTO(1L));
         exerciseRequestDTO.setNameEn("nameEn");
         exerciseRequestDTO.setNameEn("nameNo");
+        exerciseRequestDTO.setTypes(Collections.emptyList());
         Exercise existedExercise = new Exercise();
         when(exerciseRepository.findOne(eq(1L))).thenReturn(existedExercise);
         ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();
