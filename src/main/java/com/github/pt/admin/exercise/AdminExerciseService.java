@@ -117,10 +117,14 @@ class AdminExerciseService {
         exercise.setExerciseEquipmentType(exerciseEquipmentTypeDb);
         exercise.setExerciseTypes(exerciseTypeRepository.findAll(
             exerciseRequestDTO.getTypes().stream().map(type -> type.getId()).collect(Collectors.toList())));
-        exercise.setExerciseInputs(exerciseInputRepository.findAll(
-            exerciseRequestDTO.getInputs().stream().map(input -> input.getId()).collect(Collectors.toList())));
-        exercise.setExerciseOutputs(exerciseOutputRepository.findAll(
-            exerciseRequestDTO.getOutputs().stream().map(output -> output.getId()).collect(Collectors.toList())));
+        if (exerciseRequestDTO.getInputs() != null) {
+            exercise.setExerciseInputs(exerciseInputRepository.findAll(
+                exerciseRequestDTO.getInputs().stream().map(input -> input.getId()).collect(Collectors.toList())));
+        }
+        if (exerciseRequestDTO.getOutputs() != null) {
+            exercise.setExerciseOutputs(exerciseOutputRepository.findAll(
+                exerciseRequestDTO.getOutputs().stream().map(output -> output.getId()).collect(Collectors.toList())));
+        }
         exercise.setCardio_percent(exerciseRequestDTO.getCardioPercent());
         return exerciseToDto(exerciseRepository.save(exercise));
     }
@@ -153,10 +157,14 @@ class AdminExerciseService {
         existedExercise.setCardio_percent(exerciseRequestDTO.getCardioPercent());
         existedExercise.setExerciseTypes(exerciseTypeRepository.findAll(
                 exerciseRequestDTO.getTypes().stream().map(type -> type.getId()).collect(Collectors.toList())));
-        existedExercise.setExerciseInputs(exerciseInputRepository.findAll(
-            exerciseRequestDTO.getInputs().stream().map(input -> input.getId()).collect(Collectors.toList())));
-        existedExercise.setExerciseOutputs(exerciseOutputRepository.findAll(
-            exerciseRequestDTO.getOutputs().stream().map(output -> output.getId()).collect(Collectors.toList())));
+        if (exerciseRequestDTO.getInputs() != null) {
+            existedExercise.setExerciseInputs(exerciseInputRepository.findAll(
+                exerciseRequestDTO.getInputs().stream().map(input -> input.getId()).collect(Collectors.toList())));
+        }
+        if (exerciseRequestDTO.getOutputs() != null) {
+            existedExercise.setExerciseOutputs(exerciseOutputRepository.findAll(
+                exerciseRequestDTO.getOutputs().stream().map(output -> output.getId()).collect(Collectors.toList())));
+        }
         final Exercise savedExercise = exerciseRepository.save(existedExercise);
         return exerciseToDto(savedExercise);
     }
