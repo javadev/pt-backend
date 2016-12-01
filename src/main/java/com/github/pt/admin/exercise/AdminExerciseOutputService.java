@@ -3,6 +3,7 @@ package com.github.pt.admin.exercise;
 import com.github.pt.exercises.ExerciseOutput;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,10 +16,14 @@ class AdminExerciseOutputService {
     }
 
     List<ExerciseOutputResponseDTO> findAll() {
-        return exerciseOutputRepository.findAll().stream().map(AdminExerciseOutputService::exerciseOutputToDto
+        return exerciseOutputRepository.findAll(sortByIdAsc()).stream().map(AdminExerciseOutputService::exerciseOutputToDto
         ).collect(Collectors.toList());
     }
     
+    private Sort sortByIdAsc() {
+        return new Sort(Sort.Direction.ASC, "id");
+    }
+
     private static ExerciseOutputResponseDTO exerciseOutputToDto(ExerciseOutput output) {
         return ExerciseOutputResponseDTO.builder()
                 .id(output.getId())
