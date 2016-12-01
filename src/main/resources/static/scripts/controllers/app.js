@@ -108,7 +108,8 @@ define([
           var exerciseEditView = new ExercisesViews.NewExerciseLayout({
             model: exercise
           });
-          exercise.on('exercise:back', function() {
+          exercise.on('exercise:back', function(modelId) {
+            exercises._modelId = modelId;
             var exercisesView = new ExercisesViews.Exercises({
               collection: exercises
             });

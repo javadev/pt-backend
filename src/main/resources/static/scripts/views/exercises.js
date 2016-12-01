@@ -18,6 +18,9 @@ function ($, _, Marionette, App) {
 
   var Exercise = Marionette.ItemView.extend({
     tagName: 'tr',
+    className: function() {
+      return this.collection._modelId === this.model.get('id') ? 'selectedId' : '';
+    },
     template: _.template([
       '<td>',
         '{{ exerciseId }}',
@@ -190,13 +193,13 @@ function ($, _, Marionette, App) {
     },
     back: function(evt) {
       evt.preventDefault();
-      this.model.trigger('exercise:back');
+      this.model.trigger('exercise:back', this.model.get('id'));
     },
     save: function(evt) {
       evt.preventDefault();
       var model = this.model;
       this.model.save().done(function() {
-        model.trigger('exercise:back');
+        model.trigger('exercise:back', model.get('id'));
       })
       .fail(function (xhr) {
         App.vent.trigger('xhr:error', 'Exercise save was failed');
