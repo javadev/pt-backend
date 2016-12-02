@@ -4,6 +4,10 @@ import com.github.pt.token.InUser;
 import com.github.pt.token.InUserLogin;
 import com.github.pt.user.UserService;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -27,12 +31,66 @@ public class ProgramServiceTest {
         InUserLogin inUserLogin = new InUserLogin();
         InUser inUserForLogin = new InUser();
         inUserForLogin.setId(10L);
-        InWorkout inWorkout = new InWorkout().setInWorkoutItems(Arrays.asList(new InWorkoutItem()));
+        InWorkout inWorkout = new InWorkout()
+                .setInWarmupWorkoutItems(Arrays.asList(new InWarmupWorkoutItem()))
+                .setInWorkoutItems(Arrays.asList(new InWorkoutItem()));
         InProgram inProgram = new InProgram()
                 .setId(1L)
                 .setName("name")
                 .setInWorkouts(Arrays.asList(inWorkout));
         inUserForLogin.setInPrograms(Arrays.asList(inProgram));
+        inUserLogin.setInUser(inUserForLogin);
+        when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
+        programService.getExamples("1");
+        verify(userService).checkUserToken(eq("1"));
+    }
+
+    @Test
+    public void getExamples_with_duplicates() {
+        InUserLogin inUserLogin = new InUserLogin();
+        InUser inUserForLogin = new InUser();
+        inUserForLogin.setId(10L);
+        InWorkout inWorkout = new InWorkout()
+                .setInWarmupWorkoutItems(Arrays.asList(new InWarmupWorkoutItem()))
+                .setInWorkoutItems(Arrays.asList(new InWorkoutItem()));
+        InProgram inProgram = new InProgram()
+                .setId(1L)
+                .setName("name")
+                .setInWorkouts(Arrays.asList(inWorkout));
+        inUserForLogin.setInPrograms(Arrays.asList(inProgram, inProgram));
+        inUserLogin.setInUser(inUserForLogin);
+        when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
+        List<ProgramResponseDTO> responses = programService.getExamples("1");
+        verify(userService).checkUserToken(eq("1"));
+        assertThat(responses.size(), equalTo(1));
+    }
+
+    @Test
+    public void getExamples_with_exercise_id_and_type() {
+        InUserLogin inUserLogin = new InUserLogin();
+        InUser inUserForLogin = new InUser();
+        inUserForLogin.setId(10L);
+        InWorkout inWorkout = new InWorkout()
+                .setInWarmupWorkoutItems(Arrays.asList(new InWarmupWorkoutItem().setD_exercise_id("1")))
+                .setInWorkoutItems(Arrays.asList(new InWorkoutItem()
+                        .setD_exercise_id("1").setD_exercise_type("T")));
+        InProgram inProgram = new InProgram()
+                .setId(1L)
+                .setName("name")
+                .setInWorkouts(Arrays.asList(inWorkout));
+        inUserForLogin.setInPrograms(Arrays.asList(inProgram));
+        inUserLogin.setInUser(inUserForLogin);
+        when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
+        programService.getExamples("1");
+        verify(userService).checkUserToken(eq("1"));
+    }
+
+    @Test
+    public void getExamples_with_empty_programs() {
+        InUserLogin inUserLogin = new InUserLogin();
+        InUser inUserForLogin = new InUser();
+        inUserForLogin.setId(10L);
+        inUserForLogin.setInPrograms(Collections.emptyList());
         inUserLogin.setInUser(inUserForLogin);
         when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
         programService.getExamples("1");
