@@ -15,9 +15,13 @@ class WorkoutItemResponseDTO {
     Long id;
     Long exercise_id;
     String exercise_name;
-    String type;
+    String exercise_type;
     Integer sets;
     Integer repetitions;
     Integer weight;
     Boolean bodyweight;
+    Integer time_in_min;
+    Integer speed;
+    Integer incline;
+    Integer resistance;
 }

@@ -62,11 +62,15 @@ class ProgramService {
                 workoutItem.setExercise_id(inWorkoutItem.getD_exercise_id() == null ? 0L
                         : Long.parseLong(inWorkoutItem.getD_exercise_id()));
                 workoutItem.setExercise_name(inWorkoutItem.getD_exercise_name());
-                workoutItem.setType("OnRepetitions");
+                workoutItem.setExercise_type(inWorkoutItem.getD_exercise_type() == null ? "OnRepetitions"
+                        : inWorkoutItem.getD_exercise_type());
                 workoutItem.setSets(inWorkoutItem.getSets());
                 workoutItem.setRepetitions(inWorkoutItem.getRepetitions());
                 workoutItem.setWeight(inWorkoutItem.getWeight());
-                workoutItem.setBodyweight(BooleanUtils.isTrue(inWorkoutItem.getBodyweight()));                
+                workoutItem.setBodyweight(BooleanUtils.isTrue(inWorkoutItem.getBodyweight()));
+                workoutItem.setTime_in_min(inWorkoutItem.getTime_in_min());
+                workoutItem.setSpeed(inWorkoutItem.getSpeed());
+                workoutItem.setResistance(inWorkoutItem.getSpeed());
                 workout.getItems().add(workoutItem);
             }
         }
