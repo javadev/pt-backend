@@ -30,19 +30,22 @@ class AdminProgramAssignService {
     private final InWorkoutItemRepository inWorkoutItemRepository;
     private final ParseUserRepository parseUserRepository;
     private final InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository;
+    private final AdminProgramScanExerciseService adminProgramScanExerciseService;
 
     AdminProgramAssignService(InUserRepository inUserRepository,
             InProgramRepository inProgramRepository,
             InWorkoutRepository inWorkoutRepository,
             InWorkoutItemRepository inWorkoutItemRepository,
             ParseUserRepository parseUserRepository,
-            InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository) {
+            InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository,
+            AdminProgramScanExerciseService adminProgramScanExerciseService) {
         this.inUserRepository = inUserRepository;
         this.inProgramRepository = inProgramRepository;
         this.inWorkoutRepository = inWorkoutRepository;
         this.inWorkoutItemRepository = inWorkoutItemRepository;
         this.parseUserRepository = parseUserRepository;
         this.inWarmupWorkoutItemRepository = inWarmupWorkoutItemRepository;
+        this.adminProgramScanExerciseService = adminProgramScanExerciseService;
     }
 
     private static boolean isNotNullOrEmpty (String str) {
@@ -79,6 +82,9 @@ class AdminProgramAssignService {
                         final InWarmupWorkoutItem inWarmupWorkoutItem = new InWarmupWorkoutItem();
                         inWarmupWorkoutItem.setInWorkout(savedInWorkout);
                         inWarmupWorkoutItem.setD_exercise_name(parseWarmupWorkoutItem.getName());
+                        final Optional<Long> exerciseId = adminProgramScanExerciseService.getExerciseIdByName(
+                                parseWarmupWorkoutItem.getName());
+                        inWarmupWorkoutItem.setD_exercise_id("" + exerciseId.orElse(0L));
                         inWarmupWorkoutItem.setSpeed(parseWarmupWorkoutItem.getSpeed());
                         inWarmupWorkoutItem.setIncline(parseWarmupWorkoutItem.getIncline());
                         inWarmupWorkoutItem.setTime_in_min(parseWarmupWorkoutItem.getTime_in_min());
@@ -88,6 +94,9 @@ class AdminProgramAssignService {
                         final InWorkoutItem inWorkoutItem = new InWorkoutItem();
                         inWorkoutItem.setInWorkout(savedInWorkout);
                         inWorkoutItem.setD_exercise_name(parseWorkoutItem.getName());
+                        final Optional<Long> exerciseId = adminProgramScanExerciseService.getExerciseIdByName(
+                                parseWorkoutItem.getName());
+                        inWorkoutItem.setD_exercise_id("" + exerciseId.orElse(0L));
                         inWorkoutItem.setSets(parseWorkoutItem.getSets());
                         inWorkoutItem.setRepetitions(parseWorkoutItem.getRepetitions());
                         inWorkoutItem.setWeight(parseWorkoutItem.getWeight());
