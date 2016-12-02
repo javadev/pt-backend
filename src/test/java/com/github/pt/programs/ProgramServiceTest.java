@@ -71,12 +71,13 @@ public class ProgramServiceTest {
         InUser inUserForLogin = new InUser();
         inUserForLogin.setId(10L);
         InWorkout inWorkout = new InWorkout()
-                .setInWarmupWorkoutItems(Arrays.asList(new InWarmupWorkoutItem().setD_exercise_id("1")))
+                .setInWarmupWorkoutItems(Collections.emptyList())
                 .setInWorkoutItems(Arrays.asList(new InWorkoutItem()
                         .setD_exercise_id("1").setD_exercise_type("T")));
         InProgram inProgram = new InProgram()
                 .setId(1L)
                 .setName("name")
+                .setD_program_type("type")
                 .setInWorkouts(Arrays.asList(inWorkout));
         inUserForLogin.setInPrograms(Arrays.asList(inProgram));
         inUserLogin.setInUser(inUserForLogin);
