@@ -16,6 +16,5 @@ class ExerciseDTO {
     Long id;
     String name;
     Integer cardio_percent;
-    List<String> input_parameters;
-    List<String> output_parameters;    
+    List<String> types;
 }

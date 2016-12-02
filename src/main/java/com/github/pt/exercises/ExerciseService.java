@@ -35,10 +35,8 @@ class ExerciseService {
             exerciseDTO.setName(dictionaryService.getEnValue(DictionaryName.exercise_name,
                     exercise.getDExerciseName(), ""));
             exerciseDTO.setCardio_percent(exercise.getCardio_percent());
-            exerciseDTO.setInput_parameters(exercise.getExerciseInputs()
-                    .stream().map(input -> input.getName().toLowerCase()).collect(Collectors.toList()));
-            exerciseDTO.setOutput_parameters(exercise.getExerciseOutputs()
-                    .stream().map(output -> output.getName().toLowerCase()).collect(Collectors.toList()));
+            exerciseDTO.setTypes(exercise.getExerciseTypes()
+                    .stream().map(type -> type.getName()).collect(Collectors.toList()));
             return exerciseDTO;
         }).sorted((e1, e2) -> Long.compare(e1.getId(), e2.getId()))
                 .collect(Collectors.toList());

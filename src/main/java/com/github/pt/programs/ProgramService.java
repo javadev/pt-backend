@@ -62,6 +62,7 @@ class ProgramService {
                 workoutItem.setExercise_id(inWorkoutItem.getD_exercise_id() == null ? 0L
                         : Long.parseLong(inWorkoutItem.getD_exercise_id()));
                 workoutItem.setExercise_name(inWorkoutItem.getD_exercise_name());
+                workoutItem.setType("OnRepetitions");
                 workoutItem.setSets(inWorkoutItem.getSets());
                 workoutItem.setRepetitions(inWorkoutItem.getRepetitions());
                 workoutItem.setWeight(inWorkoutItem.getWeight());
