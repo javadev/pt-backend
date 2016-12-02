@@ -1,11 +1,14 @@
 package com.github.pt.programs;
 
-import com.github.pt.ResourceNotFoundException;
 import com.github.pt.token.InUserLogin;
 import com.github.pt.user.UserService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +30,17 @@ class ProgramService {
             if (inPrograms.isEmpty()) {
                 return Collections.emptyList();
             }
-            return inPrograms.stream().map(ProgramService::createProgramResponseDTO).collect(Collectors.toList());
+            return inPrograms.stream().filter(distinctByKey(program -> program.getName()))
+                    .map(ProgramService::createProgramResponseDTO).collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
- 
+
+    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Map<Object,Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
+
     private static ProgramResponseDTO createProgramResponseDTO(InProgram inProgram) {
         ProgramResponseDTO program = new ProgramResponseDTO();
         program.setId(inProgram.getId());
