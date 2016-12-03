@@ -18,6 +18,9 @@ require.config({
 
   },
   shim: {
+    jquery: {
+      exports: 'jQuery'
+    },
     bootstrapTab: {
       deps: ['jquery']
     },
