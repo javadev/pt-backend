@@ -85,6 +85,37 @@ public class TokenServiceTest {
         verify(inUserFacebookRepository, times(2)).save(any(InUserFacebook.class));
     }
     
+    @Test
+    public void createOrReadNewToken_user_was_loggedOut() {
+        TokenRequestDTO tokenRequest = new TokenRequestDTO();
+        tokenRequest.setFacebook_token("token");
+        tokenRequest.setDevice_id("device_id");
+        FacebookResponse facebookResponse = new FacebookResponse();
+        facebookResponse.setAge(20L);
+        when(facebookService.getProfileNameAndId(anyString())).thenReturn(Optional.of(facebookResponse));
+        when(facebookService.getProfilePictureUrl(anyString())).thenReturn(Optional.empty());
+        when(inUserRepository.save(any(InUser.class))).thenReturn(null);
+        when(inUserLoginRepository.saveAndFlush(any(InUserLogin.class))).thenReturn(null);
+        when(inUserFacebookRepository.save(any(InUserFacebook.class))).thenReturn(null);
+        InUserFacebook inUserFacebook = new InUserFacebook();
+        InUser inUser = new InUser();
+        inUserFacebook.setInUser(inUser);
+        InUserLogin inUserLogin = new InUserLogin();
+        inUser.setInUserLogins(Arrays.asList(inUserLogin));
+        InUserLogout inUserLogout = new InUserLogout();
+        inUser.setInUserLogouts(Arrays.asList(inUserLogout));
+        when(inUserFacebookRepository.findByTokenAndDeviceId(anyString(), anyString())).thenReturn(
+                Arrays.asList(inUserFacebook));
+        TokenResponseDTO tokenResponseDTO = tokenService.createOrReadNewToken(tokenRequest, "");
+        TokenResponseDTO tokenResponseDTO2 = tokenService.createOrReadNewToken(tokenRequest, "");
+        assertThat(tokenResponseDTO.getToken(), equalTo(tokenResponseDTO2.getToken()));
+        verify(facebookService, times(2)).getProfileNameAndId(same(tokenRequest.getFacebook_token()));
+        verify(facebookService, times(2)).getProfilePictureUrl(same(tokenRequest.getFacebook_token()));
+        verify(inUserRepository, times(2)).save(any(InUser.class));
+        verify(inUserLoginRepository, times(2)).saveAndFlush(any(InUserLogin.class));
+        verify(inUserFacebookRepository, times(2)).save(any(InUserFacebook.class));
+    }
+    
     @Test(expected = ResourceNotFoundException.class)
     public void deleteToken_not_found() {
         tokenService.deleteToken("", "");
