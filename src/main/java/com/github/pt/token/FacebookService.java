@@ -13,15 +13,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import static java.time.temporal.ChronoUnit.YEARS;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 class FacebookService {
-    private static final Logger LOG = LoggerFactory.getLogger(FacebookService.class);
     private static final String PICTURE_URL = "https://graph.facebook.com/me/picture?redirect=false&type=large";
     private static final String NAME_URL = "https://graph.facebook.com/me?fields=name,gender,birthday&locale=en_US";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
@@ -56,7 +55,7 @@ class FacebookService {
             );
             return Optional.of(facebookResponse);
         } catch (IOException ex) {
-            LOG.error(ex.getMessage(), ex);
+            log.error(ex.getMessage(), ex);
             return Optional.empty();
         }
     }
@@ -74,7 +73,7 @@ class FacebookService {
             final JSONObject object = (JSONObject) new JSONTokener(pictureBody).nextValue();
             return Optional.ofNullable(object.getJSONObject("data").getString("url"));
         } catch (IOException ex) {
-            LOG.error(ex.getMessage(), ex);
+            log.error(ex.getMessage(), ex);
             return Optional.empty();
         }
     }

@@ -11,15 +11,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 class ReportWorkoutService {
-    private static final Logger LOG = LoggerFactory.getLogger(ReportWorkoutService.class);
     private final InWorkoutItemRepository inWorkoutItemRepository;
     private final InWorkoutItemReportRepository inWorkoutItemReportRepository;
     private final InWorkoutItemSetReportRepository inWorkoutItemSetReportRepository;
@@ -56,7 +55,7 @@ class ReportWorkoutService {
                 }
                 final InWorkoutItem inWorkoutItem = inWorkoutItems.get(inWorkoutItems.size() - 1);
                 if (!inWorkoutItem.getInWorkout().getInProgram().getInUser().getId().equals(inUser.getId())) {
-                    LOG.warn("User with id {} tries to update workout for user with id {}", inUser.getId(),
+                    log.warn("User with id {} tries to update workout for user with id {}", inUser.getId(),
                         inWorkoutItem.getInWorkout().getInProgram().getInUser().getId());
                     throw new UnauthorizedException("This workout item with id " + inWorkoutItem.getId() + " belong to other user");
                 }
