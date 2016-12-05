@@ -1,5 +1,6 @@
 package com.github.pt.admin.certificate;
 
+import com.github.pt.ResourceNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -33,6 +34,12 @@ public class AdminCertificateServiceTest {
         when(certificateRepository.findOne(eq(1L))).thenReturn(new Certificate());
         adminCertificateService.findOne(1L);
         verify(certificateRepository).findOne(eq(1L));
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void findOne_token_not_found() {
+        when(certificateRepository.findOne(eq(2L))).thenReturn(new Certificate());
+        adminCertificateService.findOne(1L);
     }
 
     @Test
