@@ -15,9 +15,15 @@ public class AdminCertificateResourceTest {
 
     @Mock
     private AdminCertificateService adminCertificateService;
-    
+
     @InjectMocks
     private AdminCertificateResource adminCertificateResource;
+
+    @Test
+    public void findOne() {
+        adminCertificateResource.findOne(1L);
+        verify(adminCertificateService).findOne(anyLong());
+    }
 
     @Test
     public void create() {
@@ -25,7 +31,14 @@ public class AdminCertificateResourceTest {
         verify(adminCertificateService).create(any(CertificateRequestDTO.class));
     }
 
-    public void delete() throws Exception {
+    @Test
+    public void update() {
+        adminCertificateResource.update(1L, new CertificateRequestDTO());
+        verify(adminCertificateService).update(anyLong(), any(CertificateRequestDTO.class));
+    }
+
+    @Test
+    public void delete() {
         adminCertificateResource.delete(1L);
         verify(adminCertificateService).delete(anyLong());
     }
