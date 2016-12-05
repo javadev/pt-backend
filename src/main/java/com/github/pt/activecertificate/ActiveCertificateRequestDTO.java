@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.NonNull;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,6 +12,5 @@ import lombok.NonNull;
 @Getter
 @Setter
 class ActiveCertificateRequestDTO {
-    @NonNull
     String code;
 }
