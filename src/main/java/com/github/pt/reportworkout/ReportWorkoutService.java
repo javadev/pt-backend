@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,16 +58,18 @@ class ReportWorkoutService {
                 if (!inWorkoutItem.getInWorkout().getInProgram().getInUser().getId().equals(inUser.getId())) {
                     LOG.warn("User with id {} tries to update workout for user with id {}", inUser.getId(),
                         inWorkoutItem.getInWorkout().getInProgram().getInUser().getId());
-                    throw new UnauthorizedException("This workout item belong to other user");
+                    throw new UnauthorizedException("This workout item with id " + inWorkoutItem.getId() + " belong to other user");
                 }
                 final InWorkoutItemReport inWorkoutItemReport = new InWorkoutItemReport();
                 inWorkoutItemReport.setInWorkoutItem(inWorkoutItems.get(inWorkoutItems.size() - 1));
                 inWorkoutItemReport.setInWorkoutItemSetReports(new ArrayList<>());
+                InWorkoutItemReport savedInWorkoutItemReport = inWorkoutItemReportRepository.save(inWorkoutItemReport);
                 for (WorkoutItemSetReportRequestDTO workoutItemSetReportRequestDTO : workoutItemReportRequestDTO.getSets()) {
                     final InWorkoutItemSetReport inWorkoutItemSetReport = new InWorkoutItemSetReport();
+                    inWorkoutItemSetReport.setInWorkoutItemReport(savedInWorkoutItemReport);
                     inWorkoutItemSetReport.setRepetitions(workoutItemSetReportRequestDTO.getRepetitions());
                     inWorkoutItemSetReport.setWeight(workoutItemSetReportRequestDTO.getWeight());
-                    inWorkoutItemSetReport.setBodyweight(workoutItemSetReportRequestDTO.getBodyweight());
+                    inWorkoutItemSetReport.setBodyweight(BooleanUtils.isTrue(workoutItemSetReportRequestDTO.getBodyweight()));
                     inWorkoutItemSetReport.setTime_in_min(workoutItemSetReportRequestDTO.getTime_in_min());
                     inWorkoutItemSetReport.setSpeed(workoutItemSetReportRequestDTO.getSpeed());
                     inWorkoutItemSetReport.setIncline(workoutItemSetReportRequestDTO.getIncline());
@@ -74,7 +77,6 @@ class ReportWorkoutService {
                     inWorkoutItemSetReportRepository.save(inWorkoutItemSetReport);
                     inWorkoutItemReport.getInWorkoutItemSetReports().add(inWorkoutItemSetReport);
                 }
-                InWorkoutItemReport savedInWorkoutItemReport = inWorkoutItemReportRepository.save(inWorkoutItemReport);
                 WorkoutItemReportResponseDTO workoutItemReportResponseDTO = new WorkoutItemReportResponseDTO();
                 workoutItemReportResponseDTO.setId(savedInWorkoutItemReport.getId());
                 workoutItemReportResponseDTO.setSets(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
@@ -88,6 +90,7 @@ class ReportWorkoutService {
                     .setIncline(itemSetReport.getIncline())
                     .setResistance(itemSetReport.getResistance())
                 ).collect(Collectors.toList()));
+                workoutReportResponseDTO.setId(inWorkoutItem.getInWorkout().getId());
                 workoutReportResponseDTO.getItems().add(workoutItemReportResponseDTO);
             }
             return workoutReportResponseDTO;
