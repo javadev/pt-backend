@@ -16,7 +16,7 @@ public class TokenResourceTest {
 
     @Mock
     private TokenService tokenService;    
-    
+
     @InjectMocks
     private TokenResource tokenResource;
 
@@ -26,7 +26,8 @@ public class TokenResourceTest {
         verify(tokenService).createOrReadNewToken(any(TokenRequestDTO.class), anyString());
     }
 
-    public void delete() throws Exception {
+    @Test
+    public void delete() {
         tokenResource.delete("", new MockHttpServletRequest());
         verify(tokenService).deleteToken(anyString(), anyString());
     }
