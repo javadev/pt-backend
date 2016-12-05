@@ -15,7 +15,7 @@ public class UserResourceTest {
 
     @Mock
     private UserService userService;    
-    
+
     @InjectMocks
     private UserResource userResource;
 
@@ -25,7 +25,8 @@ public class UserResourceTest {
         verify(userService).findOne(eq("1"));
     }
 
-    public void update() throws Exception {
+    @Test
+    public void update() {
         userResource.update("1", new UserRequestDTO());
         verify(userService).updateUser(eq("1"), any(UserRequestDTO.class));
     }
