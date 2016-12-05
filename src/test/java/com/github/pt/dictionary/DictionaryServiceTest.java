@@ -33,6 +33,15 @@ public class DictionaryServiceTest {
     }
 
     @Test
+    public void getNewDictionaryDataKey_wit_key() {
+        when(dictionaryRepository.findDictionaryAllValues(eq(DictionaryRepository.ENG_LANGUAGE),
+                eq("exercise_name"), any())).thenReturn(Arrays.asList(new DictionaryData().setDkey("10")));
+        dictionaryService.getNewDictionaryDataKey(DictionaryName.exercise_name);
+        verify(dictionaryRepository).findDictionaryAllValues(eq(DictionaryRepository.ENG_LANGUAGE),
+                eq("exercise_name"), any());
+    }
+
+    @Test
     public void createDictionaryDataKey() {
         dictionaryService.createDictionaryDataKey(DictionaryName.exercise_name, "1", "en", "no");
         verify(dictionaryRepository, times(2)).save(any(DictionaryData.class));
