@@ -39,7 +39,7 @@ public class ActiveCertificateServiceTest {
     @Test
     public void firstActive_with_token() {
         InUserCertificate inUserCertificate = new InUserCertificate();
-        inUserCertificate.setCreated(LocalDateTime.MIN);
+        inUserCertificate.setCreated(LocalDateTime.MAX.minusDays(1));
         inUserCertificate.setAmount_of_days(1);
         InUser inUser = new InUser();
         inUser.setInUserCertificates(Arrays.asList(inUserCertificate));
