@@ -31,6 +31,8 @@ public class ReportWorkoutServiceTest {
     @Mock
     private InWorkoutItemReportRepository inWorkoutItemReportRepository;
     @Mock
+    private InWorkoutItemSetReportRepository inWorkoutItemSetReportRepository;
+    @Mock
     private UserService userService;
 
     @InjectMocks
@@ -50,8 +52,10 @@ public class ReportWorkoutServiceTest {
         inUserLogin.setInUser(inUserForLogin);
         when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
         WorkoutReportRequestDTO workoutReportRequestDTO = new WorkoutReportRequestDTO();
+        WorkoutItemSetReportRequestDTO workoutItemSetReportRequestDTO = new WorkoutItemSetReportRequestDTO();
         WorkoutItemReportRequestDTO workoutItemReportRequestDTO = new WorkoutItemReportRequestDTO();
         workoutItemReportRequestDTO.setId(1L);
+        workoutItemReportRequestDTO.setSets(Arrays.asList(workoutItemSetReportRequestDTO));
         workoutReportRequestDTO.setItems(Arrays.asList(workoutItemReportRequestDTO));
         InWorkoutItem inWorkoutItem = new InWorkoutItem();
         InWorkout inWorkout = new InWorkout();

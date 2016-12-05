@@ -1,6 +1,5 @@
 package com.github.pt.reportworkout;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,13 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-class WorkoutItemReportRequestDTO {
+class WorkoutItemSetReportResponseDTO {
     Long id;
-    List<WorkoutItemSetReportRequestDTO> sets;
+    Integer repetitions;
+    Integer weight;
+    Boolean bodyweight;
+    Integer time_in_min;
+    Integer speed;
+    Integer incline;
+    Integer resistance;
 }

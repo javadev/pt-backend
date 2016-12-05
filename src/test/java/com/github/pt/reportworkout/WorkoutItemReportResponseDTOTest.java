@@ -8,7 +8,7 @@ public class WorkoutItemReportResponseDTOTest {
     @Test
     public void createAllArgs() {
         assertThat(new WorkoutItemReportResponseDTO(
-                1L, 1, 1, 1, false), notNullValue());
+                1L, null), notNullValue());
     }
 
     @Test
@@ -16,9 +16,6 @@ public class WorkoutItemReportResponseDTOTest {
         WorkoutItemReportResponseDTO workoutItemReportResponseDTO = new WorkoutItemReportResponseDTO();
         workoutItemReportResponseDTO.setId(1L);
         workoutItemReportResponseDTO.setSets(null);
-        workoutItemReportResponseDTO.setRepetitions(null);
-        workoutItemReportResponseDTO.setWeight(null);
-        workoutItemReportResponseDTO.setBodyweight(null);
         assertThat(workoutItemReportResponseDTO, notNullValue());
     }
 
@@ -27,9 +24,6 @@ public class WorkoutItemReportResponseDTOTest {
         WorkoutItemReportResponseDTO workoutItemReportResponseDTO = new WorkoutItemReportResponseDTO();
         workoutItemReportResponseDTO.getId();
         workoutItemReportResponseDTO.getSets();
-        workoutItemReportResponseDTO.getRepetitions();
-        workoutItemReportResponseDTO.getWeight();
-        workoutItemReportResponseDTO.getBodyweight();
         assertThat(workoutItemReportResponseDTO, notNullValue());
     }
 }

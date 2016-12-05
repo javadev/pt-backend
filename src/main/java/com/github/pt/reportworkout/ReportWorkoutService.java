@@ -4,11 +4,13 @@ import com.github.pt.ResourceNotFoundException;
 import com.github.pt.UnauthorizedException;
 import com.github.pt.programs.InWorkoutItem;
 import com.github.pt.programs.InWorkoutItemReport;
+import com.github.pt.programs.InWorkoutItemSetReport;
 import com.github.pt.token.InUser;
 import com.github.pt.user.UserService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +21,17 @@ class ReportWorkoutService {
     private static final Logger LOG = LoggerFactory.getLogger(ReportWorkoutService.class);
     private final InWorkoutItemRepository inWorkoutItemRepository;
     private final InWorkoutItemReportRepository inWorkoutItemReportRepository;
+    private final InWorkoutItemSetReportRepository inWorkoutItemSetReportRepository;
     private final UserService userService;
 
     @Autowired
     ReportWorkoutService(InWorkoutItemRepository inWorkoutItemRepository,
             InWorkoutItemReportRepository inWorkoutItemReportRepository,
+            InWorkoutItemSetReportRepository inWorkoutItemSetReportRepository,
             UserService userService) {
         this.inWorkoutItemRepository = inWorkoutItemRepository;
         this.inWorkoutItemReportRepository = inWorkoutItemReportRepository;
+        this.inWorkoutItemSetReportRepository = inWorkoutItemSetReportRepository;
         this.userService = userService;
     }
 
@@ -56,17 +61,33 @@ class ReportWorkoutService {
                 }
                 final InWorkoutItemReport inWorkoutItemReport = new InWorkoutItemReport();
                 inWorkoutItemReport.setInWorkoutItem(inWorkoutItems.get(inWorkoutItems.size() - 1));
-                inWorkoutItemReport.setSets(workoutItemReportRequestDTO.getSets());
-                inWorkoutItemReport.setRepetitions(workoutItemReportRequestDTO.getRepetitions());
-                inWorkoutItemReport.setWeight(workoutItemReportRequestDTO.getWeight());
-                inWorkoutItemReport.setBodyweight(workoutItemReportRequestDTO.getBodyweight());
+                inWorkoutItemReport.setInWorkoutItemSetReports(new ArrayList<>());
+                for (WorkoutItemSetReportRequestDTO workoutItemSetReportRequestDTO : workoutItemReportRequestDTO.getSets()) {
+                    final InWorkoutItemSetReport inWorkoutItemSetReport = new InWorkoutItemSetReport();
+                    inWorkoutItemSetReport.setRepetitions(workoutItemSetReportRequestDTO.getRepetitions());
+                    inWorkoutItemSetReport.setWeight(workoutItemSetReportRequestDTO.getWeight());
+                    inWorkoutItemSetReport.setBodyweight(workoutItemSetReportRequestDTO.getBodyweight());
+                    inWorkoutItemSetReport.setTime_in_min(workoutItemSetReportRequestDTO.getTime_in_min());
+                    inWorkoutItemSetReport.setSpeed(workoutItemSetReportRequestDTO.getSpeed());
+                    inWorkoutItemSetReport.setIncline(workoutItemSetReportRequestDTO.getIncline());
+                    inWorkoutItemSetReport.setResistance(workoutItemSetReportRequestDTO.getResistance());
+                    inWorkoutItemSetReportRepository.save(inWorkoutItemSetReport);
+                    inWorkoutItemReport.getInWorkoutItemSetReports().add(inWorkoutItemSetReport);
+                }
                 InWorkoutItemReport savedInWorkoutItemReport = inWorkoutItemReportRepository.save(inWorkoutItemReport);
                 WorkoutItemReportResponseDTO workoutItemReportResponseDTO = new WorkoutItemReportResponseDTO();
                 workoutItemReportResponseDTO.setId(savedInWorkoutItemReport.getId());
-                workoutItemReportResponseDTO.setSets(savedInWorkoutItemReport.getSets());
-                workoutItemReportResponseDTO.setRepetitions(savedInWorkoutItemReport.getRepetitions());
-                workoutItemReportResponseDTO.setWeight(savedInWorkoutItemReport.getWeight());
-                workoutItemReportResponseDTO.setBodyweight(savedInWorkoutItemReport.getBodyweight());
+                workoutItemReportResponseDTO.setSets(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
+                .map(itemSetReport -> new WorkoutItemSetReportResponseDTO()
+                    .setId(itemSetReport.getId())
+                    .setRepetitions(itemSetReport.getRepetitions())
+                    .setWeight(itemSetReport.getWeight())
+                    .setBodyweight(itemSetReport.getBodyweight())
+                    .setTime_in_min(itemSetReport.getTime_in_min())
+                    .setSpeed(itemSetReport.getSpeed())
+                    .setIncline(itemSetReport.getIncline())
+                    .setResistance(itemSetReport.getResistance())
+                ).collect(Collectors.toList()));
                 workoutReportResponseDTO.getItems().add(workoutItemReportResponseDTO);
             }
             return workoutReportResponseDTO;

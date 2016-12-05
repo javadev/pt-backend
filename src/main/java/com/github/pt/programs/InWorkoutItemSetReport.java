@@ -2,7 +2,6 @@ package com.github.pt.programs;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
@@ -26,19 +24,24 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 @Setter
 @Entity
-@Table (name = "in_workout_item_report", schema = "ptcore")
+@Table (name = "in_workout_item_set_report", schema = "ptcore")
 @DynamicInsert
-public class InWorkoutItemReport {
+public class InWorkoutItemSetReport {
     @Id
-    @SequenceGenerator(name = "InWorkoutItemReportIdSequence", sequenceName = "ptcore.in_workout_item_report_id_seq",
+    @SequenceGenerator(name = "InWorkoutItemSetReportIdSequence", sequenceName = "ptcore.in_workout_item_set_report_id_seq",
             allocationSize = 1, initialValue = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "InWorkoutItemReportIdSequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "InWorkoutItemSetReportIdSequence")
     Long id;
     LocalDateTime created;
+    Integer repetitions;
+    Integer weight;
+    Boolean bodyweight;
+    Integer time_in_min;
+    Integer speed;
+    Integer incline;
+    Integer resistance;
     @ManyToOne
-    @JoinColumn(name="in_workout_item_id")
+    @JoinColumn(name="in_workout_item_report_id")
     @JsonBackReference
-    InWorkoutItem inWorkoutItem;
-    @OneToMany(mappedBy="inWorkoutItemReport")
-    List<InWorkoutItemSetReport> inWorkoutItemSetReports;
+    InWorkoutItemReport inWorkoutItemReport;
 }

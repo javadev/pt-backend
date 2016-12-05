@@ -7,7 +7,6 @@ import static org.junit.Assert.assertThat;
 public class WorkoutItemReportRequestDTOTest {
     @Test
     public void createAllArgs() {
-        assertThat(new WorkoutItemReportRequestDTO(
-                1L, 1, 1, 1, false), notNullValue());
+        assertThat(new WorkoutItemReportRequestDTO(1L, null), notNullValue());
     }
 }
