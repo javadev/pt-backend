@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 class ActiveCertificateService {
-    private final InUserCertificateRepository InUserCertificateRepository;
+    private final InUserCertificateRepository inUserCertificateRepository;
     private final CertificateRepository certificateRepository;
     private final UserService userService;
 
@@ -20,7 +20,7 @@ class ActiveCertificateService {
     ActiveCertificateService(InUserCertificateRepository inUserCertificateRepository,
             CertificateRepository certificateRepository,
             UserService userService) {
-        this.InUserCertificateRepository = inUserCertificateRepository;
+        this.inUserCertificateRepository = inUserCertificateRepository;
         this.certificateRepository = certificateRepository;
         this.userService = userService;
     }
@@ -58,7 +58,7 @@ class ActiveCertificateService {
             inUserCertificate.setInUser(inUserLogin.getInUser());
             inUserCertificate.setCode(notActiveCertificate.getCode());
             inUserCertificate.setAmount_of_days(notActiveCertificate.getAmount_of_days());
-            InUserCertificate inUserCertificateSaved = InUserCertificateRepository.save(inUserCertificate);
+            InUserCertificate inUserCertificateSaved = inUserCertificateRepository.save(inUserCertificate);
             certificateRepository.save(notActiveCertificate);
             return ActiveCertificateResponseDTO.builder()
                     .id(inUserCertificateSaved.getId())
