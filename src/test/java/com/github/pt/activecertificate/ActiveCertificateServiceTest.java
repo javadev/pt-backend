@@ -1,5 +1,6 @@
 package com.github.pt.activecertificate;
 
+import com.github.pt.ResourceNotFoundException;
 import com.github.pt.admin.certificate.Certificate;
 import com.github.pt.admin.certificate.CertificateRepository;
 import com.github.pt.token.InUser;
@@ -7,6 +8,7 @@ import com.github.pt.token.InUserLogin;
 import com.github.pt.user.UserService;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import static org.hamcrest.CoreMatchers.equalTo;
 import org.junit.Test;
 import static org.junit.Assert.assertThat;
@@ -75,4 +77,41 @@ public class ActiveCertificateServiceTest {
         assertThat(activeCertificateService.create("1", activeCertificateRequestDTO).getCode(),
             equalTo(new ActiveCertificateResponseDTO().getCode()));
     }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void create_with_token_code_not_found() {
+        InUserCertificate inUserCertificate = new InUserCertificate();
+        inUserCertificate.setId(1L);
+        inUserCertificate.setCreated(LocalDateTime.MIN);
+        inUserCertificate.setAmount_of_days(1);
+        InUser inUser = new InUser();
+        inUser.setInUserCertificates(Arrays.asList(inUserCertificate));
+        InUserLogin inUserLogin = new InUserLogin();
+        inUserLogin.setInUser(inUser);
+        when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
+        when(certificateRepository.findByCode(eq("123"))).thenReturn(
+            Collections.emptyList());
+        ActiveCertificateRequestDTO activeCertificateRequestDTO = new ActiveCertificateRequestDTO().setCode("123");
+        activeCertificateService.create("1", activeCertificateRequestDTO);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void create_with_token_no_active_certificates() {
+        InUserCertificate inUserCertificate = new InUserCertificate();
+        inUserCertificate.setId(1L);
+        inUserCertificate.setCreated(LocalDateTime.MIN);
+        inUserCertificate.setAmount_of_days(1);
+        InUser inUser = new InUser();
+        inUser.setInUserCertificates(Arrays.asList(inUserCertificate));
+        InUserLogin inUserLogin = new InUserLogin();
+        inUserLogin.setInUser(inUser);
+        when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
+        when(certificateRepository.findByCode(eq("123"))).thenReturn(
+            Arrays.asList(new Certificate().setActivated(Boolean.TRUE).setAmount_of_days(1)));
+        when(inUserCertificateRepository.save(any(InUserCertificate.class))).thenAnswer(i -> i.getArguments()[0]);
+        ActiveCertificateRequestDTO activeCertificateRequestDTO = new ActiveCertificateRequestDTO().setCode("123");
+        assertThat(activeCertificateService.create("1", activeCertificateRequestDTO).getCode(),
+            equalTo(new ActiveCertificateResponseDTO().getCode()));
+    }
+
 }
