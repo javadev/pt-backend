@@ -32,7 +32,7 @@ public class ProgramServiceTest {
         InUser inUserForLogin = new InUser();
         inUserForLogin.setId(10L);
         InWorkout inWorkout = new InWorkout()
-                .setInWarmupWorkoutItems(Arrays.asList(new InWarmupWorkoutItem()))
+                .setInWarmupWorkoutItems(null)
                 .setInWorkoutItems(Arrays.asList(new InWorkoutItem()));
         InProgram inProgram = new InProgram()
                 .setId(1L)
@@ -53,16 +53,21 @@ public class ProgramServiceTest {
         InWorkout inWorkout = new InWorkout()
                 .setInWarmupWorkoutItems(Arrays.asList(new InWarmupWorkoutItem()))
                 .setInWorkoutItems(Arrays.asList(new InWorkoutItem()));
-        InProgram inProgram = new InProgram()
+        InProgram inProgram1 = new InProgram()
                 .setId(1L)
                 .setName("name")
                 .setInWorkouts(Arrays.asList(inWorkout));
-        inUserForLogin.setInPrograms(Arrays.asList(inProgram, inProgram));
+        InProgram inProgram2 = new InProgram()
+                .setId(2L)
+                .setName("name")
+                .setInWorkouts(Arrays.asList(inWorkout));
+        inUserForLogin.setInPrograms(Arrays.asList(inProgram1, inProgram2));
         inUserLogin.setInUser(inUserForLogin);
         when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
         List<ProgramResponseDTO> responses = programService.getExamples("1");
         verify(userService).checkUserToken(eq("1"));
         assertThat(responses.size(), equalTo(1));
+        assertThat(responses.get(0).getId(), equalTo(2L));
     }
 
     @Test

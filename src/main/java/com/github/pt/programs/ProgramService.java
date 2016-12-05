@@ -5,10 +5,6 @@ import com.github.pt.user.UserService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,15 +26,30 @@ class ProgramService {
             if (inPrograms.isEmpty()) {
                 return Collections.emptyList();
             }
-            return inPrograms.stream().filter(distinctByKey(program -> program.getName()))
-                    .map(ProgramService::createProgramResponseDTO).collect(Collectors.toList());
+            class inProgrmWrapper {
+                private String name;
+                private InProgram inProgram;
+                inProgrmWrapper(String name, InProgram inProgram) {
+                    this.name = name;
+                    this.inProgram = inProgram;
+                }
+                @Override
+                public boolean equals(Object object) {
+                    return name.equals(((inProgrmWrapper) object).name);
+                }
+                @Override
+                public int hashCode() {
+                    return name.hashCode();
+                }
+            }
+            return inPrograms.stream()
+                    .sorted((p1, p2) -> Long.compare(p2.getId(), p1.getId()))
+                    .map(inProgram -> new inProgrmWrapper(inProgram.getName(), inProgram))
+                    .distinct()
+                    .map(inProgramWrapper -> createProgramResponseDTO(inProgramWrapper.inProgram))
+                    .collect(Collectors.toList());
         }
         return Collections.emptyList();
-    }
-
-    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
-        Map<Object,Boolean> seen = new ConcurrentHashMap<>();
-        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
     private static ProgramResponseDTO createProgramResponseDTO(InProgram inProgram) {
