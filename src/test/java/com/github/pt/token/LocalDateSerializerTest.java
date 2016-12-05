@@ -18,4 +18,11 @@ public class LocalDateSerializerTest {
         verify(jsonGenerator).writeString(eq("+999999999-12-31"));
     }
 
+    @Test
+    public void serialize_null() throws Exception {
+        JsonGenerator jsonGenerator = mock(JsonGenerator.class);
+        SerializerProvider serializerProvider = mock(SerializerProvider.class);
+        new LocalDateSerializer().serialize(null, jsonGenerator, serializerProvider);
+        verify(jsonGenerator).writeString((String) eq(null));
+    }
 }
