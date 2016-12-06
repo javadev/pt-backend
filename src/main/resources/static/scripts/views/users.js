@@ -357,6 +357,9 @@ function ($, _, Backbone, Marionette, moment, App) {
       '</td>',
       '<td>',
         '{{ getInputs() }}',
+      '</td>',
+      '<td>',
+        '{{ getOutputs() }}',
       '</td>'
     ].join('')),
     templateHelpers: function() {
@@ -366,6 +369,11 @@ function ($, _, Backbone, Marionette, moment, App) {
           return 'sets ' + model.get('sets') +
                   (model.get('repetitions') === null ? '' : ', repetitions ' + model.get('repetitions')) +
                   (model.get('weight') === null ? '' : ', weight ' + model.get('weight'));
+        },
+        getOutputs: function () {
+          return (_.isNull(model.get('reportSets')) ? '' : 'sets ' + model.get('reportSets')) +
+                  (_.isEmpty(_.compact(model.get('reportRepetitions'))) ? '' : ', repetitions ' + model.get('reportRepetitions').join(', ')) +
+                  (_.isEmpty(_.compact(model.get('reportWeight'))) ? '' : ', weight ' + model.get('reportWeight').join(', '));
         }
       };
     }
@@ -502,6 +510,7 @@ function ($, _, Backbone, Marionette, moment, App) {
             '<th>ID</th>',
             '<th>Exercise name</th>',
             '<th>Inputs</th>',
+            '<th>Outputs</th>',
           '</tr>',
         '</thead>',
         '<tbody></tbody>',
