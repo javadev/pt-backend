@@ -40,10 +40,12 @@ public class InWorkoutItem {
     String d_exercise_type;
     Integer sets;
     Integer repetitions;
+    Boolean repetitions_to_failure;
     Integer weight;
     Boolean bodyweight;
     Integer time_in_min;
     Integer speed;
+    Integer incline;
     Integer resistance;
     @ManyToOne
     @JoinColumn(name="in_workout_id")
