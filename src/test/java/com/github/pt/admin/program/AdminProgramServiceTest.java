@@ -76,6 +76,7 @@ public class AdminProgramServiceTest {
         }
         programRequestDTO.setDataUrl(result.toString());
         when(parseUserRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
+        when(parseWorkoutRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
         when(programRepository.save(any(Program.class))).thenAnswer(i -> i.getArguments()[0]);
         adminProgramService.create(programRequestDTO);
         verify(programRepository).save(any(Program.class));
@@ -104,6 +105,7 @@ public class AdminProgramServiceTest {
                     Arrays.asList(new ParseWorkout().setParseWorkoutItems(
                         Arrays.asList(new ParseWorkoutItem())))))));
         when(parseUserRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
+        when(parseWorkoutRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
         when(programRepository.save(any(Program.class))).thenAnswer(i -> i.getArguments()[0]);
         adminProgramService.update(1L, programRequestDTO);
         verify(programRepository).save(any(Program.class));
