@@ -6,6 +6,8 @@ import com.github.pt.programs.InProgramRepository;
 import com.github.pt.programs.InWarmupWorkoutItem;
 import com.github.pt.programs.InWorkout;
 import com.github.pt.programs.InWorkoutItem;
+import com.github.pt.programs.InWorkoutItemReport;
+import com.github.pt.programs.InWorkoutItemSetReport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,6 +35,7 @@ class AdminUserProgramService {
             workout.setId(inWorkout.getId());
             workout.setName(inWorkout.getD_workout_name());
             workout.setItems(new ArrayList<>());
+            workout.setReportItems(new ArrayList<>());
             program.getWorkouts().add(workout);
             if (inWorkout.getInWarmupWorkoutItems() != null && !inWorkout.getInWarmupWorkoutItems().isEmpty()) {
                 InWarmupWorkoutItem inWarmupWorkoutItem = inWorkout.getInWarmupWorkoutItems().get(0);
@@ -47,16 +50,36 @@ class AdminUserProgramService {
                 workout.setWarmup(warmupWorkoutItem);
             }
             for (InWorkoutItem inWorkoutItem : inWorkout.getInWorkoutItems()) {
-                UserWorkoutItemResponseDTO workoutItem = new UserWorkoutItemResponseDTO();
-                workoutItem.setId(inWorkoutItem.getId());
-                workoutItem.setExercise_id(inWorkoutItem.getD_exercise_id() == null ? 0L
-                        : Long.parseLong(inWorkoutItem.getD_exercise_id()));
-                workoutItem.setExercise_name(inWorkoutItem.getD_exercise_name());
-                workoutItem.setSets(inWorkoutItem.getSets());
-                workoutItem.setRepetitions(inWorkoutItem.getRepetitions());
-                workoutItem.setWeight(inWorkoutItem.getWeight());
-                workoutItem.setBodyweight(BooleanUtils.isTrue(inWorkoutItem.getBodyweight()));                
-                workout.getItems().add(workoutItem);
+                UserWorkoutItemResponseDTO userWorkoutItemResponseDTO = new UserWorkoutItemResponseDTO()
+                    .setId(inWorkoutItem.getId())
+                    .setExercise_id(inWorkoutItem.getD_exercise_id() == null ? 0L
+                            : Long.parseLong(inWorkoutItem.getD_exercise_id()))
+                    .setExercise_name(inWorkoutItem.getD_exercise_name())
+                    .setSets(inWorkoutItem.getSets())
+                    .setRepetitions(inWorkoutItem.getRepetitions())
+                    .setWeight(inWorkoutItem.getWeight())
+                    .setBodyweight(BooleanUtils.isTrue(inWorkoutItem.getBodyweight()));
+                workout.getItems().add(userWorkoutItemResponseDTO);
+                InWorkoutItemReport inWorkoutItemReport = inWorkoutItem.getInWorkoutItemReports().get(
+                    inWorkoutItem.getInWorkoutItemReports().size() - 1);
+                UserWorkoutItemReportResponseDTO userWorkoutItemReportResponseDTO
+                        = new UserWorkoutItemReportResponseDTO()
+                                .setId(inWorkoutItemReport.getId())
+                                .setSets(new ArrayList<>());
+                for (InWorkoutItemSetReport inWorkoutItemSetReport : inWorkoutItemReport.getInWorkoutItemSetReports()) {
+                    UserWorkoutItemSetReportResponseDTO userWorkoutItemSetReportResponseDTO
+                        = new UserWorkoutItemSetReportResponseDTO()
+                                .setId(inWorkoutItemSetReport.getId())
+                            .setRepetitions(inWorkoutItemSetReport.getRepetitions())
+                            .setWeight(inWorkoutItemSetReport.getWeight())
+                            .setBodyweight(inWorkoutItemSetReport.getBodyweight())
+                            .setTimeInMin(inWorkoutItemSetReport.getTime_in_min())
+                            .setSpeed(inWorkoutItemSetReport.getSpeed())
+                            .setIncline(inWorkoutItemSetReport.getIncline())
+                            .setResistance(inWorkoutItemSetReport.getResistance());
+                    userWorkoutItemReportResponseDTO.getSets().add(userWorkoutItemSetReportResponseDTO);
+                }
+                workout.getReportItems().add(userWorkoutItemReportResponseDTO);
             }
         }
         return program;
@@ -78,7 +101,7 @@ class AdminUserProgramService {
     UserProgramResponseDTO create(UserProgramRequestDTO userProgramRequestDTO) {
         final InProgram inProgram = new InProgram();
         final InProgram savedInProgram = inProgramRepository.save(inProgram);
-        return new UserProgramResponseDTO();
+        return inProgramToDto(savedInProgram);
     }
 
     UserProgramResponseDTO update(Long id, UserProgramRequestDTO userProgramRequestDTO) {

@@ -1,6 +1,5 @@
 package com.github.pt.admin.user;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +11,13 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-class UserWorkoutResponseDTO {
+class UserWorkoutItemSetReportResponseDTO {
     Long id;
-    String name;
-    UserWarmupWorkoutItemResponseDTO warmup;
-    List<UserWorkoutItemResponseDTO> items;
-    List<UserWorkoutItemReportResponseDTO> reportItems;
+    Integer repetitions;
+    Integer weight;
+    Boolean bodyweight;
+    Integer timeInMin;
+    Integer speed;
+    Integer incline;
+    Integer resistance;
 }
