@@ -3,7 +3,6 @@ package com.github.pt.exercises;
 import com.github.pt.dictionary.DictionaryName;
 import com.github.pt.dictionary.DictionaryService;
 import com.github.pt.user.UserService;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
