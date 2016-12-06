@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
@@ -49,7 +50,6 @@ public class AdminProgramServiceTest {
     @Test(expected = ResourceNotFoundException.class)
     public void findOne_not_found() {
         adminProgramService.findOne(1L);
-        verify(programRepository).findOne(eq(1L));
     }
 
     @Test
@@ -75,9 +75,15 @@ public class AdminProgramServiceTest {
             }
         }
         programRequestDTO.setDataUrl(result.toString());
+        when(parseUserRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
         when(programRepository.save(any(Program.class))).thenAnswer(i -> i.getArguments()[0]);
         adminProgramService.create(programRequestDTO);
         verify(programRepository).save(any(Program.class));
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void update_not_found() {
+        adminProgramService.update(1L, new ProgramRequestDTO());
     }
 
     @Test
@@ -97,9 +103,15 @@ public class AdminProgramServiceTest {
                 Arrays.asList(new ParseUser().setParseWorkouts(
                     Arrays.asList(new ParseWorkout().setParseWorkoutItems(
                         Arrays.asList(new ParseWorkoutItem())))))));
+        when(parseUserRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
         when(programRepository.save(any(Program.class))).thenAnswer(i -> i.getArguments()[0]);
         adminProgramService.update(1L, programRequestDTO);
         verify(programRepository).save(any(Program.class));
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void delete_not_found() {
+        adminProgramService.delete(1L);
     }
 
     @Test

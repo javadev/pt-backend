@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -20,9 +21,21 @@ public class AdminProgramResourceTest {
     private AdminProgramResource adminProgramResource;
 
     @Test
+    public void findOne() {
+        adminProgramResource.findOne(1L);
+        verify(adminProgramService).findOne(eq(1L));
+    }
+
+    @Test
     public void create() {
         adminProgramResource.create(new ProgramRequestDTO());
         verify(adminProgramService).create(any(ProgramRequestDTO.class));
+    }
+
+    @Test
+    public void update() {
+        adminProgramResource.update(1L, new ProgramRequestDTO());
+        verify(adminProgramService).update(eq(1L), any(ProgramRequestDTO.class));
     }
 
     @Test
