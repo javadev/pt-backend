@@ -16,7 +16,7 @@ public class TokenEmailResourceTest {
 
     @Mock
     private TokenEmailService tokenEmailService;    
-    
+
     @InjectMocks
     private TokenEmailResource tokenEmailResource;
 
@@ -26,7 +26,8 @@ public class TokenEmailResourceTest {
         verify(tokenEmailService).createOrReadNewToken(any(TokenEmailRequestDTO.class), anyString());
     }
 
-    public void delete() throws Exception {
+    @Test
+    public void delete() {
         tokenEmailResource.delete("", new MockHttpServletRequest());
         verify(tokenEmailService).deleteToken(anyString(), anyString());
     }
