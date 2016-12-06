@@ -28,7 +28,7 @@ public class UserService {
     }
 
     public InUserLogin checkUserToken(String token) {
-        List<InUserLogin> inUserLogins = inUserLoginRepository.findByToken(token);
+        final List<InUserLogin> inUserLogins = inUserLoginRepository.findByToken(token);
         if (inUserLogins.isEmpty()) {
             throw new ResourceNotFoundException("Token not found " + token);
         } else {
@@ -41,7 +41,7 @@ public class UserService {
 
     UserResponseDTO findOne(String token) {
         final InUser inUser = checkUserToken(token).getInUser();
-        UserResponseDTO userResponse = new UserResponseDTO();
+        final UserResponseDTO userResponse = new UserResponseDTO();
         userResponse.setGender(inUser.getD_sex());
         if (inUser.getAge() != null) {
             userResponse.setAge(inUser.getAge().longValue());
