@@ -17,5 +17,4 @@ class UserWorkoutResponseDTO {
     String name;
     UserWarmupWorkoutItemResponseDTO warmup;
     List<UserWorkoutItemResponseDTO> items;
-    List<UserWorkoutItemReportResponseDTO> reportItems;
 }

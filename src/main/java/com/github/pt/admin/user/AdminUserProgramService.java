@@ -7,7 +7,6 @@ import com.github.pt.programs.InWarmupWorkoutItem;
 import com.github.pt.programs.InWorkout;
 import com.github.pt.programs.InWorkoutItem;
 import com.github.pt.programs.InWorkoutItemReport;
-import com.github.pt.programs.InWorkoutItemSetReport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +34,6 @@ class AdminUserProgramService {
             workout.setId(inWorkout.getId());
             workout.setName(inWorkout.getD_workout_name());
             workout.setItems(new ArrayList<>());
-            workout.setReportItems(new ArrayList<>());
             program.getWorkouts().add(workout);
             if (inWorkout.getInWarmupWorkoutItems() != null && !inWorkout.getInWarmupWorkoutItems().isEmpty()) {
                 InWarmupWorkoutItem inWarmupWorkoutItem = inWorkout.getInWarmupWorkoutItems().get(0);
