@@ -126,5 +126,24 @@ public class AdminProgramServiceTest {
         adminProgramService.delete(1L);
         verify(programRepository).delete(any(Program.class));
     }
-
+    
+    @Test
+    public void createXlsx() throws IOException {
+        final java.io.ByteArrayOutputStream result = new java.io.ByteArrayOutputStream();
+        final byte[] buffer = new byte[1024];
+        try (InputStream inputStream = AdminProgramServiceTest.class.getResourceAsStream("dataurl01.txt")) {
+            int length;
+            while ((length = inputStream.read(buffer)) != -1) {
+                result.write(buffer, 0, length);
+            }
+        }
+        when(programRepository.findOne(eq(1L))).thenReturn(new Program()
+                .setData_url(result.toString())
+                .setParseUsers(Arrays.asList(new ParseUser()
+                        .setSheet_index(0)
+                        .setParseWorkouts(Arrays.asList(new ParseWorkout()
+                            .setRow_index(5)
+                            .setColumn_index(10))))));
+        adminProgramService.createXlsx(1L);
+    }
 }

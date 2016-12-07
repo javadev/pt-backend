@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,7 +33,7 @@ public class AdminProgramFileResourceIntTest {
     public void findOne() throws Exception {
         given(this.programService.findOne(1L)).willReturn(new ProgramResponseDTO());
         given(this.programService.findOne(eq(1L))).willReturn(new ProgramResponseDTO().setDataUrl(""));
-        given(this.programService.createXlsx(anyString())).willReturn(
+        given(this.programService.createXlsx(anyLong())).willReturn(
                 new ByteArrayOutputStream());
         HttpServletResponse httpServletResponse = new MockHttpServletResponse();
         adminProgramFileResource.findOne(1L, "fileName", httpServletResponse);

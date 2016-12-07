@@ -26,7 +26,7 @@ class AdminProgramFileResource {
     Object findOne(@PathVariable Long id, @PathVariable String fileName, HttpServletResponse response)
             throws IOException {
         final ProgramResponseDTO programResponseDTO = programService.findOne(id);
-        final ByteArrayOutputStream outputStream = programService.createXlsx(programResponseDTO.getDataUrl());
+        final ByteArrayOutputStream outputStream = programService.createXlsx(id);
         response.setContentType(programResponseDTO.getFileType());
         response.setHeader("Content-disposition",
                 "attachment; filename=" + programResponseDTO.getFileName());

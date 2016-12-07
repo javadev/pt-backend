@@ -105,7 +105,7 @@ public class XlsxParser {
             int workoutIndex, int addRows, ScanMode scanMode, ExcelUser excelUser, String workoutName) {
         final int multiplyCoeff = scanMode == ScanMode.Strength ? 7 : 9;
         WorkoutItem workoutItem = new WorkoutItem();
-        workoutItem.setRowIndex(4 + addRows + workoutItemIndex * multiplyCoeff);
+        workoutItem.setRowIndex(4 + 4 + addRows + workoutItemIndex * multiplyCoeff);
         workoutItem.setColumnIndex(2 + workoutIndex);
         final Optional<String> exerciseName = getStringOrEmpty(getCellData(sheet, 4 + 4 + addRows
                 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));

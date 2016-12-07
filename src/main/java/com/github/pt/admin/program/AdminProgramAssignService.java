@@ -103,7 +103,8 @@ class AdminProgramAssignService {
                         inWorkoutItem.setTime_in_min(parseWorkoutItem.getTime_in_min());
                         inWorkoutItem.setSpeed(parseWorkoutItem.getSpeed());
                         inWorkoutItem.setResistance(parseWorkoutItem.getResistance());
-                        inWorkoutItemRepository.save(inWorkoutItem);
+                        final InWorkoutItem savedInWorkoutItem = inWorkoutItemRepository.save(inWorkoutItem);
+                        parseWorkoutItem.setIn_workout_item_id(savedInWorkoutItem.getId());
                     }
                 }
             }

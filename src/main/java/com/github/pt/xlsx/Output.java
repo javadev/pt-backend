@@ -1,5 +1,6 @@
 package com.github.pt.xlsx;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +14,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class WorkoutItem {
-    int columnIndex;
-    int rowIndex;
-    Input input = new Input();
-    Output output = new Output();
+public class Output {
+    Integer sets;
+    List<Integer> repetitions;
+    List<Integer> weights;
+    List<Integer> timeInMins;
+    List<Integer> speeds;
+    List<Integer> inclines;
+    List<Integer> resistances;
 }

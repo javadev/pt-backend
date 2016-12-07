@@ -1,10 +1,16 @@
 package com.github.pt.admin.program;
 
 import com.github.pt.ResourceNotFoundException;
+import com.github.pt.programs.InWorkoutItem;
+import com.github.pt.programs.InWorkoutItemReport;
 import com.github.pt.programs.ParseUser;
 import com.github.pt.programs.Program;
 import com.github.pt.programs.ProgramRepository;
 import com.github.pt.xlsx.ExcelUser;
+import com.github.pt.xlsx.Input;
+import com.github.pt.xlsx.Output;
+import com.github.pt.xlsx.Workout;
+import com.github.pt.xlsx.WorkoutItem;
 import com.github.pt.xlsx.XlsxParser;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
@@ -19,6 +25,7 @@ import com.github.pt.programs.ParseWorkout;
 import com.github.pt.programs.ParseWorkoutItem;
 import com.github.pt.programs.ParseWorkoutItemRepository;
 import com.github.pt.programs.ParseWorkoutRepository;
+import com.github.pt.reportworkout.InWorkoutItemRepository;
 import com.github.pt.xlsx.XlsxModifier;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
@@ -33,17 +40,20 @@ class AdminProgramService {
     private final ParseUserRepository parseUserRepository;
     private final ParseWorkoutRepository parseWorkoutRepository;
     private final ParseWorkoutItemRepository parseWorkoutItemRepository;
+    private final InWorkoutItemRepository inWorkoutItemRepository;
     private final AdminProgramAssignService adminProgramAssignService;
 
     AdminProgramService(ProgramRepository programRepository,
             ParseUserRepository parseResultRepository,
             ParseWorkoutRepository parseWorkoutRepository,
             ParseWorkoutItemRepository parseWorkoutItemRepository,
+            InWorkoutItemRepository inWorkoutItemRepository,
             AdminProgramAssignService adminProgramAssignService) {
         this.programRepository = programRepository;
         this.parseUserRepository = parseResultRepository;
         this.parseWorkoutRepository = parseWorkoutRepository;
         this.parseWorkoutItemRepository = parseWorkoutItemRepository;
+        this.inWorkoutItemRepository = inWorkoutItemRepository;
         this.adminProgramAssignService = adminProgramAssignService;
     }
 
@@ -201,11 +211,56 @@ class AdminProgramService {
         return responseDTO;
     }
 
-    ByteArrayOutputStream createXlsx(String dataUrl) {
-        final ByteArrayInputStream inputStream = dataUrlToInputStream(dataUrl);
+    ByteArrayOutputStream createXlsx(Long programId) {
+        final Program program = programRepository.findOne(programId);
+        final ByteArrayInputStream inputStream = dataUrlToInputStream(program.getData_url());
         final XlsxModifier xlsxModifier = XlsxModifier.of(inputStream);
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        xlsxModifier.updateCellData(outputStream);
+        final List<ParseUser> parseUsers = program.getParseUsers();
+        final List<ExcelUser> excelUsers = parseUsers.stream().map(parseUser ->
+                new ExcelUser()
+                    .setSheetIndex(parseUser.getSheet_index())
+                    .setWorkouts(parseUser.getParseWorkouts().stream().map(parseWorkout ->
+                        createWorkout(parseWorkout)
+                    ).collect(Collectors.toList()))
+        ).collect(Collectors.toList());
+        xlsxModifier.updateCellData(outputStream, excelUsers);
         return outputStream;
+    }
+
+    private Workout createWorkout(ParseWorkout parseWorkout) {
+        Workout workout = new Workout()
+                .setRowIndex(parseWorkout.getRow_index())
+                .setColumnIndex(parseWorkout.getColumn_index());
+        if (parseWorkout.getParseWorkoutItems() != null) {
+            workout.setWorkoutItems(parseWorkout.getParseWorkoutItems().stream().map(parseWorkoutItem ->
+                createWorkoutItem(parseWorkoutItem)
+            ).collect(Collectors.toList()));
+        }
+        return workout;
+    }
+
+    private WorkoutItem createWorkoutItem(ParseWorkoutItem parseWorkoutItem) {
+        InWorkoutItem inWorkoutItem =
+                parseWorkoutItem.getIn_workout_item_id() == null ? null
+                : inWorkoutItemRepository.findOne(parseWorkoutItem.getIn_workout_item_id());
+        WorkoutItem workoutItem = new WorkoutItem()
+                .setColumnIndex(parseWorkoutItem.getColumn_index())
+                .setRowIndex(parseWorkoutItem.getRow_index())
+                .setInput(new Input()
+                        .setSets(parseWorkoutItem.getSets())
+                        .setRepetitions(parseWorkoutItem.getRepetitions())
+                        .setWeight(parseWorkoutItem.getWeight()));
+        if (inWorkoutItem != null && !inWorkoutItem.getInWorkoutItemReports().isEmpty()) {
+            InWorkoutItemReport inWorkoutItemReport = inWorkoutItem.getInWorkoutItemReports()
+                    .get(inWorkoutItem.getInWorkoutItemReports().size() - 1);
+            workoutItem.setOutput(new Output()
+                    .setSets(inWorkoutItemReport.getInWorkoutItemSetReports().size())
+                    .setRepetitions(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
+                            .map(item -> item.getRepetitions()).collect(Collectors.toList()))
+                    .setWeights(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
+                            .map(item -> item.getWeight()).collect(Collectors.toList())));
+        }
+        return workoutItem;
     }
 }

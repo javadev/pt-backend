@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,6 +27,7 @@ import org.hibernate.annotations.DynamicInsert;
 @Entity
 @Table (name = "parse_workout_item", schema = "ptcore")
 @DynamicInsert
+@DynamicUpdate
 public class ParseWorkoutItem {
     @Id
     @SequenceGenerator(name = "ParseWorkoutItemIdSequence", sequenceName = "ptcore.parse_workout_item_id_seq",
@@ -43,6 +45,7 @@ public class ParseWorkoutItem {
     Integer time_in_min;
     Integer speed;
     Integer resistance;
+    Long in_workout_item_id;
     @ManyToOne
     @JoinColumn(name="parse_workout_id")
     @JsonBackReference
