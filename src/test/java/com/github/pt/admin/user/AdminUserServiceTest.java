@@ -64,4 +64,13 @@ public class AdminUserServiceTest {
         assertThat(userResponseDTO.getName(), equalTo("?"));
     }
 
+    @Test
+    public void create() {
+        when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
+        UserResponseDTO userResponseDTO = adminUserService.create(
+                new UserRequestDTO()
+                .setType(new UserTypeRequestDTO())
+        );
+        assertThat(userResponseDTO.getName(), equalTo(null));
+    }
 }
