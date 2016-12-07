@@ -29,6 +29,30 @@ define([
           users._types = _.union({id: null, nameEn: ''}, data);
           users.trigger('sync');
         });
+        users.on('user:view', function(model) {
+          var user = new UsersModels.User();
+          user._types = users._types;
+          if (!_.isUndefined(model)) {
+            user.set({
+              id: model.get('id'),
+              name: model.get('name'),
+              email: model.get('email'),
+              type: model.get('type'),
+              programs: model.get('programs')
+            });
+          }
+          var userEditView = new UsersViews.ViewUserLayout({
+            model: user
+          });
+          user.on('user:back', function() {
+            var usersView = new UsersViews.Users({
+              collection: users
+            });
+            users.fetch();
+            applicationLayout.mainUsers.show(usersView);
+          });
+          applicationLayout.mainUsers.show(userEditView);
+        });
         users.on('user:new', function(model) {
           var user = new UsersModels.User();
           user._types = users._types;

@@ -47,7 +47,7 @@ function ($, _, Backbone, Marionette, moment, App) {
   
   var EmptyView = Marionette.ItemView.extend({
         tagName: 'tr',
-        template: _.template('<td colspan="4">There are no users available.</td>')
+        template: _.template('<td colspan="7">There are no users available.</td>')
   });
   
   var EmptyProgramTableItemView = Marionette.ItemView.extend({
@@ -81,6 +81,11 @@ function ($, _, Backbone, Marionette, moment, App) {
         '{{ type == null ? "" : type.nameEn }}',
       '</td>',
       '<td>',
+        '<button type="button" class="btn btn-default btn-sm js-view-value">',
+          '<i class="glyphicon glyphicon-expand"></i>',
+        '</button>',
+      '</td>',
+      '<td>',
         '<button type="button" class="btn btn-default btn-sm js-edit-value">',
           '<i class="glyphicon glyphicon-edit"></i>',
         '</button>',
@@ -96,8 +101,12 @@ function ($, _, Backbone, Marionette, moment, App) {
       this.collection = options.collection;
     },
     events: {
+      'click .js-view-value': 'viewUser',
       'click .js-edit-value': 'editUser',
       'click .js-delete-value': 'deleteUser'
+    },
+    viewUser: function() {
+      this.collection.trigger('user:view', this.model);
     },
     editUser: function() {
       this.collection.trigger('user:new', this.model);
@@ -149,6 +158,7 @@ function ($, _, Backbone, Marionette, moment, App) {
             '<th>Type</th>',
             '<th></th>',
             '<th></th>',
+            '<th></th>',
           '</tr>',
         '</thead>',
         '<tbody></tbody>',
@@ -166,11 +176,11 @@ function ($, _, Backbone, Marionette, moment, App) {
     }
   });
 
-  var NewUserLayout = Marionette.Layout.extend({
+  var ViewUserLayout = Marionette.Layout.extend({
     template: _.template([
       '<div class="panel panel-primary">',
         '<div class="panel-heading">',
-          '<h3 class="panel-title"> {{ getHeader() }} </h3>',
+          '<h3 class="panel-title"> View user </h3>',
         '</div>',
         '<div id="buttons"/>',
         '<div id="inputForm"/>',
@@ -179,14 +189,6 @@ function ($, _, Backbone, Marionette, moment, App) {
         '<div id="exerciseTable"/>',
       '</div>'
     ].join('')),
-    templateHelpers: function() {
-      var model = this.model;
-      return {
-        getHeader: function () {
-          return model.isNew() ? 'New user' : 'Edit user';
-        }
-      };
-    },
     tagName: 'form',
     className: 'form-horizontal',
     regions: {
@@ -197,8 +199,8 @@ function ($, _, Backbone, Marionette, moment, App) {
       exerciseTable: '#exerciseTable'
     },
     onShow: function() {
-      this.buttons.show(new NewUserButtons({model: this.model}));
-      this.inputForm.show(new NewUserInputForm({model: this.model}));
+      this.buttons.show(new ViewUserButtons({model: this.model}));
+      this.inputForm.show(new ViewUserInputForm({model: this.model}));
       this.programTable.show(new ProgramTableForm({model: this.model,
           collection: new Backbone.Collection(_.last(this.model.get('programs'), 3))}));
       var workouts = new Backbone.Collection();
@@ -215,6 +217,59 @@ function ($, _, Backbone, Marionette, moment, App) {
           exercises.set(data);
           exercises.trigger('sync');
       });
+    }
+  });
+
+  var NewUserLayout = Marionette.Layout.extend({
+    template: _.template([
+      '<div class="panel panel-primary">',
+        '<div class="panel-heading">',
+          '<h3 class="panel-title"> {{ getHeader() }} </h3>',
+        '</div>',
+        '<div id="buttons"/>',
+        '<div id="inputForm"/>',
+      '</div>'
+    ].join('')),
+    templateHelpers: function() {
+      var model = this.model;
+      return {
+        getHeader: function () {
+          return model.isNew() ? 'New user' : 'Edit user';
+        }
+      };
+    },
+    tagName: 'form',
+    className: 'form-horizontal',
+    regions: {
+      buttons: '#buttons',
+      inputForm: '#inputForm'
+    },
+    onShow: function() {
+      this.buttons.show(new NewUserButtons({model: this.model}));
+      this.inputForm.show(new NewUserInputForm({model: this.model}));
+    }
+  });
+
+  var ViewUserButtons = Marionette.ItemView.extend({
+    template: _.template([
+      '<div class="btn-group">',
+        '<button class="btn btn-default js-back" style="margin: 10px 0 0 10px;">',
+          'Back',
+        '</button>',
+      '</div>'
+    ].join('')),
+    events: {
+      'click .js-back': 'back'
+    },
+    modelEvents: {
+      'change': 'render'
+    },
+    initialize: function(options) {
+      this._model = options.model.clone();
+    },
+    back: function(evt) {
+      evt.preventDefault();
+      this.model.trigger('user:back');
     }
   });
 
@@ -533,6 +588,88 @@ function ($, _, Backbone, Marionette, moment, App) {
     }
   });
 
+  var ViewUserInputForm = Marionette.ItemView.extend({
+    className: 'user-input-form',
+    template: _.template([
+      '<div class="form-group">',
+        '<label class="col-sm-3 control-label">ID</label>',
+        '<div class="col-sm-8">',
+          '<p class="form-control-static">',
+            ' {{ id }}',
+          '</p>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Type</label>',
+        '<div class="col-sm-8">',
+          '{{ getTypes() }}',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Name</label>',
+        '<div class="col-sm-8">',
+          '<textarea id="user-name" class="form-control" rows="3" placeholder="Please enter name" name="address" required="true" readonly>',
+            '{{ name }}',
+          '</textarea>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Email</label>',
+        '<div class="col-sm-8">',
+          '<textarea id="user-email" class="form-control" rows="3" placeholder="Please enter email" name="address" required="true" readonly>',
+            '{{ email }}',
+          '</textarea>',
+        '</div>',
+      '</div>'
+    ].join('')),
+    templateHelpers: function() {
+      var model = this.model;
+      return {
+        getTypes: function() {
+          var types = model._types || [];
+          var result = _.compact(_.map(types, function(item) {
+            if (_.isNull(item.id)) {
+              return '';
+            }
+            return !!model.get('type') && model.get('type').id === item.id ? item.nameEn : null;
+          }));
+          return result.join('');
+        }
+      };
+    },
+    modelEvents: {
+      'sync': 'render'
+    },
+    events: {
+      'input #user-name': 'inputName',
+      'input #user-email': 'inputEmail'
+    },
+    ui: {
+      userType: '#user-type',
+      name: '#user-name',
+      email: '#user-email'
+    },
+    inputName: function() {
+      this.model.set('name', this.ui.name.val());
+    },
+    inputEmail: function() {
+      this.model.set('email', this.ui.email.val());
+    },
+    onShow: function() {
+      this.onRender();
+    },
+    onRender: function() {
+      var view = this;
+      $('.selectpicker').selectpicker({
+        style: 'btn-default',
+        size: false
+      });
+      this.ui.userType.on('changed.bs.select', function (e) {
+        view.model.set('type', {id: parseInt(e.target.value, 10) });
+      });
+    }
+  });
+
   var NewUserInputForm = Marionette.ItemView.extend({
     className: 'user-input-form',
     template: _.template([
@@ -621,6 +758,7 @@ function ($, _, Backbone, Marionette, moment, App) {
 
   return {
     Users: Users,
+    ViewUserLayout: ViewUserLayout,
     NewUserLayout: NewUserLayout,
     Layout: Layout
   };
