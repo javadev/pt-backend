@@ -38,7 +38,7 @@ function ($, _, Backbone, Marionette, moment, App) {
         '{{ updated == null ? "" : formatDate(updated) }}',
       '</td>',
       '<td>',
-        '<a type="button" class="btn btn-default btn-sm" href="/api/v1/admin/program-file/{{ id }}/{{ fileName }}">',
+        '<a type="button" class="btn btn-default btn-sm" href="/api/v1/admin/program-file/{{ id }}/{{ fileName }}" download>',
           '<i class="glyphicon glyphicon-download"></i>',
         '</a>',
       '</td>',

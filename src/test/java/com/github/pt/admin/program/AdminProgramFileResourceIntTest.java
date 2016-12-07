@@ -1,8 +1,6 @@
 package com.github.pt.admin.program;
 
-import com.github.pt.ResourceNotFoundException;
-import com.github.pt.programs.ProgramRepository;
-import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import static org.hamcrest.CoreMatchers.equalTo;
 import org.junit.Assert;
@@ -10,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +32,9 @@ public class AdminProgramFileResourceIntTest {
     @Test
     public void findOne() throws Exception {
         given(this.programService.findOne(1L)).willReturn(new ProgramResponseDTO());
-        given(this.programService.dataUrlToInputStream(anyString())).willReturn(new ByteArrayInputStream(new byte[]{}));
+        given(this.programService.findOne(eq(1L))).willReturn(new ProgramResponseDTO().setDataUrl(""));
+        given(this.programService.createXlsx(anyString())).willReturn(
+                new ByteArrayOutputStream());
         HttpServletResponse httpServletResponse = new MockHttpServletResponse();
         adminProgramFileResource.findOne(1L, "fileName", httpServletResponse);
         Assert.assertThat(httpServletResponse.getStatus(), equalTo(HttpStatus.OK.value()));

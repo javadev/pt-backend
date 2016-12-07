@@ -19,6 +19,8 @@ import com.github.pt.programs.ParseWorkout;
 import com.github.pt.programs.ParseWorkoutItem;
 import com.github.pt.programs.ParseWorkoutItemRepository;
 import com.github.pt.programs.ParseWorkoutRepository;
+import com.github.pt.xlsx.XlsxModifier;
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -197,5 +199,13 @@ class AdminProgramService {
         final ProgramResponseDTO responseDTO = programToDto(program);
         programRepository.delete(program);
         return responseDTO;
+    }
+
+    ByteArrayOutputStream createXlsx(String dataUrl) {
+        final ByteArrayInputStream inputStream = dataUrlToInputStream(dataUrl);
+        final XlsxModifier xlsxModifier = XlsxModifier.of(inputStream);
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        xlsxModifier.updateCellData(outputStream);
+        return outputStream;
     }
 }

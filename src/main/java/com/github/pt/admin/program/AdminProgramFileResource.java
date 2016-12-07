@@ -1,6 +1,6 @@
 package com.github.pt.admin.program;
 
-import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +26,11 @@ class AdminProgramFileResource {
     Object findOne(@PathVariable Long id, @PathVariable String fileName, HttpServletResponse response)
             throws IOException {
         final ProgramResponseDTO programResponseDTO = programService.findOne(id);
-        final ByteArrayInputStream inputStream = programService.dataUrlToInputStream(programResponseDTO.getDataUrl());
+        final ByteArrayOutputStream outputStream = programService.createXlsx(programResponseDTO.getDataUrl());
         response.setContentType(programResponseDTO.getFileType());
         response.setHeader("Content-disposition",
                 "attachment; filename=" + programResponseDTO.getFileName());
-        final byte[] array = new byte[inputStream.available()];
-        inputStream.read(array);
-        response.getOutputStream().write(array);
+        response.getOutputStream().write(outputStream.toByteArray());
         response.getOutputStream().close();
         return null;
     }
