@@ -3,10 +3,13 @@ package com.github.pt.admin.user;
 import com.github.pt.ResourceNotFoundException;
 import com.github.pt.dictionary.DictionaryService;
 import com.github.pt.token.InUser;
+import com.github.pt.token.InUserFacebook;
 import com.github.pt.token.InUserFacebookRepository;
 import com.github.pt.token.InUserRepository;
 import com.github.pt.tokenemail.EmailValidator;
+import com.github.pt.tokenemail.InUserEmail;
 import com.github.pt.tokenemail.InUserEmailRepository;
+import java.util.Arrays;
 import java.util.Collections;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -71,6 +74,53 @@ public class AdminUserServiceTest {
                 new UserRequestDTO()
                 .setType(new UserTypeRequestDTO())
         );
+        assertThat(userResponseDTO.getName(), equalTo(null));
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void update_not_found() {
+        adminUserService.update(1L,new UserRequestDTO().setType(new UserTypeRequestDTO()));
+    }
+
+    @Test
+    public void update() {
+        when(inUserRepository.findOne(eq(1L))).thenReturn(
+                new InUser()
+            .setInUserEmails(Collections.emptyList())
+            .setInUserFacebooks(Arrays.asList(new InUserFacebook())));
+        when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
+        UserResponseDTO userResponseDTO = adminUserService.update(1L,
+                new UserRequestDTO()
+                .setType(new UserTypeRequestDTO())
+        );
+        assertThat(userResponseDTO.getName(), equalTo(null));
+    }
+
+    @Test
+    public void update_with_eamil() {
+        when(inUserRepository.findOne(eq(1L))).thenReturn(
+                new InUser()
+            .setInUserEmails(Arrays.asList(new InUserEmail()))
+            .setInUserFacebooks(Arrays.asList(new InUserFacebook())));
+        when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
+        UserResponseDTO userResponseDTO = adminUserService.update(1L,
+                new UserRequestDTO()
+                .setType(new UserTypeRequestDTO())
+        );
+        assertThat(userResponseDTO.getName(), equalTo(null));
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void delete_not_found() {
+        adminUserService.delete(1L);
+    }
+
+    @Test
+    public void delete() {
+        when(inUserRepository.findOne(eq(1L))).thenReturn(
+                new InUser()
+            .setInUserEmails(Arrays.asList(new InUserEmail())));
+        UserResponseDTO userResponseDTO = adminUserService.delete(1L);
         assertThat(userResponseDTO.getName(), equalTo(null));
     }
 }
