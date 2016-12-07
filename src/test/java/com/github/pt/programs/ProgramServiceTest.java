@@ -41,7 +41,7 @@ public class ProgramServiceTest {
         inUserForLogin.setInPrograms(Arrays.asList(inProgram));
         inUserLogin.setInUser(inUserForLogin);
         when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
-        programService.getExamples("1");
+        programService.getPredefinedPrograms("1");
         verify(userService).checkUserToken(eq("1"));
     }
 
