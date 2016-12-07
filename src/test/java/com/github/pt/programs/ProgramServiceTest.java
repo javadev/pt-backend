@@ -27,6 +27,25 @@ public class ProgramServiceTest {
     private ProgramService programService;
 
     @Test
+    public void getPredefinedPrograms() {
+        InUserLogin inUserLogin = new InUserLogin();
+        InUser inUserForLogin = new InUser();
+        inUserForLogin.setId(10L);
+        InWorkout inWorkout = new InWorkout()
+                .setInWarmupWorkoutItems(null)
+                .setInWorkoutItems(Arrays.asList(new InWorkoutItem()));
+        InProgram inProgram = new InProgram()
+                .setId(1L)
+                .setName("name")
+                .setInWorkouts(Arrays.asList(inWorkout));
+        inUserForLogin.setInPrograms(Arrays.asList(inProgram));
+        inUserLogin.setInUser(inUserForLogin);
+        when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
+        programService.getExamples("1");
+        verify(userService).checkUserToken(eq("1"));
+    }
+
+    @Test
     public void getExamples() {
         InUserLogin inUserLogin = new InUserLogin();
         InUser inUserForLogin = new InUser();
@@ -68,6 +87,12 @@ public class ProgramServiceTest {
         verify(userService).checkUserToken(eq("1"));
         assertThat(responses.size(), equalTo(1));
         assertThat(responses.get(0).getId(), equalTo(2L));
+    }
+
+    @Test
+    public void getExamples_with_empty_token() {
+        List<ProgramResponseDTO> responses = programService.getExamples("");
+        assertThat(responses.size(), equalTo(0));
     }
 
     @Test
