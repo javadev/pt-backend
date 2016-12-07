@@ -21,6 +21,6 @@ public class ProgramsResourceTest {
     @Test
     public void findAll() throws Exception {
         programsResource.findAll("");
-        verify(programService).getExamples(eq(""));
+        verify(programService).getPredefinedPrograms(eq(""));
     }
 }
