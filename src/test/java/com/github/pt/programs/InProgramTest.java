@@ -5,7 +5,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import org.junit.Test;
 import static org.junit.Assert.assertThat;
 
-public class InProgramReportTest {
+public class InProgramTest {
     @Test
     public void createAllArgs() {
         assertThat(new InProgram(
