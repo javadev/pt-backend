@@ -2,6 +2,12 @@ package com.github.pt.admin.user;
 
 import com.github.pt.ResourceNotFoundException;
 import com.github.pt.dictionary.DictionaryService;
+import com.github.pt.programs.InProgram;
+import com.github.pt.programs.InWarmupWorkoutItem;
+import com.github.pt.programs.InWorkout;
+import com.github.pt.programs.InWorkoutItem;
+import com.github.pt.programs.InWorkoutItemReport;
+import com.github.pt.programs.InWorkoutItemSetReport;
 import com.github.pt.token.InUser;
 import com.github.pt.token.InUserFacebook;
 import com.github.pt.token.InUserFacebookRepository;
@@ -49,6 +55,9 @@ public class AdminUserServiceTest {
 
     @Test
     public void findAll() {
+        when(inUserRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(
+                new InUser()
+                    .setInUserEmails(Collections.emptyList())));
         adminUserService.findAll();
         verify(inUserRepository).findAll(any(Sort.class));
     }
@@ -58,11 +67,29 @@ public class AdminUserServiceTest {
         adminUserService.findOne(1L);
     }
 
+    private InProgram getInProgram() {
+        return new InProgram()
+        .setInWorkouts(Arrays.asList(
+                new InWorkout()
+                    .setInWarmupWorkoutItems(Arrays.asList(new InWarmupWorkoutItem()
+                    ))
+                    .setInWorkoutItems(Arrays.asList(
+                            new InWorkoutItem()
+                    .setInWorkoutItemReports(Arrays.asList(
+                            new InWorkoutItemReport()
+                                    .setInWorkoutItemSetReports(Arrays.asList(
+                                            new InWorkoutItemSetReport()))
+                    ))))
+        ));
+    }
+
     @Test
     public void findOne() {
         when(inUserRepository.findOne(eq(1L))).thenReturn(
                 new InUser()
-        .setInUserEmails(Collections.emptyList()));
+        .setInUserEmails(Collections.emptyList())
+        .setInUserType(new InUserType())
+        .setInPrograms(Arrays.asList(getInProgram())));
         UserResponseDTO userResponseDTO = adminUserService.findOne(1L);
         assertThat(userResponseDTO.getName(), equalTo("?"));
     }
