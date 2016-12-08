@@ -49,12 +49,22 @@ public class AdminCertificateServiceTest {
         verify(certificateRepository).save(any(Certificate.class));
     }
 
+    @Test(expected = ResourceNotFoundException.class)
+    public void update_not_found() {
+        adminCertificateService.update(1L, new CertificateRequestDTO());
+    }
+
     @Test
     public void update() {
         when(certificateRepository.findOne(eq(1L))).thenReturn(new Certificate());
         when(certificateRepository.save(any(Certificate.class))).thenAnswer(i -> i.getArguments()[0]);
         adminCertificateService.update(1L, new CertificateRequestDTO());
         verify(certificateRepository).save(any(Certificate.class));
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void delete_not_found() {
+        adminCertificateService.delete(1L);
     }
 
     @Test

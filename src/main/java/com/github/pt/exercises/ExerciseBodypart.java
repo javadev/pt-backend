@@ -36,5 +36,5 @@ public class ExerciseBodypart {
     @Column(name = "d_exercise_bodypart_name")
     String dExerciseBodypartName;
     @OneToMany(mappedBy="exerciseBodypart")
-    List<Exercise> exercise;
+    List<Exercise> exercises;
 }
