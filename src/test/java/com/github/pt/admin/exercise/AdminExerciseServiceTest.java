@@ -1,5 +1,6 @@
 package com.github.pt.admin.exercise;
 
+import com.github.pt.ResourceNotFoundException;
 import com.github.pt.dictionary.DictionaryService;
 import com.github.pt.exercises.Exercise;
 import com.github.pt.exercises.ExerciseBodypart;
@@ -41,6 +42,11 @@ public class AdminExerciseServiceTest {
         verify(exerciseRepository).findAll(any(Sort.class));
     }
 
+    @Test(expected = ResourceNotFoundException.class)
+    public void findOne_not_found() {
+        tokenService.findOne(1L);
+    }
+
     @Test
     public void findOne() {
         ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();
@@ -77,6 +83,11 @@ public class AdminExerciseServiceTest {
         verify(exerciseRepository).save(any(Exercise.class));
     }
 
+    @Test(expected = ResourceNotFoundException.class)
+    public void update_not_found() {
+        tokenService.update(1L, new ExerciseRequestDTO());
+    }
+
     @Test
     public void update() {
         ExerciseRequestDTO exerciseRequestDTO = new ExerciseRequestDTO();
@@ -99,6 +110,11 @@ public class AdminExerciseServiceTest {
         when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
         tokenService.update(1L, exerciseRequestDTO);
         verify(exerciseRepository).save(any(Exercise.class));
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void delete_not_found() {
+        tokenService.delete(1L);
     }
 
     @Test
