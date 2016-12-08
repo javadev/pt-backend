@@ -1,11 +1,15 @@
 package com.github.pt.tokenemail;
 
 import com.github.pt.ResourceNotFoundException;
+import com.github.pt.UnauthorizedException;
 import com.github.pt.token.InUserLogin;
 import com.github.pt.token.InUserLoginRepository;
+import com.github.pt.token.InUserLogout;
 import com.github.pt.token.InUserLogoutRepository;
 import com.github.pt.token.InUserRepository;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -49,4 +53,13 @@ public class TokenEmailServiceTest {
         tokenEmailService.deleteToken("1", "");
         verify(inUserLogoutRepository).saveAndFlush(any());
     }
+
+    @Test(expected = UnauthorizedException.class)
+    public void deleteToken_invalid() {
+        InUserLogin inUserLogin = new InUserLogin();
+        when(inUserLoginRepository.findByToken(anyString())).thenReturn(Arrays.asList(inUserLogin));
+        when(inUserLogoutRepository.findByToken(anyString())).thenReturn(Arrays.asList(new InUserLogout()));
+        tokenEmailService.deleteToken("1", "");
+    }
+
 }
