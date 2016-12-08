@@ -8,8 +8,6 @@ import com.github.pt.token.InUserLogout;
 import com.github.pt.token.InUserLogoutRepository;
 import com.github.pt.token.InUserRepository;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

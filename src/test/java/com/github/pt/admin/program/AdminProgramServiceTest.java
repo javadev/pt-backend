@@ -1,6 +1,9 @@
 package com.github.pt.admin.program;
 
 import com.github.pt.ResourceNotFoundException;
+import com.github.pt.programs.InWorkoutItem;
+import com.github.pt.programs.InWorkoutItemReport;
+import com.github.pt.programs.InWorkoutItemSetReport;
 import com.github.pt.programs.ParseUser;
 import com.github.pt.programs.ParseUserRepository;
 import com.github.pt.programs.ParseWorkout;
@@ -9,6 +12,7 @@ import com.github.pt.programs.ParseWorkoutItemRepository;
 import com.github.pt.programs.ParseWorkoutRepository;
 import com.github.pt.programs.Program;
 import com.github.pt.programs.ProgramRepository;
+import com.github.pt.reportworkout.InWorkoutItemRepository;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -35,6 +39,8 @@ public class AdminProgramServiceTest {
     private ParseWorkoutRepository parseWorkoutRepository;
     @Mock
     private ParseWorkoutItemRepository parseWorkoutItemRepository;
+    @Mock
+    private InWorkoutItemRepository inWorkoutItemRepository;
     @Mock
     private AdminProgramAssignService adminProgramAssignService;
 
@@ -137,13 +143,22 @@ public class AdminProgramServiceTest {
                 result.write(buffer, 0, length);
             }
         }
+        when(inWorkoutItemRepository.findOne(eq(1L))).thenReturn(new InWorkoutItem()
+            .setInWorkoutItemReports(Arrays.asList(new InWorkoutItemReport()
+                .setInWorkoutItemSetReports(Arrays.asList(new InWorkoutItemSetReport()
+                    .setRepetitions(1)
+                    .setWeight(1))))));
         when(programRepository.findOne(eq(1L))).thenReturn(new Program()
                 .setData_url(result.toString())
                 .setParseUsers(Arrays.asList(new ParseUser()
                         .setSheet_index(0)
                         .setParseWorkouts(Arrays.asList(new ParseWorkout()
                             .setRow_index(5)
-                            .setColumn_index(10))))));
+                            .setColumn_index(10)
+                            .setParseWorkoutItems(Arrays.asList(new ParseWorkoutItem()
+                                .setIn_workout_item_id(1L)
+                                .setColumn_index(1)
+                                .setRow_index(1))))))));
         adminProgramService.createXlsx(1L);
     }
 }
