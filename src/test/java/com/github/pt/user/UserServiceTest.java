@@ -50,6 +50,18 @@ public class UserServiceTest {
         assertThat(userResponseDTO.weight, equalTo(50L));
     }
 
+    @Test
+    public void findOne_token_found_without_data() {
+        InUserLogin inUserLogin = new InUserLogin();
+        inUserLogin.setInUser(new InUser());
+        when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
+        when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
+        UserResponseDTO userResponseDTO = userService.findOne("1");
+        assertThat(userResponseDTO.age, equalTo(null));
+        assertThat(userResponseDTO.height, equalTo(null));
+        assertThat(userResponseDTO.weight, equalTo(null));
+    }
+
     @Test(expected = ResourceNotFoundException.class)
     public void updateUser() {
         userService.updateUser("1", new UserRequestDTO());
@@ -62,6 +74,20 @@ public class UserServiceTest {
         when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
         when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
         userService.updateUser("1", new UserRequestDTO());
+        verify(inUserRepository).save(any(InUser.class));
+    }
+
+    @Test
+    public void updateUser_token_found_with_data() {
+        InUserLogin inUserLogin = new InUserLogin();
+        inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
+        when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
+        when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
+        userService.updateUser("1", new UserRequestDTO()
+            .setGender("gender")
+            .setAge(10L)
+            .setHeight(160L)
+            .setWeight(60L));
         verify(inUserRepository).save(any(InUser.class));
     }
 }
