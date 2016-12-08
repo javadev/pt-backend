@@ -1,6 +1,7 @@
 package com.github.pt.admin.user;
 
 import com.github.pt.ResourceNotFoundException;
+import com.github.pt.UnauthorizedException;
 import com.github.pt.dictionary.DictionaryService;
 import com.github.pt.programs.InProgram;
 import com.github.pt.programs.InWarmupWorkoutItem;
@@ -25,12 +26,17 @@ import org.mockito.Mock;
 
 import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.Errors;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminUserServiceTest {
@@ -102,6 +108,19 @@ public class AdminUserServiceTest {
                 .setType(new UserTypeRequestDTO())
         );
         assertThat(userResponseDTO.getName(), equalTo(null));
+    }
+
+    @Test(expected = UnauthorizedException.class)
+    public void create_emailValidator() {
+        doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
+            Object[] args = invocation.getArguments();
+            ((Errors) args[1]).reject("email", "Invalid empty email");
+            return null;
+        }).when(emailValidator).validate(anyObject(), any(Errors.class));
+        adminUserService.create(
+                new UserRequestDTO()
+                .setType(new UserTypeRequestDTO())
+        );
     }
 
     @Test(expected = ResourceNotFoundException.class)
