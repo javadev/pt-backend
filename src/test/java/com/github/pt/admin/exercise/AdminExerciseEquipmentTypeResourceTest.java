@@ -12,7 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class AdminExerciseEquipmentTypeResourceTest {
 
     @Mock
-    private AdminExerciseBodypartService adminExerciseBodypartService;    
+    private AdminExerciseEquipmentTypeService adminExerciseEquipmentTypeService;    
 
     @InjectMocks
     private AdminExerciseEquipmentTypeResource adminExerciseEquipmentTypeResource;
@@ -20,6 +20,6 @@ public class AdminExerciseEquipmentTypeResourceTest {
     @Test
     public void findAll() {
         adminExerciseEquipmentTypeResource.findAll();
-        verify(adminExerciseBodypartService).findAll();
+        verify(adminExerciseEquipmentTypeService).findAll();
     }
 }
