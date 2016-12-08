@@ -19,6 +19,12 @@ public class AdminUserProgramResourceTest {
     private AdminUserProgramResource adminUserProgramResource;
 
     @Test
+    public void findAll() {
+        adminUserProgramResource.findAll();
+        verify(userProgramService).findAll();
+    }
+
+    @Test
     public void findOne() {
         adminUserProgramResource.findOne(1L);
         verify(userProgramService).findOne(eq(1L));
