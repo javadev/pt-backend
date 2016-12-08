@@ -8,6 +8,7 @@ import com.github.pt.programs.InWorkout;
 import com.github.pt.programs.InWorkoutItem;
 import com.github.pt.programs.InWorkoutItemReport;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.BooleanUtils;
@@ -96,7 +97,17 @@ class AdminUserProgramService {
     }
     
     UserProgramResponseDTO create(UserProgramRequestDTO userProgramRequestDTO) {
-        final InProgram inProgram = new InProgram();
+        final InProgram inProgram = new InProgram()
+                .setName(userProgramRequestDTO.getName())
+                .setInWorkouts(userProgramRequestDTO.getWorkouts().stream()
+                        .map(workout -> new InWorkout()
+                                .setD_workout_name(workout.getName())
+                                .setInWorkoutItems(workout.getItems().stream()
+                                        .map(item -> new InWorkoutItem()
+                                                .setInWorkoutItemReports(Collections.emptyList()))
+                                        .collect(Collectors.toList()))
+                        )
+                        .collect(Collectors.toList()));
         final InProgram savedInProgram = inProgramRepository.save(inProgram);
         return inProgramToDto(savedInProgram);
     }
