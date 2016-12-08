@@ -35,6 +35,6 @@ public class ExerciseEquipmentType {
     LocalDateTime created;
     @Column(name = "d_exercise_equipment_type_name")
     String dExerciseEquipmentTypeName;
-    @OneToMany(mappedBy="exerciseEquipmentType")
-    List<Exercise> exercise;
+    @OneToMany(mappedBy = "exerciseEquipmentType")
+    List<Exercise> exercises;
 }
