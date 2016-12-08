@@ -1,9 +1,11 @@
 package com.github.pt.user;
 
 import com.github.pt.ResourceNotFoundException;
+import com.github.pt.UnauthorizedException;
 import com.github.pt.token.InUser;
 import com.github.pt.token.InUserLogin;
 import com.github.pt.token.InUserLoginRepository;
+import com.github.pt.token.InUserLogout;
 import com.github.pt.token.InUserLogoutRepository;
 import com.github.pt.token.InUserRepository;
 import java.util.Arrays;
@@ -48,6 +50,15 @@ public class UserServiceTest {
         assertThat(userResponseDTO.age, equalTo(32L));
         assertThat(userResponseDTO.height, equalTo(180L));
         assertThat(userResponseDTO.weight, equalTo(50L));
+    }
+
+    @Test(expected = UnauthorizedException.class)
+    public void findOne_token_with_logout() {
+        InUserLogin inUserLogin = new InUserLogin();
+        inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
+        when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
+        when(inUserLogoutRepository.findByToken("1")).thenReturn(Arrays.asList(new InUserLogout()));
+        userService.findOne("1");
     }
 
     @Test
