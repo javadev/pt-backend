@@ -37,7 +37,7 @@ public class AmountOfDaysValidatorTest {
     @Test
     public void not_valid_366() {
         final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
-        new AmountOfDaysValidator().validate(0, errors);
+        new AmountOfDaysValidator().validate(366, errors);
         assertThat(errors.getAllErrors().size(), equalTo(1));
     }
 }
