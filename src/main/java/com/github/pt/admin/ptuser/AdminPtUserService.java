@@ -73,6 +73,12 @@ class AdminPtUserService {
         return ptUserResponseDTO;
     }
 
+    PtUserResponseDTO create(PtUserRequestDTO userRequestDTO) {
+        final PtUser ptUser = dtoToPtUser(userRequestDTO, new PtUser());
+        final PtUser savedPtUser = ptUserRepository.save(ptUser);
+        return ptUserToDto(savedPtUser);
+    }
+
     PtUserResponseDTO update(Long id, PtUserRequestDTO userRequestDTO) {
         final PtUser ptUser = ptUserRepository.findOne(id);
         if (ptUser == null) {
@@ -83,12 +89,6 @@ class AdminPtUserService {
         }
         final PtUser updatedPtUser = dtoToPtUser(userRequestDTO, ptUser);
         final PtUser savedPtUser = ptUserRepository.save(updatedPtUser);
-        return ptUserToDto(savedPtUser);
-    }
-
-    PtUserResponseDTO create(PtUserRequestDTO userRequestDTO) {
-        final PtUser ptUser = dtoToPtUser(userRequestDTO, new PtUser());
-        final PtUser savedPtUser = ptUserRepository.save(ptUser);
         return ptUserToDto(savedPtUser);
     }
 
