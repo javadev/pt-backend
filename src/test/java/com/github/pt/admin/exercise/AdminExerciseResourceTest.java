@@ -44,7 +44,8 @@ public class AdminExerciseResourceTest {
         verify(adminExerciseService).update(eq(1L), any(ExerciseRequestDTO.class));
     }
 
-    public void delete() throws Exception {
+    @Test
+    public void delete() {
         adminExerciseResource.delete(1L);
         verify(adminExerciseService).delete(anyLong());
     }
