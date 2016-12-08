@@ -10,6 +10,8 @@ import com.github.pt.token.InUserLogoutRepository;
 import com.github.pt.token.InUserRepository;
 import java.util.Arrays;
 import java.util.Collections;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,6 +26,7 @@ import static org.mockito.Mockito.when;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 
@@ -70,7 +73,20 @@ public class TokenEmailServiceTest {
             .setInUser(new InUser().setInUserLogins(Arrays.asList(new InUserLogin())))));
         when(passwordEncoder.matches(anyObject(), anyString())).thenReturn(Boolean.TRUE);
         when(inUserLogoutRepository.findByToken(anyString())).thenReturn(Arrays.asList(new InUserLogout()));
-        tokenEmailService.readOrCreateInUserEmail(new TokenEmailRequestDTO().setEmail("email"));
+        Pair<Boolean, InUserEmail> pair = tokenEmailService.readOrCreateInUserEmail(
+                new TokenEmailRequestDTO().setEmail("email"));
+        assertThat(pair.getFirst(), equalTo(true));
+    }
+
+    @Test
+    public void readOrCreateInUserEmail_empty() {
+        when(inUserEmailRepository.findByLogin(eq("email"))).thenReturn(Arrays.asList(new InUserEmail()
+            .setInUser(new InUser().setInUserLogins(Arrays.asList(new InUserLogin())))));
+        when(passwordEncoder.matches(anyObject(), anyString())).thenReturn(Boolean.TRUE);
+        when(inUserLogoutRepository.findByToken(anyString())).thenReturn(Collections.emptyList());
+        Pair<Boolean, InUserEmail> pair = tokenEmailService.readOrCreateInUserEmail(
+                new TokenEmailRequestDTO().setEmail("email"));
+        assertThat(pair.getFirst(), equalTo(false));
     }
 
     @Test(expected = ResourceNotFoundException.class)
