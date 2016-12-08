@@ -9,6 +9,11 @@ import org.springframework.validation.MapBindingResult;
 public class EmailValidatorTest {
 
     @Test
+    public void supports() {
+        assertThat(new EmailValidator().supports(String.class), equalTo(true));
+    }
+
+    @Test
     public void valid() {
         final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
         new EmailValidator().validate("test@mail.com", errors);
