@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 class AdminExerciseTypeResource {
 
     private final AdminExerciseTypeService exerciseTypeService;
-    
+
     @Autowired
     AdminExerciseTypeResource(AdminExerciseTypeService exerciseTypeService) {
         this.exerciseTypeService = exerciseTypeService;

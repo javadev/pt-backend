@@ -2,10 +2,13 @@ package com.github.pt.admin.exercise;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,27 +22,27 @@ class AdminExerciseResource {
         this.exerciseService = exerciseService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     List<ExerciseResponseDTO> findAll() {
         return exerciseService.findAll();
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.GET)
+    @GetMapping(value = "{id}")
     ExerciseResponseDTO findOne(@PathVariable Long id) {
         return exerciseService.findOne(id);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     ExerciseResponseDTO create(@RequestBody ExerciseRequestDTO exerciseRequestDTO) {
         return exerciseService.create(exerciseRequestDTO);
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.PUT)
+    @PutMapping(value = "{id}")
     ExerciseResponseDTO update(@PathVariable Long id, @RequestBody ExerciseRequestDTO exerciseRequestDTO) {
         return exerciseService.update(id, exerciseRequestDTO);
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "{id}")
     ExerciseResponseDTO delete(@PathVariable Long id) {
         return exerciseService.delete(id);
     }
