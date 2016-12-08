@@ -1,15 +1,21 @@
 package com.github.pt.admin.certificate;
 
 import com.github.pt.ResourceNotFoundException;
+import com.github.pt.UnauthorizedException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
+import org.springframework.validation.Errors;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminCertificateServiceTest {
@@ -42,6 +48,26 @@ public class AdminCertificateServiceTest {
         adminCertificateService.findOne(1L);
     }
 
+    @Test(expected = UnauthorizedException.class)
+    public void create_certificateValidator() {
+        doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
+            Object[] args = invocation.getArguments();
+            ((Errors) args[1]).reject("certificate", "Invalid empty certificate");
+            return null;
+        }).when(certificateValidator).validate(anyObject(), any(Errors.class));
+        adminCertificateService.create(new CertificateRequestDTO());
+    }
+    
+    @Test(expected = UnauthorizedException.class)
+    public void create_amountOfDaysValidator() {
+        doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
+            Object[] args = invocation.getArguments();
+            ((Errors) args[1]).reject("amountOfDays", "Invalid empty amountOfDays");
+            return null;
+        }).when(amountOfDaysValidator).validate(anyObject(), any(Errors.class));
+        adminCertificateService.create(new CertificateRequestDTO());
+    }
+
     @Test
     public void create() {
         when(certificateRepository.save(any(Certificate.class))).thenAnswer(i -> i.getArguments()[0]);
@@ -60,6 +86,28 @@ public class AdminCertificateServiceTest {
         when(certificateRepository.save(any(Certificate.class))).thenAnswer(i -> i.getArguments()[0]);
         adminCertificateService.update(1L, new CertificateRequestDTO());
         verify(certificateRepository).save(any(Certificate.class));
+    }
+    
+    @Test(expected = UnauthorizedException.class)
+    public void update_certificateValidator() {
+        when(certificateRepository.findOne(eq(1L))).thenReturn(new Certificate());
+        doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
+            Object[] args = invocation.getArguments();
+            ((Errors) args[1]).reject("certificate", "Invalid empty certificate");
+            return null;
+        }).when(certificateValidator).validate(anyObject(), any(Errors.class));
+        adminCertificateService.update(1L, new CertificateRequestDTO());
+    }
+    
+    @Test(expected = UnauthorizedException.class)
+    public void update_amountOfDaysValidator() {
+        when(certificateRepository.findOne(eq(1L))).thenReturn(new Certificate());
+        doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
+            Object[] args = invocation.getArguments();
+            ((Errors) args[1]).reject("amountOfDays", "Invalid empty amountOfDays");
+            return null;
+        }).when(amountOfDaysValidator).validate(anyObject(), any(Errors.class));
+        adminCertificateService.update(1L, new CertificateRequestDTO());
     }
 
     @Test(expected = ResourceNotFoundException.class)
