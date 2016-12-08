@@ -27,6 +27,13 @@ public class CertificateValidatorTest {
     }
 
     @Test
+    public void not_valid_empty() {
+        final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
+        new CertificateValidator().validate(" ", errors);
+        assertThat(errors.getAllErrors().size(), equalTo(1));
+    }
+
+    @Test
     public void not_valid() {
         final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
         new CertificateValidator().validate("AAA", errors);
