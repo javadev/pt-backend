@@ -217,7 +217,7 @@ class ProgramService {
             }
             @Override
             public boolean equals(Object object) {
-                return name.equals(((InProgramWrapper) object).name);
+                return object instanceof InProgramWrapper && name.equals(((InProgramWrapper) object).name);
             }
             @Override
             public int hashCode() {
