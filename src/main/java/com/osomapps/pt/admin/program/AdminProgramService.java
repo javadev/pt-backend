@@ -211,11 +211,10 @@ class AdminProgramService {
         return responseDTO;
     }
 
-    ByteArrayOutputStream createXlsx(Long programId) {
+    ProgramResponseDTO createXlsx(Long programId, ByteArrayOutputStream outputStream) {
         final Program program = programRepository.findOne(programId);
         final ByteArrayInputStream inputStream = dataUrlToInputStream(program.getData_url());
         final XlsxModifier xlsxModifier = XlsxModifier.of(inputStream);
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         final List<ParseUser> parseUsers = program.getParseUsers();
         final List<ExcelUser> excelUsers = parseUsers.stream().map(parseUser ->
                 new ExcelUser()
@@ -225,7 +224,7 @@ class AdminProgramService {
                     ).collect(Collectors.toList()))
         ).collect(Collectors.toList());
         xlsxModifier.updateCellData(outputStream, excelUsers);
-        return outputStream;
+        return programToDto(program);
     }
 
     private Workout createWorkout(ParseWorkout parseWorkout) {

@@ -30,9 +30,8 @@ public class XlsxParser {
 
     public List<ExcelUser> getExcelUsers() {
         final List<ExcelUser> excelUsers = new ArrayList<>();
-        final Workbook workbook;
-        try {
-            workbook = WorkbookFactory.create(inputStream);
+        try (final Workbook workbook = WorkbookFactory.create(inputStream)) {
+            
             for (int index = 0; index < workbook.getNumberOfSheets(); index += 1) {
                 final Sheet sheet = workbook.getSheetAt(index);
                 if (sheet == null) {

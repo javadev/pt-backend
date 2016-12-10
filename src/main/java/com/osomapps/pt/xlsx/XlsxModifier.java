@@ -25,8 +25,8 @@ public class XlsxModifier {
     }
 
     public void updateCellData(OutputStream outputStream, List<ExcelUser> excelUsers) {
-        try {
-            final XSSFWorkbook book = new XSSFWorkbook(inputStream);
+        try (final XSSFWorkbook book = new XSSFWorkbook(inputStream)) {
+            
             for (ExcelUser excelUser : excelUsers) {
                 final XSSFSheet sheet = book.getSheetAt(excelUser.getSheetIndex());
                 for (Workout workout : excelUser.getWorkouts()) {

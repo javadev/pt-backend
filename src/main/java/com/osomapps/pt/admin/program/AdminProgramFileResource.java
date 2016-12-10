@@ -25,13 +25,14 @@ class AdminProgramFileResource {
     @ResponseBody
     Object findOne(@PathVariable Long id, @PathVariable String fileName, HttpServletResponse response)
             throws IOException {
-        final ProgramResponseDTO programResponseDTO = programService.findOne(id);
-        final ByteArrayOutputStream outputStream = programService.createXlsx(id);
+        try (final ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+        final ProgramResponseDTO programResponseDTO = programService.createXlsx(id, outputStream);
         response.setContentType(programResponseDTO.getFileType());
         response.setHeader("Content-disposition",
                 "attachment; filename=" + programResponseDTO.getFileName());
         response.getOutputStream().write(outputStream.toByteArray());
         response.getOutputStream().close();
+        }
         return null;
     }
 }

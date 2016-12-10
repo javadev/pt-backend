@@ -159,6 +159,6 @@ public class AdminProgramServiceTest {
                                 .setIn_workout_item_id(1L)
                                 .setColumn_index(1)
                                 .setRow_index(1))))))));
-        adminProgramService.createXlsx(1L);
+        adminProgramService.createXlsx(1L, new java.io.ByteArrayOutputStream());
     }
 }
