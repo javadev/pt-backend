@@ -30,8 +30,9 @@ class AdminProgramFileResource {
         response.setContentType(programResponseDTO.getFileType());
         response.setHeader("Content-disposition",
                 "attachment; filename=" + programResponseDTO.getFileName());
-        response.getOutputStream().write(outputStream.toByteArrayUnsafe());
+        outputStream.writeTo(response.getOutputStream());
         response.getOutputStream().close();
+        outputStream.reset();
         outputStream.close();
         return null;
     }
