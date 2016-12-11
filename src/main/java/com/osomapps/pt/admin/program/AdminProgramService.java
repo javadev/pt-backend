@@ -27,7 +27,7 @@ import com.osomapps.pt.programs.ParseWorkoutItemRepository;
 import com.osomapps.pt.programs.ParseWorkoutRepository;
 import com.osomapps.pt.reportworkout.InWorkoutItemRepository;
 import com.osomapps.pt.xlsx.XlsxModifier;
-import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -211,7 +211,7 @@ class AdminProgramService {
         return responseDTO;
     }
 
-    ProgramResponseDTO createXlsx(Long programId, ByteArrayOutputStream outputStream) {
+    ProgramResponseDTO createXlsx(Long programId, OutputStream outputStream) {
         final Program program = programRepository.findOne(programId);
         final ByteArrayInputStream inputStream = dataUrlToInputStream(program.getData_url());
         final XlsxModifier xlsxModifier = XlsxModifier.of(inputStream);

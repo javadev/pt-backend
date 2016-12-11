@@ -1,9 +1,9 @@
 package com.osomapps.pt.admin.program;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,14 +25,14 @@ class AdminProgramFileResource {
     @ResponseBody
     Object findOne(@PathVariable Long id, @PathVariable String fileName, HttpServletResponse response)
             throws IOException {
-        try (final ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+        FastByteArrayOutputStream outputStream = new FastByteArrayOutputStream();
         final ProgramResponseDTO programResponseDTO = programService.createXlsx(id, outputStream);
         response.setContentType(programResponseDTO.getFileType());
         response.setHeader("Content-disposition",
                 "attachment; filename=" + programResponseDTO.getFileName());
-        response.getOutputStream().write(outputStream.toByteArray());
+        response.getOutputStream().write(outputStream.toByteArrayUnsafe());
         response.getOutputStream().close();
-        }
+        outputStream.close();
         return null;
     }
 }
