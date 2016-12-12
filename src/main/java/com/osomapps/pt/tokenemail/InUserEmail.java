@@ -41,4 +41,5 @@ public class InUserEmail {
     String login;
     String password;
     String user_name;
+    String device_id;
 }

@@ -49,6 +49,7 @@ class TokenEmailSignupService {
             }
             inUserEmail.setLogin(email);
             inUserEmail.setUser_name(tokenEmailSignupRequestDTO.getUser().getName());
+            inUserEmail.setDevice_id(tokenEmailSignupRequestDTO.getDevice_id());
             inUserEmail.setPassword(passwordEncoder.encode(tokenEmailSignupRequestDTO.getPassword()));
         } else {
             throw new UnauthorizedException("User already registered");
@@ -80,6 +81,7 @@ class TokenEmailSignupService {
         final UserSignupResponseDTO user = new UserSignupResponseDTO();
         user.setId(inUserEmail.getInUser().getId());
         user.setName(inUserEmail.getUser_name());
+        user.setEmail(inUserEmail.getLogin());
         tokenEmailSignupResponseDTO.setUser(user);
         return tokenEmailSignupResponseDTO;
     }

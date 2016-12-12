@@ -14,4 +14,5 @@ import lombok.experimental.Accessors;
 class TokenEmailSignupRequestDTO {
     UserSignupRequestDTO user;
     String password;
+    String device_id;
 }
