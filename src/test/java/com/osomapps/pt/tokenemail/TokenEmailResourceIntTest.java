@@ -1,6 +1,7 @@
 package com.osomapps.pt.tokenemail;
 
 import com.osomapps.pt.ResourceNotFoundException;
+import com.osomapps.pt.UnauthorizedException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class TokenEmailResourceIntTest {
         inUserEmailRepository.deleteAll();
     }
 
-    @Test
+    @Test(expected = UnauthorizedException.class)
     public void create() {
         TokenEmailResponseDTO user = tokenEmailResource.create(new TokenEmailRequestDTO("name", "test@mail.com", "test"),
                 new MockHttpServletRequest());
