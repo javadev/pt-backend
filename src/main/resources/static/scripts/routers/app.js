@@ -10,6 +10,7 @@ function(Marionette, App) {
   return Marionette.AppRouter.extend({
     //`index` etc must be a method in AppRouter's controller
     appRoutes: {
+      'login': 'login',
       '': 'index'
     },
     initialize: function (options) {
@@ -17,6 +18,11 @@ function(Marionette, App) {
       App.vent.on('redirect:default', function() {
         controller.index();
         this.navigate('');
+      }, this);
+
+      App.vent.on('login:required', function() {
+        controller.login();
+        this.navigate('login');
       }, this);
     }
   });

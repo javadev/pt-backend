@@ -12,10 +12,11 @@ define([
   'models/programs',
   'views/programs',
   'models/certificates',
-  'views/certificates'
+  'views/certificates',
+  'views/login'
 ],
   function($, _, Marionette, App, UsersModels, UsersViews, ExercisesModels, ExercisesViews,
-    ProgramsModels, ProgramsViews, CertificatesModels, CertificatesViews) {
+    ProgramsModels, ProgramsViews, CertificatesModels, CertificatesViews, LoginView) {
   'use strict';
 
     function setupApplicationLayout() {
@@ -209,7 +210,20 @@ define([
     }
 
     return Marionette.Controller.extend({
+      login: function() {
+        // If the user is already logged in,
+        // show the default route.
+        if (App.globals.user.authorized()) {
+          App.vent.trigger('redirect:default');
+          return;
+        }
+        App.mainRegion.show(new LoginView({ model: App.globals.user }));
+      },
       index: function () {
+        if (!App.globals.user.authorized()) {
+          App.vent.trigger('login:required');
+          return;
+        }
         setupApplicationLayout('');
       }
     });
