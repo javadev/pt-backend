@@ -20,15 +20,11 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.Errors;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TokenEmailServiceTest {
@@ -43,20 +39,11 @@ public class TokenEmailServiceTest {
     private InUserLogoutRepository inUserLogoutRepository;
     @Mock
     private PasswordEncoder passwordEncoder;
-    @Mock
-    private EmailValidator emailValidator;
-    @Mock
-    private SendEmailService sendEmailService;
     @InjectMocks
     private TokenEmailService tokenEmailService;
 
     @Test(expected = UnauthorizedException.class)
     public void readOrCreateInUserEmail_invalid_email() {
-        doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
-            Object[] args = invocation.getArguments();
-            ((Errors) args[1]).reject("email", "Invalid empty email");
-            return null;
-        }).when(emailValidator).validate(anyObject(), any(Errors.class));
         when(inUserEmailRepository.findByLogin(eq("email"))).thenReturn(Collections.emptyList());
         tokenEmailService.readOrCreateInUserEmail(new TokenEmailRequestDTO().setEmail("email"));
     }

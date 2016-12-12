@@ -8,13 +8,10 @@ import com.osomapps.pt.token.InUserLoginRepository;
 import com.osomapps.pt.token.InUserLogout;
 import com.osomapps.pt.token.InUserLogoutRepository;
 import com.osomapps.pt.token.InUserRepository;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.MapBindingResult;
 
 @Service
 class TokenEmailService {
@@ -24,23 +21,18 @@ class TokenEmailService {
     private final InUserLoginRepository inUserLoginRepository;
     private final InUserLogoutRepository inUserLogoutRepository;
     private final PasswordEncoder passwordEncoder;
-    private final EmailValidator emailValidator;
-    private final SendEmailService sendEmailService;
 
     TokenEmailService(InUserRepository inUserRepository,
             InUserEmailRepository inUserEmailRepository,
             InUserLoginRepository inUserLoginRepository,
             InUserLogoutRepository inUserLogoutRepository,
-            PasswordEncoder passwordEncoder,
-            EmailValidator emailValidator,
-            SendEmailService sendEmailService) {
+            PasswordEncoder passwordEncoder
+            ) {
         this.inUserRepository = inUserRepository;
         this.inUserEmailRepository = inUserEmailRepository;
         this.inUserLoginRepository = inUserLoginRepository;
         this.inUserLogoutRepository = inUserLogoutRepository;
         this.passwordEncoder = passwordEncoder;
-        this.emailValidator = emailValidator;
-        this.sendEmailService = sendEmailService;
     }
 
     Pair<Boolean, InUserEmail> readOrCreateInUserEmail(TokenEmailRequestDTO tokenEmailRequest) {
@@ -49,16 +41,7 @@ class TokenEmailService {
         final String email = tokenEmailRequest.getEmail().toLowerCase().trim();
         final List<InUserEmail> inUserEmails = inUserEmailRepository.findByLogin(email);
         if (inUserEmails.isEmpty()) {
-            inUserEmail = new InUserEmail();
-            inUserEmail.setUser_name(tokenEmailRequest.getName());
-            final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
-            emailValidator.validate(email, errors);
-            if (errors.hasErrors()) {
-                throw new UnauthorizedException(errors.getAllErrors().get(0).getDefaultMessage());
-            }
-            inUserEmail.setLogin(email);
-            inUserEmail.setPassword(passwordEncoder.encode(tokenEmailRequest.getPassword()));
-            isNewLogin = true;
+            throw new UnauthorizedException("E-mail is not registered");
         } else {
             inUserEmail = inUserEmails.get(inUserEmails.size() - 1);
             if (!passwordEncoder.matches(tokenEmailRequest.getPassword(), inUserEmail.getPassword())) {
@@ -84,31 +67,25 @@ class TokenEmailService {
             inUserLogin = inUserEmail.getInUser().getInUserLogins().get(
                     inUserEmail.getInUser().getInUserLogins().size() - 1);
         }
-        if (inUserEmail.getId() == null) {
-            inUser = new InUser();
-            inUser.setInUserEmails(Arrays.asList(inUserEmail));
-            inUser.setInUserLogins(Arrays.asList(inUserLogin));
-        } else {
-            inUser = inUserEmail.getInUser();
-            inUser.getInUserEmails().add(inUserEmail);
-            inUser.getInUserLogins().add(inUserLogin);
-        }
+        inUser = inUserEmail.getInUser();
+        inUser.getInUserEmails().add(inUserEmail);
+        inUser.getInUserLogins().add(inUserLogin);
         final InUser savedInUser = inUserRepository.save(inUser);
         inUserLogin.setInUser(savedInUser);
         inUserLogin.setIp_address(remoteAddr);
         inUserLoginRepository.saveAndFlush(inUserLogin);
         inUserEmail.setInUser(savedInUser);
-        if (inUserEmail.getId() == null) {
-            new Thread(() -> {
-                sendEmailService.send(inUserEmail);
-            }, "Send-email").start();
-        }
         inUserEmailRepository.save(inUserEmail);
         final TokenEmailResponseDTO tokenEmailResponseDTO = new TokenEmailResponseDTO();
         tokenEmailResponseDTO.setToken(inUserLogin.getToken());
         final UserResponseDTO user = new UserResponseDTO();
         user.setId(inUserEmail.getInUser().getId());
         user.setName(inUserEmail.getUser_name());
+        user.setEmail(inUserEmail.getLogin());
+        user.setAvatar_dataurl(null);
+        user.setGender(inUserEmail.getInUser().getD_sex());
+        user.setAge(inUserEmail.getInUser().getAge() == null ? null : inUserEmail.getInUser().getAge().intValue());
+        user.setBirthday(inUserEmail.getInUser().getBirthday());
         tokenEmailResponseDTO.setUser(user);
         return tokenEmailResponseDTO;
     }

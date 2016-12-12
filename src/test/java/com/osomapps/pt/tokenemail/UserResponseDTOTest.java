@@ -7,7 +7,7 @@ import org.junit.Test;
 public class UserResponseDTOTest {
     @Test
     public void createAllArgs() {
-        assertThat(new UserResponseDTO(1L, null), notNullValue());
+        assertThat(new UserResponseDTO(1L, null, null, null, null, null, null), notNullValue());
     }
 
     @Test
