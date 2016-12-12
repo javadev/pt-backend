@@ -12,6 +12,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 class UserSignupRequestDTO {
+    String name;
     String email;
     String password;
 }

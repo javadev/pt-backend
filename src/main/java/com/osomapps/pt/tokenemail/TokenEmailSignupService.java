@@ -48,6 +48,7 @@ class TokenEmailSignupService {
                 throw new UnauthorizedException(errors.getAllErrors().get(0).getDefaultMessage());
             }
             inUserEmail.setLogin(email);
+            inUserEmail.setUser_name(tokenEmailSignupRequestDTO.getUser().getPassword());
             inUserEmail.setPassword(passwordEncoder.encode(tokenEmailSignupRequestDTO.getPassword()));
         } else {
             throw new UnauthorizedException("User already registered");
