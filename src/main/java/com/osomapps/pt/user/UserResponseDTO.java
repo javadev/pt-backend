@@ -12,6 +12,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 class UserResponseDTO {
+    String name;
     String gender;
     Long age;
     Long height;

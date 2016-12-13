@@ -22,6 +22,7 @@ class TokenEmailSignupService {
     private final InUserRepository inUserRepository;
     private final InUserLoginRepository inUserLoginRepository;
     private final DataurlValidator dataurlValidator;
+    private final NameValidator nameValidator;
 
     TokenEmailSignupService(SendEmailService sendEmailService,
             InUserEmailRepository inUserEmailRepository,
@@ -29,7 +30,8 @@ class TokenEmailSignupService {
             PasswordEncoder passwordEncoder,
             InUserRepository inUserRepository,
             InUserLoginRepository inUserLoginRepository,
-            DataurlValidator dataurlValidator) {
+            DataurlValidator dataurlValidator,
+            NameValidator nameValidator) {
         this.sendEmailService = sendEmailService;
         this.inUserEmailRepository = inUserEmailRepository;
         this.emailValidator = emailValidator;
@@ -37,6 +39,7 @@ class TokenEmailSignupService {
         this.inUserRepository = inUserRepository;
         this.inUserLoginRepository = inUserLoginRepository;
         this.dataurlValidator = dataurlValidator;
+        this.nameValidator = nameValidator;
     }
 
     InUserEmail createInUserEmail(TokenEmailSignupRequestDTO tokenEmailSignupRequestDTO) {
@@ -54,6 +57,11 @@ class TokenEmailSignupService {
             dataurlValidator.validate(tokenEmailSignupRequestDTO.getUser().getAvatar_dataurl(), errorsDataurl);
             if (errorsDataurl.hasErrors()) {
                 throw new UnauthorizedException(errorsDataurl.getAllErrors().get(0).getDefaultMessage());
+            }
+            final MapBindingResult errorsName = new MapBindingResult(new HashMap<>(), String.class.getName());
+            nameValidator.validate(tokenEmailSignupRequestDTO.getUser().getName(), errorsName);
+            if (errorsName.hasErrors()) {
+                throw new UnauthorizedException(errorsName.getAllErrors().get(0).getDefaultMessage());
             }
             inUserEmail.setLogin(email);
             inUserEmail.setUser_name(tokenEmailSignupRequestDTO.getUser().getName());
