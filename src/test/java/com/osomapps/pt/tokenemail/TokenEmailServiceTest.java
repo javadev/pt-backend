@@ -8,9 +8,11 @@ import com.osomapps.pt.token.InUserLoginRepository;
 import com.osomapps.pt.token.InUserLogout;
 import com.osomapps.pt.token.InUserLogoutRepository;
 import com.osomapps.pt.token.InUserRepository;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +43,22 @@ public class TokenEmailServiceTest {
     private PasswordEncoder passwordEncoder;
     @InjectMocks
     private TokenEmailService tokenEmailService;
+
+    @Test
+    public void createOrReadNewToken() {
+        when(inUserEmailRepository.findByLogin(anyString())).thenReturn(Arrays.asList(
+                new InUserEmail().setInUser(new InUser()
+                        .setId(1L)
+                        .setInUserEmails(new ArrayList<>())
+                        .setInUserLogins(new ArrayList<>(Arrays.asList(new InUserLogin()))))));
+        when(passwordEncoder.matches(any(CharSequence.class), anyString())).thenReturn(true);
+        when(inUserLogoutRepository.findByToken(anyString())).thenReturn(Collections.emptyList());
+        when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
+        TokenEmailResponseDTO tokenEmailResponseDTO =
+            tokenEmailService.createOrReadNewToken(
+                new TokenEmailRequestDTO().setEmail("test@mail.com"), "");
+        assertThat(tokenEmailResponseDTO, notNullValue());
+    }
 
     @Test(expected = UnauthorizedException.class)
     public void readOrCreateInUserEmail_invalid_email() {

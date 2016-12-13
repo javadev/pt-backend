@@ -56,7 +56,6 @@ class TokenEmailService {
     }
 
     TokenEmailResponseDTO createOrReadNewToken(TokenEmailRequestDTO tokenRequest, String remoteAddr) {
-        final InUser inUser;
         final Pair<Boolean, InUserEmail> inUserEmailData = readOrCreateInUserEmail(tokenRequest);
         final boolean isNewLogin = inUserEmailData.getFirst();
         final InUserEmail inUserEmail = inUserEmailData.getSecond();
@@ -67,7 +66,7 @@ class TokenEmailService {
             inUserLogin = inUserEmail.getInUser().getInUserLogins().get(
                     inUserEmail.getInUser().getInUserLogins().size() - 1);
         }
-        inUser = inUserEmail.getInUser();
+        final InUser inUser = inUserEmail.getInUser();
         inUser.getInUserEmails().add(inUserEmail);
         inUser.getInUserLogins().add(inUserLogin);
         final InUser savedInUser = inUserRepository.save(inUser);
