@@ -30,3 +30,6 @@ PT user and pt role store db schema:
 
 ![pt schema](pt-schema-user-and-role-v2.png)
 
+Admin program test data store db schema:
+
+![pt schema](pt-schema-program-test-v1.png)
