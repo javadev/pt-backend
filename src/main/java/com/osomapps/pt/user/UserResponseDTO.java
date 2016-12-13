@@ -16,4 +16,5 @@ class UserResponseDTO {
     Long age;
     Long height;
     Long weight;
+    String avatar_dataurl;
 }

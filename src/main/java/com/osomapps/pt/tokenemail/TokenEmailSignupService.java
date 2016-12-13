@@ -21,19 +21,22 @@ class TokenEmailSignupService {
     private final PasswordEncoder passwordEncoder;
     private final InUserRepository inUserRepository;
     private final InUserLoginRepository inUserLoginRepository;
+    private final DataurlValidator dataurlValidator;
 
     TokenEmailSignupService(SendEmailService sendEmailService,
             InUserEmailRepository inUserEmailRepository,
             EmailValidator emailValidator,
             PasswordEncoder passwordEncoder,
             InUserRepository inUserRepository,
-            InUserLoginRepository inUserLoginRepository) {
+            InUserLoginRepository inUserLoginRepository,
+            DataurlValidator dataurlValidator) {
         this.sendEmailService = sendEmailService;
         this.inUserEmailRepository = inUserEmailRepository;
         this.emailValidator = emailValidator;
         this.passwordEncoder = passwordEncoder;
         this.inUserRepository = inUserRepository;
         this.inUserLoginRepository = inUserLoginRepository;
+        this.dataurlValidator = dataurlValidator;
     }
 
     InUserEmail createInUserEmail(TokenEmailSignupRequestDTO tokenEmailSignupRequestDTO) {
@@ -47,6 +50,11 @@ class TokenEmailSignupService {
             if (errors.hasErrors()) {
                 throw new UnauthorizedException(errors.getAllErrors().get(0).getDefaultMessage());
             }
+            final MapBindingResult errorsDataurl = new MapBindingResult(new HashMap<>(), String.class.getName());
+            dataurlValidator.validate(tokenEmailSignupRequestDTO.getUser().getAvatar_dataurl(), errorsDataurl);
+            if (errorsDataurl.hasErrors()) {
+                throw new UnauthorizedException(errorsDataurl.getAllErrors().get(0).getDefaultMessage());
+            }
             inUserEmail.setLogin(email);
             inUserEmail.setUser_name(tokenEmailSignupRequestDTO.getUser().getName());
             inUserEmail.setDevice_id(tokenEmailSignupRequestDTO.getDevice_id());
@@ -58,28 +66,26 @@ class TokenEmailSignupService {
     }
 
     TokenEmailSignupResponseDTO createNewToken(TokenEmailSignupRequestDTO tokenEmailSignupRequestDTO, String remoteAddr) {
-        final InUser inUser;
         final InUserEmail inUserEmail = createInUserEmail(tokenEmailSignupRequestDTO);
-        final InUserLogin inUserLogin;
-        inUserLogin = new InUserLogin();
-        inUser = new InUser();
+        final InUserLogin inUserLogin = new InUserLogin();
+        final InUser inUser = new InUser();
         inUser.setInUserEmails(Arrays.asList(inUserEmail));
         inUser.setInUserLogins(Arrays.asList(inUserLogin));
+        inUser.setAvatar_dataurl(tokenEmailSignupRequestDTO.getUser().getAvatar_dataurl());
         final InUser savedInUser = inUserRepository.save(inUser);
         inUserLogin.setInUser(savedInUser);
         inUserLogin.setIp_address(remoteAddr);
         inUserLoginRepository.saveAndFlush(inUserLogin);
         inUserEmail.setInUser(savedInUser);
-        if (inUserEmail.getId() == null) {
-            new Thread(() -> {
-                sendEmailService.send(inUserEmail);
-            }, "Send-email").start();
-        }
+        new Thread(() -> {
+            sendEmailService.send(inUserEmail);
+        }, "Send-email").start();
         inUserEmailRepository.save(inUserEmail);
         final UserSignupResponseDTO user = new UserSignupResponseDTO();
         user.setId(inUserEmail.getInUser().getId());
         user.setName(inUserEmail.getUser_name());
         user.setEmail(inUserEmail.getLogin());
+        user.setAvatar_dataurl(inUser.getAvatar_dataurl());
         return new TokenEmailSignupResponseDTO().setToken(inUserLogin.getToken()).setUser(user);
     }
 

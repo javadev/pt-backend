@@ -7,7 +7,7 @@ import static org.junit.Assert.assertThat;
 public class UserResponseDTOTest {
     @Test
     public void createAllArgs() {
-        assertThat(new UserResponseDTO(1L, "", "", "", 1L, null), notNullValue());
+        assertThat(new UserResponseDTO(1L, "", "", "", "", 1L, null), notNullValue());
     }
 
     @Test
@@ -16,6 +16,7 @@ public class UserResponseDTOTest {
             .setId(1L)
             .setName("")
             .setAvatar("")
+            .setAvatar_dataurl("")
             .setGender("")
             .setAge(1L)
             .setBirthday(null);
@@ -28,6 +29,7 @@ public class UserResponseDTOTest {
         userResponseDTO.getId();
         userResponseDTO.getName();
         userResponseDTO.getAvatar();
+        userResponseDTO.getAvatar_dataurl();
         userResponseDTO.getGender();
         userResponseDTO.getAge();
         userResponseDTO.getBirthday();

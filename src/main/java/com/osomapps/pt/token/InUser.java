@@ -48,6 +48,7 @@ public class InUser {
     Float height;
     Float weight;
     String d_level;
+    String avatar_dataurl;
     LocalDateTime updated;
     @OneToMany(mappedBy="inUser")
     @JsonManagedReference

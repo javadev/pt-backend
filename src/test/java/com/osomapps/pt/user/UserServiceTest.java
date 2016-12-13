@@ -8,6 +8,7 @@ import com.osomapps.pt.token.InUserLoginRepository;
 import com.osomapps.pt.token.InUserLogout;
 import com.osomapps.pt.token.InUserLogoutRepository;
 import com.osomapps.pt.token.InUserRepository;
+import com.osomapps.pt.tokenemail.DataurlValidator;
 import java.util.Arrays;
 import java.util.Collections;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -31,6 +32,8 @@ public class UserServiceTest {
     private InUserLoginRepository inUserLoginRepository;
     @Mock
     private InUserLogoutRepository inUserLogoutRepository;
+    @Mock
+    private DataurlValidator dataurlValidator;
 
     @InjectMocks
     private UserService userService;

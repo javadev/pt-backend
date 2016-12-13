@@ -17,6 +17,7 @@ class UserResponseDTO {
     Long id;
     String name;
     String avatar;    
+    String avatar_dataurl;
     String gender;
     Long age;
     @JsonSerialize(using = LocalDateSerializer.class)

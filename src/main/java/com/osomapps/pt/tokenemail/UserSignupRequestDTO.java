@@ -14,4 +14,5 @@ import lombok.experimental.Accessors;
 class UserSignupRequestDTO {
     String name;
     String email;
+    String avatar_dataurl;
 }

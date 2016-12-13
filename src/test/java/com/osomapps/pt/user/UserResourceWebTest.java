@@ -40,6 +40,6 @@ public class UserResourceWebTest {
         JsonNode responseJson = objectMapper.readTree(response.getBody());
 
         assertThat(responseJson.isMissingNode(), is(false));
-        assertThat(responseJson.toString(), equalTo("{\"gender\":null,\"age\":null,\"height\":null,\"weight\":null}"));
+        assertThat(responseJson.toString(), equalTo("{\"gender\":null,\"age\":null,\"height\":null,\"weight\":null,\"avatar_dataurl\":null}"));
     }
 }

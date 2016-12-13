@@ -17,7 +17,7 @@ public class InUserTest {
     public void createAllArgs() {
         assertThat(new InUser(
                 1L, LocalDateTime.now(), "d_sex", 20F,
-                LocalDate.now(), 2F, 3F, "d_level", LocalDateTime.now(),
+                LocalDate.now(), 2F, 3F, "d_level", null, LocalDateTime.now(),
                 Collections.emptyList(),
                 Collections.emptyList(),
                 Collections.emptyList(),
@@ -39,6 +39,7 @@ public class InUserTest {
         inUser.setHeight(Float.MAX_VALUE);
         inUser.setWeight(Float.MAX_VALUE);
         inUser.setD_level("");
+        inUser.setAvatar_dataurl("");
         inUser.setUpdated(LocalDateTime.MAX);
         inUser.setInUserFacebooks(Collections.emptyList());
         inUser.setInUserLogins(Collections.emptyList());
@@ -62,6 +63,7 @@ public class InUserTest {
         inUser.getHeight();
         inUser.getWeight();
         inUser.getD_level();
+        inUser.getAvatar_dataurl();
         inUser.getUpdated();
         inUser.getInUserFacebooks();
         inUser.getInUserLogins();
