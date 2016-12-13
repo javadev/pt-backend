@@ -147,7 +147,7 @@ public class AdminProgramServiceTest {
             .setInWorkoutItemReports(Arrays.asList(new InWorkoutItemReport()
                 .setInWorkoutItemSetReports(Arrays.asList(new InWorkoutItemSetReport()
                     .setRepetitions(1)
-                    .setWeight(1))))));
+                    .setWeight(1F))))));
         when(programRepository.findOne(eq(1L))).thenReturn(new Program()
                 .setData_url(result.toString())
                 .setParseUsers(Arrays.asList(new ParseUser()

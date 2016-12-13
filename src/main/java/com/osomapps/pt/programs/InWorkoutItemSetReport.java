@@ -34,7 +34,7 @@ public class InWorkoutItemSetReport {
     Long id;
     LocalDateTime created;
     Integer repetitions;
-    Integer weight;
+    Float weight;
     Boolean bodyweight;
     Integer time_in_min;
     Integer speed;

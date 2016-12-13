@@ -67,7 +67,7 @@ class ReportWorkoutService {
                     final InWorkoutItemSetReport inWorkoutItemSetReport = new InWorkoutItemSetReport();
                     inWorkoutItemSetReport.setInWorkoutItemReport(savedInWorkoutItemReport);
                     inWorkoutItemSetReport.setRepetitions(workoutItemSetReportRequestDTO.getRepetitions());
-                    inWorkoutItemSetReport.setWeight(workoutItemSetReportRequestDTO.getWeight());
+                    inWorkoutItemSetReport.setWeight(workoutItemSetReportRequestDTO.getWeight() == null ? null : workoutItemSetReportRequestDTO.getWeight().floatValue());
                     inWorkoutItemSetReport.setBodyweight(BooleanUtils.isTrue(workoutItemSetReportRequestDTO.getBodyweight()));
                     inWorkoutItemSetReport.setTime_in_min(workoutItemSetReportRequestDTO.getTime_in_min());
                     inWorkoutItemSetReport.setSpeed(workoutItemSetReportRequestDTO.getSpeed());
@@ -82,7 +82,7 @@ class ReportWorkoutService {
                 .map(itemSetReport -> new WorkoutItemSetReportResponseDTO()
                     .setId(itemSetReport.getId())
                     .setRepetitions(itemSetReport.getRepetitions())
-                    .setWeight(itemSetReport.getWeight())
+                    .setWeight(itemSetReport.getWeight() == null ? null : itemSetReport.getWeight().intValue())
                     .setBodyweight(itemSetReport.getBodyweight())
                     .setTime_in_min(itemSetReport.getTime_in_min())
                     .setSpeed(itemSetReport.getSpeed())

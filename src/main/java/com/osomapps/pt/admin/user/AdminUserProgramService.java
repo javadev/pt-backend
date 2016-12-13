@@ -57,7 +57,7 @@ class AdminUserProgramService {
                     .setSets(inWorkoutItem.getSets())
                     .setRepetitions(inWorkoutItem.getRepetitions())
                     .setRepetitionsToFailure(inWorkoutItem.getRepetitions_to_failure())
-                    .setWeight(inWorkoutItem.getWeight())
+                    .setWeight(inWorkoutItem.getWeight() == null ? null : inWorkoutItem.getWeight().intValue())
                     .setBodyweight(BooleanUtils.isTrue(inWorkoutItem.getBodyweight()));
                 InWorkoutItemReport inWorkoutItemReport = inWorkoutItem.getInWorkoutItemReports().isEmpty()
                         ? null : inWorkoutItem.getInWorkoutItemReports().get(
@@ -68,7 +68,7 @@ class AdminUserProgramService {
                         .setReportRepetitions(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
                             .map(set -> set.getRepetitions()).collect(Collectors.toList()))
                         .setReportWeight(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
-                            .map(set -> set.getWeight()).collect(Collectors.toList()))
+                            .map(set -> set.getWeight() == null ? null : set.getWeight().intValue()).collect(Collectors.toList()))
                         .setReportTimeInMin(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
                             .map(set -> set.getTime_in_min()).collect(Collectors.toList()))
                         .setReportSpeed(inWorkoutItemReport.getInWorkoutItemSetReports().stream()

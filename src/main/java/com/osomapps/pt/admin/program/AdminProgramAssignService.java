@@ -99,7 +99,7 @@ class AdminProgramAssignService {
                         inWorkoutItem.setD_exercise_id("" + exerciseId.orElse(0L));
                         inWorkoutItem.setSets(parseWorkoutItem.getSets());
                         inWorkoutItem.setRepetitions(parseWorkoutItem.getRepetitions());
-                        inWorkoutItem.setWeight(parseWorkoutItem.getWeight());
+                        inWorkoutItem.setWeight(parseWorkoutItem.getWeight() == null ? null : parseWorkoutItem.getWeight().floatValue());
                         inWorkoutItem.setTime_in_min(parseWorkoutItem.getTime_in_min());
                         inWorkoutItem.setSpeed(parseWorkoutItem.getSpeed());
                         inWorkoutItem.setResistance(parseWorkoutItem.getResistance());

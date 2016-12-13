@@ -258,7 +258,7 @@ class AdminProgramService {
                     .setRepetitions(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
                             .map(item -> item.getRepetitions()).collect(Collectors.toList()))
                     .setWeights(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
-                            .map(item -> item.getWeight()).collect(Collectors.toList())));
+                            .map(item -> item.getWeight() == null ? null : item.getWeight().intValue()).collect(Collectors.toList())));
         }
         return workoutItem;
     }
