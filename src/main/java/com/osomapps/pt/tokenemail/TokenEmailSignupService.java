@@ -76,14 +76,11 @@ class TokenEmailSignupService {
             }, "Send-email").start();
         }
         inUserEmailRepository.save(inUserEmail);
-        final TokenEmailSignupResponseDTO tokenEmailSignupResponseDTO = new TokenEmailSignupResponseDTO();
-        tokenEmailSignupResponseDTO.setToken(inUserLogin.getToken());
         final UserSignupResponseDTO user = new UserSignupResponseDTO();
         user.setId(inUserEmail.getInUser().getId());
         user.setName(inUserEmail.getUser_name());
         user.setEmail(inUserEmail.getLogin());
-        tokenEmailSignupResponseDTO.setUser(user);
-        return tokenEmailSignupResponseDTO;
+        return new TokenEmailSignupResponseDTO().setToken(inUserLogin.getToken()).setUser(user);
     }
 
 }
