@@ -81,7 +81,6 @@ class TokenEmailService {
         user.setId(inUserEmail.getInUser().getId());
         user.setName(inUserEmail.getUser_name());
         user.setEmail(inUserEmail.getLogin());
-        user.setAvatar_dataurl(null);
         user.setGender(inUserEmail.getInUser().getD_sex());
         user.setAge(inUserEmail.getInUser().getAge() == null ? null : inUserEmail.getInUser().getAge().intValue());
         user.setBirthday(inUserEmail.getInUser().getBirthday());
