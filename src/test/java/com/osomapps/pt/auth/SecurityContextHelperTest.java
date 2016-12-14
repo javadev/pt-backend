@@ -1,16 +1,23 @@
 package com.osomapps.pt.auth;
 
+import com.osomapps.pt.admin.ptuser.PtUser;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import org.junit.Test;
 import static org.junit.Assert.assertThat;
 import org.junit.Before;
+import org.junit.runner.RunWith;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SecurityContextHelperTest {
 
     @Before
@@ -31,8 +38,16 @@ public class SecurityContextHelperTest {
     }
 
     @Test
-    public void getUserDetails() {
+    public void getUserDetails_null() {
         assertThat(new SecurityContextHelper().getUserDetails(), nullValue());
+    }
+
+    @Test
+    public void getUserDetails() {
+        Authentication auth = mock(Authentication.class);
+        when(auth.getPrincipal()).thenReturn(new CustomUserDetails(new PtUser()));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        assertThat(new SecurityContextHelper().getUserDetails(), notNullValue());
     }
 
     @Test
