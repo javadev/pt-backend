@@ -18,6 +18,7 @@ public class CustomUserDetailsTest {
         customUserDetails.isCredentialsNonExpired();
         customUserDetails.isEnabled();
         assertThat(customUserDetails, notNullValue());
+        new CustomUserDetails(new PtUser().setIs_deleted(Boolean.TRUE)).isEnabled();
     }
 
 }
