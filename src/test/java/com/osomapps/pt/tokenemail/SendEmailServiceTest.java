@@ -6,8 +6,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import org.mockito.Mock;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 
@@ -19,6 +21,13 @@ public class SendEmailServiceTest {
 
     @InjectMocks
     private SendEmailService sendEmailService;
+
+    @Test
+    public void send_error() {
+        doThrow(new MailException("") {}).when(mailSender).send(any(SimpleMailMessage.class));
+        sendEmailService.send(new InUserEmail().setInUser(new InUser().setId(1L)));
+        verify(mailSender).send(any(SimpleMailMessage.class));
+    }
 
     @Test
     public void send() {
