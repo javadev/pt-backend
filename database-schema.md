@@ -14,6 +14,10 @@ User extra data store db schema:
 
 ![pt schema](pt-schema-user-data-v1.png)
 
+User goal store db schema:
+
+![pt schema](pt-schema-goal-v1.png)
+
 Admin program data store db schema:
 
 ![pt schema](pt-schema-program-data-v3.png)
