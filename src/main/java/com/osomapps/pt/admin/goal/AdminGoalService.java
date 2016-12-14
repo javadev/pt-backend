@@ -40,8 +40,8 @@ class AdminGoalService {
                 .id(goal.getId())
                 .titleEn(dictionaryService.getEnValue(DictionaryName.goal_title, goal.getDGoalTitle(), ""))
                 .titleNo(dictionaryService.getNoValue(DictionaryName.goal_title, goal.getDGoalTitle(), ""))
-                .titleEn2(dictionaryService.getEnValue(DictionaryName.goal_title_2, goal.getDGoalTitle2(), ""))
-                .titleNo2(dictionaryService.getNoValue(DictionaryName.goal_title_2, goal.getDGoalTitle2(), ""))
+                .title2En(dictionaryService.getEnValue(DictionaryName.goal_title_2, goal.getDGoalTitle2(), null))
+                .title2No(dictionaryService.getNoValue(DictionaryName.goal_title_2, goal.getDGoalTitle2(), null))
                 .parameters(goal.getGoalParameters().stream()
                     .map(parameter -> GoalParameterResponseDTO.builder()
                         .id(parameter.getId())
@@ -80,13 +80,13 @@ class AdminGoalService {
             throw new ResourceNotFoundException("Goal with id not found: " + id);
         }
         final String dataKey = existedGoal.getDGoalTitle();
-        dictionaryService.createDictionaryDataKey(DictionaryName.exercise_name, dataKey,
+        dictionaryService.createDictionaryDataKey(DictionaryName.goal_title, dataKey,
                 goalRequestDTO.getTitleEn(), goalRequestDTO.getTitleNo());
         final String data2Key = existedGoal.getDGoalTitle2();
-        dictionaryService.createDictionaryDataKey(DictionaryName.exercise_name, data2Key,
+        dictionaryService.createDictionaryDataKey(DictionaryName.goal_title_2, data2Key,
                 goalRequestDTO.getTitle2En(), goalRequestDTO.getTitle2No());
         existedGoal.setDGoalTitle(dataKey);
-        existedGoal.setDGoalTitle(data2Key);
+        existedGoal.setDGoalTitle2(data2Key);
         existedGoal.setGoalParameters(goalParameterRepository.findAll(
                 goalRequestDTO.getParameters().stream().map(type -> type.getId()).collect(Collectors.toList())));
         final Goal savedGoal = goalRepository.save(existedGoal);

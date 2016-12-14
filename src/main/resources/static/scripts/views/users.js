@@ -16,6 +16,7 @@ function ($, _, Backbone, Marionette, moment, App) {
     regions: {
       mainUsers: '#usersMappingConfig',
       mainExercises: '#exercisesMappingConfig',
+      mainGoals: '#goalsMappingConfig',
       mainPrograms: '#programsMappingConfig',
       mainCertificates: '#certificatesMappingConfig'
     },
@@ -24,6 +25,7 @@ function ($, _, Backbone, Marionette, moment, App) {
       '<ul class="nav nav-tabs">',
       '  <li class="active"><a href="#user" data-toggle="tab">Users</a></li>',
       '  <li><a href="#exercise" data-toggle="tab">Exercises</a></li>',
+      '  <li><a href="#goal" data-toggle="tab">Goals</a></li>',
       '  <li><a href="#program" data-toggle="tab" class="js-admin-config">Programs</a></li>',
       '  <li><a href="#certificate" data-toggle="tab" class="js-admin-config">Certificates</a></li>',
       '</ul>',
@@ -34,6 +36,9 @@ function ($, _, Backbone, Marionette, moment, App) {
       '  </div>',
       '  <div class="tab-pane" id="exercise">',
       '    <div id="exercisesMappingConfig"></div>',
+      '  </div>',
+      '  <div class="tab-pane" id="goal">',
+      '    <div id="goalsMappingConfig"></div>',
       '  </div>',
       '  <div class="tab-pane" id="program">',
       '    <div id="programsMappingConfig"></div>',

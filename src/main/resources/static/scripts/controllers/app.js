@@ -13,10 +13,13 @@ define([
   'views/programs',
   'models/certificates',
   'views/certificates',
+  'models/goals',
+  'views/goals',
   'views/login'
 ],
   function($, _, Marionette, App, UsersModels, UsersViews, ExercisesModels, ExercisesViews,
-    ProgramsModels, ProgramsViews, CertificatesModels, CertificatesViews, LoginView) {
+    ProgramsModels, ProgramsViews, CertificatesModels, CertificatesViews,
+    GoalsModels, GoalsViews, LoginView) {
   'use strict';
 
     function setupApplicationLayout() {
@@ -144,6 +147,43 @@ define([
           applicationLayout.mainExercises.show(exerciseEditView);
         });
         applicationLayout.mainExercises.show(exercisesView);
+
+        var goals = new GoalsModels.Goals();
+        var goalsView = new GoalsViews.Goals({
+          collection: goals
+        });
+        goals.fetch();
+        $.get('/api/v1/admin/goal-parameter').done(function(data) {
+          goals._parameters = _.union({id: null, name: ''}, data);
+          goals.trigger('sync');
+        });
+        goals.on('goal:new', function(model) {
+          var goal = new GoalsModels.Goal();
+          goal._parameters = goals._parameters;
+          if (!_.isUndefined(model)) {
+            goal.set({
+              id: model.get('id'),
+              parameters: model.get('parameters'),
+              titleEn: model.get('titleEn'),
+              titleNo: model.get('titleNo'),
+              title2En: model.get('title2En'),
+              title2No: model.get('title2No')
+            });
+          }
+          var goalEditView = new GoalsViews.NewGoalLayout({
+            model: goal
+          });
+          goal.on('goal:back', function(modelId) {
+            goals._modelId = modelId;
+            var goalsView = new GoalsViews.Goals({
+              collection: goals
+            });
+            goals.fetch();
+            applicationLayout.mainGoals.show(goalsView);
+          });
+          applicationLayout.mainGoals.show(goalEditView);
+        });
+        applicationLayout.mainGoals.show(goalsView);
 
         var programs = new ProgramsModels.Programs();
         var programsView = new ProgramsViews.Programs({
