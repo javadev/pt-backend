@@ -1,6 +1,7 @@
 package com.osomapps.pt.auth;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
 import org.junit.Test;
 import static org.junit.Assert.assertThat;
 import org.junit.Before;
@@ -26,7 +27,12 @@ public class SecurityContextHelperTest {
 
     @Test
     public void getCredentials() {
-        assertThat(new SecurityContextHelper().getCredentials(), equalTo("notused"));        
+        assertThat(new SecurityContextHelper().getCredentials(), equalTo("notused"));
+    }
+
+    @Test
+    public void getUserDetails() {
+        assertThat(new SecurityContextHelper().getUserDetails(), nullValue());
     }
 
     @Test
