@@ -49,6 +49,12 @@ public class DictionaryServiceTest {
     }
 
     @Test
+    public void createDictionaryDataKey_with_null_key() {
+        dictionaryService.createDictionaryDataKey(DictionaryName.exercise_name, null, "en", "no");
+        verify(dictionaryRepository, times(2)).save(any(DictionaryData.class));
+    }
+
+    @Test
     public void deleteDatas() {
         when(dictionaryRepository.findDictionaryByKey(
                 anyString(), anyString(), anyString(), any(LocalDateTime.class)))
