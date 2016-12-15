@@ -81,6 +81,12 @@ public class AdminPtUserServiceTest {
         adminPtUserService.delete(1L);
     }
 
+    @Test(expected = UnauthorizedException.class)
+    public void delete_not_allowed() {
+        when(ptUserRepository.findOne(eq(1L))).thenReturn(new PtUser());
+        adminPtUserService.delete(1L);
+    }
+
     @Test
     public void delete() {
         when(ptUserRepository.findOne(eq(2L))).thenReturn(new PtUser());
