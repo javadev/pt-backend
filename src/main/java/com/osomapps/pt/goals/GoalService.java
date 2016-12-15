@@ -26,15 +26,16 @@ class GoalService {
             userService.checkUserToken(token);
         }
         List<Goal> goals = goalRepository.findAll();
-        return goals.stream().map(goal -> {
-            GoalDTO goalDTO = new GoalDTO();
-            goalDTO.setId(goal.getId());
-            goalDTO.setTitle(dictionaryService.getEnValue(DictionaryName.goal_title,
-                    goal.getDGoalTitle(), null));
-            goalDTO.setTitle2(dictionaryService.getEnValue(DictionaryName.goal_title_2,
-                    goal.getDGoalTitle2(), null));
-            return goalDTO;
-        }).sorted((e1, e2) -> Long.compare(e1.getId(), e2.getId()))
+        return goals.stream().map(goal ->
+            new GoalDTO()
+                .setId(goal.getId())
+                .setTitle(dictionaryService.getEnValue(DictionaryName.goal_title,
+                    goal.getDGoalTitle(), null))
+                .setTitle2(dictionaryService.getEnValue(DictionaryName.goal_title_2,
+                    goal.getDGoalTitle2(), null))
+                .setParameters(goal.getGoalParameters()
+                    .stream().map(parameter -> parameter.getName()).collect(Collectors.toList()))
+        ).sorted((e1, e2) -> Long.compare(e1.getId(), e2.getId()))
                 .collect(Collectors.toList());
     }
 }
