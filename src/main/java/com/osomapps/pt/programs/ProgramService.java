@@ -40,24 +40,50 @@ class ProgramService {
         inWarmupWorkoutItem111.setId(1L);
         inWarmupWorkoutItem111.setD_exercise_id("810");
         inWarmupWorkoutItem111.setD_exercise_name("Treadmill 11");
-        inWarmupWorkoutItem111.setIncline(4);
+        inWarmupWorkoutItem111.setSpeed(10);
+        inWarmupWorkoutItem111.setIncline(2);
         inWarmupWorkoutItem111.setTime_in_min(10);
         inWorkout11.setInWarmupWorkoutItems(Arrays.asList(inWarmupWorkoutItem111));
         InWorkoutItem inWorkoutItem111 = new InWorkoutItem();
         inWorkoutItem111.setId(1L);
         inWorkoutItem111.setD_exercise_id("20");
-        inWorkoutItem111.setD_exercise_name("Squat");
-        inWorkoutItem111.setSets(3);
-        inWorkoutItem111.setRepetitions(4);
-        inWorkoutItem111.setWeight(10F);
-        InWorkoutItem inWorkoutItem112 = new InWorkoutItem();
-        inWorkoutItem112.setId(2L);
-        inWorkoutItem112.setD_exercise_id("30");
-        inWorkoutItem112.setD_exercise_name("Front Squat");
-        inWorkoutItem112.setSets(5);
-        inWorkoutItem112.setRepetitions(6);
-        inWorkoutItem112.setWeight(11F);
-        inWorkout11.setInWorkoutItems(Arrays.asList(inWorkoutItem111, inWorkoutItem112));
+        inWorkoutItem111.setD_exercise_name("Deadlift");
+        inWorkoutItem111.setSets(1);
+        inWorkoutItem111.setRepetitions(10);
+        inWorkoutItem111.setWeight(75F);
+        InWorkoutItem inWorkoutItem112 = new InWorkoutItem()
+            .setId(2L)
+            .setD_exercise_id("30")
+            .setD_exercise_name("Bench Press")
+            .setSets(3)
+            .setRepetitions(10)
+            .setWeight(65F);
+
+        InWorkoutItem inWorkoutItem113 = new InWorkoutItem()
+            .setId(3L)
+            .setD_exercise_id("40")
+            .setD_exercise_name("Pull Up")
+            .setSets(4)
+            .setRepetitions(10)
+            .setWeight(0F);
+
+        InWorkoutItem inWorkoutItem114 = new InWorkoutItem()
+            .setId(4L)
+            .setD_exercise_id("50")
+            .setD_exercise_name("Dips")
+            .setSets(3)
+            .setRepetitions(10)
+            .setWeight(0F);
+
+        InWorkoutItem inWorkoutItem115 = new InWorkoutItem()
+            .setId(5L)
+            .setD_exercise_id("60")
+            .setD_exercise_name("Plank")
+            .setD_exercise_type("OnTime")
+            .setSets(2)
+            .setTime_in_min(2);
+
+        inWorkout11.setInWorkoutItems(Arrays.asList(inWorkoutItem111, inWorkoutItem112, inWorkoutItem113, inWorkoutItem114, inWorkoutItem115));
         InWarmupWorkoutItem inWarmupWorkoutItem121 = new InWarmupWorkoutItem();
         inWarmupWorkoutItem121.setId(1L);
         inWarmupWorkoutItem121.setD_exercise_id("810");
@@ -209,8 +235,8 @@ class ProgramService {
             return Collections.emptyList();
         }
         class InProgramWrapper {
-            private String name;
-            private InProgram inProgram;
+            private final String name;
+            private final InProgram inProgram;
             InProgramWrapper(String name, InProgram inProgram) {
                 this.name = name;
                 this.inProgram = inProgram;
@@ -251,6 +277,7 @@ class ProgramService {
                 warmupWorkoutItem.setExercise_id(inWarmupWorkoutItem.getD_exercise_id() == null ? 0L
                         : Long.parseLong(inWarmupWorkoutItem.getD_exercise_id()));
                 warmupWorkoutItem.setExercise_name(inWarmupWorkoutItem.getD_exercise_name());
+                warmupWorkoutItem.setExercise_type("OnTime");
                 warmupWorkoutItem.setSpeed(inWarmupWorkoutItem.getSpeed());
                 warmupWorkoutItem.setIncline(inWarmupWorkoutItem.getIncline());
                 warmupWorkoutItem.setTime_in_min(inWarmupWorkoutItem.getTime_in_min());

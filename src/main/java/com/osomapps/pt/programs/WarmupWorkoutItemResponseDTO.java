@@ -15,6 +15,7 @@ class WarmupWorkoutItemResponseDTO {
     Long id;
     Long exercise_id;
     String exercise_name;
+    String exercise_type;
     Integer speed;
     Integer incline;
     Integer time_in_min;
