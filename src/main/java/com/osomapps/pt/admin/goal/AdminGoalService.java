@@ -82,8 +82,8 @@ class AdminGoalService {
         final String dataKey = existedGoal.getDGoalTitle();
         dictionaryService.createDictionaryDataKey(DictionaryName.goal_title, dataKey,
                 goalRequestDTO.getTitleEn(), goalRequestDTO.getTitleNo());
-        final String data2Key = existedGoal.getDGoalTitle2();
-        dictionaryService.createDictionaryDataKey(DictionaryName.goal_title_2, data2Key,
+        final String data2Key = dictionaryService.createDictionaryDataKey(
+                DictionaryName.goal_title_2, existedGoal.getDGoalTitle2(),
                 goalRequestDTO.getTitle2En(), goalRequestDTO.getTitle2No());
         existedGoal.setDGoalTitle(dataKey);
         existedGoal.setDGoalTitle2(data2Key);

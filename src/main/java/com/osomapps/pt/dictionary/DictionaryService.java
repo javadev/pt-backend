@@ -2,6 +2,7 @@ package com.osomapps.pt.dictionary;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,26 +22,29 @@ public class DictionaryService {
             return "10";
         }
         final String biggestKey =  allExerciseEnNames.stream()
+                .filter(data -> Objects.nonNull(data.getDkey()))
                 .filter(data -> data.getDkey().matches("\\d+"))
                 .sorted((d1, d2) ->
                         Integer.compare(Integer.parseInt(d2.getDkey()), Integer.parseInt(d1.getDkey())))
-                    .findFirst().get().getDkey();
+                    .findFirst().orElse(new DictionaryData().setDkey("10")).getDkey();
         return "" + (Integer.parseInt(biggestKey) + 10);
     }
 
-    public void createDictionaryDataKey(DictionaryName dName, String dKey, String dataNameEn, String dataNameNo) {
+    public String createDictionaryDataKey(DictionaryName dName, String dKey, String dataNameEn, String dataNameNo) {
+        final String localDkey = (dKey == null) ? getNewDictionaryDataKey(dName) : dKey;
         final DictionaryData dataEn = new DictionaryData();
         dataEn.setDlanguage(DictionaryRepository.ENG_LANGUAGE);
         dataEn.setDname(dName.name());
-        dataEn.setDkey(dKey);
+        dataEn.setDkey(localDkey);
         dataEn.setDvalue(dataNameEn);
         dictionaryRepository.save(dataEn);
         final DictionaryData dataNo = new DictionaryData();
         dataNo.setDlanguage(DictionaryRepository.NOR_LANGUAGE);
         dataNo.setDname(dName.name());
-        dataNo.setDkey(dKey);
+        dataNo.setDkey(localDkey);
         dataNo.setDvalue(dataNameNo);
         dictionaryRepository.save(dataNo);
+        return localDkey;
     }
 
     public String getEnValue(DictionaryName dName, String dKey, String defaultValue) {
