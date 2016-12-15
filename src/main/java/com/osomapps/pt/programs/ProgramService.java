@@ -78,7 +78,7 @@ class ProgramService {
             .setD_exercise_id("60")
             .setD_exercise_name("Plank")
             .setD_exercise_type("OnTime")
-            .setSets(2)
+            .setSets(1)
             .setTime_in_min(2);
 
         inWorkout11.setInWorkoutItems(Arrays.asList(inWorkoutItem111, inWorkoutItem112, inWorkoutItem113, inWorkoutItem114, inWorkoutItem115));
