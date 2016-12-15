@@ -64,16 +64,14 @@ class ProgramService {
             .setD_exercise_id("40")
             .setD_exercise_name("Pull Up")
             .setSets(4)
-            .setRepetitions(10)
-            .setWeight(0F);
+            .setRepetitions(10);
 
         InWorkoutItem inWorkoutItem114 = new InWorkoutItem()
             .setId(4L)
             .setD_exercise_id("50")
             .setD_exercise_name("Dips")
             .setSets(3)
-            .setRepetitions(10)
-            .setWeight(0F);
+            .setRepetitions(10);
 
         InWorkoutItem inWorkoutItem115 = new InWorkoutItem()
             .setId(5L)
