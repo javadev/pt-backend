@@ -7,5 +7,7 @@ public enum DictionaryName {
     exercise_equipment_type_name,
     user_type,
     goal_title,
-    goal_title_2
+    goal_title_2,
+    email_subject,
+    email_text
 }
