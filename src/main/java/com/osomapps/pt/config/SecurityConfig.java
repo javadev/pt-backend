@@ -19,6 +19,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private CustomLoginSuccessHandler loginSuccessHandler;
+    @Autowired
+    private CustomLogoutSuccessHandler logoutSuccessHandler;
+    @Autowired
+    private CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     @Autowired
     public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
@@ -43,8 +49,11 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .failureUrl("/login?error")
                 .permitAll()
+                .successHandler(loginSuccessHandler)
                 .and()
                 .logout()
-                .permitAll();
+                .permitAll()
+                .logoutSuccessHandler(logoutSuccessHandler);
+        http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
     }
 }

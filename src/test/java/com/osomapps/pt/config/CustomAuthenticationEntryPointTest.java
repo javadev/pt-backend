@@ -1,0 +1,29 @@
+package com.osomapps.pt.config;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.core.AuthenticationException;
+
+@RunWith(MockitoJUnitRunner.class)
+public class CustomAuthenticationEntryPointTest {
+
+    @Test
+    public void testSomeMethod() throws IOException, ServletException {
+        HttpServletResponse httpServletResponse = mock(HttpServletResponse.class);
+        when(httpServletResponse.getWriter()).thenReturn(mock(PrintWriter.class));
+        new CustomAuthenticationEntryPoint().commence(mock(HttpServletRequest.class),
+                httpServletResponse, mock(AuthenticationException.class));
+        verify(httpServletResponse).setStatus(eq(HttpServletResponse.SC_UNAUTHORIZED));
+    }
+
+}
