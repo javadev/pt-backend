@@ -16,7 +16,8 @@ class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
                 AuthenticationException authException) throws IOException, ServletException {
         if (authException != null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().print("Unauthorizated....");
+            response.setContentType("application/json");
+            response.getWriter().format("{\"authenticated\": \"false\"}");
         }
     }
 }

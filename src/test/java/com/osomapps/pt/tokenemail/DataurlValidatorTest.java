@@ -1,6 +1,6 @@
 package com.osomapps.pt.tokenemail;
 
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import java.util.Base64;
 import java.util.HashMap;
 import static org.hamcrest.CoreMatchers.equalTo;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class DataurlValidatorTest {
     public void not_valid_big_size() {
         final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
         new DataurlValidator().validate("data:image/gif;base64,"
-                + Base64.encode(new byte[2097153]), errors);
+                + Base64.getEncoder().encodeToString(new byte[2097153]), errors);
         assertThat(errors.getAllErrors().size(), equalTo(1));
     }
 
