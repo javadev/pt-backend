@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,6 +34,6 @@ public class EmailMessageType {
     Long id;
     LocalDateTime created;
     String name;
-    @OneToMany(mappedBy="emailMessageType")
+    @OneToMany(mappedBy="emailMessageType", fetch = FetchType.EAGER)
     List<EmailMessageTemplate> emailMessageTemplates;
 }

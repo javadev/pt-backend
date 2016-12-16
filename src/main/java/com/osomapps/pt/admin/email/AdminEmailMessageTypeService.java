@@ -1,5 +1,6 @@
 package com.osomapps.pt.admin.email;
 
+import com.osomapps.pt.email.EmailMessageTypeRepository;
 import com.osomapps.pt.email.EmailMessageType;
 import java.util.List;
 import java.util.stream.Collectors;

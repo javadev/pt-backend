@@ -1,5 +1,7 @@
 package com.osomapps.pt.admin.email;
 
+import com.osomapps.pt.email.EmailMessageTypeRepository;
+import com.osomapps.pt.email.EmailMessageTemplateRepository;
 import com.osomapps.pt.ResourceNotFoundException;
 
 import com.osomapps.pt.dictionary.DictionaryName;

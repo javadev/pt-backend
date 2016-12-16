@@ -1,5 +1,7 @@
 package com.osomapps.pt.tokenemail;
 
+import com.osomapps.pt.dictionary.DictionaryService;
+import com.osomapps.pt.email.EmailMessageTypeRepository;
 import com.osomapps.pt.token.InUser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +20,10 @@ public class SendEmailServiceTest {
 
     @Mock
     private MailSender mailSender;
+    @Mock
+    private EmailMessageTypeRepository emailMessageTypeRepository;
+    @Mock
+    private DictionaryService dictionaryService;
 
     @InjectMocks
     private SendEmailService sendEmailService;
