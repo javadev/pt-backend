@@ -18,7 +18,7 @@ import org.springframework.security.core.AuthenticationException;
 public class CustomAuthenticationEntryPointTest {
 
     @Test
-    public void testSomeMethod() throws IOException, ServletException {
+    public void commence() throws IOException, ServletException {
         HttpServletResponse httpServletResponse = mock(HttpServletResponse.class);
         when(httpServletResponse.getWriter()).thenReturn(mock(PrintWriter.class));
         new CustomAuthenticationEntryPoint().commence(mock(HttpServletRequest.class),

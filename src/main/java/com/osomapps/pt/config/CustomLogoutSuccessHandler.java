@@ -15,7 +15,7 @@ class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse httpServletResponse,
             Authentication authentication) throws IOException, ServletException {
-        httpServletResponse.setContentType("application/json");
+        httpServletResponse.setContentType("application/json;charset=UTF-8");
         httpServletResponse.getWriter().format("{\"authenticated\": \"false\"}");
         httpServletResponse.setStatus(HttpServletResponse.SC_OK);
     }

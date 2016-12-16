@@ -20,8 +20,8 @@ public class CustomLoginFailureHandlerTest {
         when(httpServletResponse.getWriter()).thenReturn(mock(PrintWriter.class));
         new CustomLoginFailureHandler().onAuthenticationFailure(mock(HttpServletRequest.class),
                 httpServletResponse, mock(AuthenticationException.class));
-        verify(httpServletResponse).setStatus(eq(HttpServletResponse.SC_UNAUTHORIZED));
         verify(httpServletResponse).setContentType(eq("application/json;charset=UTF-8"));
+        verify(httpServletResponse).setStatus(eq(HttpServletResponse.SC_UNAUTHORIZED));
     }
 
 }
