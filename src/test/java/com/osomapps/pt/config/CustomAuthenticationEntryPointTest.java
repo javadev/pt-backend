@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -26,4 +27,12 @@ public class CustomAuthenticationEntryPointTest {
         verify(httpServletResponse).setStatus(eq(HttpServletResponse.SC_UNAUTHORIZED));
     }
 
+    @Test
+    public void commence_null() throws IOException, ServletException {
+        HttpServletResponse httpServletResponse = mock(HttpServletResponse.class);
+        when(httpServletResponse.getWriter()).thenReturn(mock(PrintWriter.class));
+        new CustomAuthenticationEntryPoint().commence(mock(HttpServletRequest.class),
+                httpServletResponse, null);
+        verify(httpServletResponse, never()).setStatus(eq(HttpServletResponse.SC_UNAUTHORIZED));
+    }
 }
