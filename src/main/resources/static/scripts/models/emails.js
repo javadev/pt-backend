@@ -28,6 +28,10 @@ define([
           errors.push({name: 'emailSubjectEn', message: 'Please fill email subject in English field.'});
         } else if (_.isNull(attrs.emailSubjectNo) || _.isEmpty($.trim(attrs.emailSubjectNo))) {
           errors.push({name: 'emailSubjectNo', message: 'Please fill email subject in Norwegian field.'});
+        } else if (_.isNull(attrs.emailTextEn) || _.isEmpty($.trim(attrs.emailTextEn))) {
+          errors.push({name: 'emailTextEn', message: 'Please fill email text in English field.'});
+        } else if (_.isNull(attrs.emailTextNo) || _.isEmpty($.trim(attrs.emailTextNo))) {
+          errors.push({name: 'emailTextNo', message: 'Please fill email text in Norwegian field.'});
         }
         return errors.length > 0 ? errors : false;
       }

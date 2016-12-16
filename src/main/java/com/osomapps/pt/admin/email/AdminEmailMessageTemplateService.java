@@ -5,6 +5,7 @@ import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.dictionary.DictionaryName;
 import com.osomapps.pt.dictionary.DictionaryService;
 import com.osomapps.pt.email.EmailMessageTemplate;
+import com.osomapps.pt.email.EmailMessageType;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Sort;
@@ -14,11 +15,14 @@ import org.springframework.stereotype.Service;
 class AdminEmailMessageTemplateService {
 
     private final EmailMessageTemplateRepository emailMessageTemplateRepository;
+    private final EmailMessageTypeRepository emailMessageTypeRepository;
     private final DictionaryService dictionaryService;
     
     AdminEmailMessageTemplateService(EmailMessageTemplateRepository emailMessageTemplateRepository,
+            EmailMessageTypeRepository emailMessageTypeRepository,
             DictionaryService dictionaryService) {
         this.emailMessageTemplateRepository = emailMessageTemplateRepository;
+        this.emailMessageTypeRepository = emailMessageTypeRepository;
         this.dictionaryService = dictionaryService;
     }
 
@@ -55,14 +59,54 @@ class AdminEmailMessageTemplateService {
     }
 
     EmailMessageTemplateResponseDTO create(EmailMessageTemplateRequestDTO templateRequestDTO) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final EmailMessageType emailMessageTypeDb =
+                templateRequestDTO.getType() == null ? null : emailMessageTypeRepository
+            .findOne(templateRequestDTO.getType().getId());
+        final String dataKey = dictionaryService.createDictionaryDataKey(DictionaryName.email_subject,
+                dictionaryService.getNewDictionaryDataKey(DictionaryName.email_subject),
+                templateRequestDTO.getEmailSubjectEn(), templateRequestDTO.getEmailSubjectNo());
+        final String data2Key = dictionaryService.createDictionaryDataKey(DictionaryName.email_text,
+                dictionaryService.getNewDictionaryDataKey(DictionaryName.email_text),
+                templateRequestDTO.getEmailTextEn(), templateRequestDTO.getEmailTextNo());
+        final EmailMessageTemplate emailMessageTemplate = new EmailMessageTemplate();
+        emailMessageTemplate.setDEmailSubject(dataKey);
+        emailMessageTemplate.setDEmailText(data2Key);
+        emailMessageTemplate.setEmailMessageType(emailMessageTypeDb);
+        return templateToDto(emailMessageTemplateRepository.save(emailMessageTemplate));
     }
 
     EmailMessageTemplateResponseDTO update(Long id, EmailMessageTemplateRequestDTO templateRequestDTO) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final EmailMessageTemplate existedEmailMessageTemplate = emailMessageTemplateRepository.findOne(id);
+        if (existedEmailMessageTemplate == null) {
+            throw new ResourceNotFoundException("EmailMessageTemplate with id not found: " + id);
+        }
+        final String dataKey =
+            dictionaryService.createDictionaryDataKey(DictionaryName.email_subject, 
+                existedEmailMessageTemplate.getDEmailSubject(),
+                templateRequestDTO.getEmailSubjectEn(), templateRequestDTO.getEmailSubjectNo());
+        final String data2Key =
+            dictionaryService.createDictionaryDataKey(DictionaryName.email_text, 
+                existedEmailMessageTemplate.getDEmailSubject(),
+                templateRequestDTO.getEmailTextEn(), templateRequestDTO.getEmailTextNo());
+        final EmailMessageType emailMessageTypeDb =
+            templateRequestDTO.getType().getId() == null ? null : emailMessageTypeRepository
+            .findOne(templateRequestDTO.getType().getId());
+        existedEmailMessageTemplate.setEmailMessageType(emailMessageTypeDb);
+        existedEmailMessageTemplate.setDEmailSubject(dataKey);
+        existedEmailMessageTemplate.setDEmailText(data2Key);
+        final EmailMessageTemplate savedEmailMessageTemplate = emailMessageTemplateRepository.save(existedEmailMessageTemplate);
+        return templateToDto(savedEmailMessageTemplate);
     }
 
     EmailMessageTemplateResponseDTO delete(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final EmailMessageTemplate existedEmailMessageTemplate = emailMessageTemplateRepository.findOne(id);
+        if (existedEmailMessageTemplate == null) {
+            throw new ResourceNotFoundException("EmailMessageTemplate with id " + id + " not found.");
+        }
+        dictionaryService.deleteDatas(DictionaryName.email_subject, existedEmailMessageTemplate.getDEmailSubject());
+        dictionaryService.deleteDatas(DictionaryName.email_text, existedEmailMessageTemplate.getDEmailText());
+        final EmailMessageTemplateResponseDTO emailMessageTemplateResponseDTO = templateToDto(existedEmailMessageTemplate);
+        emailMessageTemplateRepository.delete(id);
+        return emailMessageTemplateResponseDTO;
     }
 }

@@ -255,13 +255,20 @@ define([
           collection: emails
         });
         emails.fetch();
+        $.get('/api/v1/admin/email-message-type').done(function(data) {
+          emails._types = _.union({id: null, name: ''}, data);
+          emails.trigger('sync');
+        });
         emails.on('email:new', function(model) {
           var email = new EmailsModels.Email();
+          email._types = emails._types;
           if (!_.isUndefined(model)) {
             email.set({
               id: model.get('id'),
               emailSubjectEn: model.get('emailSubjectEn'),
               emailSubjectNo: model.get('emailSubjectNo'),
+              emailTextEn: model.get('emailTextEn'),
+              emailTextNo: model.get('emailTextNo'),
               type: model.get('type')
             });
           }

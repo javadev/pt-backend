@@ -208,6 +208,14 @@ function ($, _, Marionette, App) {
         '</div>',
       '</div>',
       '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Type</label>',
+        '<div class="col-sm-8">',
+          '<select id="email-message-type" class="selectpicker show-tick">',
+            '{{ getTypes() }}',
+          '</select>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
         '<label class="col-sm-3 control-label">Email subject in English</label>',
         '<div class="col-sm-8">',
           '<textarea id="emailSubjectEn" class="form-control" rows="3" placeholder="Please enter email subject in English" name="emailSubjectEn" required="true">',
@@ -222,24 +230,81 @@ function ($, _, Marionette, App) {
             '{{ emailSubjectNo }}',
           '</textarea>',
         '</div>',
+      '</div>',
+      '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Email text in English</label>',
+        '<div class="col-sm-8">',
+          '<textarea id="emailTextEn" class="form-control" rows="3" placeholder="Please enter email text in English" name="emailTextEn" required="true">',
+            '{{ emailTextEn }}',
+          '</textarea>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Email text in Norwegian</label>',
+        '<div class="col-sm-8">',
+          '<textarea id="emailTextNo" class="form-control" rows="3" placeholder="Please enter email text in Norwegian" name="emailTextNo" required="true">',
+            '{{ emailTextNo }}',
+          '</textarea>',
+        '</div>',
       '</div>'
     ].join('')),
+    templateHelpers: function() {
+      var model = this.model;
+      return {
+        getTypes: function() {
+          var types = model._types || [];
+          var result = _.map(types, function(item) {
+            if (_.isNull(item.id)) {
+              return '<option data-hidden="true"></option>';
+            }
+            return '<option value="' + item.id + '"' +
+              (!!model.get('type') && model.get('type').id === item.id ? ' selected' : '') +
+              '>' + item.name + '</option>';
+          });
+          return result;
+        }
+      };
+    },
     modelEvents: {
       'sync': 'render'
     },
     events: {
       'input #emailSubjectEn': 'inputEmailSubjectEn',
-      'input #emailSubjectNo': 'inputEmailSubjectNo'
+      'input #emailSubjectNo': 'inputEmailSubjectNo',
+      'input #emailTextEn': 'inputEmailTextEn',
+      'input #emailTextNo': 'inputEmailTextNo'
     },
     ui: {
+      emailMessageType: '#email-message-type',
       emailSubjectEn: '#emailSubjectEn',
-      emailSubjectNo: '#emailSubjectNo'
+      emailSubjectNo: '#emailSubjectNo',
+      emailTextEn: '#emailTextEn',
+      emailTextNo: '#emailTextNo'
     },
     inputEmailSubjectEn: function() {
       this.model.set('emailSubjectEn', this.ui.emailSubjectEn.val());
     },
     inputEmailSubjectNo: function() {
       this.model.set('emailSubjectNo', this.ui.emailSubjectNo.val());
+    },
+    inputEmailTextEn: function() {
+      this.model.set('emailTextEn', this.ui.emailTextEn.val());
+    },
+    inputEmailTextNo: function() {
+      this.model.set('emailTextNo', this.ui.emailTextNo.val());
+    },
+    onShow: function() {
+      this.onRender();
+    },
+    onRender: function() {
+      var view = this;
+      $('.selectpicker').selectpicker({
+        style: 'btn-default',
+        size: false
+      });
+      this.ui.emailMessageType.on('changed.bs.select', function (e) {
+        view.model.set('type', _.isEmpty(e.target.value) ? null : {id: parseInt(e.target.value, 10) });
+      });
     }
   });
 
