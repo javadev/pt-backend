@@ -15,11 +15,13 @@ define([
   'views/certificates',
   'models/goals',
   'views/goals',
+  'models/emails',
+  'views/emails',
   'views/login'
 ],
   function($, _, Marionette, App, UsersModels, UsersViews, ExercisesModels, ExercisesViews,
     ProgramsModels, ProgramsViews, CertificatesModels, CertificatesViews,
-    GoalsModels, GoalsViews, LoginView) {
+    GoalsModels, GoalsViews, EmailsModels, EmailsViews, LoginView) {
   'use strict';
 
     function setupApplicationLayout() {
@@ -247,6 +249,35 @@ define([
           applicationLayout.mainCertificates.show(certificateEditView);
         });
         applicationLayout.mainCertificates.show(certificatesView);
+        
+        var emails = new EmailsModels.Emails();
+        var emailsView = new EmailsViews.Emails({
+          collection: emails
+        });
+        emails.fetch();
+        emails.on('email:new', function(model) {
+          var email = new EmailsModels.Email();
+          if (!_.isUndefined(model)) {
+            email.set({
+              id: model.get('id'),
+              emailSubjectEn: model.get('emailSubjectEn'),
+              emailSubjectNo: model.get('emailSubjectNo'),
+              type: model.get('type')
+            });
+          }
+          var emailEditView = new EmailsViews.NewEmailLayout({
+            model: email
+          });
+          email.on('email:back', function() {
+            var emailsView = new EmailsViews.Emails({
+              collection: emails
+            });
+            emails.fetch();
+            applicationLayout.mainEmails.show(emailsView);
+          });
+          applicationLayout.mainEmails.show(emailEditView);
+        });
+        applicationLayout.mainEmails.show(emailsView);
     }
 
     return Marionette.Controller.extend({

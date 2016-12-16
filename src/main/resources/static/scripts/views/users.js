@@ -18,7 +18,8 @@ function ($, _, Backbone, Marionette, moment, App) {
       mainExercises: '#exercisesMappingConfig',
       mainGoals: '#goalsMappingConfig',
       mainPrograms: '#programsMappingConfig',
-      mainCertificates: '#certificatesMappingConfig'
+      mainCertificates: '#certificatesMappingConfig',
+      mainEmails: '#emailsMappingConfig'
     },
     template: _.template([
       '<!-- Nav tabs -->',
@@ -28,6 +29,7 @@ function ($, _, Backbone, Marionette, moment, App) {
       '  <li><a href="#goal" data-toggle="tab">Goals</a></li>',
       '  <li><a href="#program" data-toggle="tab" class="js-admin-config">Programs</a></li>',
       '  <li><a href="#certificate" data-toggle="tab" class="js-admin-config">Certificates</a></li>',
+      '  <li><a href="#email" data-toggle="tab" class="js-admin-config">Email templates</a></li>',
       '</ul>',
       '<!-- Tab panes -->',
       '<div class="tab-content">',
@@ -45,6 +47,9 @@ function ($, _, Backbone, Marionette, moment, App) {
       '  </div>',
       '  <div class="tab-pane" id="certificate">',
       '    <div id="certificatesMappingConfig"></div>',
+      '  </div>',
+      '  <div class="tab-pane" id="email">',
+      '    <div id="emailsMappingConfig"></div>',
       '  </div>',
       '</div>'
     ].join(''))
