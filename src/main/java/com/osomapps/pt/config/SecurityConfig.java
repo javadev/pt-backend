@@ -22,6 +22,8 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomLoginSuccessHandler loginSuccessHandler;
     @Autowired
+    private CustomLoginFailureHandler loginFailureHandler;
+    @Autowired
     private CustomLogoutSuccessHandler logoutSuccessHandler;
     @Autowired
     private CustomAuthenticationEntryPoint authenticationEntryPoint;
@@ -50,6 +52,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureUrl("/login?error")
                 .permitAll()
                 .successHandler(loginSuccessHandler)
+                .failureHandler(loginFailureHandler)
                 .and()
                 .logout()
                 .permitAll()

@@ -6,7 +6,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.Test;
-import static org.junit.Assert.assertThat;
 import org.junit.runner.RunWith;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -25,7 +24,7 @@ public class CustomLogoutSuccessHandlerTest {
         new CustomLogoutSuccessHandler().onLogoutSuccess(mock(HttpServletRequest.class),
                 httpServletResponse, mock(Authentication.class));
         verify(httpServletResponse).setContentType(eq("application/json"));
-        verify(httpServletResponse).setStatus(eq(200));
+        verify(httpServletResponse).setStatus(eq(HttpServletResponse.SC_OK));
     }
 
 }

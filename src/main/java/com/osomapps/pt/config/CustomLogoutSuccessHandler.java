@@ -17,6 +17,6 @@ class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
             Authentication authentication) throws IOException, ServletException {
         httpServletResponse.setContentType("application/json");
         httpServletResponse.getWriter().format("{\"authenticated\": \"false\"}");
-        httpServletResponse.setStatus(200);
+        httpServletResponse.setStatus(HttpServletResponse.SC_OK);
     }
 }
