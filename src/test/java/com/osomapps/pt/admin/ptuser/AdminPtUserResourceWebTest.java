@@ -32,12 +32,12 @@ public class AdminPtUserResourceWebTest {
         ResponseEntity<String> response = restTemplate.exchange(
             "http://localhost:9090/api/v1/admin/pt-user", HttpMethod.GET, new HttpEntity<>(headers), String.class);
 
-        assertThat(response.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+        assertThat(response.getStatusCode(), equalTo(HttpStatus.UNAUTHORIZED));
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode responseJson = objectMapper.readTree(response.getBody());
 
         assertThat(responseJson.isMissingNode(), is(false));
-        assertThat(responseJson.toString(), equalTo("{\"error_description\":\"No message available\"}"));
+        assertThat(responseJson.toString(), equalTo("{\"authenticated\":\"false\"}"));
     }
 }
