@@ -26,7 +26,7 @@ public class DictionaryService {
                 .filter(data -> data.getDkey().matches("\\d+"))
                 .sorted((d1, d2) ->
                         Integer.compare(Integer.parseInt(d2.getDkey()), Integer.parseInt(d1.getDkey())))
-                    .findFirst().orElse(new DictionaryData().setDkey("10")).getDkey();
+                    .findFirst().orElse(new DictionaryData().setDkey("0")).getDkey();
         return "" + (Integer.parseInt(biggestKey) + 10);
     }
 
