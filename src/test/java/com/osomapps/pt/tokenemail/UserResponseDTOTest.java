@@ -17,9 +17,14 @@ public class UserResponseDTOTest {
 
     @Test
     public void setters() {
-        UserResponseDTO userResponseDTO = new UserResponseDTO();
-        userResponseDTO.setId(1L);
-        userResponseDTO.setName(null);
+        UserResponseDTO userResponseDTO = new UserResponseDTO()
+            .setId(1L)
+            .setName(null)
+            .setEmail(null)
+            .setAvatar_dataurl(null)
+            .setGender(null)
+            .setAge(null)
+            .setBirthday(null);
         assertThat(userResponseDTO, notNullValue());
     }
 
@@ -28,5 +33,11 @@ public class UserResponseDTOTest {
         UserResponseDTO userResponseDTO = new UserResponseDTO();
         userResponseDTO.getId();
         userResponseDTO.getName();
+        userResponseDTO.getEmail();
+        userResponseDTO.getAvatar_dataurl();
+        userResponseDTO.getGender();
+        userResponseDTO.getAge();
+        userResponseDTO.getBirthday();
         assertThat(userResponseDTO, notNullValue());
-    }}
+    }
+}
