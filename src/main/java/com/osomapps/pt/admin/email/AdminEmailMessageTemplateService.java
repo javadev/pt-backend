@@ -19,7 +19,7 @@ class AdminEmailMessageTemplateService {
     private final EmailMessageTemplateRepository emailMessageTemplateRepository;
     private final EmailMessageTypeRepository emailMessageTypeRepository;
     private final DictionaryService dictionaryService;
-    
+
     AdminEmailMessageTemplateService(EmailMessageTemplateRepository emailMessageTemplateRepository,
             EmailMessageTypeRepository emailMessageTypeRepository,
             DictionaryService dictionaryService) {
