@@ -60,6 +60,22 @@ public class TokenEmailServiceTest {
         assertThat(tokenEmailResponseDTO, notNullValue());
     }
 
+    @Test
+    public void createOrReadNewToken_not_empty() {
+        when(inUserEmailRepository.findByLogin(anyString())).thenReturn(Arrays.asList(
+                new InUserEmail().setInUser(new InUser()
+                        .setId(1L)
+                        .setInUserEmails(new ArrayList<>())
+                        .setInUserLogins(new ArrayList<>(Arrays.asList(new InUserLogin()))))));
+        when(passwordEncoder.matches(any(CharSequence.class), anyString())).thenReturn(true);
+        when(inUserLogoutRepository.findByToken(anyString())).thenReturn(Arrays.asList(new InUserLogout()));
+        when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
+        TokenEmailResponseDTO tokenEmailResponseDTO =
+            tokenEmailService.createOrReadNewToken(
+                new TokenEmailRequestDTO().setEmail("test@mail.com"), "");
+        assertThat(tokenEmailResponseDTO, notNullValue());
+    }
+
     @Test(expected = UnauthorizedException.class)
     public void readOrCreateInUserEmail_invalid_email() {
         when(inUserEmailRepository.findByLogin(eq("email"))).thenReturn(Collections.emptyList());
