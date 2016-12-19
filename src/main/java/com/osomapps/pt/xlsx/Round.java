@@ -1,11 +1,13 @@
 package com.osomapps.pt.xlsx;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,13 +15,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Input {
-    String exercise;
-    Integer sets;
-    Integer repetitions;
-    Integer weight;
-    Boolean bodyweight;
-    Integer timeInMin;
-    Integer speed;
-    Integer resistance;
+class Round {
+    String name;
+    int columnIndex;
+    int rowIndex;
+    List<Part> parts = new ArrayList<>();
 }
