@@ -64,6 +64,14 @@ public class AdminEmailMessageTemplateServiceTest {
         assertThat(emailMessageTemplateResponseDTO, notNullValue());
     }
 
+    @Test
+    public void create_with_null_type() {
+        when(emailMessageTemplateRepository.save((EmailMessageTemplate) anyObject())).thenAnswer(i -> i.getArguments()[0]);
+        EmailMessageTemplateResponseDTO emailMessageTemplateResponseDTO = adminEmailMessageTemplateService.create(
+            new EmailMessageTemplateRequestDTO().setType(null));
+        assertThat(emailMessageTemplateResponseDTO, notNullValue());
+    }
+
     @Test(expected = ResourceNotFoundException.class)
     public void update_not_found() {
         adminEmailMessageTemplateService.update(1L,
@@ -77,6 +85,16 @@ public class AdminEmailMessageTemplateServiceTest {
         when(emailMessageTemplateRepository.save((EmailMessageTemplate) anyObject())).thenAnswer(i -> i.getArguments()[0]);
         EmailMessageTemplateResponseDTO emailMessageTemplateResponseDTO = adminEmailMessageTemplateService.update(1L,
             new EmailMessageTemplateRequestDTO().setType(new EmailMessageTypeRequestDTO()));
+        assertThat(emailMessageTemplateResponseDTO, notNullValue());
+    }
+
+    @Test
+    public void update_with_type_1() {
+        when(emailMessageTemplateRepository.findOne(eq(1L))).thenReturn(
+                new EmailMessageTemplate().setEmailMessageType(new EmailMessageType()));
+        when(emailMessageTemplateRepository.save((EmailMessageTemplate) anyObject())).thenAnswer(i -> i.getArguments()[0]);
+        EmailMessageTemplateResponseDTO emailMessageTemplateResponseDTO = adminEmailMessageTemplateService.update(1L,
+            new EmailMessageTemplateRequestDTO().setType(new EmailMessageTypeRequestDTO().setId(1L)));
         assertThat(emailMessageTemplateResponseDTO, notNullValue());
     }
 
