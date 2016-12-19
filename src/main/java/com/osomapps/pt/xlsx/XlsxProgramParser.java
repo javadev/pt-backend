@@ -3,9 +3,9 @@ package com.osomapps.pt.xlsx;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.StringJoiner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -29,29 +29,53 @@ public class XlsxProgramParser {
         return new XlsxProgramParser(inputStream);
     }
 
-    public List<ExcelGoal> getExcelUsers() {
+    public List<ExcelGoal> getExcelGoals() {
         final List<ExcelGoal> excelGoals = new ArrayList<>();
         try (final Workbook workbook = WorkbookFactory.create(inputStream)) {
             
-            for (int index = 0; index < workbook.getNumberOfSheets(); index += 1) {
+            for (int index = 4; index < workbook.getNumberOfSheets(); index += 1) {
                 final Sheet sheet = workbook.getSheetAt(index);
-                final ExcelGoal excelGoal = new ExcelGoal();
-                excelGoal.setSheetIndex(index);
-                excelGoal.setName(sheet.getSheetName());
-                excelGoal.setErrors(new ArrayList<>());
+                final ExcelGoal excelGoal = new ExcelGoal()
+                    .setSheetIndex(index)
+                    .setName(sheet.getSheetName())
+                    .setErrors(new ArrayList<>());
                 final ScanMode scanMode;
                 if ("Output".equals(getCellData(sheet, 13, 0))) {
-                    scanMode = ScanMode.Cardio;
-                } else {
                     scanMode = ScanMode.Strength;
+                } else {
+                    scanMode = ScanMode.Cardio;
                 }
+                String prevUserGroupName = "";
+                String prevRoundName = "";
+                String prevPartName = "";
+                UserGroup userGroup = new UserGroup();
+                Round round = new Round();
+                Part part = new Part();
                 for (int workoutIndex = 0; workoutIndex < 10; workoutIndex += 1) {
-                    final String workoutName = (String) getCellData(sheet, 3, 2 + workoutIndex);
-                    if (workoutName == null) {
-                        break;
+                    final String userGroupName = getNumberOrNullAsString(getCellData(sheet, 2, 2 + workoutIndex));
+                    final String roundName = getNumberOrNullAsString(getCellData(sheet, 3, 2 + workoutIndex));
+                    final String partName = (String) getCellData(sheet, 4, 2 + workoutIndex);
+                    if (userGroupName != null && !prevUserGroupName.equals(userGroupName)) {
+                        userGroup = new UserGroup().setName(userGroupName);
+                        prevUserGroupName = userGroupName;
+                        excelGoal.getUserGroups().add(userGroup);
                     }
+                    if (roundName != null && !prevRoundName.equals(roundName)) {
+                        round = new Round()
+                            .setName(roundName);
+                        prevRoundName = roundName;
+                        userGroup.getRounds().add(round);
+                    }
+                    if (!prevPartName.equals(partName)) {
+                        part = new Part()
+                            .setName(partName);
+                        prevPartName = partName;
+                        round.getParts().add(part);
+                    }
+                    final String workoutName = new StringJoiner("_").add(excelGoal.getName())
+                            .add(userGroup.getName()).add(round.getName()).add(part.getName()).toString();
                     final Workout workout = new Workout();
-                    workout.setRowIndex(3);
+                    workout.setRowIndex(4);
                     workout.setColumnIndex(2 + workoutIndex);
                     workout.setName(workoutName);
                     final Optional<WarmupWorkoutItem> warmupWorkoutItem = extractWarmupWorkoutItem(sheet,
@@ -59,7 +83,7 @@ public class XlsxProgramParser {
                     workout.setWarmup(warmupWorkoutItem.orElse(null));
                     for (int workoutItemIndex = 0; workoutItemIndex < 10; workoutItemIndex += 1) {
                         final int multiplyCoeff = scanMode == ScanMode.Strength ? 7 : 9;
-                        if (!(getCellData(sheet, 9 + workoutItemIndex
+                        if (!(getCellData(sheet, 10 + workoutItemIndex
                                 * multiplyCoeff, 2 + workoutIndex) instanceof Number)) {
                             break;
                         }
@@ -69,11 +93,7 @@ public class XlsxProgramParser {
                             workout.getWorkoutItems().add(workoutItem.get());
                         }
                     }
-                    excelGoal.setUserGroups(Arrays.asList(
-                            new UserGroup().setRounds(Arrays.asList(
-                                    new Round().setParts(Arrays.asList(
-                                            new Part().setWorkouts(Arrays.asList(
-                                                    workout))))))));
+                    part.getWorkouts().add(workout);
                 }
                 excelGoals.add(excelGoal);
             }
@@ -84,14 +104,14 @@ public class XlsxProgramParser {
     }
 
     private Optional<WarmupWorkoutItem> extractWarmupWorkoutItem(Sheet sheet, int workoutIndex, ScanMode scanMode, ExcelGoal excelGoal, String workoutName) {
-        final Optional<String> warmupName = getStringOrEmpty(getCellData(sheet, 4, 2 + workoutIndex));
+        final Optional<String> warmupName = getStringOrEmpty(getCellData(sheet, 5, 2 + workoutIndex));
         if (!warmupName.isPresent()) {
             excelGoal.getErrors().add("Warmup name not found. User " + excelGoal.getName() + ", workout " + workoutName + ".");
             return Optional.empty();
         }
-        Integer speedInp = getIntegerOrNull(getCellData(sheet, 4 + 1, 2 + workoutIndex));
-        Integer inclineInp = getIntegerOrNull(getCellData(sheet, 4 + 2, 2 + workoutIndex));
-        Integer timeInp = extractNumbers(getCellData(sheet, 4 + 3, 2 + workoutIndex));
+        Integer speedInp = getIntegerOrNull(getCellData(sheet, 5 + 1, 2 + workoutIndex));
+        Integer inclineInp = getIntegerOrNull(getCellData(sheet, 5 + 2, 2 + workoutIndex));
+        Integer timeInp = extractNumbers(getCellData(sheet, 5 + 3, 2 + workoutIndex));
         return Optional.of(new WarmupWorkoutItem().setExercise(warmupName.get())
             .setSpeed(speedInp).setIncline(inclineInp).setTimeInMin(timeInp));
     }
@@ -102,28 +122,28 @@ public class XlsxProgramParser {
         WorkoutItem workoutItem = new WorkoutItem();
         workoutItem.setRowIndex(4 + 4 + workoutItemIndex * multiplyCoeff);
         workoutItem.setColumnIndex(2 + workoutIndex);
-        final Optional<String> exerciseName = getStringOrEmpty(getCellData(sheet, 4 + 4
+        final Optional<String> exerciseName = getStringOrEmpty(getCellData(sheet, 5 + 4
                 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
         if (!exerciseName.isPresent()) {
             excelGoal.getErrors().add("Exercise name not found. User " + excelGoal.getName() + ", workout " + workoutName + ".");
             return Optional.empty();
         }
-        Number setsInp = getNumberOrNull(getCellData(sheet, 4 + 5 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+        Number setsInp = getNumberOrNull(getCellData(sheet, 5 + 5 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
         if (getIntegerOrNull(setsInp) == null || getIntegerOrNull(setsInp) == 0) {
             excelGoal.getErrors().add("Amount of sets cannot be 0. User " + excelGoal.getName() + ", workout " + workoutName + ".");
             return Optional.empty();
         }
         if (scanMode == ScanMode.Strength) {
-            Number repetitionsInp = getNumberOrNull(getCellData(sheet, 4 + 6  + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
-            String weightInp = getStringOrNull(getCellData(sheet, 4 + 7 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+            Number repetitionsInp = getNumberOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+            String weightInp = getStringOrNull(getCellData(sheet, 5 + 7 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
             workoutItem.getInput().setExercise(exerciseName.orElse(null));
             workoutItem.getInput().setSets(getIntegerOrNull(setsInp));
             workoutItem.getInput().setRepetitions(getIntegerOrNull(repetitionsInp));
             workoutItem.getInput().setWeight(extractNumbers(weightInp));
         } else {
-            String timeInp = getStringOrNull(getCellData(sheet, 4 + 6 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
-            Number speedInp = getNumberOrNull(getCellData(sheet, 4 + 7 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
-            String resistanceInp = getStringOrNull(getCellData(sheet, 4 + 8 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+            String timeInp = getStringOrNull(getCellData(sheet, 5 + 6 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+            Number speedInp = getNumberOrNull(getCellData(sheet, 5 + 7 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+            String resistanceInp = getStringOrNull(getCellData(sheet, 5 + 8 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
             workoutItem.getInput().setExercise(exerciseName.orElse(null));
             workoutItem.getInput().setSets(getIntegerOrNull(setsInp));
             workoutItem.getInput().setTimeInMin(extractNumbers(timeInp));
@@ -135,6 +155,10 @@ public class XlsxProgramParser {
 
     private Number getNumberOrNull(Object object) {
         return object instanceof Number ? (Number) object : null;
+    }
+
+    private String getNumberOrNullAsString(Object object) {
+        return object instanceof Number ? String.valueOf(((Number) object).intValue()) : null;
     }
 
     private Integer extractNumbers(Object object) {
