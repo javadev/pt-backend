@@ -22,7 +22,8 @@ public class EmailMessageTemplateResponseDTOTest {
             .setEmailSubjectEn(null)
             .setEmailSubjectNo(null)
             .setEmailTextEn(null)
-            .setEmailTextNo(null);
+            .setEmailTextNo(null)
+            .setType(null);
         assertThat(emailMessageTemplateResponseDTO, notNullValue());
     }
 
@@ -34,6 +35,7 @@ public class EmailMessageTemplateResponseDTOTest {
         emailMessageTemplateResponseDTO.getEmailSubjectNo();
         emailMessageTemplateResponseDTO.getEmailTextEn();
         emailMessageTemplateResponseDTO.getEmailTextNo();
+        emailMessageTemplateResponseDTO.getType();
         assertThat(emailMessageTemplateResponseDTO, notNullValue());
     }
 
