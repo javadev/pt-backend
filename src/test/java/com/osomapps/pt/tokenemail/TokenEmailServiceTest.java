@@ -65,6 +65,7 @@ public class TokenEmailServiceTest {
         when(inUserEmailRepository.findByLogin(anyString())).thenReturn(Arrays.asList(
                 new InUserEmail().setInUser(new InUser()
                         .setId(1L)
+                        .setAge(20F)
                         .setInUserEmails(new ArrayList<>())
                         .setInUserLogins(new ArrayList<>(Arrays.asList(new InUserLogin()))))));
         when(passwordEncoder.matches(any(CharSequence.class), anyString())).thenReturn(true);
