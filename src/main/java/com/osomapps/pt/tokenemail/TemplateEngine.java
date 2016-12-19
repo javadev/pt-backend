@@ -3,26 +3,20 @@ package com.osomapps.pt.tokenemail;
 import java.util.HashMap;
 import java.util.Map;
 
-class TemplateEngine {
-    private static final Map<String, String> TEMPLATE_SETTINGS = new HashMap<String, String>() { {
-        put("evaluate", "\\{\\{([\\s\\S]+?)\\}\\}");
-    } };
+final class TemplateEngine {
     private static final String ALL_SYMBOLS = "([\\s\\S]+?)";
+    private static final Map<String, String> TEMPLATE_SETTINGS = new HashMap<String, String>() { {
+        put("evaluate", "\\{\\{" + ALL_SYMBOLS + "\\}\\}");
+    } };
 
-    private interface Function1<F, T> {
-        T apply(F arg);
-
-        @Override
-        boolean equals(Object object);
+    interface Template<F> {
+        String apply(F arg);
     }
 
-    public interface Template<T> extends Function1<T, String> {
-    }
-
-    private static final class TemplateImpl<K, V> implements Template<Map<K, V>> {
+    static final class TemplateImpl<K, V> implements Template<Map<K, V>> {
         private final String template;
 
-        private TemplateImpl(String template) {
+        TemplateImpl(String template) {
             this.template = template;
         }
 
@@ -41,7 +35,7 @@ class TemplateEngine {
     }
 
     static <K, V> TemplateEngine.Template<Map<K, V>> template(final String template) {
-        return new TemplateEngine.TemplateImpl<>(template);
+        return new TemplateImpl<>(template);
     }
 
 }

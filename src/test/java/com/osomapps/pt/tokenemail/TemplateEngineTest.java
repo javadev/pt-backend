@@ -8,6 +8,12 @@ import static org.junit.Assert.assertThat;
 public class TemplateEngineTest {
 
     @Test
+    public void constructor() {
+        new TemplateEngine();
+        new TemplateEngine.TemplateImpl<String, String>("");
+    }
+
+    @Test
     public void template() {
         assertThat(TemplateEngine.<String, String>template("Hi, {{test}}!").apply(new HashMap<String, String>() {{
             put("test", "Example");
