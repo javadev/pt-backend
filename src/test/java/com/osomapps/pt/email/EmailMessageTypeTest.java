@@ -16,6 +16,7 @@ public class EmailMessageTypeTest {
     public void setters() {
         assertThat(new EmailMessageType().setId(null), notNullValue());
         assertThat(new EmailMessageType().setCreated(null), notNullValue());
+        assertThat(new EmailMessageType().setName(null), notNullValue());
         assertThat(new EmailMessageType().setEmailMessageTemplates(null), notNullValue());
     }
 
@@ -23,6 +24,7 @@ public class EmailMessageTypeTest {
     public void getters() {
         assertThat(new EmailMessageType().getId(), nullValue());
         assertThat(new EmailMessageType().getCreated(), nullValue());
+        assertThat(new EmailMessageType().getName(), nullValue());
         assertThat(new EmailMessageType().getEmailMessageTemplates(), nullValue());
     }
 }
