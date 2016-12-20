@@ -58,4 +58,26 @@ public class SendEmailServiceTest {
         verify(mailSender).send(any(SimpleMailMessage.class));
     }
 
+    @Test
+    public void sendForgotPassword_error() {
+        doThrow(new MailException("") {}).when(mailSender).send(any(SimpleMailMessage.class));
+        sendEmailService.sendForgotPassword(new InUserEmail().setInUser(new InUser().setId(1L)));
+        verify(mailSender).send(any(SimpleMailMessage.class));
+    }
+
+    @Test
+    public void sendForgotPassword() {
+        sendEmailService.sendForgotPassword(new InUserEmail().setInUser(new InUser().setId(1L)));
+        verify(mailSender).send(any(SimpleMailMessage.class));
+    }
+
+    @Test
+    public void sendForgotPassword_with_template() {
+        when(emailMessageTypeRepository.findByNameOrderByIdDesc(eq("ForgetPasswordMessage")))
+                .thenReturn(Arrays.asList(new EmailMessageType().setEmailMessageTemplates(
+                        Arrays.asList(new EmailMessageTemplate()))));
+        when(dictionaryService.getEnValue(any(DictionaryName.class), anyString(), anyString())).thenReturn("test");
+        sendEmailService.sendForgotPassword(new InUserEmail().setInUser(new InUser().setId(1L)));
+        verify(mailSender).send(any(SimpleMailMessage.class));
+    }
 }

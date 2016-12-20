@@ -17,6 +17,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import org.mockito.Mock;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -117,6 +118,19 @@ public class TokenEmailSignupServiceTest {
         when(inUserEmailRepository.findByConfirmToken(anyString())).thenReturn(Arrays.asList(
                 new InUserEmail().setIs_confirmed(Boolean.TRUE)));
         assertThat(tokenEmailSignupService.confirmToken(""), equalTo(true));
+    }
+
+    @Test(expected = UnauthorizedException.class)
+    public void forgotPassword() {
+        tokenEmailSignupService.forgotPassword(new ForgotPasswordRequestDTO().setEmail("test@mail.com"), "");
+    }
+
+    @Test
+    public void forgotPassword_true() {
+        when(inUserEmailRepository.findByLogin(anyString())).thenReturn(Arrays.asList(
+                new InUserEmail().setIs_confirmed(Boolean.FALSE)));
+        tokenEmailSignupService.forgotPassword(new ForgotPasswordRequestDTO().setEmail("test@mail.com"), "");
+        verify(inUserEmailRepository).save(any(InUserEmail.class));
     }
 
     @Test
