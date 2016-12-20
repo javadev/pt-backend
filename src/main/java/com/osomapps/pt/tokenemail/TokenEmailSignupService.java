@@ -5,6 +5,7 @@ import com.osomapps.pt.token.InUser;
 import com.osomapps.pt.token.InUserLogin;
 import com.osomapps.pt.token.InUserLoginRepository;
 import com.osomapps.pt.token.InUserRepository;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -95,6 +96,19 @@ class TokenEmailSignupService {
         user.setEmail(inUserEmail.getLogin());
         user.setAvatar_dataurl(inUser.getAvatar_dataurl());
         return new TokenEmailSignupResponseDTO().setToken(inUserLogin.getToken()).setUser(user);
+    }
+
+    boolean confirmToken(String confirmToken) {
+        final List<InUserEmail> inUserEmails = inUserEmailRepository.findByConfirmToken(confirmToken);
+        if (inUserEmails.isEmpty()) {
+            return false;
+        }
+        if (!inUserEmails.get(0).getIs_confirmed()) {
+            inUserEmails.get(0).setIs_confirmed(Boolean.TRUE);
+            inUserEmails.get(0).setConfirmed(LocalDateTime.now());
+            inUserEmailRepository.save(inUserEmails.get(0));
+        }
+        return true;
     }
 
 }

@@ -3,6 +3,8 @@ package com.osomapps.pt.tokenemail;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.osomapps.pt.token.InUser;
 import java.time.LocalDateTime;
+import java.util.UUID;
+import javax.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,4 +44,8 @@ public class InUserEmail {
     String password;
     String user_name;
     String device_id;
+    LocalDateTime confirmed;
+    Boolean is_confirmed;
+    @Column(name = "confirm_token")
+    String confirmToken = "em-" + UUID.randomUUID().toString().replace("-", "");
 }

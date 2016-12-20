@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -19,13 +20,16 @@ class SendEmailService {
     private final MailSender mailSender;
     private final EmailMessageTypeRepository emailMessageTypeRepository;
     private final DictionaryService dictionaryService;
+    private final String emailConfirmUrl;
 
     SendEmailService(MailSender mailSender,
             EmailMessageTypeRepository emailMessageTypeRepository,
-            DictionaryService dictionaryService) {
+            DictionaryService dictionaryService,
+            @Value("${app.email.confirm.url}") String emailConfirmUrl) {
         this.mailSender = mailSender;
         this.emailMessageTypeRepository = emailMessageTypeRepository;
         this.dictionaryService = dictionaryService;
+        this.emailConfirmUrl = emailConfirmUrl;
     }
 
     String getSubject(String defaultValue) {
@@ -53,6 +57,7 @@ class SendEmailService {
     void send(InUserEmail inUserEmail) {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("user_name", inUserEmail.getUser_name());
+        parameters.put("email_confirm_link", emailConfirmUrl + inUserEmail.getConfirmToken());
         SimpleMailMessage message = new SimpleMailMessage();
         message.setSubject(getSubject("Welcome to the Personal Trainer application!"));
         message.setFrom("PT <pt.backend@gmail.com>");

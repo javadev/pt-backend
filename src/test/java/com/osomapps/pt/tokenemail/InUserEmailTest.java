@@ -20,6 +20,9 @@ public class InUserEmailTest {
                 null,
                 null,
                 null,
+                null,
+                null,
+                null,
                 null), notNullValue());
     }
 
@@ -29,6 +32,9 @@ public class InUserEmailTest {
         inUserEmail.setId(1L);
         inUserEmail.setCreated(LocalDateTime.MAX);
         inUserEmail.setDevice_id("");
+        inUserEmail.setIs_confirmed(null);
+        inUserEmail.setConfirmed(null);
+        inUserEmail.setConfirmToken("");
         assertThat(inUserEmail, notNullValue());
     }
 
@@ -38,6 +44,9 @@ public class InUserEmailTest {
         inUserEmail.getId();
         inUserEmail.getCreated();
         inUserEmail.getDevice_id();
+        inUserEmail.getIs_confirmed();
+        inUserEmail.getConfirmed();
+        inUserEmail.getConfirmToken();
         assertThat(inUserEmail, notNullValue());
     }
 }
