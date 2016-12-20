@@ -5,6 +5,8 @@ import com.osomapps.pt.token.InUser;
 import com.osomapps.pt.token.InUserLoginRepository;
 import com.osomapps.pt.token.InUserRepository;
 import java.util.Arrays;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -95,4 +97,17 @@ public class TokenEmailSignupServiceTest {
         tokenEmailSignupService.createNewToken(new TokenEmailSignupRequestDTO().setUser(
                 new UserSignupRequestDTO().setEmail("test@mail.com")), "");
     }
+
+    @Test
+    public void confirmToken() {
+        assertThat(tokenEmailSignupService.confirmToken(""), equalTo(false));
+    }
+
+    @Test
+    public void confirmToken_true() {
+        when(inUserEmailRepository.findByConfirmToken(anyString())).thenReturn(Arrays.asList(
+                new InUserEmail().setIs_confirmed(Boolean.FALSE)));
+        assertThat(tokenEmailSignupService.confirmToken(""), equalTo(true));
+    }
+
 }
