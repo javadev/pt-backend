@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -119,6 +120,8 @@ class TokenEmailSignupService {
         if (inUserEmails.isEmpty()) {
             throw new UnauthorizedException("Email not found: " + email);
         } else {
+            inUserEmails.get(0).setResetToken("re-" + UUID.randomUUID().toString().replace("-", ""));
+            inUserEmailRepository.save(inUserEmails.get(0));
             new Thread(() -> {
                 sendEmailService.sendForgotPassword(inUserEmails.get(0));
             }, "Reset-email").start();
@@ -135,6 +138,7 @@ class TokenEmailSignupService {
         inUserEmails.get(0).setIs_reseted(Boolean.TRUE);
         inUserEmails.get(0).setReseted(LocalDateTime.now());
         inUserEmails.get(0).setPassword(passwordEncoder.encode(newPassword));
+        inUserEmails.get(0).setResetToken(null);
         inUserEmailRepository.save(inUserEmails.get(0));
         return Optional.of(newPassword);
     }

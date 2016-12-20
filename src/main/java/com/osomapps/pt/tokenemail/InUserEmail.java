@@ -51,5 +51,5 @@ public class InUserEmail {
     LocalDateTime reseted;
     Boolean is_reseted;
     @Column(name = "reset_token")
-    String resetToken = "re-" + UUID.randomUUID().toString().replace("-", "");
+    String resetToken;
 }
