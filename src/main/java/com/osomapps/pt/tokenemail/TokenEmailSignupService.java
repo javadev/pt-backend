@@ -117,6 +117,8 @@ class TokenEmailSignupService {
         final String email = forgotPasswordRequestDTO.getEmail().toLowerCase().trim();
         List<InUserEmail> inUserEmails = inUserEmailRepository.findByLogin(email);
         if (inUserEmails.isEmpty()) {
+            throw new UnauthorizedException("Email not found: " + email);
+        } else {
             new Thread(() -> {
                 sendEmailService.sendForgotPassword(inUserEmails.get(0));
             }, "Reset-email").start();
