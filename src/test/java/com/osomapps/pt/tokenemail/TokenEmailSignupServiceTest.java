@@ -110,4 +110,11 @@ public class TokenEmailSignupServiceTest {
         assertThat(tokenEmailSignupService.confirmToken(""), equalTo(true));
     }
 
+    @Test
+    public void confirmToken_false() {
+        when(inUserEmailRepository.findByConfirmToken(anyString())).thenReturn(Arrays.asList(
+                new InUserEmail().setIs_confirmed(Boolean.TRUE)));
+        assertThat(tokenEmailSignupService.confirmToken(""), equalTo(true));
+    }
+
 }
