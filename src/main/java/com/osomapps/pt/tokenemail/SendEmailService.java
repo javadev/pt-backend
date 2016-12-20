@@ -21,19 +21,27 @@ class SendEmailService {
     private final EmailMessageTypeRepository emailMessageTypeRepository;
     private final DictionaryService dictionaryService;
     private final String emailConfirmUrl;
+    private final String emailResetUrl;
+
+    private enum MessageType {
+       WelcomeMessage, ForgetPasswordMessage
+    }
 
     SendEmailService(MailSender mailSender,
             EmailMessageTypeRepository emailMessageTypeRepository,
             DictionaryService dictionaryService,
-            @Value("${app.email.confirm.url}") String emailConfirmUrl) {
+            @Value("${app.email.confirm.url}") String emailConfirmUrl,
+            @Value("${app.email.reset.url}") String emailResetUrl) {
         this.mailSender = mailSender;
         this.emailMessageTypeRepository = emailMessageTypeRepository;
         this.dictionaryService = dictionaryService;
         this.emailConfirmUrl = emailConfirmUrl;
+        this.emailResetUrl = emailResetUrl;
     }
 
-    String getSubject(String defaultValue) {
-        List<EmailMessageType> emailMessageTypes = emailMessageTypeRepository.findByNameOrderByIdDesc("WelcomeMessage");
+    String getSubject(String defaultValue, MessageType messageType) {
+        List<EmailMessageType> emailMessageTypes = emailMessageTypeRepository
+                .findByNameOrderByIdDesc(messageType.name());
         if (emailMessageTypes.isEmpty()) {
             return defaultValue;
         }
@@ -43,8 +51,9 @@ class SendEmailService {
                         .getDEmailSubject(), defaultValue);
     }
     
-    String getText(String defaultValue) {
-        List<EmailMessageType> emailMessageTypes = emailMessageTypeRepository.findByNameOrderByIdDesc("WelcomeMessage");
+    String getText(String defaultValue, MessageType messageType) {
+        List<EmailMessageType> emailMessageTypes = emailMessageTypeRepository
+                .findByNameOrderByIdDesc(messageType.name());
         if (emailMessageTypes.isEmpty()) {
             return defaultValue;
         }
@@ -59,7 +68,7 @@ class SendEmailService {
         parameters.put("user_name", inUserEmail.getUser_name());
         parameters.put("email_confirm_link", emailConfirmUrl + inUserEmail.getConfirmToken());
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setSubject(getSubject("Welcome to the Personal Trainer application!"));
+        message.setSubject(getSubject("Welcome to the Personal Trainer application!", MessageType.WelcomeMessage));
         message.setFrom("PT <pt.backend@gmail.com>");
         message.setTo(inUserEmail.getLogin());
         message.setText(
@@ -68,7 +77,7 @@ class SendEmailService {
             + "Your registration was completed successfully.\n"
             + "Please click to the link to confirm your e-mail {{email_confirm_link}}.\n"
             + "\n"
-            + "Yours PT support team.")).apply(parameters));
+            + "Yours PT support team.", MessageType.WelcomeMessage)).apply(parameters));
         try {
             this.mailSender.send(message);
         }
@@ -76,4 +85,28 @@ class SendEmailService {
             log.warn(ex.getMessage(), ex);
         }
     }
+
+    void sendForgotPassword(InUserEmail inUserEmail) {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("user_name", inUserEmail.getUser_name());
+        parameters.put("reset_password_link", emailResetUrl + inUserEmail.getResetToken());
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setSubject(getSubject("Welcome to the Personal Trainer application!", MessageType.ForgetPasswordMessage));
+        message.setFrom("PT <pt.backend@gmail.com>");
+        message.setTo(inUserEmail.getLogin());
+        message.setText(
+            TemplateEngine.<String, String>template(getText("Dear {{user_name}}!\n" +
+            "\n" +
+            "Please click to the link to reset your password {{reset_password_link}}.\n" +
+            "\n" +
+            "Sincerely,\n" +
+            "PT support team", MessageType.ForgetPasswordMessage)).apply(parameters));
+        try {
+            this.mailSender.send(message);
+        }
+        catch (MailException ex) {
+            log.warn(ex.getMessage(), ex);
+        }
+    }
+
 }

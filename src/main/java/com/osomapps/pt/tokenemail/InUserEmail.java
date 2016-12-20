@@ -48,4 +48,8 @@ public class InUserEmail {
     Boolean is_confirmed;
     @Column(name = "confirm_token")
     String confirmToken = "em-" + UUID.randomUUID().toString().replace("-", "");
+    LocalDateTime reseted;
+    Boolean is_reseted;
+    @Column(name = "reset_token")
+    String resetToken = "re-" + UUID.randomUUID().toString().replace("-", "");
 }

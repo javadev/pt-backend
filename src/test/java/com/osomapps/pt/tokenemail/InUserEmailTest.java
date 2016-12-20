@@ -23,6 +23,9 @@ public class InUserEmailTest {
                 null,
                 null,
                 null,
+                null,
+                null,
+                null,
                 null), notNullValue());
     }
 
@@ -35,6 +38,9 @@ public class InUserEmailTest {
         inUserEmail.setIs_confirmed(null);
         inUserEmail.setConfirmed(null);
         inUserEmail.setConfirmToken("");
+        inUserEmail.setIs_reseted(null);
+        inUserEmail.setReseted(null);
+        inUserEmail.setResetToken("");
         assertThat(inUserEmail, notNullValue());
     }
 
@@ -47,6 +53,9 @@ public class InUserEmailTest {
         inUserEmail.getIs_confirmed();
         inUserEmail.getConfirmed();
         inUserEmail.getConfirmToken();
+        inUserEmail.getIs_reseted();
+        inUserEmail.getReseted();
+        inUserEmail.getResetToken();
         assertThat(inUserEmail, notNullValue());
     }
 }

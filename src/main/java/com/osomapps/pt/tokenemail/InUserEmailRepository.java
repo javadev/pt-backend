@@ -7,5 +7,6 @@ public interface InUserEmailRepository extends JpaRepository<InUserEmail, Long> 
 
     List<InUserEmail> findByLogin(String login);
     List<InUserEmail> findByConfirmToken(String confirmToken);
+    List<InUserEmail> findByResetToken(String resetToken);
 
 }

@@ -1,0 +1,3 @@
+ALTER TABLE ptcore.in_user_email ADD COLUMN reseted TIMESTAMP WITHOUT TIME ZONE;
+ALTER TABLE ptcore.in_user_email ADD COLUMN is_reseted BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE ptcore.in_user_email ADD COLUMN reset_token VARCHAR(35) NOT NULL DEFAULT '';

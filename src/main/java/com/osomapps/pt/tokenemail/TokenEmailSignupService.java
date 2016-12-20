@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.MapBindingResult;
@@ -111,4 +113,27 @@ class TokenEmailSignupService {
         return true;
     }
 
+    void forgotPassword(ForgotPasswordRequestDTO forgotPasswordRequestDTO, String remoteAddr) {
+        final String email = forgotPasswordRequestDTO.getEmail().toLowerCase().trim();
+        List<InUserEmail> inUserEmails = inUserEmailRepository.findByLogin(email);
+        if (inUserEmails.isEmpty()) {
+            new Thread(() -> {
+                sendEmailService.sendForgotPassword(inUserEmails.get(0));
+            }, "Reset-email").start();
+        }
+    }
+
+    Optional<String> resetToken(String resetToken) {
+        final List<InUserEmail> inUserEmails = inUserEmailRepository.findByResetToken(resetToken);
+        if (inUserEmails.isEmpty()) {
+            return Optional.empty();
+        }
+        String newPassword = RandomStringUtils.randomAlphabetic(3).toUpperCase()
+                + RandomStringUtils.randomNumeric(3);
+        inUserEmails.get(0).setIs_reseted(Boolean.TRUE);
+        inUserEmails.get(0).setReseted(LocalDateTime.now());
+        inUserEmails.get(0).setPassword(passwordEncoder.encode(newPassword));
+        inUserEmailRepository.save(inUserEmails.get(0));
+        return Optional.of(newPassword);
+    }
 }
