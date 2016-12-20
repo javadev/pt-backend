@@ -19,8 +19,6 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 public class XlsxProgramParser {
     private final InputStream inputStream;
 
-    private enum ScanMode {Strength, Cardio};
-
     private XlsxProgramParser(InputStream inputStream) {
        this.inputStream = inputStream; 
     }
@@ -39,12 +37,6 @@ public class XlsxProgramParser {
                     .setSheetIndex(index)
                     .setName(sheet.getSheetName())
                     .setErrors(new ArrayList<>());
-                final ScanMode scanMode;
-                if ("Output".equals(getCellData(sheet, 13, 0))) {
-                    scanMode = ScanMode.Strength;
-                } else {
-                    scanMode = ScanMode.Cardio;
-                }
                 String prevUserGroupName = "";
                 String prevRoundName = "";
                 String prevPartName = "";
@@ -79,16 +71,16 @@ public class XlsxProgramParser {
                     workout.setColumnIndex(2 + workoutIndex);
                     workout.setName(workoutName);
                     final Optional<WarmupWorkoutItem> warmupWorkoutItem = extractWarmupWorkoutItem(sheet,
-                            workoutIndex, scanMode, excelGoal, workoutName);
+                            workoutIndex, excelGoal, workoutName);
                     workout.setWarmup(warmupWorkoutItem.orElse(null));
                     for (int workoutItemIndex = 0; workoutItemIndex < 10; workoutItemIndex += 1) {
-                        final int multiplyCoeff = scanMode == ScanMode.Strength ? 7 : 9;
+                        final int multiplyCoeff = 7;
                         if (!(getCellData(sheet, 10 + workoutItemIndex
                                 * multiplyCoeff, 2 + workoutIndex) instanceof Number)) {
                             break;
                         }
                         final Optional<WorkoutItem> workoutItem = extractWorkoutItem(sheet, workoutItemIndex,
-                                workoutIndex, scanMode, excelGoal, workoutName);
+                                workoutIndex, excelGoal, workoutName);
                         if (workoutItem.isPresent()) {
                             workout.getWorkoutItems().add(workoutItem.get());
                         }
@@ -103,7 +95,7 @@ public class XlsxProgramParser {
         return excelGoals;
     }
 
-    private Optional<WarmupWorkoutItem> extractWarmupWorkoutItem(Sheet sheet, int workoutIndex, ScanMode scanMode, ExcelGoal excelGoal, String workoutName) {
+    private Optional<WarmupWorkoutItem> extractWarmupWorkoutItem(Sheet sheet, int workoutIndex, ExcelGoal excelGoal, String workoutName) {
         final Optional<String> warmupName = getStringOrEmpty(getCellData(sheet, 5, 2 + workoutIndex));
         if (!warmupName.isPresent()) {
             excelGoal.getErrors().add("Warmup name not found. User " + excelGoal.getName() + ", workout " + workoutName + ".");
@@ -117,8 +109,8 @@ public class XlsxProgramParser {
     }
 
     private Optional<WorkoutItem> extractWorkoutItem(final Sheet sheet, int workoutItemIndex,
-            int workoutIndex, ScanMode scanMode, ExcelGoal excelGoal, String workoutName) {
-        final int multiplyCoeff = scanMode == ScanMode.Strength ? 7 : 9;
+            int workoutIndex, ExcelGoal excelGoal, String workoutName) {
+        final int multiplyCoeff = 7;
         WorkoutItem workoutItem = new WorkoutItem();
         workoutItem.setRowIndex(4 + 4 + workoutItemIndex * multiplyCoeff);
         workoutItem.setColumnIndex(2 + workoutIndex);
@@ -129,27 +121,16 @@ public class XlsxProgramParser {
             return Optional.empty();
         }
         Number setsInp = getNumberOrNull(getCellData(sheet, 5 + 5 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
-        if (getIntegerOrNull(setsInp) == null || getIntegerOrNull(setsInp) == 0) {
-            excelGoal.getErrors().add("Amount of sets cannot be 0. User " + excelGoal.getName() + ", workout " + workoutName + ".");
-            return Optional.empty();
-        }
-        if (scanMode == ScanMode.Strength) {
-            Number repetitionsInp = getNumberOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
-            String weightInp = getStringOrNull(getCellData(sheet, 5 + 7 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
-            workoutItem.getInput().setExercise(exerciseName.orElse(null));
-            workoutItem.getInput().setSets(getIntegerOrNull(setsInp));
-            workoutItem.getInput().setRepetitions(getIntegerOrNull(repetitionsInp));
-            workoutItem.getInput().setWeight(extractNumbers(weightInp));
+        Number repetitionsInp = getNumberOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+        Number weightInp = getNumberOrNull(getCellData(sheet, 5 + 7 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+        workoutItem.getInput().setExercise(exerciseName.orElse(null));
+        workoutItem.getInput().setSets(getIntegerOrNull(setsInp));
+        if ("Time".equalsIgnoreCase(getStringOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 1)))) {
+            workoutItem.getInput().setTimeInMin(getIntegerOrNull(repetitionsInp));
         } else {
-            String timeInp = getStringOrNull(getCellData(sheet, 5 + 6 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
-            Number speedInp = getNumberOrNull(getCellData(sheet, 5 + 7 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
-            String resistanceInp = getStringOrNull(getCellData(sheet, 5 + 8 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
-            workoutItem.getInput().setExercise(exerciseName.orElse(null));
-            workoutItem.getInput().setSets(getIntegerOrNull(setsInp));
-            workoutItem.getInput().setTimeInMin(extractNumbers(timeInp));
-            workoutItem.getInput().setSpeed(getIntegerOrNull(speedInp));
-            workoutItem.getInput().setResistance(extractNumbers(resistanceInp));
+            workoutItem.getInput().setRepetitions(getIntegerOrNull(repetitionsInp));
         }
+        workoutItem.getInput().setWeight(getIntegerOrNull(weightInp));
         return Optional.of(workoutItem);
     }
 

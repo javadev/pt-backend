@@ -26,6 +26,8 @@ public class XlsxProgramParserTest {
         assertThat(excelGoals.get(0).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().get(0).getWorkoutItems().size(), equalTo(5));
         assertThat(excelGoals.get(0).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().get(0).getWorkoutItems()
                 .get(1).getInput().getExercise(), equalTo("Bench Press"));
+        assertThat(excelGoals.get(0).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().get(0).getWorkoutItems()
+                .get(1).getInput().getWeight(), equalTo(1));
         assertThat(excelGoals.get(0).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().get(0).getWorkoutItems().size(), equalTo(5));
         assertThat(excelGoals.get(0).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().get(0).getWorkoutItems()
                 .get(2).getInput().getExercise(), equalTo("Pull Up"));
@@ -35,6 +37,8 @@ public class XlsxProgramParserTest {
         assertThat(excelGoals.get(0).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().get(0).getWorkoutItems().size(), equalTo(5));
         assertThat(excelGoals.get(0).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().get(0).getWorkoutItems()
                 .get(4).getInput().getExercise(), equalTo("Plank"));
+        assertThat(excelGoals.get(0).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().get(0).getWorkoutItems()
+                .get(4).getInput().getTimeInMin(), equalTo(2));
         assertThat(excelGoals.get(7).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().get(0).getWorkoutItems().size(), equalTo(5));
         assertThat(excelGoals.get(7).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().get(0).getWorkoutItems()
                 .get(0).getInput().getExercise(), equalTo("Deadlift"));
@@ -43,7 +47,7 @@ public class XlsxProgramParserTest {
         assertThat(excelGoals.get(7).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().get(0).getWorkoutItems()
                 .get(0).getInput().getRepetitions(), equalTo(10));
         assertThat(excelGoals.get(7).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().get(0).getWorkoutItems()
-                .get(0).getInput().getWeight(), equalTo(null));
+                .get(0).getInput().getWeight(), equalTo(1));
     }
 
 }
