@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import static org.mockito.Matchers.anyString;
 import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -26,6 +27,13 @@ public class EmailConfirmResourceTest {
 
     @Test
     public void create() {
+        emailConfirmResource.create("");
+        verify(tokenEmailSignupService).confirmToken(anyString());
+    }
+
+    @Test
+    public void create_true() {
+        when(tokenEmailSignupService.confirmToken(anyString())).thenReturn(true);
         emailConfirmResource.create("");
         verify(tokenEmailSignupService).confirmToken(anyString());
     }
