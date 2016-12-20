@@ -91,7 +91,7 @@ class SendEmailService {
         parameters.put("user_name", inUserEmail.getUser_name());
         parameters.put("reset_password_link", emailResetUrl + inUserEmail.getResetToken());
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setSubject(getSubject("Welcome to the Personal Trainer application!", MessageType.ForgetPasswordMessage));
+        message.setSubject(getSubject("Reset password service", MessageType.ForgetPasswordMessage));
         message.setFrom("PT <pt.backend@gmail.com>");
         message.setTo(inUserEmail.getLogin());
         message.setText(
