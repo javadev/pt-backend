@@ -138,7 +138,7 @@ class TokenEmailSignupService {
         inUserEmails.get(0).setIs_reseted(Boolean.TRUE);
         inUserEmails.get(0).setReseted(LocalDateTime.now());
         inUserEmails.get(0).setPassword(passwordEncoder.encode(newPassword));
-        inUserEmails.get(0).setResetToken(null);
+        inUserEmails.get(0).setResetToken("");
         inUserEmailRepository.save(inUserEmails.get(0));
         return Optional.of(newPassword);
     }
