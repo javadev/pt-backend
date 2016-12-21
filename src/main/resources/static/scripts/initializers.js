@@ -34,9 +34,6 @@ function($, Backbone, App, LoginModel, DialogModel, MessagesView) {
       }
       if (!Backbone.History.started) {
         Backbone.history.start();
-      } else {
-        Backbone.history.stop();
-        Backbone.history.start();          
       }
     });
   });

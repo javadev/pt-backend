@@ -109,7 +109,7 @@ function ($, _, Backbone, Marionette, moment, App) {
         '{{ name }}',
       '</td>',
       '<td>',
-        '{{ _.map(workouts, function(item) {return item.name;}) }}',
+        '{{ _.map(userGroups, function(item) {return item.name;}) }}',
       '</td>',
       '<td>',
         '{{ errors }}',
@@ -195,7 +195,7 @@ function ($, _, Backbone, Marionette, moment, App) {
       this.buttons.show(new NewProgramButtons({model: this.model}));
       this.inputForm.show(new NewProgramInputForm({model: this.model}));
       this.parseResultTable.show(new ParseResultForm({model: this.model,
-          collection: new Backbone.Collection(this.model.get('parseUsers'))}));
+          collection: new Backbone.Collection(this.model.get('parseGoals'))}));
     }
   });
 
@@ -279,8 +279,8 @@ function ($, _, Backbone, Marionette, moment, App) {
         '<thead>',
           '<tr>',
             '<th>ID</th>',
-            '<th>User name</th>',
-            '<th>Workouts</th>',
+            '<th>Goal name</th>',
+            '<th>User groups</th>',
             '<th>Errors</th>',
           '</tr>',
         '</thead>',
