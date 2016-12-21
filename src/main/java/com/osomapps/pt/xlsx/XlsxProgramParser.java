@@ -58,7 +58,7 @@ public class XlsxProgramParser {
                         prevRoundName = roundName;
                         userGroup.getRounds().add(round);
                     }
-                    if (!prevPartName.equals(partName)) {
+                    if (partName != null && !prevPartName.equals(partName)) {
                         part = new Part()
                             .setName(partName);
                         prevPartName = partName;

@@ -4,6 +4,7 @@ import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.programs.InWorkoutItem;
 import com.osomapps.pt.programs.InWorkoutItemReport;
 import com.osomapps.pt.programs.InWorkoutItemSetReport;
+import com.osomapps.pt.programs.ParseGoal;
 import com.osomapps.pt.programs.ParseUserGroup;
 import com.osomapps.pt.programs.ParseWorkout;
 import com.osomapps.pt.programs.ParseWorkoutItem;
@@ -27,6 +28,12 @@ import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.data.domain.Sort;
 import com.osomapps.pt.programs.ParseGoalRepository;
+import com.osomapps.pt.programs.ParsePart;
+import com.osomapps.pt.programs.ParsePartRepository;
+import com.osomapps.pt.programs.ParseRound;
+import com.osomapps.pt.programs.ParseRoundRepository;
+import com.osomapps.pt.programs.ParseUserGroupRepository;
+import com.osomapps.pt.programs.ParseWarmupWorkoutItemRepository;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminProgramServiceTest {
@@ -34,9 +41,17 @@ public class AdminProgramServiceTest {
     @Mock
     private ProgramRepository programRepository;
     @Mock
-    private ParseGoalRepository parseUserRepository;
+    private ParseGoalRepository parseGoalRepository;
+    @Mock
+    private ParseUserGroupRepository parseUserGroupRepository;
+    @Mock
+    private ParseRoundRepository parseRoundRepository;
+    @Mock
+    private ParsePartRepository parsePartRepository;
     @Mock
     private ParseWorkoutRepository parseWorkoutRepository;
+    @Mock
+    private ParseWarmupWorkoutItemRepository parseWarmupWorkoutItemRepository;
     @Mock
     private ParseWorkoutItemRepository parseWorkoutItemRepository;
     @Mock
@@ -60,11 +75,16 @@ public class AdminProgramServiceTest {
 
     @Test
     public void findOne() {
-//        when(programRepository.findOne(eq(1L))).thenReturn(new ParseProgram().setParseUsers(Arrays.asList(new ParseUserGroup().setParseWorkouts(
-//                            Arrays.asList(new ParseWorkout().setParseWorkoutItems(
-//                                Arrays.asList(new ParseWorkoutItem())))))));
-//        adminProgramService.findOne(1L);
-//        verify(programRepository).findOne(eq(1L));
+        when(programRepository.findOne(eq(1L))).thenReturn(new ParseProgram().setParseGoals(
+                Arrays.asList(new ParseGoal().setParseUserGroups(
+                        Arrays.asList(new ParseUserGroup().setParseRounds(
+                            Arrays.asList(new ParseRound().setParseParts(
+                                Arrays.asList(new ParsePart().setParseWorkouts(
+                                        Arrays.asList(
+                                            new ParseWorkout().setParseWorkoutItems(
+                                                Arrays.asList(new ParseWorkoutItem())))))))))))));
+        adminProgramService.findOne(1L);
+        verify(programRepository).findOne(eq(1L));
     }
 
     @Test
@@ -72,18 +92,18 @@ public class AdminProgramServiceTest {
         ProgramRequestDTO programRequestDTO = new ProgramRequestDTO();
         final java.io.ByteArrayOutputStream result = new java.io.ByteArrayOutputStream();
         final byte[] buffer = new byte[1024];
-        try (InputStream inputStream = AdminProgramServiceTest.class.getResourceAsStream("dataurl01.txt")) {
+        try (InputStream inputStream = AdminProgramServiceTest.class.getResourceAsStream("dataurl02.txt")) {
             int length;
             while ((length = inputStream.read(buffer)) != -1) {
                 result.write(buffer, 0, length);
             }
         }
         programRequestDTO.setDataUrl(result.toString());
-        when(parseUserRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
+        when(parseGoalRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
         when(parseWorkoutRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
         when(programRepository.save(any(ParseProgram.class))).thenAnswer(i -> i.getArguments()[0]);
-//        adminProgramService.create(programRequestDTO);
-//        verify(programRepository).save(any(ParseProgram.class));
+        adminProgramService.create(programRequestDTO);
+        verify(programRepository).save(any(ParseProgram.class));
     }
 
     @Test(expected = ResourceNotFoundException.class)
@@ -96,21 +116,26 @@ public class AdminProgramServiceTest {
         ProgramRequestDTO programRequestDTO = new ProgramRequestDTO();
         final java.io.ByteArrayOutputStream result = new java.io.ByteArrayOutputStream();
         final byte[] buffer = new byte[1024];
-        try (InputStream inputStream = AdminProgramServiceTest.class.getResourceAsStream("dataurl01.txt")) {
+        try (InputStream inputStream = AdminProgramServiceTest.class.getResourceAsStream("dataurl02.txt")) {
             int length;
             while ((length = inputStream.read(buffer)) != -1) {
                 result.write(buffer, 0, length);
             }
         }
         programRequestDTO.setDataUrl(result.toString());
-//        when(programRepository.findOne(eq(1L))).thenReturn(new ParseProgram().setParseUsers(Arrays.asList(new ParseUserGroup().setParseWorkouts(
-//                    Arrays.asList(new ParseWorkout().setParseWorkoutItems(
-//                        Arrays.asList(new ParseWorkoutItem())))))));
-        when(parseUserRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
+        when(programRepository.findOne(eq(1L))).thenReturn(new ParseProgram().setParseGoals(
+                Arrays.asList(new ParseGoal().setParseUserGroups(
+                        Arrays.asList(new ParseUserGroup().setParseRounds(
+                            Arrays.asList(new ParseRound().setParseParts(
+                                Arrays.asList(new ParsePart().setParseWorkouts(
+                                        Arrays.asList(
+                                            new ParseWorkout().setParseWorkoutItems(
+                                                Arrays.asList(new ParseWorkoutItem())))))))))))));
+        when(parseGoalRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
         when(parseWorkoutRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
         when(programRepository.save(any(ParseProgram.class))).thenAnswer(i -> i.getArguments()[0]);
-//        adminProgramService.update(1L, programRequestDTO);
-//        verify(programRepository).save(any(ParseProgram.class));
+        adminProgramService.update(1L, programRequestDTO);
+        verify(programRepository).save(any(ParseProgram.class));
     }
 
     @Test(expected = ResourceNotFoundException.class)
@@ -120,18 +145,23 @@ public class AdminProgramServiceTest {
 
     @Test
     public void delete() {
-//        when(programRepository.findOne(eq(1L))).thenReturn(new ParseProgram().setParseUsers(Arrays.asList(new ParseUserGroup().setParseWorkouts(
-//                            Arrays.asList(new ParseWorkout().setParseWorkoutItems(
-//                                Arrays.asList(new ParseWorkoutItem())))))));
-//        adminProgramService.delete(1L);
-//        verify(programRepository).delete(any(ParseProgram.class));
+        when(programRepository.findOne(eq(1L))).thenReturn(new ParseProgram().setParseGoals(
+                Arrays.asList(new ParseGoal().setParseUserGroups(
+                        Arrays.asList(new ParseUserGroup().setParseRounds(
+                            Arrays.asList(new ParseRound().setParseParts(
+                                Arrays.asList(new ParsePart().setParseWorkouts(
+                                        Arrays.asList(
+                                            new ParseWorkout().setParseWorkoutItems(
+                                                Arrays.asList(new ParseWorkoutItem())))))))))))));
+        adminProgramService.delete(1L);
+        verify(programRepository).delete(any(ParseProgram.class));
     }
     
     @Test
     public void createXlsx() throws IOException {
         final java.io.ByteArrayOutputStream result = new java.io.ByteArrayOutputStream();
         final byte[] buffer = new byte[1024];
-        try (InputStream inputStream = AdminProgramServiceTest.class.getResourceAsStream("dataurl01.txt")) {
+        try (InputStream inputStream = AdminProgramServiceTest.class.getResourceAsStream("dataurl02.txt")) {
             int length;
             while ((length = inputStream.read(buffer)) != -1) {
                 result.write(buffer, 0, length);
@@ -142,17 +172,20 @@ public class AdminProgramServiceTest {
                 .setInWorkoutItemSetReports(Arrays.asList(new InWorkoutItemSetReport()
                     .setRepetitions(1)
                     .setWeight(1F))))));
-//        when(programRepository.findOne(eq(1L))).thenReturn(new ParseProgram()
-//                .setData_url(result.toString())
-//                .setParseUsers(Arrays.asList(new ParseUserGroup()
-//                        .setSheet_index(0)
-//                        .setParseWorkouts(Arrays.asList(new ParseWorkout()
-//                            .setRow_index(5)
-//                            .setColumn_index(10)
-//                            .setParseWorkoutItems(Arrays.asList(new ParseWorkoutItem()
-//                                .setIn_workout_item_id(1L)
-//                                .setColumn_index(1)
-//                                .setRow_index(1))))))));
-//        adminProgramService.createXlsx(1L, new java.io.ByteArrayOutputStream());
+        when(programRepository.findOne(eq(1L))).thenReturn(new ParseProgram()
+                .setData_url(result.toString())
+                .setParseGoals(Arrays.asList(new ParseGoal()
+                        .setSheet_index(0)
+                        .setParseUserGroups(Arrays.asList(new ParseUserGroup()
+                                .setParseRounds(Arrays.asList(new ParseRound()
+                                        .setParseParts(Arrays.asList(new ParsePart()
+                                                .setParseWorkouts(Arrays.asList(new ParseWorkout()
+                            .setRow_index(5)
+                            .setColumn_index(10)
+                            .setParseWorkoutItems(Arrays.asList(new ParseWorkoutItem()
+                                .setIn_workout_item_id(1L)
+                                .setColumn_index(1)
+                                .setRow_index(1))))))))))))));
+        adminProgramService.createXlsx(1L, new java.io.ByteArrayOutputStream());
     }
 }
