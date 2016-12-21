@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @ToString
-class UserGroup {
+public class UserGroup {
     String name;
     int columnIndex;
     int rowIndex;

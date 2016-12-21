@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @ToString
-class Round {
+public class Round {
     String name;
     int columnIndex;
     int rowIndex;

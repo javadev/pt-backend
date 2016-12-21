@@ -15,7 +15,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-class Part {
+public class Part {
     String name;
     int sheetIndex;
     List<Workout> workouts = new ArrayList<>();

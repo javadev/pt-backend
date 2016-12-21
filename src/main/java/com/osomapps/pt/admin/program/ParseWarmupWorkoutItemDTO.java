@@ -1,7 +1,5 @@
 package com.osomapps.pt.admin.program;
 
-import com.osomapps.pt.programs.ParseWarmupWorkoutItem;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,9 +13,10 @@ import lombok.Builder;
 @Getter
 @Setter
 @Builder
-class ParseWorkoutDTO {
+class ParseWarmupWorkoutItemDTO {
     Long id;
     String name;
-    ParseWarmupWorkoutItemDTO warmupWorkoutItem;
-    List<ParseWorkoutItemDTO> workoutItems;
+    Integer speed;
+    Integer incline;
+    Integer time_in_min;
 }

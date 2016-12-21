@@ -1,5 +1,6 @@
 package com.osomapps.pt.programs;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -12,10 +13,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,23 +27,21 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 @Setter
 @Entity
-@Table (name = "program", schema = "ptcore")
+@Table (name = "parse_part", schema = "ptcore")
 @DynamicInsert
-public class Program {
+@DynamicUpdate
+public class ParsePart {
     @Id
-    @SequenceGenerator(name = "ProgramIdSequence", sequenceName = "ptcore.program_id_seq",
+    @SequenceGenerator(name = "ParsePartIdSequence", sequenceName = "ptcore.parse_part_id_seq",
             allocationSize = 1, initialValue = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ProgramIdSequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ParsePartIdSequence")
     Long id;
     LocalDateTime created;
     String name;
-    String file_name;
-    Long file_size;
-    String file_type;
-    String data_url;
-    LocalDateTime updated;
-    Boolean active;
-    @OneToMany(mappedBy="program")
-    List<ParseUser> parseUsers;
-
+    @ManyToOne
+    @JoinColumn(name = "parse_round_id")
+    @JsonBackReference
+    ParseRound parseRound;
+    @OneToMany(mappedBy="parsePart")
+    List<ParseWorkout> parseWorkouts;
 }

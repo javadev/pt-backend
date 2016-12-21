@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,24 +27,21 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 @Setter
 @Entity
-@Table (name = "parse_workout", schema = "ptcore")
+@Table (name = "parse_user_group", schema = "ptcore")
 @DynamicInsert
-public class ParseWorkout {
+@DynamicUpdate
+public class ParseUserGroup {
     @Id
-    @SequenceGenerator(name = "ParseWorkoutIdSequence", sequenceName = "ptcore.parse_workout_id_seq",
+    @SequenceGenerator(name = "ParseUserGroupIdSequence", sequenceName = "ptcore.parse_user_group_id_seq",
             allocationSize = 1, initialValue = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ParseWorkoutIdSequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ParseUserGroupIdSequence")
     Long id;
     LocalDateTime created;
     String name;
-    Integer column_index;
-    Integer row_index;
     @ManyToOne
-    @JoinColumn(name="parse_part_id")
+    @JoinColumn(name="parse_goal_id")
     @JsonBackReference
-    ParsePart parsePart;
-    @OneToMany(mappedBy="parseWorkout")
-    List<ParseWarmupWorkoutItem> parseWarmupWorkoutItems;
-    @OneToMany(mappedBy="parseWorkout")
-    List<ParseWorkoutItem> parseWorkoutItems;
+    ParseGoal parseGoal;
+    @OneToMany(mappedBy="parseUserGroup")
+    List<ParseRound> parseRounds;
 }
