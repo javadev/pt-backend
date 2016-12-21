@@ -168,6 +168,10 @@ function ($, _, Backbone, Marionette, moment, App) {
       evt.preventDefault();
       this._model._userGroupName = this.model.get('name');
       this._model.trigger('refresh:rounds', this.model.get('rounds'));
+      this._model.trigger('refresh:parts', []);
+      this._model._workoutName = '';
+      this._model.trigger('refresh:workouts', []);
+      this._model.trigger('refresh:workoutItems', []);
     }
   });
 
@@ -199,6 +203,9 @@ function ($, _, Backbone, Marionette, moment, App) {
       evt.preventDefault();
       this._model._roundName = this.model.get('name');
       this._model.trigger('refresh:parts', this.model.get('parts'));
+      this._model._workoutName = '';
+      this._model.trigger('refresh:workouts', []);
+      this._model.trigger('refresh:workoutItems', []);
     }
   });
 
@@ -230,6 +237,7 @@ function ($, _, Backbone, Marionette, moment, App) {
       evt.preventDefault();
       this._model._partName = this.model.get('name');
       this._model.trigger('refresh:workouts', this.model.get('workouts'));
+      this._model.trigger('refresh:workoutItems', []);
     }
   });
 
