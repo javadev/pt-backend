@@ -203,8 +203,9 @@ function ($, _, Backbone, Marionette, moment, App) {
       evt.preventDefault();
       this._model._roundName = this.model.get('name');
       this._model.trigger('refresh:parts', this.model.get('parts'));
-      this._model._workoutName = '';
+      this._model._partName = '';
       this._model.trigger('refresh:workouts', []);
+      this._model._workoutName = '';
       this._model.trigger('refresh:workoutItems', []);
     }
   });
@@ -237,6 +238,7 @@ function ($, _, Backbone, Marionette, moment, App) {
       evt.preventDefault();
       this._model._partName = this.model.get('name');
       this._model.trigger('refresh:workouts', this.model.get('workouts'));
+      this._model._workoutName = '';
       this._model.trigger('refresh:workoutItems', []);
     }
   });
@@ -718,7 +720,7 @@ function ($, _, Backbone, Marionette, moment, App) {
     template: _.template([
     '<div class="panel panel-primary">',
       '<div class="panel-heading">',
-        '<h3 class="panel-title"> Workouts {{ _.isEmpty(getWorkoutName()) ? "" : "for user group " + getWorkoutName() }} </h3>',
+        '<h3 class="panel-title"> Workouts {{ _.isEmpty(getPartName()) ? "" : "for part " + getPartName() }} </h3>',
       '</div>',
       '<table class="table">',
         '<thead>',
@@ -736,8 +738,8 @@ function ($, _, Backbone, Marionette, moment, App) {
     templateHelpers: function() {
       var view = this;
       return {
-        getWorkoutName: function () {
-          return view.model._workoutName;
+        getPartName: function () {
+          return view.model._partName;
         }
       };
     },
@@ -766,7 +768,7 @@ function ($, _, Backbone, Marionette, moment, App) {
     template: _.template([
     '<div class="panel panel-primary">',
       '<div class="panel-heading">',
-        '<h3 class="panel-title"> Exercises {{ _.isEmpty(getWorkoutName()) ? "" : "for user group " + getWorkoutName() }} </h3>',
+        '<h3 class="panel-title"> Exercises {{ _.isEmpty(getWorkoutName()) ? "" : "for workout " + getWorkoutName() }} </h3>',
       '</div>',
       '<table class="table">',
         '<thead>',

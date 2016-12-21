@@ -120,6 +120,7 @@ class AdminProgramService {
     private ParseWorkoutDTO createParseWorkoutDTO(ParseWorkout workout) {
         return ParseWorkoutDTO.builder()
                 .id(workout.getId())
+                .name(workout.getName())
                 .warmupWorkoutItem(workout.getParseWarmupWorkoutItems() == null ? null
                         : ParseWarmupWorkoutItemDTO.builder()
                                 .id(workout.getParseWarmupWorkoutItems().get(0).getId())
