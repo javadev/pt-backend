@@ -102,6 +102,7 @@ public class AdminProgramServiceTest {
         when(parseGoalRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
         when(parseWorkoutRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
         when(programRepository.save(any(ParseProgram.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(adminProgramAssignService.assign(anyList())).thenAnswer(i -> i.getArguments()[0]);
         adminProgramService.create(programRequestDTO);
         verify(programRepository).save(any(ParseProgram.class));
     }
@@ -134,6 +135,7 @@ public class AdminProgramServiceTest {
         when(parseGoalRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
         when(parseWorkoutRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
         when(programRepository.save(any(ParseProgram.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(adminProgramAssignService.assign(anyList())).thenAnswer(i -> i.getArguments()[0]);
         adminProgramService.update(1L, programRequestDTO);
         verify(programRepository).save(any(ParseProgram.class));
     }

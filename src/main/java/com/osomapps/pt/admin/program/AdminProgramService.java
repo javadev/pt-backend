@@ -306,27 +306,27 @@ class AdminProgramService {
         return programToDto(program);
     }
 
-    private WorkoutItem createWorkoutItem(ParseWorkoutItem parseWorkoutItem) {
-        InWorkoutItem inWorkoutItem =
-                parseWorkoutItem.getIn_workout_item_id() == null ? null
-                : inWorkoutItemRepository.findOne(parseWorkoutItem.getIn_workout_item_id());
-        WorkoutItem workoutItem = new WorkoutItem()
-                .setColumnIndex(parseWorkoutItem.getColumn_index())
-                .setRowIndex(parseWorkoutItem.getRow_index())
-                .setInput(new Input()
-                        .setSets(parseWorkoutItem.getSets())
-                        .setRepetitions(parseWorkoutItem.getRepetitions())
-                        .setWeight(parseWorkoutItem.getWeight()));
-        if (inWorkoutItem != null && !inWorkoutItem.getInWorkoutItemReports().isEmpty()) {
-            InWorkoutItemReport inWorkoutItemReport = inWorkoutItem.getInWorkoutItemReports()
-                    .get(inWorkoutItem.getInWorkoutItemReports().size() - 1);
-            workoutItem.setOutput(new Output()
-                    .setSets(inWorkoutItemReport.getInWorkoutItemSetReports().size())
-                    .setRepetitions(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
-                            .map(item -> item.getRepetitions()).collect(Collectors.toList()))
-                    .setWeights(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
-                            .map(item -> item.getWeight() == null ? null : item.getWeight().intValue()).collect(Collectors.toList())));
-        }
-        return workoutItem;
-    }
+//    private WorkoutItem createWorkoutItem(ParseWorkoutItem parseWorkoutItem) {
+//        InWorkoutItem inWorkoutItem =
+//                parseWorkoutItem.getIn_workout_item_id() == null ? null
+//                : inWorkoutItemRepository.findOne(parseWorkoutItem.getIn_workout_item_id());
+//        WorkoutItem workoutItem = new WorkoutItem()
+//                .setColumnIndex(parseWorkoutItem.getColumn_index())
+//                .setRowIndex(parseWorkoutItem.getRow_index())
+//                .setInput(new Input()
+//                        .setSets(parseWorkoutItem.getSets())
+//                        .setRepetitions(parseWorkoutItem.getRepetitions())
+//                        .setWeight(parseWorkoutItem.getWeight()));
+//        if (inWorkoutItem != null && !inWorkoutItem.getInWorkoutItemReports().isEmpty()) {
+//            InWorkoutItemReport inWorkoutItemReport = inWorkoutItem.getInWorkoutItemReports()
+//                    .get(inWorkoutItem.getInWorkoutItemReports().size() - 1);
+//            workoutItem.setOutput(new Output()
+//                    .setSets(inWorkoutItemReport.getInWorkoutItemSetReports().size())
+//                    .setRepetitions(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
+//                            .map(item -> item.getRepetitions()).collect(Collectors.toList()))
+//                    .setWeights(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
+//                            .map(item -> item.getWeight() == null ? null : item.getWeight().intValue()).collect(Collectors.toList())));
+//        }
+//        return workoutItem;
+//    }
 }
