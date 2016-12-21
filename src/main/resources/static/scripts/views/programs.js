@@ -113,8 +113,192 @@ function ($, _, Backbone, Marionette, moment, App) {
       '</td>',
       '<td>',
         '{{ errors }}',
+      '</td>',
+      '<td>',
+        '<button type="button" class="btn btn-default btn-sm js-view-userGroups">',
+          '<i class="glyphicon glyphicon-expand"></i>',
+        '</button>',
       '</td>'
-    ].join(''))
+    ].join('')),
+    initialize: function(options) {
+      this._model = options.rootModel;
+    },
+    events: {
+      'click .js-view-userGroups': 'reloadData'
+    },
+    reloadData: function(evt) {
+      evt.preventDefault();
+      this._model._goalName = this.model.get('name');
+      this._model.trigger('refresh:userGroups', this.model.get('userGroups'));
+      this._model._roundName = '';
+      this._model.trigger('refresh:rounds', []);
+      this._model._partName = '';
+      this._model.trigger('refresh:parts', []);
+      this._model._workoutName = '';
+      this._model.trigger('refresh:workouts', []);
+      this._model.trigger('refresh:workoutItems', []);
+    }
+  });
+
+  var ParseUserGroupResult = Marionette.ItemView.extend({
+    tagName: 'tr',
+    template: _.template([
+      '<td>',
+        '{{ id }}',
+      '</td>',
+      '<td>',
+        '{{ name }}',
+      '</td>',
+      '<td>',
+        '{{ _.map(rounds, function(item) {return item.name;}) }}',
+      '</td>',
+      '<td>',
+        '<button type="button" class="btn btn-default btn-sm js-view-round">',
+          '<i class="glyphicon glyphicon-expand"></i>',
+        '</button>',
+      '</td>'
+    ].join('')),
+    initialize: function(options) {
+      this._model = options.rootModel;
+    },
+    events: {
+      'click .js-view-round': 'reloadData'
+    },
+    reloadData: function(evt) {
+      evt.preventDefault();
+      this._model._userGroupName = this.model.get('name');
+      this._model.trigger('refresh:rounds', this.model.get('rounds'));
+    }
+  });
+
+  var ParseRoundResult = Marionette.ItemView.extend({
+    tagName: 'tr',
+    template: _.template([
+      '<td>',
+        '{{ id }}',
+      '</td>',
+      '<td>',
+        '{{ name }}',
+      '</td>',
+      '<td>',
+        '{{ _.map(parts, function(item) {return item.name;}) }}',
+      '</td>',
+      '<td>',
+        '<button type="button" class="btn btn-default btn-sm js-view-round">',
+          '<i class="glyphicon glyphicon-expand"></i>',
+        '</button>',
+      '</td>'
+    ].join('')),
+    initialize: function(options) {
+      this._model = options.rootModel;
+    },
+    events: {
+      'click .js-view-round': 'reloadData'
+    },
+    reloadData: function(evt) {
+      evt.preventDefault();
+      this._model._roundName = this.model.get('name');
+      this._model.trigger('refresh:parts', this.model.get('parts'));
+    }
+  });
+
+  var ParsePartResult = Marionette.ItemView.extend({
+    tagName: 'tr',
+    template: _.template([
+      '<td>',
+        '{{ id }}',
+      '</td>',
+      '<td>',
+        '{{ name }}',
+      '</td>',
+      '<td>',
+        '{{ _.map(workouts, function(item) {return item.name;}) }}',
+      '</td>',
+      '<td>',
+        '<button type="button" class="btn btn-default btn-sm js-view-workout">',
+          '<i class="glyphicon glyphicon-expand"></i>',
+        '</button>',
+      '</td>'
+    ].join('')),
+    initialize: function(options) {
+      this._model = options.rootModel;
+    },
+    events: {
+      'click .js-view-workout': 'reloadData'
+    },
+    reloadData: function(evt) {
+      evt.preventDefault();
+      this._model._partName = this.model.get('name');
+      this._model.trigger('refresh:workouts', this.model.get('workouts'));
+    }
+  });
+
+  var ParseWorkoutResult = Marionette.ItemView.extend({
+    tagName: 'tr',
+    template: _.template([
+      '<td>',
+        '{{ id }}',
+      '</td>',
+      '<td>',
+        '{{ name }}',
+      '</td>',
+      '<td>',
+        '{{ _.map(workoutItems, function(item) {return item.name;}) }}',
+      '</td>',
+      '<td>',
+        '<button type="button" class="btn btn-default btn-sm js-view-workout">',
+          '<i class="glyphicon glyphicon-expand"></i>',
+        '</button>',
+      '</td>'
+    ].join('')),
+    initialize: function(options) {
+      this._model = options.rootModel;
+    },
+    events: {
+      'click .js-view-workout': 'reloadData'
+    },
+    reloadData: function(evt) {
+      evt.preventDefault();
+      this._model._workoutName = this.model.get('name');
+      this._model.trigger('refresh:workoutItems', this.model.get('workoutItems'));
+    }
+  });
+
+  var ParseWorkoutItemResult = Marionette.ItemView.extend({
+    tagName: 'tr',
+    template: _.template([
+      '<td>',
+        '{{ id }}',
+      '</td>',
+      '<td>',
+        '{{ name }}',
+      '</td>',
+      '<td>',
+        '{{ getInputs() }}',
+      '</td>'
+    ].join('')),
+    templateHelpers: function() {
+      var model = this.model;
+      return {
+        getInputs: function () {
+          return 'sets ' + model.get('sets') +
+                  (model.get('repetitions') === null ? '' : ', repetitions ' + model.get('repetitions')) +
+                  (model.get('weight') === null ? '' : ', weight ' + model.get('weight')) +
+                  (model.get('time_in_min') === null ? '' : ', time ' + model.get('time_in_min'));
+        }
+      };
+    },
+    initialize: function(options) {
+      this._model = options.rootModel;
+    },
+    events: {
+      'click .js-view-workout': 'reloadData'
+    },
+    reloadData: function(evt) {
+      evt.preventDefault();
+      this._model._workoutName = this.model.get('name');
+      this._model.trigger('refresh:workoutItemss', this.model.get('workoutItems'));
+    }
   });
 
   var Programs = Marionette.CompositeView.extend({
@@ -174,6 +358,11 @@ function ($, _, Backbone, Marionette, moment, App) {
         '<div id="buttons"/>',
         '<div id="inputForm"/>',
         '<div id="parseResultTable"/>',
+        '<div id="parseUserGroupResultTable"/>',
+        '<div id="parseRoundResultTable"/>',
+        '<div id="parsePartResultTable"/>',
+        '<div id="parseWorkoutResultTable"/>',
+        '<div id="parseWorkoutItemResultTable"/>',
       '</div>'
     ].join('')),
     templateHelpers: function() {
@@ -189,13 +378,53 @@ function ($, _, Backbone, Marionette, moment, App) {
     regions: {
       buttons: '#buttons',
       inputForm: '#inputForm',
-      parseResultTable: '#parseResultTable'
+      parseResultTable: '#parseResultTable',
+      parseUserGroupResultTable: '#parseUserGroupResultTable',
+      parseRoundResultTable: '#parseRoundResultTable',
+      parsePartResultTable: '#parsePartResultTable',
+      parseWorkoutResultTable: '#parseWorkoutResultTable',
+      parseWorkoutItemResultTable: '#parseWorkoutItemResultTable'
     },
     onShow: function() {
       this.buttons.show(new NewProgramButtons({model: this.model}));
       this.inputForm.show(new NewProgramInputForm({model: this.model}));
       this.parseResultTable.show(new ParseResultForm({model: this.model,
           collection: new Backbone.Collection(this.model.get('parseGoals'))}));
+      var userGroups = new Backbone.Collection();
+      this.parseUserGroupResultTable.show(new ParseUserGroupForm({model: this.model,
+          collection: userGroups}));
+      this.model.on('refresh:userGroups', function(data) {
+          userGroups.set(data);
+          userGroups.trigger('sync');
+      });
+      var rounds = new Backbone.Collection();
+      this.parseRoundResultTable.show(new ParseRoundForm({model: this.model,
+          collection: rounds}));
+      this.model.on('refresh:rounds', function(data) {
+          rounds.set(data);
+          rounds.trigger('sync');
+      });
+      var parts = new Backbone.Collection();
+      this.parsePartResultTable.show(new ParsePartForm({model: this.model,
+          collection: parts}));
+      this.model.on('refresh:parts', function(data) {
+          parts.set(data);
+          parts.trigger('sync');
+      });
+      var workouts = new Backbone.Collection();
+      this.parseWorkoutResultTable.show(new ParseWorkoutForm({model: this.model,
+          collection: workouts}));
+      this.model.on('refresh:workouts', function(data) {
+          workouts.set(data);
+          workouts.trigger('sync');
+      });
+      var workoutItems = new Backbone.Collection();
+      this.parseWorkoutItemResultTable.show(new ParseWorkoutItemForm({model: this.model,
+          collection: workoutItems}));
+      this.model.on('refresh:workoutItems', function(data) {
+          workoutItems.set(data);
+          workoutItems.trigger('sync');
+      });
     }
   });
 
@@ -263,7 +492,7 @@ function ($, _, Backbone, Marionette, moment, App) {
       table: '.table'
     },
     itemViewOptions : function () {
-      return { collection: this.collection };
+      return { collection: this.collection, rootModel: this.model };
     },
     initialize: function() {
     },
@@ -282,6 +511,7 @@ function ($, _, Backbone, Marionette, moment, App) {
             '<th>Goal name</th>',
             '<th>User groups</th>',
             '<th>Errors</th>',
+            '<th></th>',
           '</tr>',
         '</thead>',
         '<tbody></tbody>',
@@ -316,6 +546,245 @@ function ($, _, Backbone, Marionette, moment, App) {
       .fail(function (xhr) {
         App.vent.trigger('xhr:error', 'Program save was failed');
       });
+    }
+  });
+
+  var ParseUserGroupForm = Marionette.CompositeView.extend({
+    itemViewContainer: 'tbody',
+    itemView: ParseUserGroupResult,
+    emptyView: EmptyParseView,
+    tagName: 'div',
+    className: 'js-users-mapping-config',
+    ui: {
+      table: '.table'
+    },
+    itemViewOptions : function () {
+      return { collection: this.collection, rootModel: this.model };
+    },
+    initialize: function() {
+    },
+    template: _.template([
+    '<div class="panel panel-primary">',
+      '<div class="panel-heading">',
+        '<h3 class="panel-title"> User groups {{ _.isEmpty(getGoalName()) ? "" : "for goal " + getGoalName() }} </h3>',
+      '</div>',
+      '<table class="table">',
+        '<thead>',
+          '<tr>',
+            '<th>ID</th>',
+            '<th>User group</th>',
+            '<th>Rounds</th>',
+            '<th></th>',
+          '</tr>',
+        '</thead>',
+        '<tbody></tbody>',
+      '</table>',
+    '</div>'
+    ].join('')),
+    templateHelpers: function() {
+      var view = this;
+      return {
+        getGoalName: function () {
+          return view.model._goalName;
+        }
+      };
+    },
+    modelEvents: {
+      'change': 'render'
+    },
+    collectionEvents: {
+      'sync': 'render'
+    }
+  });
+
+  var ParseRoundForm = Marionette.CompositeView.extend({
+    itemViewContainer: 'tbody',
+    itemView: ParseRoundResult,
+    emptyView: EmptyParseView,
+    tagName: 'div',
+    className: 'js-users-mapping-config',
+    ui: {
+      table: '.table'
+    },
+    itemViewOptions : function () {
+      return { collection: this.collection, rootModel: this.model };
+    },
+    initialize: function() {
+    },
+    template: _.template([
+    '<div class="panel panel-primary">',
+      '<div class="panel-heading">',
+        '<h3 class="panel-title"> Rounds {{ _.isEmpty(getUserGroupName()) ? "" : "for user group " + getUserGroupName() }} </h3>',
+      '</div>',
+      '<table class="table">',
+        '<thead>',
+          '<tr>',
+            '<th>ID</th>',
+            '<th>Round</th>',
+            '<th>Parts</th>',
+            '<th></th>',
+          '</tr>',
+        '</thead>',
+        '<tbody></tbody>',
+      '</table>',
+    '</div>'
+    ].join('')),
+    templateHelpers: function() {
+      var view = this;
+      return {
+        getUserGroupName: function () {
+          return view.model._userGroupName;
+        }
+      };
+    },
+    modelEvents: {
+      'change': 'render'
+    },
+    collectionEvents: {
+      'sync': 'render'
+    }
+  });
+
+  var ParsePartForm = Marionette.CompositeView.extend({
+    itemViewContainer: 'tbody',
+    itemView: ParsePartResult,
+    emptyView: EmptyParseView,
+    tagName: 'div',
+    className: 'js-users-mapping-config',
+    ui: {
+      table: '.table'
+    },
+    itemViewOptions : function () {
+      return { collection: this.collection, rootModel: this.model };
+    },
+    initialize: function() {
+    },
+    template: _.template([
+    '<div class="panel panel-primary">',
+      '<div class="panel-heading">',
+        '<h3 class="panel-title"> Parts {{ _.isEmpty(getRoundName()) ? "" : "for round " + getRoundName() }} </h3>',
+      '</div>',
+      '<table class="table">',
+        '<thead>',
+          '<tr>',
+            '<th>ID</th>',
+            '<th>Part</th>',
+            '<th>Workouts</th>',
+            '<th></th>',
+          '</tr>',
+        '</thead>',
+        '<tbody></tbody>',
+      '</table>',
+    '</div>'
+    ].join('')),
+    templateHelpers: function() {
+      var view = this;
+      return {
+        getRoundName: function () {
+          return view.model._roundName;
+        }
+      };
+    },
+    modelEvents: {
+      'change': 'render'
+    },
+    collectionEvents: {
+      'sync': 'render'
+    }
+  });
+  
+  var ParseWorkoutForm = Marionette.CompositeView.extend({
+    itemViewContainer: 'tbody',
+    itemView: ParseWorkoutResult,
+    emptyView: EmptyParseView,
+    tagName: 'div',
+    className: 'js-users-mapping-config',
+    ui: {
+      table: '.table'
+    },
+    itemViewOptions : function () {
+      return { collection: this.collection, rootModel: this.model };
+    },
+    initialize: function() {
+    },
+    template: _.template([
+    '<div class="panel panel-primary">',
+      '<div class="panel-heading">',
+        '<h3 class="panel-title"> Workouts {{ _.isEmpty(getWorkoutName()) ? "" : "for user group " + getWorkoutName() }} </h3>',
+      '</div>',
+      '<table class="table">',
+        '<thead>',
+          '<tr>',
+            '<th>ID</th>',
+            '<th>Workout</th>',
+            '<th>Exercises</th>',
+            '<th></th>',
+          '</tr>',
+        '</thead>',
+        '<tbody></tbody>',
+      '</table>',
+    '</div>'
+    ].join('')),
+    templateHelpers: function() {
+      var view = this;
+      return {
+        getWorkoutName: function () {
+          return view.model._workoutName;
+        }
+      };
+    },
+    modelEvents: {
+      'change': 'render'
+    },
+    collectionEvents: {
+      'sync': 'render'
+    }
+  });
+
+  var ParseWorkoutItemForm = Marionette.CompositeView.extend({
+    itemViewContainer: 'tbody',
+    itemView: ParseWorkoutItemResult,
+    emptyView: EmptyParseView,
+    tagName: 'div',
+    className: 'js-users-mapping-config',
+    ui: {
+      table: '.table'
+    },
+    itemViewOptions : function () {
+      return { collection: this.collection, rootModel: this.model };
+    },
+    initialize: function() {
+    },
+    template: _.template([
+    '<div class="panel panel-primary">',
+      '<div class="panel-heading">',
+        '<h3 class="panel-title"> Exercises {{ _.isEmpty(getWorkoutName()) ? "" : "for user group " + getWorkoutName() }} </h3>',
+      '</div>',
+      '<table class="table">',
+        '<thead>',
+          '<tr>',
+            '<th>ID</th>',
+            '<th>Exercise</th>',
+            '<th>Inputs</th>',
+          '</tr>',
+        '</thead>',
+        '<tbody></tbody>',
+      '</table>',
+    '</div>'
+    ].join('')),
+    templateHelpers: function() {
+      var view = this;
+      return {
+        getWorkoutName: function () {
+          return view.model._workoutName;
+        }
+      };
+    },
+    modelEvents: {
+      'change': 'render'
+    },
+    collectionEvents: {
+      'sync': 'render'
     }
   });
 
