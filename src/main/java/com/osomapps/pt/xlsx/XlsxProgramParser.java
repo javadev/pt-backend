@@ -43,7 +43,8 @@ public class XlsxProgramParser {
                 UserGroup userGroup = new UserGroup();
                 Round round = new Round();
                 Part part = new Part();
-                for (int workoutIndex = 0; workoutIndex < 10; workoutIndex += 1) {
+                for (int workoutIndex = 0; workoutIndex < sheet.getRow(0).getPhysicalNumberOfCells();
+                        workoutIndex += 1) {
                     final String userGroupName = getNumberOrNullAsString(getCellData(sheet, 2, 2 + workoutIndex));
                     final String roundName = getNumberOrNullAsString(getCellData(sheet, 3, 2 + workoutIndex));
                     final String partName = (String) getCellData(sheet, 4, 2 + workoutIndex);

@@ -18,6 +18,7 @@ public class XlsxProgramParserTest {
         }
         assertThat(excelGoals.size(), equalTo(8));
         assertThat(excelGoals.get(0).getName(), equalTo("Loose weight"));
+        assertThat(excelGoals.get(0).getUserGroups().size(), equalTo(4));
         assertThat(excelGoals.get(0).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().size(), equalTo(1));
         assertThat(excelGoals.get(0).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().get(0).getName(), equalTo("Loose weight_1_1_Part 1"));
         assertThat(excelGoals.get(0).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().get(0).getWorkoutItems().size(), equalTo(5));
