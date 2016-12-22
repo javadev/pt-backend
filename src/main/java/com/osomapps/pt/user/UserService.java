@@ -87,6 +87,9 @@ public class UserService {
         if (inUser.getWeight() != null) {
             userResponse.setWeight(inUser.getWeight().longValue());
         }
+        if (inUser.getD_level() != null) {
+            userResponse.setLevel(UserLevel.of(Integer.parseInt(inUser.getD_level())));
+        }
         userResponse.setAvatar_dataurl(inUser.getAvatar_dataurl());
         userResponse.setName(getUserName(inUser).orElse("?"));
         return userResponse;        
@@ -106,6 +109,9 @@ public class UserService {
         }
         if (userRequest.getWeight() != null) {
             inUser.setWeight(userRequest.getWeight().floatValue());
+        }
+        if (userRequest.getLevel() != null) {
+            inUser.setD_level("" + userRequest.getLevel());
         }
         final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
         dataurlValidator.validate(userRequest.getAvatar_dataurl(), errors);

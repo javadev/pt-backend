@@ -7,6 +7,6 @@ import org.junit.Test;
 public class UserRequestDTOTest {
     @Test
     public void createAllArgs() {
-        assertThat(new UserRequestDTO(null, null, null, null, null, null), notNullValue());
+        assertThat(new UserRequestDTO(null, null, null, null, null, null, null), notNullValue());
     }
 }

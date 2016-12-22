@@ -1,5 +1,6 @@
 package com.osomapps.pt.user;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,4 +19,6 @@ class UserResponseDTO {
     Long height;
     Long weight;
     String avatar_dataurl;
+    @JsonSerialize(using = UserLevelSerializer.class)
+    UserLevel level;
 }

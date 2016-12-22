@@ -49,13 +49,14 @@ public class UserServiceTest {
     @Test
     public void findOne_token_found() {
         InUserLogin inUserLogin = new InUserLogin();
-        inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
+        inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F).setD_level("1"));
         when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
         when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
         UserResponseDTO userResponseDTO = userService.findOne("1");
         assertThat(userResponseDTO.age, equalTo(32L));
         assertThat(userResponseDTO.height, equalTo(180L));
         assertThat(userResponseDTO.weight, equalTo(50L));
+        assertThat(userResponseDTO.level, equalTo(UserLevel.Unexperienced));
     }
 
     @Test(expected = UnauthorizedException.class)
@@ -77,6 +78,7 @@ public class UserServiceTest {
         assertThat(userResponseDTO.age, equalTo(null));
         assertThat(userResponseDTO.height, equalTo(null));
         assertThat(userResponseDTO.weight, equalTo(null));
+        assertThat(userResponseDTO.level, equalTo(null));
     }
 
     @Test(expected = ResourceNotFoundException.class)
