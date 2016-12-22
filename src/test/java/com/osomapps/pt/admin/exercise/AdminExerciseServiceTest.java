@@ -4,7 +4,9 @@ import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.dictionary.DictionaryService;
 import com.osomapps.pt.exercises.Exercise;
 import com.osomapps.pt.exercises.ExerciseBodypart;
+import com.osomapps.pt.exercises.ExerciseFile;
 import com.osomapps.pt.exercises.ExerciseRepository;
+import java.util.Arrays;
 import java.util.Collections;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +32,8 @@ public class AdminExerciseServiceTest {
     private ExerciseInputRepository exerciseInputRepository;
     @Mock
     private ExerciseOutputRepository exerciseOutputRepository;
+    @Mock
+    private ExerciseFileRepository exerciseFileRepository;
     @Mock
     private DictionaryService dictionaryService;
 
@@ -70,6 +74,7 @@ public class AdminExerciseServiceTest {
         exerciseRequestDTO.setTypes(Collections.emptyList());
         exerciseRequestDTO.setInputs(Collections.emptyList());
         exerciseRequestDTO.setOutputs(Collections.emptyList());
+        exerciseRequestDTO.setFiles(Arrays.asList(new ExerciseFileRequestDTO()));
         ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();
         existedExerciseBodypart.setId(1L);
         existedExerciseBodypart.setDExerciseBodypartName("10");
@@ -78,6 +83,7 @@ public class AdminExerciseServiceTest {
         savedExercise.setId(1L);
         savedExercise.setDExerciseName("10");
         savedExercise.setExerciseBodypart(existedExerciseBodypart);
+        savedExercise.setExerciseFiles(Arrays.asList(new ExerciseFile()));
         when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
         tokenService.create(exerciseRequestDTO);
         verify(exerciseRepository).save(any(Exercise.class));
@@ -97,6 +103,7 @@ public class AdminExerciseServiceTest {
         exerciseRequestDTO.setTypes(Collections.emptyList());
         exerciseRequestDTO.setInputs(Collections.emptyList());
         exerciseRequestDTO.setOutputs(Collections.emptyList());
+        exerciseRequestDTO.setFiles(Arrays.asList(new ExerciseFileRequestDTO()));
         Exercise existedExercise = new Exercise();
         when(exerciseRepository.findOne(eq(1L))).thenReturn(existedExercise);
         ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();
@@ -107,6 +114,7 @@ public class AdminExerciseServiceTest {
         savedExercise.setId(1L);
         savedExercise.setDExerciseName("10");
         savedExercise.setExerciseBodypart(existedExerciseBodypart);
+        savedExercise.setExerciseFiles(Arrays.asList(new ExerciseFile()));
         when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
         tokenService.update(1L, exerciseRequestDTO);
         verify(exerciseRepository).save(any(Exercise.class));

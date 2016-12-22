@@ -64,21 +64,8 @@ function ($, _, Backbone, Marionette, moment, App) {
       this.collection = options.collection;
     },
     events: {
-      'click .js-download-file': 'downloadFile',
       'click .js-edit-value': 'editProgram',
       'click .js-delete-value': 'deleteProgram'
-    },
-    downloadFile: function(evt) {
-      evt.preventDefault();
-      this.downloadUri(this.model.get('dataUrl'), this.model.get('fileName'));
-    },
-    downloadUri: function(uri, name) {
-      var link = document.createElement('a');
-      link.download = name;
-      link.href = uri;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
     },
     editProgram: function() {
       this.collection.trigger('program:new', this.model);

@@ -77,4 +77,12 @@ public class Exercise {
             inverseJoinColumns = { @JoinColumn(name = "exercise_output_id") }
     )
     List<ExerciseOutput> exerciseOutputs = new ArrayList<>(0);
+    @ManyToMany
+    @JoinTable(
+            name = "exercise_file_has_exercise",
+            schema = "ptcore",
+            joinColumns = { @JoinColumn(name = "exercise_id") },
+            inverseJoinColumns = { @JoinColumn(name = "exercise_file_id") }
+    )
+    List<ExerciseFile> exerciseFiles = new ArrayList<>(0);
 }

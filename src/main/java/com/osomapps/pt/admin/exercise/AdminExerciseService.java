@@ -6,6 +6,7 @@ import com.osomapps.pt.dictionary.DictionaryService;
 import com.osomapps.pt.exercises.Exercise;
 import com.osomapps.pt.exercises.ExerciseBodypart;
 import com.osomapps.pt.exercises.ExerciseEquipmentType;
+import com.osomapps.pt.exercises.ExerciseFile;
 import com.osomapps.pt.exercises.ExerciseRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ class AdminExerciseService {
     private final DictionaryService dictionaryService;
     private final ExerciseInputRepository exerciseInputRepository;
     private final ExerciseOutputRepository exerciseOutputRepository;
+    private final ExerciseFileRepository exerciseFileRepository;
     
     AdminExerciseService(ExerciseRepository exerciseRepository,
             ExerciseBodypartRepository exerciseBodypartRepository,
@@ -28,7 +30,8 @@ class AdminExerciseService {
             ExerciseTypeRepository exerciseTypeRepository,
             DictionaryService dictionaryService,
             ExerciseInputRepository exerciseInputRepository,
-            ExerciseOutputRepository exerciseOutputRepository) {
+            ExerciseOutputRepository exerciseOutputRepository,
+            ExerciseFileRepository exerciseFileRepository) {
         this.exerciseRepository = exerciseRepository;
         this.exerciseBodypartRepository = exerciseBodypartRepository;
         this.exerciseEquipmentTypeRepository = exerciseEquipmentTypeRepository;
@@ -36,6 +39,7 @@ class AdminExerciseService {
         this.dictionaryService = dictionaryService;
         this.exerciseInputRepository = exerciseInputRepository;
         this.exerciseOutputRepository = exerciseOutputRepository;
+        this.exerciseFileRepository = exerciseFileRepository;
     }
     
     List<ExerciseResponseDTO> findAll() {
@@ -84,6 +88,15 @@ class AdminExerciseService {
                         .name(output.getName())
                         .build())
                         .collect(Collectors.toList()))
+                .files(exercise.getExerciseFiles().stream()
+                    .map(file -> ExerciseFileResponseDTO.builder()
+                        .id(file.getId())
+                        .file_name(file.getFile_name())
+                        .file_size(file.getFile_size())
+                        .file_type(file.getFile_type())
+                        .data_url(file.getData_url())
+                        .build())
+                        .collect(Collectors.toList()))
                 .cardioPercent(exercise.getCardio_percent())
                 .build();
     }
@@ -125,6 +138,15 @@ class AdminExerciseService {
             exercise.setExerciseOutputs(exerciseOutputRepository.findAll(
                 exerciseRequestDTO.getOutputs().stream().map(output -> output.getId()).collect(Collectors.toList())));
         }
+        if (exerciseRequestDTO.getFiles() != null) {
+            exercise.setExerciseFiles(exerciseRequestDTO.getFiles().stream().map(file ->
+                    new ExerciseFile()
+                            .setFile_name(file.getFile_name())
+                            .setFile_size(file.getFile_size())
+                            .setFile_type(file.getFile_type())
+                            .setData_url(file.getData_url())
+            ).collect(Collectors.toList()));
+        }
         exercise.setCardio_percent(exerciseRequestDTO.getCardioPercent());
         return exerciseToDto(exerciseRepository.save(exercise));
     }
@@ -164,6 +186,17 @@ class AdminExerciseService {
         if (exerciseRequestDTO.getOutputs() != null) {
             existedExercise.setExerciseOutputs(exerciseOutputRepository.findAll(
                 exerciseRequestDTO.getOutputs().stream().map(output -> output.getId()).collect(Collectors.toList())));
+        }
+        if (exerciseRequestDTO.getFiles() != null) {
+            exerciseFileRepository.delete(existedExercise.getExerciseFiles());
+            existedExercise.setExerciseFiles(exerciseRequestDTO.getFiles().stream().map(file ->
+                    new ExerciseFile()
+                            .setFile_name(file.getFile_name())
+                            .setFile_size(file.getFile_size())
+                            .setFile_type(file.getFile_type())
+                            .setData_url(file.getData_url())
+            ).collect(Collectors.toList()));
+            exerciseFileRepository.save(existedExercise.getExerciseFiles());
         }
         final Exercise savedExercise = exerciseRepository.save(existedExercise);
         return exerciseToDto(savedExercise);

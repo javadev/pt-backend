@@ -26,5 +26,6 @@ class ExerciseResponseDTO {
     List<ExerciseTypeResponseDTO> types;
     List<ExerciseInputResponseDTO> inputs;
     List<ExerciseOutputResponseDTO> outputs;
+    List<ExerciseFileResponseDTO> files;
     Integer cardioPercent;
 }

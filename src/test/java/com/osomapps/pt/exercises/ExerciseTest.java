@@ -8,7 +8,7 @@ public class ExerciseTest {
     @Test
     public void createAllArgs() {
         assertThat(new Exercise(1L, null, null, null, null, null,
-                null, null, null, null, null), notNullValue());
+                null, null, null, null, null, null), notNullValue());
     }
 
     @Test
