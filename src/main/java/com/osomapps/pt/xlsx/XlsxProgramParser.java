@@ -45,6 +45,9 @@ public class XlsxProgramParser {
                 Part part = new Part();
                 for (int workoutIndex = 0; workoutIndex < sheet.getRow(0).getPhysicalNumberOfCells();
                         workoutIndex += 1) {
+                    if (!(getCellData(sheet, 10, 2 + workoutIndex) instanceof Number)) {
+                            break;
+                        }
                     final String userGroupName = getNumberOrNullAsString(getCellData(sheet, 2, 2 + workoutIndex));
                     final String roundName = getNumberOrNullAsString(getCellData(sheet, 3, 2 + workoutIndex));
                     final String partName = (String) getCellData(sheet, 4, 2 + workoutIndex);
