@@ -1,11 +1,13 @@
 package com.osomapps.pt.admin.exercise;
 
 import com.osomapps.pt.ResourceNotFoundException;
+import com.osomapps.pt.UnauthorizedException;
 import com.osomapps.pt.dictionary.DictionaryService;
 import com.osomapps.pt.exercises.Exercise;
 import com.osomapps.pt.exercises.ExerciseBodypart;
 import com.osomapps.pt.exercises.ExerciseFile;
 import com.osomapps.pt.exercises.ExerciseRepository;
+import com.osomapps.pt.tokenemail.DataurlValidator;
 import java.util.Arrays;
 import java.util.Collections;
 import org.junit.Test;
@@ -13,11 +15,16 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 import org.springframework.data.domain.Sort;
+import org.springframework.validation.Errors;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminExerciseServiceTest {
@@ -36,6 +43,8 @@ public class AdminExerciseServiceTest {
     private ExerciseFileRepository exerciseFileRepository;
     @Mock
     private DictionaryService dictionaryService;
+    @Mock
+    private DataurlValidator dataurlValidator;
 
     @InjectMocks
     private AdminExerciseService tokenService;
@@ -89,6 +98,34 @@ public class AdminExerciseServiceTest {
         verify(exerciseRepository).save(any(Exercise.class));
     }
 
+    @Test(expected = UnauthorizedException.class)
+    public void create_invalid_data_url() {
+        ExerciseRequestDTO exerciseRequestDTO = new ExerciseRequestDTO();
+        exerciseRequestDTO.setBodypart(new ExerciseBodypartRequestDTO(1L));
+        exerciseRequestDTO.setNameEn("nameEn");
+        exerciseRequestDTO.setNameEn("nameNo");
+        exerciseRequestDTO.setTypes(Collections.emptyList());
+        exerciseRequestDTO.setInputs(Collections.emptyList());
+        exerciseRequestDTO.setOutputs(Collections.emptyList());
+        exerciseRequestDTO.setFiles(Arrays.asList(new ExerciseFileRequestDTO()));
+        ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();
+        existedExerciseBodypart.setId(1L);
+        existedExerciseBodypart.setDExerciseBodypartName("10");
+        when(exerciseBodypartRepository.findOne(eq(1L))).thenReturn(existedExerciseBodypart);
+        Exercise savedExercise = new Exercise();
+        savedExercise.setId(1L);
+        savedExercise.setDExerciseName("10");
+        savedExercise.setExerciseBodypart(existedExerciseBodypart);
+        savedExercise.setExerciseFiles(Arrays.asList(new ExerciseFile()));
+        when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
+        doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
+            Object[] args = invocation.getArguments();
+            ((Errors) args[1]).reject("dataurlValidator", "dataurlValidator");
+            return null;
+        }).when(dataurlValidator).validate(anyObject(), any(Errors.class));
+        tokenService.create(exerciseRequestDTO);
+    }
+
     @Test(expected = ResourceNotFoundException.class)
     public void update_not_found() {
         tokenService.update(1L, new ExerciseRequestDTO());
@@ -118,6 +155,36 @@ public class AdminExerciseServiceTest {
         when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
         tokenService.update(1L, exerciseRequestDTO);
         verify(exerciseRepository).save(any(Exercise.class));
+    }
+
+    @Test(expected = UnauthorizedException.class)
+    public void update_invalid_data_url() {
+        ExerciseRequestDTO exerciseRequestDTO = new ExerciseRequestDTO();
+        exerciseRequestDTO.setBodypart(new ExerciseBodypartRequestDTO(1L));
+        exerciseRequestDTO.setNameEn("nameEn");
+        exerciseRequestDTO.setNameEn("nameNo");
+        exerciseRequestDTO.setTypes(Collections.emptyList());
+        exerciseRequestDTO.setInputs(Collections.emptyList());
+        exerciseRequestDTO.setOutputs(Collections.emptyList());
+        exerciseRequestDTO.setFiles(Arrays.asList(new ExerciseFileRequestDTO()));
+        Exercise existedExercise = new Exercise();
+        when(exerciseRepository.findOne(eq(1L))).thenReturn(existedExercise);
+        ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();
+        existedExerciseBodypart.setId(1L);
+        existedExerciseBodypart.setDExerciseBodypartName("10");
+        when(exerciseBodypartRepository.findOne(eq(1L))).thenReturn(existedExerciseBodypart);
+        Exercise savedExercise = new Exercise();
+        savedExercise.setId(1L);
+        savedExercise.setDExerciseName("10");
+        savedExercise.setExerciseBodypart(existedExerciseBodypart);
+        savedExercise.setExerciseFiles(Arrays.asList(new ExerciseFile()));
+        when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
+        doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
+            Object[] args = invocation.getArguments();
+            ((Errors) args[1]).reject("dataurlValidator", "dataurlValidator");
+            return null;
+        }).when(dataurlValidator).validate(anyObject(), any(Errors.class));
+        tokenService.update(1L, exerciseRequestDTO);
     }
 
     @Test(expected = ResourceNotFoundException.class)

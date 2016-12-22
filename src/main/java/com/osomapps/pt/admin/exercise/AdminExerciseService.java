@@ -1,6 +1,7 @@
 package com.osomapps.pt.admin.exercise;
 
 import com.osomapps.pt.ResourceNotFoundException;
+import com.osomapps.pt.UnauthorizedException;
 import com.osomapps.pt.dictionary.DictionaryName;
 import com.osomapps.pt.dictionary.DictionaryService;
 import com.osomapps.pt.exercises.Exercise;
@@ -8,10 +9,13 @@ import com.osomapps.pt.exercises.ExerciseBodypart;
 import com.osomapps.pt.exercises.ExerciseEquipmentType;
 import com.osomapps.pt.exercises.ExerciseFile;
 import com.osomapps.pt.exercises.ExerciseRepository;
+import com.osomapps.pt.tokenemail.DataurlValidator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.MapBindingResult;
 
 @Service
 class AdminExerciseService {
@@ -23,7 +27,8 @@ class AdminExerciseService {
     private final ExerciseInputRepository exerciseInputRepository;
     private final ExerciseOutputRepository exerciseOutputRepository;
     private final ExerciseFileRepository exerciseFileRepository;
-    
+    private final DataurlValidator dataurlValidator;
+
     AdminExerciseService(ExerciseRepository exerciseRepository,
             ExerciseBodypartRepository exerciseBodypartRepository,
             ExerciseEquipmentTypeRepository exerciseEquipmentTypeRepository,
@@ -31,7 +36,8 @@ class AdminExerciseService {
             DictionaryService dictionaryService,
             ExerciseInputRepository exerciseInputRepository,
             ExerciseOutputRepository exerciseOutputRepository,
-            ExerciseFileRepository exerciseFileRepository) {
+            ExerciseFileRepository exerciseFileRepository,
+            DataurlValidator dataurlValidator) {
         this.exerciseRepository = exerciseRepository;
         this.exerciseBodypartRepository = exerciseBodypartRepository;
         this.exerciseEquipmentTypeRepository = exerciseEquipmentTypeRepository;
@@ -40,14 +46,15 @@ class AdminExerciseService {
         this.exerciseInputRepository = exerciseInputRepository;
         this.exerciseOutputRepository = exerciseOutputRepository;
         this.exerciseFileRepository = exerciseFileRepository;
+        this.dataurlValidator = dataurlValidator;
     }
-    
+
     List<ExerciseResponseDTO> findAll() {
         return exerciseRepository.findAll(sortByIdAsc()).stream().map(exercise ->
             exerciseToDto(exercise)
         ).collect(Collectors.toList());
     }
-    
+
     private Sort sortByIdAsc() {
         return new Sort(Sort.Direction.ASC, "id");
     }
@@ -139,13 +146,18 @@ class AdminExerciseService {
                 exerciseRequestDTO.getOutputs().stream().map(output -> output.getId()).collect(Collectors.toList())));
         }
         if (exerciseRequestDTO.getFiles() != null) {
-            exercise.setExerciseFiles(exerciseRequestDTO.getFiles().stream().map(file ->
-                    new ExerciseFile()
+            exercise.setExerciseFiles(exerciseRequestDTO.getFiles().stream().map(file -> {
+                    final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
+                    dataurlValidator.validate(file.getData_url(), errors);
+                    if (errors.hasErrors()) {
+                        throw new UnauthorizedException(errors.getAllErrors().get(0).getDefaultMessage());
+                    }
+                    return new ExerciseFile()
                             .setFile_name(file.getFile_name())
                             .setFile_size(file.getFile_size())
                             .setFile_type(file.getFile_type())
-                            .setData_url(file.getData_url())
-            ).collect(Collectors.toList()));
+                            .setData_url(file.getData_url());
+            }).collect(Collectors.toList()));
         }
         exercise.setCardio_percent(exerciseRequestDTO.getCardioPercent());
         return exerciseToDto(exerciseRepository.save(exercise));
@@ -189,13 +201,18 @@ class AdminExerciseService {
         }
         if (exerciseRequestDTO.getFiles() != null) {
             exerciseFileRepository.delete(existedExercise.getExerciseFiles());
-            existedExercise.setExerciseFiles(exerciseRequestDTO.getFiles().stream().map(file ->
-                    new ExerciseFile()
+            existedExercise.setExerciseFiles(exerciseRequestDTO.getFiles().stream().map(file -> {
+                    final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
+                    dataurlValidator.validate(file.getData_url(), errors);
+                    if (errors.hasErrors()) {
+                        throw new UnauthorizedException(errors.getAllErrors().get(0).getDefaultMessage());
+                    }
+                    return new ExerciseFile()
                             .setFile_name(file.getFile_name())
                             .setFile_size(file.getFile_size())
                             .setFile_type(file.getFile_type())
-                            .setData_url(file.getData_url())
-            ).collect(Collectors.toList()));
+                            .setData_url(file.getData_url());
+            }).collect(Collectors.toList()));
             exerciseFileRepository.save(existedExercise.getExerciseFiles());
         }
         final Exercise savedExercise = exerciseRepository.save(existedExercise);
