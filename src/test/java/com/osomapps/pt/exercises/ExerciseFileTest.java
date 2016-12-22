@@ -16,6 +16,7 @@ public class ExerciseFileTest {
         ExerciseFile exerciseFile = new ExerciseFile();
         exerciseFile.setId(null);
         exerciseFile.setCreated(null);
+        exerciseFile.setExercises(null);
         assertThat(exerciseFile, notNullValue());
     }
 
@@ -24,6 +25,7 @@ public class ExerciseFileTest {
         ExerciseFile exerciseFile = new ExerciseFile();
         exerciseFile.getId();
         exerciseFile.getCreated();
+        exerciseFile.getExercises();
         assertThat(exerciseFile, notNullValue());
     }
 }
