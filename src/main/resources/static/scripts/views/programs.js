@@ -551,7 +551,7 @@ function ($, _, Backbone, Marionette, moment, App) {
       var view = this;
       this.model.save().done(function() {
         view.collection.reset();
-        view.collection.set(model.get('parseUsers'));
+        view.collection.set(model.get('parseGoals'));
       })
       .fail(function (xhr) {
         App.vent.trigger('xhr:error', 'Program save was failed');
