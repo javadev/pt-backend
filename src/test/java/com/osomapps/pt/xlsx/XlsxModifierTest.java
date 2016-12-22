@@ -13,10 +13,15 @@ public class XlsxModifierTest {
     public void updateCellData() throws IOException {
         try (InputStream stream = XlsxParserTest.class.getResourceAsStream("test-program2.xlsx")) {
             XlsxModifier xlsxModifier = XlsxModifier.of(stream);
-            List<ExcelUser> excelUsers = Arrays.asList(
-                    new ExcelUser()
+            List<ExcelGoal> excelGoals = Arrays.asList(
+                    new ExcelGoal()
                         .setSheetIndex(0)
-                        .setWorkouts(Arrays.asList(
+                            .setUserGroups(Arrays.asList(
+                                    new UserGroup().setRounds(Arrays.asList(
+                                            new Round()
+                                            .setParts(Arrays.asList(
+                                                    new Part()
+                                                    .setWorkouts(Arrays.asList(
                                 new Workout().setWorkoutItems(Arrays.asList(
                                         new WorkoutItem()
                                                 .setInput(new Input()
@@ -27,8 +32,8 @@ public class XlsxModifierTest {
                                                 .setOutput(new Output()
                                                         .setSets(1)
                                                 .setRepetitions(Arrays.asList(5, 6))
-                                                .setWeights(Arrays.asList(15, 16))))))));
-            xlsxModifier.updateCellData(new ByteArrayOutputStream(), excelUsers);
+                                                .setWeights(Arrays.asList(15, 16))))))))))))));
+            xlsxModifier.updateCellData(new ByteArrayOutputStream(), excelGoals);
         }
     }
 

@@ -24,12 +24,15 @@ public class XlsxModifier {
         return new XlsxModifier(inputStream);
     }
 
-    public void updateCellData(OutputStream outputStream, List<ExcelUser> excelUsers) {
+    public void updateCellData(OutputStream outputStream, List<ExcelGoal> excelGoals) {
         try (final XSSFWorkbook book = new XSSFWorkbook(inputStream)) {
             
-            for (ExcelUser excelUser : excelUsers) {
-                final XSSFSheet sheet = book.getSheetAt(excelUser.getSheetIndex());
-                for (Workout workout : excelUser.getWorkouts()) {
+            for (ExcelGoal excelGoal : excelGoals) {
+                for (UserGroup userGroup : excelGoal.getUserGroups()) {
+                    for (Round round : userGroup.getRounds()) {
+                        for (Part part : round.getParts()) {
+                final XSSFSheet sheet = book.getSheetAt(excelGoal.getSheetIndex());
+                            for (Workout workout : part.getWorkouts()) {
                     for (WorkoutItem workoutItem : workout.getWorkoutItems()) {
                         fillCell(sheet, workoutItem.getColumnIndex(), workoutItem.getRowIndex() + 1,
                                 getIntegerAsStringOrNull(workoutItem.getInput().getSets()));
@@ -52,6 +55,9 @@ public class XlsxModifier {
                                 .collect(Collectors.joining(", "));
                         fillCell(sheet, workoutItem.getColumnIndex(), workoutItem.getRowIndex() + 6,
                                 weights);
+                    }                                
+                            }
+                        }
                     }
                 }
             }
@@ -72,5 +78,4 @@ public class XlsxModifier {
         cell.setCellValue(value == null ? "" : value);
         cell.setCellFormula(null);
     }
-
 }

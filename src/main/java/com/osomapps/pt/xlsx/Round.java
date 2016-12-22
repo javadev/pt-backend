@@ -17,7 +17,5 @@ import lombok.experimental.Accessors;
 @ToString
 public class Round {
     String name;
-    int columnIndex;
-    int rowIndex;
     List<Part> parts = new ArrayList<>();
 }

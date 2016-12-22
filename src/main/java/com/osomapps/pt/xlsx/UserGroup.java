@@ -17,7 +17,5 @@ import lombok.experimental.Accessors;
 @ToString
 public class UserGroup {
     String name;
-    int columnIndex;
-    int rowIndex;
     List<Round> rounds = new ArrayList<>();
 }

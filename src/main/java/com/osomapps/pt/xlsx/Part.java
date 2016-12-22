@@ -17,6 +17,5 @@ import lombok.ToString;
 @ToString
 public class Part {
     String name;
-    int sheetIndex;
     List<Workout> workouts = new ArrayList<>();
 }

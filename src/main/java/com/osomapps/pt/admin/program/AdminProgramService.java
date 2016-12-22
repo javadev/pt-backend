@@ -37,6 +37,9 @@ import com.osomapps.pt.programs.ParseRound;
 import com.osomapps.pt.programs.ParseRoundRepository;
 import com.osomapps.pt.programs.ParseUserGroupRepository;
 import com.osomapps.pt.programs.ParseWarmupWorkoutItemRepository;
+import com.osomapps.pt.xlsx.Round;
+import com.osomapps.pt.xlsx.UserGroup;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.BooleanUtils;
 
 @Service
@@ -296,14 +299,14 @@ class AdminProgramService {
         final ByteArrayInputStream inputStream = dataUrlToInputStream(program.getData_url());
         final XlsxModifier xlsxModifier = XlsxModifier.of(inputStream);
         final List<ParseGoal> parseGoals = program.getParseGoals();
-//        final List<ExcelGoal> excelGoals = parseGoals.stream().map(parseGoal ->
-//                new ExcelUser()
-//                    .setSheetIndex(parseGoal.getSheet_index())
-//                    .setUserGroups(parseGoal.getParseUserGroups().stream().map(parseUserGroup ->
-//                        createUserGroup(parseUserGroup)
-//                    ).collect(Collectors.toList()))
-//        ).collect(Collectors.toList());
-//        xlsxModifier.updateCellData(outputStream, excelUsers);
+        final List<ExcelGoal> excelGoals = parseGoals.stream().map(parseGoal ->
+                new ExcelGoal()
+                    .setSheetIndex(parseGoal.getSheet_index())
+                    .setUserGroups(parseGoal.getParseUserGroups().stream().map(parseUserGroup ->
+                        createUserGroup(parseUserGroup)
+                    ).collect(Collectors.toList()))
+        ).collect(Collectors.toList());
+        xlsxModifier.updateCellData(outputStream, excelGoals);
         return programToDto(program);
     }
 
@@ -330,4 +333,14 @@ class AdminProgramService {
 //        }
 //        return workoutItem;
 //    }
+
+    private UserGroup createUserGroup(ParseUserGroup parseUserGroup) {
+        return new UserGroup()
+                .setRounds(parseUserGroup.getParseRounds().stream().map(
+                        parseRound -> createRound(parseRound)).collect(Collectors.toList()));
+    }
+
+    private Round createRound(ParseRound parseRound) {
+        return new Round();
+    }
 }
