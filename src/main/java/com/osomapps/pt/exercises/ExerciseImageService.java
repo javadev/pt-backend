@@ -1,8 +1,8 @@
 package com.osomapps.pt.exercises;
 
 import com.osomapps.pt.ResourceNotFoundException;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Base64;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FastByteArrayOutputStream;
@@ -23,13 +23,13 @@ class ExerciseImageService {
         if (exerciseFile == null) {
             throw new ResourceNotFoundException("File with id " + id + " not found");
         }
-        outputStream.write(dataUrlToInputStream(exerciseFile.getData_url()).read());
+        dataUrlToOutputStream(exerciseFile.getData_url(), outputStream);
         return new ExerciseImageDTO().setId(exerciseFile.getId())
                 .setFileName(exerciseFile.getFile_name()).setFileType(exerciseFile.getFile_type());
     }
 
-    ByteArrayInputStream dataUrlToInputStream(String dataUrl) {
+    void dataUrlToOutputStream(String dataUrl, OutputStream outputStream) throws IOException {
         final String encodedString = dataUrl.substring(dataUrl.indexOf(BASE64_PREFIX) + BASE64_PREFIX_LENGTH);
-        return new ByteArrayInputStream(Base64.getDecoder().decode(encodedString));
+        outputStream.write(Base64.getDecoder().decode(encodedString));
     }
 }
