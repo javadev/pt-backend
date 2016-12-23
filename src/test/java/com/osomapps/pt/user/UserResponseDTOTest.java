@@ -8,6 +8,6 @@ public class UserResponseDTOTest {
     @Test
     public void createAllArgs() {
         assertThat(new UserResponseDTO(null, null, null, null, null, null,
-                null, null, null, null), notNullValue());
+                null, null, null, null, null, null), notNullValue());
     }
 }

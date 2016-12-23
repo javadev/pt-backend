@@ -8,7 +8,10 @@ import com.osomapps.pt.token.InUserLoginRepository;
 import com.osomapps.pt.token.InUserLogout;
 import com.osomapps.pt.token.InUserLogoutRepository;
 import com.osomapps.pt.token.InUserRepository;
+import com.osomapps.pt.user.UserGoalResponseDTO;
+import com.osomapps.pt.user.UserLevel;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -85,6 +88,14 @@ class TokenEmailService {
         user.setAge(inUserEmail.getInUser().getAge() == null ? null : inUserEmail.getInUser().getAge().intValue());
         user.setBirthday(inUserEmail.getInUser().getBirthday());
         user.setAvatar_dataurl(inUserEmail.getInUser().getAvatar_dataurl());
+        if (inUser.getD_level() != null) {
+            user.setLevel(UserLevel.of(Integer.parseInt(inUser.getD_level())));
+        }
+        user.setGoals(inUser.getInUserGoals().stream().map(inUserGoal ->
+                new UserGoalResponseDTO().setId(inUserGoal.getGoalId()).setValue(inUserGoal.getGoal_value())
+        ).collect(Collectors.toList()));
+        user.setHeight(inUser.getHeight() == null ? null : inUser.getHeight().longValue());
+        user.setWeight(inUser.getWeight() == null ? null : inUser.getWeight().longValue());
         tokenEmailResponseDTO.setUser(user);
         return tokenEmailResponseDTO;
     }

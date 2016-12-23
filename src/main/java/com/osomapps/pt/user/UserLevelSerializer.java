@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
 
-class UserLevelSerializer extends JsonSerializer<UserLevel> {
+public class UserLevelSerializer extends JsonSerializer<UserLevel> {
 
     @Override
     public void serialize(UserLevel value, JsonGenerator gen, SerializerProvider serializers) throws IOException {

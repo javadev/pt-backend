@@ -1,6 +1,6 @@
 package com.osomapps.pt.user;
 
-enum UserLevel {
+public enum UserLevel {
     Unexperienced(1),
     Experienced(2);
 
@@ -13,7 +13,7 @@ enum UserLevel {
         return level;
     }
 
-    static UserLevel of(int level) {
+    public static UserLevel of(int level) {
         for (UserLevel userLevel : values()) {
             if (userLevel.level == level) {
                 return userLevel;

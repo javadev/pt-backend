@@ -39,7 +39,8 @@ public class UserResourceWebTest {
 
         assertThat(responseJson.isMissingNode(), is(false));
         assertThat(responseJson.toString(), equalTo("{\"id\":null,\"name\":null,"
-                + "\"gender\":null,\"age\":null,\"height\":null,\"weight\":null,"
-                + "\"avatar\":null,\"avatar_dataurl\":null,\"level\":null,\"goals\":null}"));
+                + "\"email\":null,\"avatar\":null,\"avatar_dataurl\":null,"
+                + "\"gender\":null,\"age\":null,\"birthday\":null,\"level\":null,"
+                + "\"goals\":null,\"height\":null,\"weight\":null}"));
     }
 }

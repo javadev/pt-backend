@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-class UserGoalResponseDTO {
+public class UserGoalResponseDTO {
     Long id;
     Integer value;
 }

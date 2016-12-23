@@ -13,6 +13,7 @@ import com.osomapps.pt.token.InUserLogoutRepository;
 import com.osomapps.pt.token.InUserRepository;
 import com.osomapps.pt.tokenemail.DataurlValidator;
 import com.osomapps.pt.tokenemail.NameValidator;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,6 +95,14 @@ public class UserService {
                 .get(inUser.getInUserFacebooks().size() - 1).getPicture_url());
     }
 
+    private Optional<String> getEmail(InUser inUser) {
+        if (inUser.getInUserEmails() == null || inUser.getInUserEmails().isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(inUser.getInUserEmails()
+                .get(inUser.getInUserEmails().size() - 1).getLogin());
+    }
+
     UserResponseDTO findOne(String token) {
         final InUser inUser = checkUserToken(token).getInUser();
         final UserResponseDTO userResponse = new UserResponseDTO();
@@ -117,6 +126,8 @@ public class UserService {
         userResponse.setAvatar_dataurl(inUser.getAvatar_dataurl());
         userResponse.setName(getUserName(inUser).orElse("?"));
         userResponse.setAvatar(getAvatar(inUser).orElse(null));
+        userResponse.setEmail(getEmail(inUser).orElse(null));
+        userResponse.setBirthday(inUser.getBirthday());
         return userResponse;        
     }
 

@@ -111,6 +111,8 @@ class TokenService {
         user.setAge(facebookResponse.getAge());
         user.setBirthday(inUser.getBirthday());
         user.setAvatar_dataurl(inUser.getAvatar_dataurl());
+        user.setHeight(inUser.getHeight() == null ? null : inUser.getHeight().longValue());
+        user.setWeight(inUser.getWeight() == null ? null : inUser.getWeight().longValue());
         tokenResponseDTO.setUser(user);
         return tokenResponseDTO;        
     }

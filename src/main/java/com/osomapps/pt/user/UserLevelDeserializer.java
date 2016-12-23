@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 
 import java.io.IOException;
 
-class UserLevelDeserializer extends JsonDeserializer<UserLevel> {
+public class UserLevelDeserializer extends JsonDeserializer<UserLevel> {
 
     @Override
     public UserLevel deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)

@@ -7,7 +7,7 @@ import org.junit.Test;
 public class UserResponseDTOTest {
     @Test
     public void createAllArgs() {
-        assertThat(new UserResponseDTO(1L, null, null, null, null, null, null), notNullValue());
+        assertThat(new UserResponseDTO(1L, null, null, null, null, null, null, null, null, null, null, null), notNullValue());
     }
 
     @Test
@@ -21,10 +21,13 @@ public class UserResponseDTOTest {
             .setId(1L)
             .setName(null)
             .setEmail(null)
+            .setAvatar(null)
             .setAvatar_dataurl(null)
             .setGender(null)
             .setAge(null)
-            .setBirthday(null);
+            .setBirthday(null)
+            .setHeight(null)
+            .setWeight(null);
         assertThat(userResponseDTO, notNullValue());
     }
 
@@ -34,10 +37,13 @@ public class UserResponseDTOTest {
         userResponseDTO.getId();
         userResponseDTO.getName();
         userResponseDTO.getEmail();
+        userResponseDTO.getAvatar();
         userResponseDTO.getAvatar_dataurl();
         userResponseDTO.getGender();
         userResponseDTO.getAge();
         userResponseDTO.getBirthday();
+        userResponseDTO.getHeight();
+        userResponseDTO.getWeight();
         assertThat(userResponseDTO, notNullValue());
     }
 }
