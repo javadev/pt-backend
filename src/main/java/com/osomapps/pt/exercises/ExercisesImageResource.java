@@ -3,7 +3,6 @@ package com.osomapps.pt.exercises;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,15 +24,12 @@ class ExercisesImageResource {
     @ResponseBody
     Object findOne(@PathVariable Long id, @PathVariable String fileName, HttpServletResponse response)
             throws IOException {
-        try (FastByteArrayOutputStream outputStream = new FastByteArrayOutputStream()) {
-            final ExerciseImageDTO exerciseImageDTO = exerciseImageService.findOne(id, fileName, outputStream);
-            response.setContentType(exerciseImageDTO.getFileType());
-            response.setHeader("Content-disposition",
-                    "attachment; filename=" + exerciseImageDTO.getFileName());
-            outputStream.writeTo(response.getOutputStream());
-            response.getOutputStream().close();
-            outputStream.reset();
-        }
+        final ExerciseImageDTO exerciseImageDTO = exerciseImageService.findOne(id, fileName,
+                response.getOutputStream());
+        response.setContentType(exerciseImageDTO.getFileType());
+        response.setHeader("Content-disposition",
+                "attachment; filename=" + exerciseImageDTO.getFileName());
+        response.getOutputStream().close();
         return null;
     }
 }

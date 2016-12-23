@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Base64;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FastByteArrayOutputStream;
 
 @Service
 class ExerciseImageService {
@@ -17,7 +16,7 @@ class ExerciseImageService {
         this.exerciseFileRepository = exerciseFileRepository;
     }
 
-    ExerciseImageDTO findOne(Long id, String fileName, FastByteArrayOutputStream outputStream)
+    ExerciseImageDTO findOne(Long id, String fileName, OutputStream outputStream)
             throws IOException {
         final ExerciseFile exerciseFile = exerciseFileRepository.findOne(id);
         if (exerciseFile == null) {
