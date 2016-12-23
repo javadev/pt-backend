@@ -7,6 +7,6 @@ import org.junit.Test;
 public class ExerciseDTOTest {
     @Test
     public void createAllArgs() {
-        assertThat(new ExerciseDTO(1L, null, null, null), notNullValue());
+        assertThat(new ExerciseDTO(1L, null, null, null, null, null), notNullValue());
     }
 }

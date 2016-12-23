@@ -15,6 +15,8 @@ import lombok.experimental.Accessors;
 class ExerciseDTO {
     Long id;
     String name;
+    String description;
+    List<String> images;
     Integer cardio_percent;
     List<String> types;
 }
