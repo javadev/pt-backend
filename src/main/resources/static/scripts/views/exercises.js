@@ -311,7 +311,7 @@ function ($, _, Backbone, Marionette, App) {
     _filerFiles: function(files) {
       return _.filter(files, function(file) {
         return file.type.match(/image\/png/) ||
-          file.type.match(/image\/jpg/);
+          file.type.match(/image\/jpeg/);
       });
     },
     handleFileSelect: function(evt) {
