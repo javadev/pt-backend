@@ -23,7 +23,8 @@ define([
         'equipmentType': {
           'id' : null
         },
-        'types': []
+        'types': [],
+        'images': []
       },
       url: function() {
         return '/api/v1/admin/exercise' + (this.isNew() ? '' : '/' + this.get('id'));

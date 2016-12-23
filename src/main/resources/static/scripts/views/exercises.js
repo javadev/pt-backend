@@ -3,17 +3,23 @@
 define([
     'jquery',
     'underscore',
+    'backbone',
     'marionette',
     'app',
     'bootstrapTab',
     'bootstrapSelect'
 ],
-function ($, _, Marionette, App) {
+function ($, _, Backbone, Marionette, App) {
   'use strict';
 
   var EmptyView = Marionette.ItemView.extend({
         tagName: 'tr',
         template: _.template('<td colspan="8">There are no exercises available.</td>')
+  });
+
+  var EmptyImageView = Marionette.ItemView.extend({
+        tagName: 'tr',
+        template: _.template('<td colspan="4">There are no images.</td>')
   });
 
   var Exercise = Marionette.ItemView.extend({
@@ -78,6 +84,37 @@ function ($, _, Marionette, App) {
     }
   });
 
+  var Image = Marionette.ItemView.extend({
+    tagName: 'tr',
+    template: _.template([
+      '<td>',
+        '{{ id }}',
+      '</td>',
+      '<td>',
+        '{{ file_name }}',
+      '</td>',
+      '<td>',
+        '{{ file_size }}',
+      '</td>',
+      '<td>',
+        '<button type="button" class="btn btn-default btn-sm js-delete-value">',
+          '<i class="glyphicon glyphicon-remove"></i>',
+        '</button>',
+      '</td>'
+    ].join('')),
+
+    initialize: function(options) {
+      this.collection = options.collection;
+    },
+    events: {
+      'click .js-delete-value': 'deleteImage'
+    },
+    deleteImage: function(evt) {
+      evt.preventDefault();
+      this.collection.remove(this.model);
+    }
+  });
+
   var Exercises = Marionette.CompositeView.extend({
     itemViewContainer: 'tbody',
     itemView: Exercise,
@@ -136,6 +173,7 @@ function ($, _, Marionette, App) {
         '</div>',
         '<div id="buttons"/>',
         '<div id="inputForm"/>',
+        '<div id="imageForm"/>',
       '</div>'
     ].join('')),
     templateHelpers: function() {
@@ -150,11 +188,15 @@ function ($, _, Marionette, App) {
     className: 'form-horizontal',
     regions: {
       buttons: '#buttons',
-      inputForm: '#inputForm'
+      inputForm: '#inputForm',
+      imageForm: '#imageForm'
     },
     onShow: function() {
       this.buttons.show(new NewExerciseButtons({model: this.model}));
       this.inputForm.show(new NewExerciseInputForm({model: this.model}));
+      this.model._files = new Backbone.Collection(this.model.get('files'));
+      this.imageForm.show(new NewExerciseImageForm({model: this.model,
+          collection: this.model._files}));
     }
   });
 
@@ -198,6 +240,7 @@ function ($, _, Marionette, App) {
     save: function(evt) {
       evt.preventDefault();
       var model = this.model;
+      model.set('files', model._files.toJSON());
       this.model.save().done(function() {
         model.trigger('exercise:back', model.get('id'));
       })
@@ -208,7 +251,94 @@ function ($, _, Marionette, App) {
     discard: function(evt) {
       evt.preventDefault();
       this.model.set(this._model.toJSON());
+      this.model._files.set(this.model.get('files'));
       this.model.trigger('sync');
+    }
+  });
+
+  var NewExerciseImageForm = Marionette.CompositeView.extend({
+    itemViewContainer: 'tbody',
+    itemView: Image,
+    emptyView: EmptyImageView,
+    tagName: 'div',
+    className: 'js-users-mapping-config',
+    ui: {
+      table: '.table',
+      fileButton: '#addFile'
+    },
+    itemViewOptions : function () {
+      return { collection: this.collection, rootModel: this.model };
+    },
+    initialize: function() {
+    },
+    template: _.template([
+    '<div class="panel panel-primary">',
+      '<div class="panel-heading">',
+        '<h3 class="panel-title"> Images </h3>',
+      '</div>',
+      '<button class="btn btn-primary js-upload-files" style="margin: 10px;">',
+        'Upload',
+      '</button>',
+      '<input type="file" id="addFile" name="files[]" multiple />',
+      '<table class="table">',
+        '<thead>',
+          '<tr>',
+            '<th>ID</th>',
+            '<th>File name</th>',
+            '<th>File size</th>',
+            '<th></th>',
+          '</tr>',
+        '</thead>',
+        '<tbody></tbody>',
+      '</table>',
+    '</div>'
+    ].join('')),
+    modelEvents: {
+      'change': 'render',
+      'sync': 'render'
+    },
+    collectionEvents: {
+      'sync': 'render'
+    },
+    events: {
+      'click .js-upload-files': 'uploadFiles',
+      'change #addFile': 'handleFileSelect'
+    },
+    uploadFiles: function(evt) {
+      evt.preventDefault();
+      this.ui.fileButton.click();
+    },
+    _filerFiles: function(files) {
+      return _.filter(files, function(file) {
+        return file.type.match(/image\/png/) ||
+          file.type.match(/image\/jpg/);
+      });
+    },
+    handleFileSelect: function(evt) {
+      // FileList object
+      var files = evt.target.files;
+      var view = this;
+      // Only process excel documents.
+      var filteredFiles = this._filerFiles(files);
+      _.each(filteredFiles, function(file) {
+        var fileModel = new Backbone.Model({
+          id: null,
+          'file_name': file.name,
+          'file_size': file.size,
+          'file_type': file.type
+        });
+        view.collection.add(fileModel);
+        var reader = new FileReader();
+        // Closure to capture the file information.
+        reader.onload = (function () {
+          return function (e) {
+            fileModel.set('data_url', e.target.result);
+          };
+        })();
+        // Read in the image file as a data URL.
+        reader.readAsDataURL(file);
+      });
+      view.collection.trigger('sync');
     }
   });
 

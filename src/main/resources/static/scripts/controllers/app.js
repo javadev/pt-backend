@@ -132,7 +132,8 @@ define([
               nameEn: model.get('nameEn'),
               nameNo: model.get('nameNo'),
               descriptionEn: model.get('descriptionEn'),
-              descriptionNo: model.get('descriptionNo')
+              descriptionNo: model.get('descriptionNo'),
+              files: model.get('files')
             });
           }
           var exerciseEditView = new ExercisesViews.NewExerciseLayout({
