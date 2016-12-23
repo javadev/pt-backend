@@ -1,16 +1,11 @@
 package com.osomapps.pt.admin.program;
 
 import com.osomapps.pt.ResourceNotFoundException;
-import com.osomapps.pt.programs.InWorkoutItem;
-import com.osomapps.pt.programs.InWorkoutItemReport;
 import com.osomapps.pt.programs.ParseGoal;
 import com.osomapps.pt.programs.ParseUserGroup;
 import com.osomapps.pt.programs.ParseProgram;
 import com.osomapps.pt.programs.ProgramRepository;
-import com.osomapps.pt.xlsx.Input;
-import com.osomapps.pt.xlsx.Output;
 import com.osomapps.pt.xlsx.Workout;
-import com.osomapps.pt.xlsx.WorkoutItem;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -39,7 +34,6 @@ import com.osomapps.pt.programs.ParseUserGroupRepository;
 import com.osomapps.pt.programs.ParseWarmupWorkoutItemRepository;
 import com.osomapps.pt.xlsx.Round;
 import com.osomapps.pt.xlsx.UserGroup;
-import java.util.stream.Stream;
 import org.apache.commons.lang3.BooleanUtils;
 
 @Service

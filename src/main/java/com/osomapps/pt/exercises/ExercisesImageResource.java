@@ -1,4 +1,4 @@
-package com.osomapps.pt.admin.program;
+package com.osomapps.pt.exercises;
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
@@ -11,25 +11,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/v1/admin/program-file")
-class AdminProgramFileResource {
+@RequestMapping("api/v1/exercise-image")
+class ExercisesImageResource {
 
-    private final AdminProgramService programService;
+    private final ExerciseImageService exerciseImageService;
 
     @Autowired
-    AdminProgramFileResource(AdminProgramService programService) {
-        this.programService = programService;
+    ExercisesImageResource(ExerciseImageService exerciseImageService) {
+        this.exerciseImageService = exerciseImageService;
     }
 
-    @GetMapping(value = "{id}/{fileName}")
+    @GetMapping("{id}/{fileName}")
     @ResponseBody
     Object findOne(@PathVariable Long id, @PathVariable String fileName, HttpServletResponse response)
             throws IOException {
         try (FastByteArrayOutputStream outputStream = new FastByteArrayOutputStream()) {
-            final ProgramResponseDTO programResponseDTO = programService.createXlsx(id, outputStream);
-            response.setContentType(programResponseDTO.getFileType());
+            final ExerciseImageDTO exerciseImageDTO = exerciseImageService.findOne(id, fileName, outputStream);
+            response.setContentType(exerciseImageDTO.getFileType());
             response.setHeader("Content-disposition",
-                    "attachment; filename=" + programResponseDTO.getFileName());
+                    "attachment; filename=" + exerciseImageDTO.getFileName());
             outputStream.writeTo(response.getOutputStream());
             response.getOutputStream().close();
             outputStream.reset();
