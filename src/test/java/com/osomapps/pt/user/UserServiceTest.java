@@ -125,6 +125,39 @@ public class UserServiceTest {
     }
 
     @Test(expected = UnauthorizedException.class)
+    public void updateUser_token_found_with_data_wrong_data_url() {
+        InUserLogin inUserLogin = new InUserLogin();
+        inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
+        when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
+        when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
+        userService.updateUser("1", new UserRequestDTO()
+            .setGender("gender")
+            .setAge(10L)
+            .setHeight(160L)
+            .setWeight(60L)
+            .setName("Name")
+            .setAvatar_dataurl("data")
+            .setLevel(UserLevel.Experienced)
+            .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L))));
+    }
+
+    @Test(expected = UnauthorizedException.class)
+    public void updateUser_token_found_with_data_wrong_name() {
+        InUserLogin inUserLogin = new InUserLogin();
+        inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
+        when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
+        when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
+        userService.updateUser("1", new UserRequestDTO()
+            .setGender("gender")
+            .setAge(10L)
+            .setHeight(160L)
+            .setWeight(60L)
+            .setName("N")
+            .setLevel(UserLevel.Experienced)
+            .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L))));
+    }
+
+    @Test(expected = UnauthorizedException.class)
     public void updateUser_token_found_with_data_goal_not_found() {
         InUserLogin inUserLogin = new InUserLogin();
         inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
