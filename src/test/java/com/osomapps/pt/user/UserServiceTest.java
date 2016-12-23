@@ -2,6 +2,9 @@ package com.osomapps.pt.user;
 
 import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.UnauthorizedException;
+import com.osomapps.pt.goals.Goal;
+import com.osomapps.pt.goals.GoalRepository;
+import com.osomapps.pt.goals.InUserGoalRepository;
 import com.osomapps.pt.token.InUser;
 import com.osomapps.pt.token.InUserLogin;
 import com.osomapps.pt.token.InUserLoginRepository;
@@ -20,6 +23,7 @@ import org.mockito.Mock;
 
 import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -33,6 +37,10 @@ public class UserServiceTest {
     private InUserLoginRepository inUserLoginRepository;
     @Mock
     private InUserLogoutRepository inUserLogoutRepository;
+    @Mock
+    private GoalRepository goalRepository;
+    @Mock
+    private InUserGoalRepository inUserGoalRepository;
     @Mock
     private DataurlValidator dataurlValidator;
     @Mock
@@ -102,12 +110,50 @@ public class UserServiceTest {
         inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
         when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
         when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
+        when(goalRepository.findOne(eq(1L))).thenReturn(new Goal());
         userService.updateUser("1", new UserRequestDTO()
             .setGender("gender")
             .setAge(10L)
             .setHeight(160L)
             .setWeight(60L)
-            .setName("Name"));
+            .setName("Name")
+            .setLevel(UserLevel.Experienced)
+            .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L))));
         verify(inUserRepository).save(any(InUser.class));
+    }
+
+    @Test(expected = UnauthorizedException.class)
+    public void updateUser_token_found_with_data_goal_not_found() {
+        InUserLogin inUserLogin = new InUserLogin();
+        inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
+        when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
+        when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
+        userService.updateUser("1", new UserRequestDTO()
+            .setGender("gender")
+            .setAge(10L)
+            .setHeight(160L)
+            .setWeight(60L)
+            .setName("Name")
+            .setLevel(UserLevel.Experienced)
+            .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L))));
+    }
+
+    @Test(expected = UnauthorizedException.class)
+    public void updateUser_token_found_with_data_more_than_two_goals() {
+        InUserLogin inUserLogin = new InUserLogin();
+        inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
+        when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
+        when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
+        when(goalRepository.findOne(eq(1L))).thenReturn(new Goal());
+        userService.updateUser("1", new UserRequestDTO()
+            .setGender("gender")
+            .setAge(10L)
+            .setHeight(160L)
+            .setWeight(60L)
+            .setName("Name")
+            .setLevel(UserLevel.Experienced)
+            .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L),
+            new UserGoalRequestDTO().setId(2L),
+            new UserGoalRequestDTO().setId(3L))));
     }
 }
