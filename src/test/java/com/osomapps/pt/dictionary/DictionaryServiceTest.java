@@ -2,13 +2,13 @@ package com.osomapps.pt.dictionary;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.List;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
@@ -55,11 +55,12 @@ public class DictionaryServiceTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void deleteDatas() {
         when(dictionaryRepository.findDictionaryByKey(
                 anyString(), anyString(), anyString(), any(LocalDateTime.class)))
                 .thenReturn(Arrays.asList(new DictionaryData()));
         dictionaryService.deleteDatas(DictionaryName.exercise_name, "1");
-        verify(dictionaryRepository, times(2)).delete(any(List.class));
+        verify(dictionaryRepository, times(2)).delete(any(Iterable.class));
     }
 }

@@ -19,10 +19,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyString;
 import org.mockito.Mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
 import com.osomapps.pt.programs.ParseGoalRepository;
@@ -48,13 +46,14 @@ public class AdminProgramAssignServiceTest {
     private AdminProgramAssignService adminProgramAssignService;
 
     @Test
+    @SuppressWarnings("unchecked")
     public void assign() {
         when(inUserRepository.findAll()).thenReturn(Arrays.asList(
                 new InUser().setInUserFacebooks(Arrays.asList(
                         new InUserFacebook().setUser_name("user_name")))));
         when(adminProgramScanExerciseService.getExerciseIdByName(anyString())).thenReturn(Optional.empty());
         when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(parseUserRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
+        when(parseUserRepository.save(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
 //        adminProgramAssignService.assign(Arrays.asList(new ParseUserGroup()
 //                .setName("user_name")
 //                .setProgram(new ParseProgram().setName("program name"))

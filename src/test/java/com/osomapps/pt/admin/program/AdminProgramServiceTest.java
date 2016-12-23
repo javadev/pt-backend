@@ -20,7 +20,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
@@ -34,6 +33,7 @@ import com.osomapps.pt.programs.ParseRound;
 import com.osomapps.pt.programs.ParseRoundRepository;
 import com.osomapps.pt.programs.ParseUserGroupRepository;
 import com.osomapps.pt.programs.ParseWarmupWorkoutItemRepository;
+import static org.mockito.Matchers.anyList;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminProgramServiceTest {
@@ -88,6 +88,7 @@ public class AdminProgramServiceTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void create() throws IOException {
         ProgramRequestDTO programRequestDTO = new ProgramRequestDTO();
         final java.io.ByteArrayOutputStream result = new java.io.ByteArrayOutputStream();
@@ -99,8 +100,8 @@ public class AdminProgramServiceTest {
             }
         }
         programRequestDTO.setDataUrl(result.toString());
-        when(parseGoalRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
-        when(parseWorkoutRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
+        when(parseGoalRepository.save(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(parseWorkoutRepository.save(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
         when(programRepository.save(any(ParseProgram.class))).thenAnswer(i -> i.getArguments()[0]);
         when(adminProgramAssignService.assign(anyList())).thenAnswer(i -> i.getArguments()[0]);
         adminProgramService.create(programRequestDTO);
@@ -113,6 +114,7 @@ public class AdminProgramServiceTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void update() throws IOException {
         ProgramRequestDTO programRequestDTO = new ProgramRequestDTO();
         final java.io.ByteArrayOutputStream result = new java.io.ByteArrayOutputStream();
@@ -132,8 +134,8 @@ public class AdminProgramServiceTest {
                                         Arrays.asList(
                                             new ParseWorkout().setParseWorkoutItems(
                                                 Arrays.asList(new ParseWorkoutItem())))))))))))));
-        when(parseGoalRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
-        when(parseWorkoutRepository.save(anyList())).thenAnswer(i -> i.getArguments()[0]);
+        when(parseGoalRepository.save(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(parseWorkoutRepository.save(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
         when(programRepository.save(any(ParseProgram.class))).thenAnswer(i -> i.getArguments()[0]);
         when(adminProgramAssignService.assign(anyList())).thenAnswer(i -> i.getArguments()[0]);
         adminProgramService.update(1L, programRequestDTO);
