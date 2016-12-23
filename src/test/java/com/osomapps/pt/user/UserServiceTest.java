@@ -6,6 +6,7 @@ import com.osomapps.pt.goals.Goal;
 import com.osomapps.pt.goals.GoalRepository;
 import com.osomapps.pt.goals.InUserGoalRepository;
 import com.osomapps.pt.token.InUser;
+import com.osomapps.pt.token.InUserGoal;
 import com.osomapps.pt.token.InUserLogin;
 import com.osomapps.pt.token.InUserLoginRepository;
 import com.osomapps.pt.token.InUserLogout;
@@ -57,7 +58,8 @@ public class UserServiceTest {
     @Test
     public void findOne_token_found() {
         InUserLogin inUserLogin = new InUserLogin();
-        inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F).setD_level("1"));
+        inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F)
+                .setWeight(50F).setD_level("1").setInUserGoals(Arrays.asList(new InUserGoal())));
         when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
         when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
         UserResponseDTO userResponseDTO = userService.findOne("1");
