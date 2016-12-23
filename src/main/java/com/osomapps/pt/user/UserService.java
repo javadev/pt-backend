@@ -85,10 +85,19 @@ public class UserService {
             inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1).setUser_name(userName);
         }
     }
+    
+    private Optional<String> getAvatar(InUser inUser) {
+        if (inUser.getInUserFacebooks() == null || inUser.getInUserFacebooks().isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(inUser.getInUserFacebooks()
+                .get(inUser.getInUserFacebooks().size() - 1).getPicture_url());
+    }
 
     UserResponseDTO findOne(String token) {
         final InUser inUser = checkUserToken(token).getInUser();
         final UserResponseDTO userResponse = new UserResponseDTO();
+        userResponse.setId(inUser.getId());
         userResponse.setGender(inUser.getD_sex());
         if (inUser.getAge() != null) {
             userResponse.setAge(inUser.getAge().longValue());
@@ -107,6 +116,7 @@ public class UserService {
         ).collect(Collectors.toList()));
         userResponse.setAvatar_dataurl(inUser.getAvatar_dataurl());
         userResponse.setName(getUserName(inUser).orElse("?"));
+        userResponse.setAvatar(getAvatar(inUser).orElse(null));
         return userResponse;        
     }
 
