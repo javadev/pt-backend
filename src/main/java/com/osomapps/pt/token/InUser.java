@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.osomapps.pt.activecertificate.InUserCertificate;
 import com.osomapps.pt.admin.user.InUserType;
+import com.osomapps.pt.exercises.ExerciseFile;
 import com.osomapps.pt.programs.InProgram;
 import com.osomapps.pt.reportweight.InUserWeight;
 import com.osomapps.pt.tokenemail.InUserEmail;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +23,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -70,4 +74,13 @@ public class InUser {
     @JoinColumn(name="in_user_type_id")
     @JsonBackReference
     InUserType inUserType;
+    @ManyToMany
+    @JoinTable(
+            name = "in_user_has_in_user_goal",
+            schema = "ptcore",
+            joinColumns = { @JoinColumn(name = "in_user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "in_user_goal_id") }
+    )
+    List<InUserGoal> inUserGoals = new ArrayList<>(0);
+
 }

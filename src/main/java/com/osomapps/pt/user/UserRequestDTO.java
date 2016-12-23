@@ -1,5 +1,7 @@
 package com.osomapps.pt.user;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,5 +20,7 @@ class UserRequestDTO {
     Long height;
     Long weight;
     String avatar_dataurl;
+    @JsonDeserialize(using = UserLevelDeserializer.class)
     UserLevel level;
+    List<UserGoalRequestDTO> goals;
 }

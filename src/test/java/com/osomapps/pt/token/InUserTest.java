@@ -25,7 +25,7 @@ public class InUserTest {
                 Collections.emptyList(),
                 Collections.emptyList(),
                 Collections.emptyList(),
-                null), notNullValue());
+                null, null), notNullValue());
     }
 
     @Test
@@ -49,6 +49,7 @@ public class InUserTest {
         inUser.setInUserCertificates(Collections.emptyList());
         inUser.setInUserEmails(Collections.emptyList());
         inUser.setInUserType(null);
+        inUser.setInUserGoals(Collections.emptyList());
         assertThat(inUser, notNullValue());
     }
 
@@ -73,6 +74,7 @@ public class InUserTest {
         inUser.getInUserCertificates();
         inUser.getInUserEmails();
         inUser.getInUserType();
+        inUser.getInUserGoals();
         assertThat(inUser, notNullValue());
     }
 }

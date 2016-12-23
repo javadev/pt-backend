@@ -1,6 +1,7 @@
 package com.osomapps.pt.user;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,4 +22,5 @@ class UserResponseDTO {
     String avatar_dataurl;
     @JsonSerialize(using = UserLevelSerializer.class)
     UserLevel level;
+    List<UserGoalResponseDTO> goals;
 }

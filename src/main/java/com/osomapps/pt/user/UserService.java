@@ -2,7 +2,11 @@ package com.osomapps.pt.user;
 
 import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.UnauthorizedException;
+import com.osomapps.pt.goals.Goal;
+import com.osomapps.pt.goals.GoalRepository;
+import com.osomapps.pt.goals.InUserGoalRepository;
 import com.osomapps.pt.token.InUser;
+import com.osomapps.pt.token.InUserGoal;
 import com.osomapps.pt.token.InUserLogin;
 import com.osomapps.pt.token.InUserLoginRepository;
 import com.osomapps.pt.token.InUserLogoutRepository;
@@ -10,9 +14,11 @@ import com.osomapps.pt.token.InUserRepository;
 import com.osomapps.pt.tokenemail.DataurlValidator;
 import com.osomapps.pt.tokenemail.NameValidator;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.MapBindingResult;
@@ -22,6 +28,8 @@ public class UserService {
     private final InUserRepository inUserRepository;
     private final InUserLoginRepository inUserLoginRepository;
     private final InUserLogoutRepository inUserLogoutRepository;
+    private final GoalRepository goalRepository;
+    private final InUserGoalRepository inUserGoalRepository;
     private final DataurlValidator dataurlValidator;
     private final NameValidator nameValidator;
 
@@ -29,11 +37,15 @@ public class UserService {
     UserService(InUserRepository inUserRepository,
             InUserLoginRepository inUserLoginRepository,
             InUserLogoutRepository inUserLogoutRepository,
+            GoalRepository goalRepository,
+            InUserGoalRepository inUserGoalRepository,
             DataurlValidator dataurlValidator,
             NameValidator nameValidator) {
         this.inUserRepository = inUserRepository;
         this.inUserLoginRepository = inUserLoginRepository;
         this.inUserLogoutRepository = inUserLogoutRepository;
+        this.goalRepository = goalRepository;
+        this.inUserGoalRepository = inUserGoalRepository;
         this.dataurlValidator = dataurlValidator;
         this.nameValidator = nameValidator;
     }
@@ -90,6 +102,9 @@ public class UserService {
         if (inUser.getD_level() != null) {
             userResponse.setLevel(UserLevel.of(Integer.parseInt(inUser.getD_level())));
         }
+        userResponse.setGoals(inUser.getInUserGoals().stream().map(inUserGoal ->
+                new UserGoalResponseDTO().setId(inUserGoal.getGoalId()).setValue(inUserGoal.getGoal_value())
+        ).collect(Collectors.toList()));
         userResponse.setAvatar_dataurl(inUser.getAvatar_dataurl());
         userResponse.setName(getUserName(inUser).orElse("?"));
         return userResponse;        
@@ -111,7 +126,7 @@ public class UserService {
             inUser.setWeight(userRequest.getWeight().floatValue());
         }
         if (userRequest.getLevel() != null) {
-            inUser.setD_level("" + userRequest.getLevel());
+            inUser.setD_level("" + userRequest.getLevel().getLevel());
         }
         final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
         dataurlValidator.validate(userRequest.getAvatar_dataurl(), errors);
@@ -125,6 +140,24 @@ public class UserService {
                 throw new UnauthorizedException(errorsName.getAllErrors().get(0).getDefaultMessage());
             }
             setUserName(inUser, userRequest.getName());
+        }
+        if (userRequest.getGoals() != null) {
+            if (userRequest.getGoals().size() > 2) {
+                throw new UnauthorizedException("Amount of goals must be not more than 2");
+            }
+            inUserGoalRepository.delete(inUser.getInUserGoals());
+            inUser.setInUserGoals(new ArrayList<>());
+            userRequest.getGoals().forEach((userGoalRequestDTO) -> {
+                Goal goal = goalRepository.findOne(userGoalRequestDTO.getId());
+                if (goal == null) {
+                    throw new UnauthorizedException("Goal with id " + userGoalRequestDTO.getId() + " not found");
+                }
+                inUser.getInUserGoals().add(inUserGoalRepository.save(new InUserGoal()
+                        .setGoalId(userGoalRequestDTO.getId())
+                        .setD_goal_title(goal.getDGoalTitle())
+                        .setD_goal_title_2(goal.getDGoalTitle2())
+                        .setGoal_value(userGoalRequestDTO.getValue())));
+            });
         }
         inUser.setAvatar_dataurl(userRequest.getAvatar_dataurl());
         inUser.setUpdated(LocalDateTime.now());
