@@ -11,7 +11,7 @@ public class XlsxModifierTest {
 
     @Test
     public void updateCellData() throws IOException {
-        try (InputStream stream = XlsxParserTest.class.getResourceAsStream("test-program2.xlsx")) {
+        try (InputStream stream = XlsxModifierTest.class.getResourceAsStream("test-program2.xlsx")) {
             XlsxModifier xlsxModifier = XlsxModifier.of(stream);
             List<ExcelGoal> excelGoals = Arrays.asList(
                     new ExcelGoal()

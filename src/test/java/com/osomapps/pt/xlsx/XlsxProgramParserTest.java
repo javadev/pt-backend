@@ -12,7 +12,7 @@ public class XlsxProgramParserTest {
     @Test
     public void parse1() throws Exception {
         List<ExcelGoal> excelGoals;
-        try (InputStream stream = XlsxParserTest.class.getResourceAsStream("Dette_blir_algo.xlsx")) {
+        try (InputStream stream = XlsxProgramParserTest.class.getResourceAsStream("Dette_blir_algo.xlsx")) {
             parser = XlsxProgramParser.of(stream);
             excelGoals = parser.getExcelGoals();
         }
