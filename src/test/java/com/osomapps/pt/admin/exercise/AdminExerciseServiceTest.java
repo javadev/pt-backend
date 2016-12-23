@@ -6,6 +6,7 @@ import com.osomapps.pt.dictionary.DictionaryService;
 import com.osomapps.pt.exercises.Exercise;
 import com.osomapps.pt.exercises.ExerciseBodypart;
 import com.osomapps.pt.exercises.ExerciseFile;
+import com.osomapps.pt.exercises.ExerciseFileRepository;
 import com.osomapps.pt.exercises.ExerciseRepository;
 import com.osomapps.pt.tokenemail.DataurlValidator;
 import java.util.Arrays;
