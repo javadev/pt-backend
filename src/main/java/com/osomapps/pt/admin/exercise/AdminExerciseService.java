@@ -209,6 +209,7 @@ class AdminExerciseService {
                         throw new UnauthorizedException(errors.getAllErrors().get(0).getDefaultMessage());
                     }
                     return new ExerciseFile()
+                            .setId(file.getId())
                             .setFile_name(file.getFile_name())
                             .setFile_size(file.getFile_size())
                             .setFile_type(file.getFile_type())
