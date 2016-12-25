@@ -12,6 +12,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 class ExerciseFileRequestDTO {
+    Long id;
     String file_name;
     Long file_size;
     String file_type;
