@@ -841,7 +841,8 @@ function ($, _, Backbone, Marionette, moment, App) {
     },
     _filerFiles: function(files) {
       return _.filter(files, function(file) {
-        return file.type.match(/.*vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet/);
+        return file.type.match(/.*vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet/) ||
+            file.name.match(/.*\.xlsx$/);
       });
     },
     handleFileSelect: function(evt) {
