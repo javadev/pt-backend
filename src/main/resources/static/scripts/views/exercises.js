@@ -97,10 +97,14 @@ function ($, _, Backbone, Marionette, App) {
         '{{ file_size }}',
       '</td>',
       '<td>',
-        '<img class="preview-content" src="{{ data_url }}"/>',
+        '{% if(data_url !== null) { %}',
+          '<img class="preview-content" src="{{ data_url }}"/>',
+        '{% } %}',
       '</td>',
       '<td>',
-        '{{ getImageSize() }}',
+        '{% if(data_url !== null) { %}',
+          '{{ getImageSize() }}',
+        '{% } %}',
       '</td>',
       '<td>',
         '<button type="button" class="btn btn-default btn-sm js-delete-value">',
@@ -352,7 +356,8 @@ function ($, _, Backbone, Marionette, App) {
           id: null,
           'file_name': file.name,
           'file_size': file.size,
-          'file_type': file.type
+          'file_type': file.type,
+          'data_url': null
         });
         view.collection.add(fileModel);
         var reader = new FileReader();
@@ -360,6 +365,7 @@ function ($, _, Backbone, Marionette, App) {
         reader.onload = (function () {
           return function (e) {
             fileModel.set('data_url', e.target.result);
+            fileModel.trigger('sync');
           };
         })();
         // Read in the image file as a data URL.
