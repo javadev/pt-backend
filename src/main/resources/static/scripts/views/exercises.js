@@ -97,6 +97,9 @@ function ($, _, Backbone, Marionette, App) {
         '{{ file_size }}',
       '</td>',
       '<td>',
+        '<img class="preview-content" src="{{ data_url }}"/>',
+      '</td>',
+      '<td>',
         '{{ getImageSize() }}',
       '</td>',
       '<td>',
@@ -109,7 +112,15 @@ function ($, _, Backbone, Marionette, App) {
       var model = this.model;
       return {
         getImageSize: function () {
-          return model._widthAndHeight;
+          if (!!model._imageWidthAndHeight) {
+              return model._imageWidthAndHeight;
+          }
+          var img = new window.Image();
+          img.onload = function() {
+            model._imageWidthAndHeight = img.width + ' x ' + img.height + ' px';
+            model.trigger('sync');
+          };
+          img.src = model.get('data_url');
         }
       };
     },
@@ -123,6 +134,9 @@ function ($, _, Backbone, Marionette, App) {
     deleteImage: function(evt) {
       evt.preventDefault();
       this.collection.remove(this.model);
+    },
+    updateSize: function(evt) {
+        this.model._widthAndHeight = evt.target.width + ' x ' + evt.target.height + ' px';
     }
   });
 
@@ -297,6 +311,7 @@ function ($, _, Backbone, Marionette, App) {
             '<th>ID</th>',
             '<th>File name</th>',
             '<th>File size</th>',
+            '<th>Preview</th>',
             '<th>Image size</th>',
             '<th></th>',
           '</tr>',
