@@ -26,6 +26,7 @@ public class ExerciseFileResponseDTOTest {
         ExerciseFileResponseDTO exerciseFileResponseDTO = new ExerciseFileResponseDTO();
         exerciseFileResponseDTO.getId();
         exerciseFileResponseDTO.getFile_name();
+        exerciseFileResponseDTO.getFile_size();
         exerciseFileResponseDTO.getFile_type();
         exerciseFileResponseDTO.getData_url();
         assertThat(exerciseFileResponseDTO, notNullValue());
