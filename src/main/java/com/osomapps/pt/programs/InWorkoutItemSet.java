@@ -26,24 +26,25 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 @Setter
 @Entity
-@Table (name = "in_workout_item", schema = "ptcore")
+@Table (name = "in_workout_item_set", schema = "ptcore")
 @DynamicInsert
-public class InWorkoutItem {
+public class InWorkoutItemSet {
     @Id
-    @SequenceGenerator(name = "InWorkoutItemIdSequence", sequenceName = "ptcore.in_workout_item_id_seq",
+    @SequenceGenerator(name = "InWorkoutItemSetIdSequence", sequenceName = "ptcore.in_workout_item_set_id_seq",
             allocationSize = 1, initialValue = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "InWorkoutItemIdSequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "InWorkoutItemSetIdSequence")
     Long id;
     LocalDateTime created;
-    String d_exercise_id;
-    String d_exercise_name;
-    String d_exercise_type;
+    Integer repetitions;
+    Boolean repetitions_to_failure;
+    Float weight;
+    Boolean bodyweight;
+    Integer time_in_min;
+    Integer speed;
+    Integer incline;
+    Integer resistance;
     @ManyToOne
-    @JoinColumn(name="in_workout_id")
+    @JoinColumn(name="in_workout_item_id")
     @JsonBackReference
-    InWorkout inWorkout;
-    @OneToMany(mappedBy="inWorkoutItem")
-    List<InWorkoutItemSet> inWorkoutItemSets;
-    @OneToMany(mappedBy="inWorkoutItem")
-    List<InWorkoutItemReport> inWorkoutItemReports;
+    InWorkoutItem inWorkoutItem;
 }

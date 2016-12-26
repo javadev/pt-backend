@@ -54,11 +54,11 @@ class AdminUserProgramService {
                     .setExercise_id(inWorkoutItem.getD_exercise_id() == null ? 0L
                             : Long.parseLong(inWorkoutItem.getD_exercise_id()))
                     .setExercise_name(inWorkoutItem.getD_exercise_name())
-                    .setSets(inWorkoutItem.getSets())
-                    .setRepetitions(inWorkoutItem.getRepetitions())
-                    .setRepetitionsToFailure(inWorkoutItem.getRepetitions_to_failure())
-                    .setWeight(inWorkoutItem.getWeight() == null ? null : inWorkoutItem.getWeight().intValue())
-                    .setBodyweight(BooleanUtils.isTrue(inWorkoutItem.getBodyweight()));
+                    .setSets(inWorkoutItem.getInWorkoutItemSets().size())
+                    .setRepetitions(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> set.getRepetitions()).collect(Collectors.toList()))
+                    .setRepetitionsToFailure(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> set.getRepetitions_to_failure()).collect(Collectors.toList()))
+                    .setWeight(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> set.getWeight() == null ? null : set.getWeight().intValue()).collect(Collectors.toList()))
+                    .setBodyweight(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> BooleanUtils.isTrue(set.getBodyweight())).collect(Collectors.toList()));
                 InWorkoutItemReport inWorkoutItemReport = inWorkoutItem.getInWorkoutItemReports().isEmpty()
                         ? null : inWorkoutItem.getInWorkoutItemReports().get(
                     inWorkoutItem.getInWorkoutItemReports().size() - 1);
