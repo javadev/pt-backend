@@ -8,6 +8,7 @@ import com.osomapps.pt.programs.InWarmupWorkoutItem;
 import com.osomapps.pt.programs.InWorkout;
 import com.osomapps.pt.programs.InWorkoutItem;
 import com.osomapps.pt.programs.InWorkoutItemReport;
+import com.osomapps.pt.programs.InWorkoutItemSet;
 import com.osomapps.pt.programs.InWorkoutItemSetReport;
 import com.osomapps.pt.token.InUser;
 import com.osomapps.pt.token.InUserFacebook;
@@ -81,6 +82,7 @@ public class AdminUserServiceTest {
                     ))
                     .setInWorkoutItems(Arrays.asList(
                             new InWorkoutItem()
+                    .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()))
                     .setInWorkoutItemReports(Arrays.asList(
                             new InWorkoutItemReport()
                                     .setInWorkoutItemSetReports(Arrays.asList(

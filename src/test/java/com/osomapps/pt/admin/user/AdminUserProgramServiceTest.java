@@ -7,8 +7,10 @@ import com.osomapps.pt.programs.InWarmupWorkoutItem;
 import com.osomapps.pt.programs.InWorkout;
 import com.osomapps.pt.programs.InWorkoutItem;
 import com.osomapps.pt.programs.InWorkoutItemReport;
+import com.osomapps.pt.programs.InWorkoutItemSet;
 import com.osomapps.pt.programs.InWorkoutItemSetReport;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -39,6 +41,7 @@ public class AdminUserProgramServiceTest {
                     ))
                     .setInWorkoutItems(Arrays.asList(
                             new InWorkoutItem()
+                    .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()))
                     .setInWorkoutItemReports(Arrays.asList(
                             new InWorkoutItemReport()
                                     .setInWorkoutItemSetReports(Arrays.asList(
@@ -73,8 +76,11 @@ public class AdminUserProgramServiceTest {
                 new UserProgramRequestDTO().setName("name")
                         .setWorkouts(Arrays.asList(
                                 new UserWorkoutRequestDTO()
-                                .setItems(Arrays.asList(new UserWorkoutItemRequestDTO()))
-                        )));
+                                .setItems(Arrays.asList(
+                                        new UserWorkoutItemRequestDTO()
+                                .setSets(Arrays.asList(
+                                new UserWorkoutItemSetRequestDTO())))))
+                        ));
         assertThat(responseDTO, notNullValue());
     }
 

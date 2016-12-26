@@ -33,7 +33,8 @@ public class ProgramServiceTest {
         inUserForLogin.setId(10L);
         InWorkout inWorkout = new InWorkout()
                 .setInWarmupWorkoutItems(null)
-                .setInWorkoutItems(Arrays.asList(new InWorkoutItem()));
+                .setInWorkoutItems(Arrays.asList(new InWorkoutItem()
+                    .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()))));
         InProgram inProgram = new InProgram()
                 .setId(1L)
                 .setName("name")
@@ -52,7 +53,8 @@ public class ProgramServiceTest {
         inUserForLogin.setId(10L);
         InWorkout inWorkout = new InWorkout()
                 .setInWarmupWorkoutItems(null)
-                .setInWorkoutItems(Arrays.asList(new InWorkoutItem()));
+                .setInWorkoutItems(Arrays.asList(new InWorkoutItem()
+                    .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()))));
         InProgram inProgram = new InProgram()
                 .setId(1L)
                 .setName("name")
@@ -71,7 +73,8 @@ public class ProgramServiceTest {
         inUserForLogin.setId(10L);
         InWorkout inWorkout = new InWorkout()
                 .setInWarmupWorkoutItems(Arrays.asList(new InWarmupWorkoutItem()))
-                .setInWorkoutItems(Arrays.asList(new InWorkoutItem()));
+                .setInWorkoutItems(Arrays.asList(new InWorkoutItem()
+                    .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()))));
         InProgram inProgram1 = new InProgram()
                 .setId(1L)
                 .setName("name")
@@ -103,7 +106,8 @@ public class ProgramServiceTest {
         InWorkout inWorkout = new InWorkout()
                 .setInWarmupWorkoutItems(Arrays.asList(new InWarmupWorkoutItem().setD_exercise_id("1")))
                 .setInWorkoutItems(Arrays.asList(new InWorkoutItem()
-                        .setD_exercise_id("1").setD_exercise_type("T")));
+                        .setD_exercise_id("1").setD_exercise_type("T")
+                        .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()))));
         InProgram inProgram = new InProgram()
                 .setId(1L)
                 .setName("name")
