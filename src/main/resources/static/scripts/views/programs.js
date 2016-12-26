@@ -855,7 +855,7 @@ function ($, _, Backbone, Marionette, moment, App) {
         view.model.set({
           fileName: file.name,
           fileSize: file.size,
-          fileType: file.type
+          fileType: file.type || 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         });
         view.model.trigger('sync');
         var reader = new FileReader();
