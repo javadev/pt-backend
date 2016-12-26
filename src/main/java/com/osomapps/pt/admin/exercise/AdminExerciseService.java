@@ -159,6 +159,7 @@ class AdminExerciseService {
                             .setFile_type(file.getFile_type())
                             .setData_url(file.getData_url());
             }).collect(Collectors.toList()));
+            exerciseFileRepository.save(exercise.getExerciseFiles());
         }
         exercise.setCardio_percent(exerciseRequestDTO.getCardioPercent());
         return exerciseToDto(exerciseRepository.save(exercise));
