@@ -22,7 +22,7 @@ public class ExercisesImageResourceTest {
     private ExercisesImageResource exercisesImageResource;
 
     @Test
-    public void findAll() throws Exception {
+    public void findOne() throws Exception {
         when(exerciseImageService.findOne(eq(1L), eq(""), any(OutputStream.class)))
                 .thenReturn(new ExerciseImageDTO());
         exercisesImageResource.findOne(1L, "", new MockHttpServletResponse());
