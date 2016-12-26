@@ -30,11 +30,13 @@ public class ExerciseServiceTest {
         when(exerciseRepository.findAll()).thenReturn(Arrays.asList(
                 new Exercise()
         .setExerciseTypes(Arrays.asList(new ExerciseType()))
-        .setExerciseFiles(Arrays.asList(new ExerciseFile()))
+        .setExerciseFiles(Arrays.asList(new ExerciseFile()
+                .setId(1L)
+                .setFile_name("test")))
         ));
         List<ExerciseDTO> exerciseDTOs = exerciseService.findAll("1");
         verify(exerciseRepository).findAll();
         assertThat(exerciseDTOs.size(), equalTo(1));
-        assertThat(exerciseDTOs.get(0).getImages(), equalTo(1));
+        assertThat(exerciseDTOs.get(0).getImages().get(0), equalTo("/api/v1/exercise-image/1/test"));
     }
 }
