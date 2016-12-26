@@ -6,6 +6,11 @@ import org.junit.Test;
 
 public class ExerciseInputRequestDTOTest {
     @Test
+    public void allArgsConstructor() {
+        assertThat(new ExerciseInputRequestDTO(null), notNullValue());
+    }
+
+    @Test
     public void noArgsConstructor() {
         assertThat(new ExerciseInputRequestDTO(), notNullValue());
     }
