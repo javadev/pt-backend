@@ -35,5 +35,6 @@ public class ExerciseServiceTest {
         List<ExerciseDTO> exerciseDTOs = exerciseService.findAll("1");
         verify(exerciseRepository).findAll();
         assertThat(exerciseDTOs.size(), equalTo(1));
+        assertThat(exerciseDTOs.get(0).getImages(), equalTo(1));
     }
 }

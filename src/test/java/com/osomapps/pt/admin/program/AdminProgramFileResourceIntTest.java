@@ -7,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import org.springframework.beans.factory.annotation.Autowired;
