@@ -1,5 +1,5 @@
 /*jshint browser: true*/
-/*global define, console*/
+/*global define, window*/
 define([
     'jquery',
     'underscore',
@@ -97,11 +97,22 @@ function ($, _, Backbone, Marionette, App) {
         '{{ file_size }}',
       '</td>',
       '<td>',
+        '{{ getImageSize() }}',
+      '</td>',
+      '<td>',
         '<button type="button" class="btn btn-default btn-sm js-delete-value">',
           '<i class="glyphicon glyphicon-remove"></i>',
         '</button>',
       '</td>'
     ].join('')),
+    templateHelpers: function() {
+      var model = this.model;
+      return {
+        getImageSize: function () {
+          return model._widthAndHeight;
+        }
+      };
+    },
 
     initialize: function(options) {
       this.collection = options.collection;
@@ -286,6 +297,7 @@ function ($, _, Backbone, Marionette, App) {
             '<th>ID</th>',
             '<th>File name</th>',
             '<th>File size</th>',
+            '<th>Image size</th>',
             '<th></th>',
           '</tr>',
         '</thead>',

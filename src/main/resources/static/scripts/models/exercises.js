@@ -24,7 +24,7 @@ define([
           'id' : null
         },
         'types': [],
-        'images': []
+        'files': []
       },
       url: function() {
         return '/api/v1/admin/exercise' + (this.isNew() ? '' : '/' + this.get('id'));
