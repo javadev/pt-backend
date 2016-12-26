@@ -22,7 +22,7 @@ class AdminProgramScanExerciseService {
         Optional<ExerciseResponse> exerciseResponseOptional = exerciseRepository.findAll(sortByIdAsc()).stream()
                 .map(exercise -> new ExerciseResponse()
                         .setId(exercise.getId())
-                        .setExerciseId(exercise.getExercise_id())
+                        .setExerciseId(exercise.getExerciseId())
                         .setNameEn(dictionaryService.getEnValue(DictionaryName.exercise_name, exercise.getDExerciseName(), ""))
                 ).filter(exerciseResponse -> 
                         exerciseResponse.getNameEn().trim().equalsIgnoreCase(name.trim())

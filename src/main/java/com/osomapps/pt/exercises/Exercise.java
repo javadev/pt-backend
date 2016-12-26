@@ -43,7 +43,8 @@ public class Exercise {
     String dExerciseName;
     @Column(name = "d_exercise_description")
     String dExerciseDescription;
-    Long exercise_id;
+    @Column(name = "exercise_id")
+    Long exerciseId;
     @ManyToOne
     @JoinColumn(name="exercise_bodypart_id")
     @JsonBackReference

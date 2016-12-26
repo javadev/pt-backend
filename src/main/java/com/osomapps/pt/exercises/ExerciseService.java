@@ -30,7 +30,7 @@ class ExerciseService {
         List<Exercise> exercises = exerciseRepository.findAll();
         return exercises.stream().map(exercise -> {
             ExerciseDTO exerciseDTO = new ExerciseDTO();
-            exerciseDTO.setId(exercise.getExercise_id());
+            exerciseDTO.setId(exercise.getExerciseId());
             exerciseDTO.setName(dictionaryService.getEnValue(DictionaryName.exercise_name,
                     exercise.getDExerciseName(), ""));
             exerciseDTO.setDescription(dictionaryService.getEnValue(DictionaryName.exercise_description,

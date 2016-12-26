@@ -31,7 +31,7 @@ public class AdminProgramScanExerciseServiceTest {
     @Test
     public void getExerciseIdByName() {
         when(exerciseRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(
-                new Exercise().setDExerciseName("10").setExercise_id(10L)));
+                new Exercise().setDExerciseName("10").setExerciseId(10L)));
         when(dictionaryService.getEnValue(eq(DictionaryName.exercise_name), eq("10"), eq(""))).thenReturn("test");
         Optional<Long> result = adminProgramScanExerciseService.getExerciseIdByName("test");
         Assert.assertThat(result.isPresent(), equalTo(true));

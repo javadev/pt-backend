@@ -37,8 +37,6 @@ define([
           errors.push({name: 'nameNo', message: 'Please fill name in Norwegian field.'});
         } else if (_.isNull(attrs.exerciseId) || _.isEmpty($.trim(attrs.exerciseId))) {
           errors.push({name: 'exerciseId', message: 'Please fill exerciseId field.'});
-        } else if (!_.isNull(attrs.bodypart) && _.isNull(attrs.bodypart.id)) {
-          errors.push({name: 'bodypart', message: 'Please fill bodypart field.'});
         } else if (parseInt(attrs.cardioPercent, 10) < 0 || parseInt(attrs.cardioPercent, 10) > 100) {
           errors.push({name: 'cardioPercent', message: 'Please fill cardio percent field.'});
         }

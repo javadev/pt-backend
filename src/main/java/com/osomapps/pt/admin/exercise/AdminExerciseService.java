@@ -57,13 +57,13 @@ class AdminExerciseService {
     }
 
     private Sort sortByIdAsc() {
-        return new Sort(Sort.Direction.ASC, "id");
+        return new Sort(Sort.Direction.ASC, "exerciseId");
     }
 
     private ExerciseResponseDTO exerciseToDto(Exercise exercise) {
         return ExerciseResponseDTO.builder()
                 .id(exercise.getId())
-                .exerciseId(exercise.getExercise_id())
+                .exerciseId(exercise.getExerciseId())
                 .nameEn(dictionaryService.getEnValue(DictionaryName.exercise_name, exercise.getDExerciseName(), ""))
                 .nameNo(dictionaryService.getNoValue(DictionaryName.exercise_name, exercise.getDExerciseName(), ""))
                 .descriptionEn(dictionaryService.getEnValue(DictionaryName.exercise_description, exercise.getDExerciseDescription(), ""))
@@ -119,11 +119,11 @@ class AdminExerciseService {
 
     ExerciseResponseDTO create(ExerciseRequestDTO exerciseRequestDTO) {
         final ExerciseBodypart exerciseBodypartDb =
-                exerciseRequestDTO.getBodypart() == null ? null : exerciseBodypartRepository
-            .findOne(exerciseRequestDTO.getBodypart().getId());
+                exerciseRequestDTO.getBodypart() == null || exerciseRequestDTO.getBodypart().getId() == null
+                ? null : exerciseBodypartRepository.findOne(exerciseRequestDTO.getBodypart().getId());
         final ExerciseEquipmentType exerciseEquipmentTypeDb =
-            exerciseRequestDTO.getEquipmentType() == null ? null : exerciseEquipmentTypeRepository
-            .findOne(exerciseRequestDTO.getEquipmentType().getId());
+            exerciseRequestDTO.getEquipmentType() == null || exerciseRequestDTO.getEquipmentType().getId() == null
+                ? null : exerciseEquipmentTypeRepository.findOne(exerciseRequestDTO.getEquipmentType().getId());
         final String dataKey = dictionaryService.getNewDictionaryDataKey(DictionaryName.exercise_name);
         dictionaryService.createDictionaryDataKey(DictionaryName.exercise_name, dataKey,
                 exerciseRequestDTO.getNameEn(), exerciseRequestDTO.getNameNo());
@@ -133,7 +133,7 @@ class AdminExerciseService {
         final Exercise exercise = new Exercise();
         exercise.setDExerciseName(dataKey);
         exercise.setDExerciseDescription(dataDescriptionKey);
-        exercise.setExercise_id(exerciseRequestDTO.getExerciseId());
+        exercise.setExerciseId(exerciseRequestDTO.getExerciseId());
         exercise.setExerciseBodypart(exerciseBodypartDb);
         exercise.setExerciseEquipmentType(exerciseEquipmentTypeDb);
         exercise.setExerciseTypes(exerciseTypeRepository.findAll(
@@ -188,7 +188,7 @@ class AdminExerciseService {
         existedExercise.setExerciseEquipmentType(exerciseEquipmentTypeDb);
         existedExercise.setDExerciseName(dataKey);
         existedExercise.setDExerciseDescription(dataDescriptionKey);
-        existedExercise.setExercise_id(exerciseRequestDTO.getExerciseId());
+        existedExercise.setExerciseId(exerciseRequestDTO.getExerciseId());
         existedExercise.setCardio_percent(exerciseRequestDTO.getCardioPercent());
         existedExercise.setExerciseTypes(exerciseTypeRepository.findAll(
                 exerciseRequestDTO.getTypes().stream().map(type -> type.getId()).collect(Collectors.toList())));
