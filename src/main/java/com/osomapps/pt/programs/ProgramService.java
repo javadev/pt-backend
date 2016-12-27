@@ -45,7 +45,7 @@ class ProgramService {
         inWarmupWorkoutItem111.setTime_in_min(10);
         inWorkout11.setInWarmupWorkoutItems(Arrays.asList(inWarmupWorkoutItem111));
         InWorkoutItem inWorkoutItem111 = new InWorkoutItem();
-        inWorkoutItem111.setId(1L);
+        inWorkoutItem111.setId(2L);
         inWorkoutItem111.setD_exercise_id("210");
         inWorkoutItem111.setD_exercise_name("Deadlift");
         InWorkoutItemSet inWorkoutItemSet111 = new InWorkoutItemSet();
@@ -53,7 +53,7 @@ class ProgramService {
         inWorkoutItemSet111.setWeight(75F);
         inWorkoutItem111.setInWorkoutItemSets(Arrays.asList(inWorkoutItemSet111));
         InWorkoutItem inWorkoutItem112 = new InWorkoutItem()
-            .setId(2L)
+            .setId(3L)
             .setD_exercise_id("260")
             .setD_exercise_name("Bench Press")
             .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()
@@ -67,7 +67,7 @@ class ProgramService {
                     .setWeight(65F)));
 
         InWorkoutItem inWorkoutItem113 = new InWorkoutItem()
-            .setId(3L)
+            .setId(4L)
             .setD_exercise_id("150")
             .setD_exercise_name("Pull Up")
             .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()
@@ -88,7 +88,7 @@ class ProgramService {
                     .setWeight(65F)));
 
         InWorkoutItem inWorkoutItem114 = new InWorkoutItem()
-            .setId(4L)
+            .setId(5L)
             .setD_exercise_id("530")
             .setD_exercise_name("Dips")
            .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()
@@ -105,7 +105,7 @@ class ProgramService {
                     .setWeight(65F)));
 
         InWorkoutItem inWorkoutItem115 = new InWorkoutItem()
-            .setId(5L)
+            .setId(6L)
             .setD_exercise_id("440")
             .setD_exercise_name("Plank")
             .setD_exercise_type("OnTime")
