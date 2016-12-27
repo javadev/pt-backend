@@ -4,11 +4,8 @@ import com.osomapps.pt.programs.InProgramRepository;
 import com.osomapps.pt.programs.InWarmupWorkoutItemRepository;
 import com.osomapps.pt.programs.InWorkoutItem;
 import com.osomapps.pt.programs.InWorkoutRepository;
+import com.osomapps.pt.programs.ParseGoal;
 import com.osomapps.pt.programs.ParseUserGroup;
-import com.osomapps.pt.programs.ParseWarmupWorkoutItem;
-import com.osomapps.pt.programs.ParseWorkout;
-import com.osomapps.pt.programs.ParseWorkoutItem;
-import com.osomapps.pt.programs.ParseProgram;
 import com.osomapps.pt.reportworkout.InWorkoutItemRepository;
 import com.osomapps.pt.token.InUser;
 import com.osomapps.pt.token.InUserFacebook;
@@ -24,6 +21,7 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
 import com.osomapps.pt.programs.ParseGoalRepository;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminProgramAssignServiceTest {
@@ -54,17 +52,11 @@ public class AdminProgramAssignServiceTest {
         when(adminProgramScanExerciseService.getExerciseIdByName(anyString())).thenReturn(Optional.empty());
         when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
         when(parseUserRepository.save(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
-//        adminProgramAssignService.assign(Arrays.asList(new ParseUserGroup()
-//                .setName("user_name")
-//                .setProgram(new ParseProgram().setName("program name"))
-//                .setParseWorkouts(Arrays.asList(
-//                        new ParseWorkout()
-//                .setParseWarmupWorkoutItems(Arrays.asList(
-//                        new ParseWarmupWorkoutItem()))
-//                .setParseWorkoutItems(Arrays.asList(
-//                        new ParseWorkoutItem()))))
-//        ));
-//        verify(parseUserRepository).save(anyList());
+        adminProgramAssignService.assign(Arrays.asList(new ParseGoal()
+                .setName("user_name")
+                .setParseUserGroups(Arrays.asList(new ParseUserGroup().setName("program name")))
+        ));
+        verify(parseUserRepository).save(any(Iterable.class));
     }
 
 }

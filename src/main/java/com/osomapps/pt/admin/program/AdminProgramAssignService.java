@@ -49,9 +49,9 @@ class AdminProgramAssignService {
         this.adminProgramScanExerciseService = adminProgramScanExerciseService;
     }
 
-    private static boolean isNotNullOrEmpty (String str) {
-        return str != null && !str.isEmpty();
-    }
+//    private static boolean isNotNullOrEmpty (String str) {
+//        return str != null && !str.isEmpty();
+//    }
 
     List<ParseGoal> assign(List<ParseGoal> parseGoals) {
 //        parseGoals.stream().forEachOrdered(parseUser -> {
