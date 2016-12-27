@@ -7,31 +7,33 @@ import org.junit.Test;
 public class ParseWarmupWorkoutItemDTOTest {
     @Test
     public void allArgsConstructor() {
-        assertThat(new ParseGoalDTO(1L, null, null, null), notNullValue());
+        assertThat(new ParseWarmupWorkoutItemDTO(1L, null, null, null, null), notNullValue());
     }
 
     @Test
     public void noArgsConstructor() {
-        assertThat(new ParseGoalDTO(), notNullValue());
+        assertThat(new ParseWarmupWorkoutItemDTO(), notNullValue());
     }
 
     @Test
     public void setters() {
-        ParseGoalDTO parseGoalDTO = new ParseGoalDTO();
-        parseGoalDTO.setId(null);
-        parseGoalDTO.setName(null);
-        parseGoalDTO.setUserGroups(null);
-        parseGoalDTO.setErrors(null);
-        assertThat(parseGoalDTO, notNullValue());
+        ParseWarmupWorkoutItemDTO parseWarmupWorkoutItemDTO = new ParseWarmupWorkoutItemDTO();
+        parseWarmupWorkoutItemDTO.setId(null);
+        parseWarmupWorkoutItemDTO.setName(null);
+        parseWarmupWorkoutItemDTO.setSpeed(null);
+        parseWarmupWorkoutItemDTO.setIncline(null);
+        parseWarmupWorkoutItemDTO.setTime_in_min(null);
+        assertThat(parseWarmupWorkoutItemDTO, notNullValue());
     }
 
     @Test
     public void getters() {
-        ParseGoalDTO parseGoalDTO = new ParseGoalDTO();
-        parseGoalDTO.getId();
-        parseGoalDTO.getName();
-        parseGoalDTO.getUserGroups();
-        parseGoalDTO.getErrors();
-        assertThat(parseGoalDTO, notNullValue());
+        ParseWarmupWorkoutItemDTO parseWarmupWorkoutItemDTO = new ParseWarmupWorkoutItemDTO();
+        parseWarmupWorkoutItemDTO.getId();
+        parseWarmupWorkoutItemDTO.getName();
+        parseWarmupWorkoutItemDTO.getSpeed();
+        parseWarmupWorkoutItemDTO.getIncline();
+        parseWarmupWorkoutItemDTO.getTime_in_min();
+        assertThat(parseWarmupWorkoutItemDTO, notNullValue());
     }
 }
