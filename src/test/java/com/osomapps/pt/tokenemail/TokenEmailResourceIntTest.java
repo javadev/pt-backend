@@ -1,6 +1,5 @@
 package com.osomapps.pt.tokenemail;
 
-import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.UnauthorizedException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +36,7 @@ public class TokenEmailResourceIntTest {
         assertThat(user, notNullValue());
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = UnauthorizedException.class)
     public void delete() {
         tokenEmailResource.delete("", new MockHttpServletRequest());
     }

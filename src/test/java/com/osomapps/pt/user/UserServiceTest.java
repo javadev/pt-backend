@@ -1,6 +1,5 @@
 package com.osomapps.pt.user;
 
-import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.UnauthorizedException;
 import com.osomapps.pt.goals.Goal;
 import com.osomapps.pt.goals.GoalRepository;
@@ -50,7 +49,7 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = UnauthorizedException.class)
     public void findOne() {
         userService.findOne("1");
     }
@@ -91,7 +90,7 @@ public class UserServiceTest {
         assertThat(userResponseDTO.level, equalTo(null));
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = UnauthorizedException.class)
     public void updateUser() {
         userService.updateUser("1", new UserRequestDTO());
     }

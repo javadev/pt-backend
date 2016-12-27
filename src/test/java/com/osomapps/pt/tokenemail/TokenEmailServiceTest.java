@@ -1,6 +1,5 @@
 package com.osomapps.pt.tokenemail;
 
-import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.UnauthorizedException;
 import com.osomapps.pt.token.InUser;
 import com.osomapps.pt.token.InUserLogin;
@@ -111,7 +110,7 @@ public class TokenEmailServiceTest {
         assertThat(pair.getFirst(), equalTo(false));
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = UnauthorizedException.class)
     public void deleteToken_not_found() {
         tokenEmailService.deleteToken("1", "");
     }

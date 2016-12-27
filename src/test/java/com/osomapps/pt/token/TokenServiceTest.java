@@ -148,7 +148,7 @@ public class TokenServiceTest {
         verify(inUserFacebookRepository, times(2)).save(any(InUserFacebook.class));
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = UnauthorizedException.class)
     public void deleteToken_not_found() {
         tokenService.deleteToken("", "");
     }

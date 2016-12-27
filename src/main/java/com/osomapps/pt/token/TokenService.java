@@ -130,7 +130,7 @@ class TokenService {
             inUserLogout.setIp_address(remoteAddr);
             inUserLogoutRepository.saveAndFlush(inUserLogout);
         } else {
-            throw new ResourceNotFoundException("Token not found " + token);
+            throw new UnauthorizedException("Token not found");
         }
     }
 }

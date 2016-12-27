@@ -1,6 +1,6 @@
 package com.osomapps.pt.user;
 
-import com.osomapps.pt.ResourceNotFoundException;
+import com.osomapps.pt.UnauthorizedException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class UserResourceIntTest {
         assertThat(user, notNullValue());
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = UnauthorizedException.class)
     public void findOneNotFound() throws Exception {
         UserResponseDTO user = userResource.findOne("1");
         assertThat(user, notNullValue());

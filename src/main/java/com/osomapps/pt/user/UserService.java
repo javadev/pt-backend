@@ -54,7 +54,7 @@ public class UserService {
     public InUserLogin checkUserToken(String token) {
         final List<InUserLogin> inUserLogins = inUserLoginRepository.findByToken(token);
         if (inUserLogins.isEmpty()) {
-            throw new ResourceNotFoundException("Token not found " + token);
+            throw new UnauthorizedException("Token not found");
         } else {
             if (!inUserLogoutRepository.findByToken(token).isEmpty()) {
                 throw new UnauthorizedException("Invalid token");
