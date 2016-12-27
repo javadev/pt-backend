@@ -25,8 +25,8 @@ public interface DictionaryRepository extends JpaRepository<DictionaryData, Long
             String dlanguage, String dname, String dkey, LocalDateTime currentdate);
     
     @Caching(evict = { 
-        @CacheEvict(value = "dictionaryData", key = "{#p0.dlanguage, #p0.dname, #p0.dkey}"),
-        @CacheEvict(value = "dictionaryAllData", key = "{#p0.dlanguage, #p0.dname}")
+        @CacheEvict(value = "dictionaryData", key = "{#p0.dlanguage, #p0.dname, #p0.dkey}", beforeInvocation = true),
+        @CacheEvict(value = "dictionaryAllData", key = "{#p0.dlanguage, #p0.dname}", beforeInvocation = true)
         })
     @Override
     <S extends DictionaryData> S save(S service);
