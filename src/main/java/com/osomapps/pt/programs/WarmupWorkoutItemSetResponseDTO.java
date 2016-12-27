@@ -1,6 +1,5 @@
 package com.osomapps.pt.programs;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +11,12 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-class WarmupWorkoutItemResponseDTO {
-    Long id;
-    Long exercise_id;
-    String exercise_name;
-    String exercise_type;
-    List<WarmupWorkoutItemSetResponseDTO> sets;
+class WarmupWorkoutItemSetResponseDTO {
+    Integer repetitions;
+    Integer weight;
+    Boolean bodyweight;
+    Integer time_in_min;
+    Integer speed;
+    Integer incline;
+    Integer resistance;
 }

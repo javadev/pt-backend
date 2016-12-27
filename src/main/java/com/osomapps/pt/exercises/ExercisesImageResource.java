@@ -28,8 +28,6 @@ class ExercisesImageResource {
         try (FastByteArrayOutputStream outputStream = new FastByteArrayOutputStream()) {
             final ExerciseImageDTO exerciseImageDTO = exerciseImageService.findOne(id, fileName, outputStream);
             response.setContentType(exerciseImageDTO.getFileType());
-            response.setHeader("Content-disposition",
-                    "attachment; filename=" + exerciseImageDTO.getFileName());
             outputStream.writeTo(response.getOutputStream());
             response.getOutputStream().close();
             outputStream.reset();
