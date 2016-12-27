@@ -1,7 +1,5 @@
 package com.osomapps.pt.xlsx;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +13,15 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Input {
+public class InputSet {
     String exercise;
-    List<InputSet> sets = new ArrayList<>();
+    Integer sets;
+    Integer repetitions;
+    Boolean repetitionsToFailure;
+    Float weight;
+    Boolean bodyweight;
+    Integer timeInMin;
+    Integer speed;
+    Integer incline;
+    Integer resistance;
 }

@@ -278,10 +278,13 @@ function ($, _, Backbone, Marionette, moment, App) {
       var model = this.model;
       return {
         getInputs: function () {
-          return 'sets ' + model.get('sets') +
-                  (model.get('repetitions') === null ? '' : ', repetitions ' + model.get('repetitions')) +
-                  (model.get('weight') === null ? '' : ', weight ' + model.get('weight')) +
-                  (model.get('time_in_min') === null ? '' : ', time ' + model.get('time_in_min'));
+          var repetitions = _.compact(_.map(model.get('sets'), function(item) { return item.repetitions; }));
+          var weight = _.compact(_.map(model.get('sets'), function(item) { return item.weigh; }));
+          var timeInMin = _.compact(_.map(model.get('sets'), function(item) { return item['time_in_min']; }));
+          return 'sets ' + model.get('sets').length +
+                  (_.isEmpty(repetitions) ? '' : ', repetitions ' + repetitions.join(',')) +
+                  (_.isEmpty(weight) ? '' : ', weight ' + weight.join(',')) +
+                  (_.isEmpty(timeInMin) ? '' : ', time ' + timeInMin.join(','));
         }
       };
     },

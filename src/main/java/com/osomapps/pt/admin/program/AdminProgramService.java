@@ -32,6 +32,8 @@ import com.osomapps.pt.programs.ParseRound;
 import com.osomapps.pt.programs.ParseRoundRepository;
 import com.osomapps.pt.programs.ParseUserGroupRepository;
 import com.osomapps.pt.programs.ParseWarmupWorkoutItemRepository;
+import com.osomapps.pt.programs.ParseWorkoutItemSet;
+import com.osomapps.pt.programs.ParseWorkoutItemSetRepository;
 import com.osomapps.pt.xlsx.Round;
 import com.osomapps.pt.xlsx.UserGroup;
 import org.apache.commons.lang3.BooleanUtils;
@@ -49,6 +51,7 @@ class AdminProgramService {
     private final ParseWorkoutRepository parseWorkoutRepository;
     private final ParseWarmupWorkoutItemRepository parseWarmupWorkoutItemRepository;
     private final ParseWorkoutItemRepository parseWorkoutItemRepository;
+    private final ParseWorkoutItemSetRepository parseWorkoutItemSetRepository;
     private final InWorkoutItemRepository inWorkoutItemRepository;
     private final AdminProgramAssignService adminProgramAssignService;
 
@@ -60,6 +63,7 @@ class AdminProgramService {
             ParseWorkoutRepository parseWorkoutRepository,
             ParseWarmupWorkoutItemRepository parseWarmupWorkoutItemRepository,
             ParseWorkoutItemRepository parseWorkoutItemRepository,
+            ParseWorkoutItemSetRepository parseWorkoutItemSetRepository,
             InWorkoutItemRepository inWorkoutItemRepository,
             AdminProgramAssignService adminProgramAssignService) {
         this.programRepository = programRepository;
@@ -70,6 +74,7 @@ class AdminProgramService {
         this.parseWorkoutRepository = parseWorkoutRepository;
         this.parseWarmupWorkoutItemRepository = parseWarmupWorkoutItemRepository;
         this.parseWorkoutItemRepository = parseWorkoutItemRepository;
+        this.parseWorkoutItemSetRepository = parseWorkoutItemSetRepository;
         this.inWorkoutItemRepository = inWorkoutItemRepository;
         this.adminProgramAssignService = adminProgramAssignService;
     }
@@ -130,13 +135,17 @@ class AdminProgramService {
                         ParseWorkoutItemDTO.builder()
                                 .id(workoutItem.getId())
                                 .name(workoutItem.getName())
-                                .sets(workoutItem.getSets())
-                                .repetitions(workoutItem.getRepetitions())
-                                .weight(workoutItem.getWeight())
-                                .bodyweight(workoutItem.getBodyweight())
-                                .time_in_min(workoutItem.getTime_in_min())
-                                .speed(workoutItem.getSpeed())
-                                .resistance(workoutItem.getResistance())
+                                .sets(workoutItem.getParseWorkoutItemSets().stream().map(set ->
+                                    new ParseWorkoutItemSetDTO()
+                                        .setRepetitions(set.getRepetitions())
+                                        .setRepetitions_to_failure(set.getRepetitions_to_failure())
+                                        .setWeight(set.getWeight())
+                                        .setBodyweight(set.getBodyweight())
+                                        .setTime_in_min(set.getTime_in_min())
+                                        .setSpeed(set.getSpeed())
+                                        .setIncline(set.getIncline())
+                                        .setResistance(set.getResistance())
+                                ).collect(Collectors.toList()))
                                 .build()).collect(Collectors.toList()))
                 .build();
     }
@@ -180,6 +189,9 @@ class AdminProgramService {
                             if (parseWorkout.getParseWorkoutItems() != null) {
                                 parseWorkout.getParseWorkoutItems().forEach((parseWorkoutItem) -> {
                                     parseWorkoutItem.setParseWorkout(parseWorkout);
+                                    parseWorkoutItem.getParseWorkoutItemSets().forEach((parseWorkoutItemSet) -> {
+                                        parseWorkoutItemSet.setParseWorkoutItem(parseWorkoutItem);
+                                    });
                                 });
                             }
                         });
@@ -198,6 +210,9 @@ class AdminProgramService {
                         parsePart.getParseWorkouts().forEach((parseWorkout) -> {
                             parseWarmupWorkoutItemRepository.save(parseWorkout.getParseWarmupWorkoutItems());
                             parseWorkoutItemRepository.save(parseWorkout.getParseWorkoutItems());
+                            parseWorkout.getParseWorkoutItems().forEach(parseWorkoutItem -> {
+                                 parseWorkoutItemSetRepository.save(parseWorkoutItem.getParseWorkoutItemSets());
+                            });
                         });
                     });
                 });
@@ -265,11 +280,17 @@ class AdminProgramService {
                                 .setColumn_index(workoutItem.getColumnIndex())
                                 .setRow_index(workoutItem.getRowIndex())
                                 .setName(workoutItem.getInput().getExercise())
-                                .setSets(workoutItem.getInput().getSets())
-                                .setRepetitions(workoutItem.getInput().getRepetitions())
-                                .setWeight(workoutItem.getInput().getWeight())
-                                .setBodyweight(BooleanUtils.isTrue(workoutItem.getInput().getBodyweight()))
-                                .setTime_in_min(workoutItem.getInput().getTimeInMin())
+                                .setParseWorkoutItemSets(workoutItem.getInput().getSets().stream().map(set ->
+                                        new ParseWorkoutItemSet()
+                                            .setRepetitions(set.getRepetitions())
+                                            .setRepetitions_to_failure(set.getRepetitionsToFailure())
+                                            .setWeight(set.getWeight())
+                                            .setBodyweight(set.getBodyweight())
+                                            .setTime_in_min(set.getTimeInMin())
+                                            .setSpeed(set.getSpeed())
+                                            .setIncline(set.getIncline())
+                                            .setResistance(set.getResistance())
+                                ).collect(Collectors.toList()))
                 ).collect(Collectors.toList()));
     }
 

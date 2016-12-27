@@ -91,7 +91,9 @@ public class XlsxProgramParser {
                     }
                     part.getWorkouts().add(workout);
                 }
-                excelGoals.add(excelGoal);
+                if (!excelGoal.getUserGroups().isEmpty()) {
+                    excelGoals.add(excelGoal);
+                }
             }
         } catch (IOException | InvalidFormatException ex) {
             log.error(ex.getMessage(), ex);
@@ -125,16 +127,48 @@ public class XlsxProgramParser {
             return Optional.empty();
         }
         Number setsInp = getNumberOrNull(getCellData(sheet, 5 + 5 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
-        Number repetitionsInp = getNumberOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
-        Number weightInp = getNumberOrNull(getCellData(sheet, 5 + 7 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+        Object repetitionsInp = getStringOrNumberOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+        Object weightInp = getStringOrNumberOrNull(getCellData(sheet, 5 + 7 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
         workoutItem.getInput().setExercise(exerciseName.orElse(null));
-        workoutItem.getInput().setSets(getIntegerOrNull(setsInp));
-        if ("Time".equalsIgnoreCase(getStringOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 1)))) {
-            workoutItem.getInput().setTimeInMin(getIntegerOrNull(repetitionsInp));
+        if (repetitionsInp instanceof String || weightInp instanceof String) {
+            workoutItem.getInput().setSets(new ArrayList<>());
+            for (int index = 0; index < getIntegerOrNull(setsInp); index += 1) {
+                InputSet inputSet = new InputSet();
+                if (repetitionsInp instanceof String) {
+                    String[] repetitionsInps = ((String) repetitionsInp).split("\\s*,\\s*");
+                    if (repetitionsInps[index].contains("min") || "Time".equalsIgnoreCase(getStringOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 1)))) {
+                        inputSet.setTimeInMin(getIntegerOrNull(extractNumbers(repetitionsInps[index])));
+                    } else {
+                       inputSet.setRepetitions(getIntegerOrNull(extractNumbers(repetitionsInps[index])));
+                    }
+                } else {
+                    if ("Time".equalsIgnoreCase(getStringOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 1)))) {
+                        inputSet.setTimeInMin(getIntegerOrNull(repetitionsInp));
+                    } else {
+                       inputSet.setRepetitions(getIntegerOrNull(repetitionsInp));
+                    }                    
+                }
+                if (weightInp instanceof String) {
+                    String[] weightInps = ((String) weightInp).split("\\s*,\\s*");
+                    inputSet.setWeight(getFloatOrNull(extractNumbers(weightInps[Math.min(index, weightInps.length - 1)])));
+                } else {
+                    inputSet.setWeight(getFloatOrNull(weightInp));
+                }
+                workoutItem.getInput().getSets().add(inputSet);
+            }
         } else {
-            workoutItem.getInput().setRepetitions(getIntegerOrNull(repetitionsInp));
+            InputSet inputSet = new InputSet();
+            if ("Time".equalsIgnoreCase(getStringOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 1)))) {
+                inputSet.setTimeInMin(getIntegerOrNull(repetitionsInp));
+            } else {
+               inputSet.setRepetitions(getIntegerOrNull(repetitionsInp));
+            }
+            inputSet.setWeight(getFloatOrNull(weightInp));
+            workoutItem.getInput().setSets(new ArrayList<>());
+            for (int index = 0; index < getIntegerOrNull(setsInp); index += 1) {
+                workoutItem.getInput().getSets().add(inputSet);
+            }            
         }
-        workoutItem.getInput().setWeight(getIntegerOrNull(weightInp));
         return Optional.of(workoutItem);
     }
 
@@ -158,8 +192,22 @@ public class XlsxProgramParser {
         return object instanceof String ? (String) object : null;
     }
 
+
+    private Object getStringOrNumberOrNull(Object object) {
+        if (object instanceof String) {
+            return (String) object;
+        } else if (object instanceof Number) {
+            return (Number) object;
+        }
+        return null;
+    }
+
     private Integer getIntegerOrNull(Object object) {
         return object instanceof Number ? ((Number) object).intValue() : null;
+    }
+    
+    private Float getFloatOrNull(Object object) {
+        return object instanceof Number ? ((Number) object).floatValue() : null;
     }
     
     private Optional<String> getStringOrEmpty(Object object) {
@@ -216,5 +264,4 @@ public class XlsxProgramParser {
         }
         return cell.getNumericCellValue();
     }
-
 }

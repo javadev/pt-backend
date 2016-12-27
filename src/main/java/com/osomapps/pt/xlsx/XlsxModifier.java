@@ -34,12 +34,12 @@ public class XlsxModifier {
                 final XSSFSheet sheet = book.getSheetAt(excelGoal.getSheetIndex());
                             for (Workout workout : part.getWorkouts()) {
                     for (WorkoutItem workoutItem : workout.getWorkoutItems()) {
-                        fillCell(sheet, workoutItem.getColumnIndex(), workoutItem.getRowIndex() + 1,
-                                getIntegerAsStringOrNull(workoutItem.getInput().getSets()));
-                        fillCell(sheet, workoutItem.getColumnIndex(), workoutItem.getRowIndex() + 2,
-                                getIntegerAsStringOrNull(workoutItem.getInput().getRepetitions()));
-                        fillCell(sheet, workoutItem.getColumnIndex(), workoutItem.getRowIndex() + 3,
-                                getIntegerAsStringOrNull(workoutItem.getInput().getWeight()));
+//                        fillCell(sheet, workoutItem.getColumnIndex(), workoutItem.getRowIndex() + 1,
+//                                getIntegerAsStringOrNull(workoutItem.getInput().getSets()));
+//                        fillCell(sheet, workoutItem.getColumnIndex(), workoutItem.getRowIndex() + 2,
+//                                getIntegerAsStringOrNull(workoutItem.getInput().getRepetitions()));
+//                        fillCell(sheet, workoutItem.getColumnIndex(), workoutItem.getRowIndex() + 3,
+//                                getIntegerAsStringOrNull(workoutItem.getInput().getWeight()));
                         if (workoutItem.getOutput().getSets() == null) {
                             continue;
                         }

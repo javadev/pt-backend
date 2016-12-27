@@ -7,7 +7,7 @@ import org.junit.Test;
 public class ParseWorkoutItemDTOTest {
     @Test
     public void allArgsConstructor() {
-        assertThat(new ParseWorkoutItemDTO(1L, null, null, null, null, null, null, null, null), notNullValue());
+        assertThat(new ParseWorkoutItemDTO(1L, null, null), notNullValue());
     }
 
     @Test
@@ -21,12 +21,6 @@ public class ParseWorkoutItemDTOTest {
         parseWorkoutItemDTO.setId(null);
         parseWorkoutItemDTO.setName(null);        
         parseWorkoutItemDTO.setSets(null);
-        parseWorkoutItemDTO.setRepetitions(null);
-        parseWorkoutItemDTO.setWeight(null);
-        parseWorkoutItemDTO.setBodyweight(null);
-        parseWorkoutItemDTO.setTime_in_min(null);
-        parseWorkoutItemDTO.setSpeed(null);
-        parseWorkoutItemDTO.setResistance(null);
         assertThat(parseWorkoutItemDTO, notNullValue());
     }
 
@@ -36,12 +30,6 @@ public class ParseWorkoutItemDTOTest {
         parseWorkoutItemDTO.getId();
         parseWorkoutItemDTO.getName();        
         parseWorkoutItemDTO.getSets();
-        parseWorkoutItemDTO.getRepetitions();
-        parseWorkoutItemDTO.getWeight();
-        parseWorkoutItemDTO.getBodyweight();
-        parseWorkoutItemDTO.getTime_in_min();
-        parseWorkoutItemDTO.getSpeed();
-        parseWorkoutItemDTO.getResistance();
         assertThat(parseWorkoutItemDTO, notNullValue());
     }
 

@@ -25,9 +25,9 @@ public class XlsxModifierTest {
                                 new Workout().setWorkoutItems(Arrays.asList(
                                         new WorkoutItem()
                                                 .setInput(new Input()
-                                                        .setSets(1)
-                                                        .setRepetitions(5)
-                                                        .setWeight(10)
+                                                        .setSets(Arrays.asList(new InputSet()
+                                                                .setRepetitions(5)
+                                                                .setWeight(10F)))
                                                 )
                                                 .setOutput(new Output()
                                                         .setSets(1)

@@ -33,6 +33,8 @@ import com.osomapps.pt.programs.ParseRound;
 import com.osomapps.pt.programs.ParseRoundRepository;
 import com.osomapps.pt.programs.ParseUserGroupRepository;
 import com.osomapps.pt.programs.ParseWarmupWorkoutItemRepository;
+import com.osomapps.pt.programs.ParseWorkoutItemSet;
+import com.osomapps.pt.programs.ParseWorkoutItemSetRepository;
 import static org.mockito.Matchers.anyList;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -54,6 +56,8 @@ public class AdminProgramServiceTest {
     private ParseWarmupWorkoutItemRepository parseWarmupWorkoutItemRepository;
     @Mock
     private ParseWorkoutItemRepository parseWorkoutItemRepository;
+    @Mock
+    private ParseWorkoutItemSetRepository parseWorkoutItemSetRepository;
     @Mock
     private InWorkoutItemRepository inWorkoutItemRepository;
     @Mock
@@ -82,7 +86,8 @@ public class AdminProgramServiceTest {
                                 Arrays.asList(new ParsePart().setParseWorkouts(
                                         Arrays.asList(
                                             new ParseWorkout().setParseWorkoutItems(
-                                                Arrays.asList(new ParseWorkoutItem())))))))))))));
+                                                Arrays.asList(new ParseWorkoutItem()
+                                                        .setParseWorkoutItemSets(Arrays.asList(new ParseWorkoutItemSet())))))))))))))));
         adminProgramService.findOne(1L);
         verify(programRepository).findOne(eq(1L));
     }
@@ -156,7 +161,8 @@ public class AdminProgramServiceTest {
                                 Arrays.asList(new ParsePart().setParseWorkouts(
                                         Arrays.asList(
                                             new ParseWorkout().setParseWorkoutItems(
-                                                Arrays.asList(new ParseWorkoutItem())))))))))))));
+                                                Arrays.asList(new ParseWorkoutItem()
+                                                .setParseWorkoutItemSets(Arrays.asList(new ParseWorkoutItemSet())))))))))))))));
         adminProgramService.delete(1L);
         verify(programRepository).delete(any(ParseProgram.class));
     }
@@ -187,6 +193,7 @@ public class AdminProgramServiceTest {
                             .setRow_index(5)
                             .setColumn_index(10)
                             .setParseWorkoutItems(Arrays.asList(new ParseWorkoutItem()
+                                .setParseWorkoutItemSets(Arrays.asList(new ParseWorkoutItemSet()))
                                 .setIn_workout_item_id(1L)
                                 .setColumn_index(1)
                                 .setRow_index(1))))))))))))));
