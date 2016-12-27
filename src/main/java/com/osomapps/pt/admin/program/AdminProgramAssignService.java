@@ -113,17 +113,17 @@ class AdminProgramAssignService {
         return parseGoalRepository.save(parseGoals);
     }
 
-    private Optional<String> getUserName(InUser inUser) {
-        final Optional<String> userName;
-        if (inUser.getInUserFacebooks() == null || inUser.getInUserFacebooks().isEmpty()) {
-            if (inUser.getInUserEmails().isEmpty()) {
-                userName = Optional.empty();
-            } else {
-                userName = Optional.of(inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1).getUser_name());
-            }
-        } else {
-            userName = Optional.of(inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1).getUser_name());
-        }
-        return userName;
-    }
+//    private Optional<String> getUserName(InUser inUser) {
+//        final Optional<String> userName;
+//        if (inUser.getInUserFacebooks() == null || inUser.getInUserFacebooks().isEmpty()) {
+//            if (inUser.getInUserEmails().isEmpty()) {
+//                userName = Optional.empty();
+//            } else {
+//                userName = Optional.of(inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1).getUser_name());
+//            }
+//        } else {
+//            userName = Optional.of(inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1).getUser_name());
+//        }
+//        return userName;
+//    }
 }
