@@ -2,6 +2,7 @@ package com.osomapps.pt.tokenemail;
 
 import com.osomapps.pt.UnauthorizedException;
 import com.osomapps.pt.token.InUser;
+import com.osomapps.pt.token.InUserGoal;
 import com.osomapps.pt.token.InUserLogin;
 import com.osomapps.pt.token.InUserLoginRepository;
 import com.osomapps.pt.token.InUserLogout;
@@ -48,6 +49,10 @@ public class TokenEmailServiceTest {
         when(inUserEmailRepository.findByLogin(anyString())).thenReturn(Arrays.asList(
                 new InUserEmail().setInUser(new InUser()
                         .setId(1L)
+                        .setD_level("1")
+                        .setInUserGoals(new ArrayList<>(Arrays.asList(new InUserGoal())))
+                        .setHeight(160F)
+                        .setWeight(80F)
                         .setInUserEmails(new ArrayList<>())
                         .setInUserLogins(new ArrayList<>(Arrays.asList(new InUserLogin()))))));
         when(passwordEncoder.matches(any(CharSequence.class), anyString())).thenReturn(true);
