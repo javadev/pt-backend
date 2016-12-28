@@ -21,6 +21,8 @@ public class UserResponseDTOTest {
             .setGender("")
             .setAge(1L)
             .setBirthday(null)
+            .setLevel(null)
+            .setGoals(null)
             .setHeight(null)
             .setWeight(null);
         assertThat(userResponseDTO, notNullValue());
@@ -37,6 +39,8 @@ public class UserResponseDTOTest {
         userResponseDTO.getGender();
         userResponseDTO.getAge();
         userResponseDTO.getBirthday();
+        userResponseDTO.getLevel();
+        userResponseDTO.getGoals();
         userResponseDTO.getHeight();
         userResponseDTO.getWeight();
         assertThat(userResponseDTO, notNullValue());
