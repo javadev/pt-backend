@@ -136,8 +136,10 @@ public class XlsxProgramParser {
                 InputSet inputSet = new InputSet();
                 if (repetitionsInp instanceof String) {
                     String[] repetitionsInps = ((String) repetitionsInp).split("\\s*,\\s*");
-                    if (repetitionsInps[index].contains("min") || "Time".equalsIgnoreCase(getStringOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 1)))) {
-                        inputSet.setTimeInMin(getFloatOrNull(extractNumbers(repetitionsInps[index])));
+                    if (exerciseName.orElse("").contains("Plank")
+                            || repetitionsInps[index].contains("min")
+                            || "Time".equalsIgnoreCase(getStringOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 1)))) {
+                        inputSet.setTimeInMin(getFloatOrNull(extractFloatNumbers(repetitionsInps[index])));
                     } else {
                        inputSet.setRepetitions(getIntegerOrNull(extractNumbers(repetitionsInps[index])));
                     }
