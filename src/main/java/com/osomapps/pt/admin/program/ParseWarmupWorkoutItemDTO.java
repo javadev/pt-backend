@@ -18,5 +18,5 @@ class ParseWarmupWorkoutItemDTO {
     String name;
     Integer speed;
     Integer incline;
-    Integer time_in_min;
+    Integer time_in_sec;
 }

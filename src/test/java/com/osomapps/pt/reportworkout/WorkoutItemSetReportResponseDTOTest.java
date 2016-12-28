@@ -18,7 +18,7 @@ public class WorkoutItemSetReportResponseDTOTest {
             .setRepetitions(1)
             .setWeight(1)
             .setBodyweight(true)
-            .setTime_in_min(1)
+            .setTime_in_sec(1)
             .setSpeed(1)
             .setIncline(1)
             .setResistance(1);
@@ -32,7 +32,7 @@ public class WorkoutItemSetReportResponseDTOTest {
         workoutItemSetResponseRequestDTO.getRepetitions();
         workoutItemSetResponseRequestDTO.getWeight();
         workoutItemSetResponseRequestDTO.getBodyweight();
-        workoutItemSetResponseRequestDTO.getTime_in_min();
+        workoutItemSetResponseRequestDTO.getTime_in_sec();
         workoutItemSetResponseRequestDTO.getSpeed();
         workoutItemSetResponseRequestDTO.getIncline();
         workoutItemSetResponseRequestDTO.getResistance();

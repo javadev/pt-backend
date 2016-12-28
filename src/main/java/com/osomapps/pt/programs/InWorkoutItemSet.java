@@ -37,7 +37,7 @@ public class InWorkoutItemSet {
     Boolean repetitions_to_failure;
     Float weight;
     Boolean bodyweight;
-    Integer time_in_min;
+    Integer time_in_sec;
     Integer speed;
     Integer incline;
     Integer resistance;

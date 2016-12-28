@@ -46,7 +46,7 @@ class AdminUserProgramService {
                 warmupWorkoutItem.setExercise_name(inWarmupWorkoutItem.getD_exercise_name());
                 warmupWorkoutItem.setSpeed(inWarmupWorkoutItem.getSpeed());
                 warmupWorkoutItem.setIncline(inWarmupWorkoutItem.getIncline());
-                warmupWorkoutItem.setTime_in_min(inWarmupWorkoutItem.getTime_in_min());
+                warmupWorkoutItem.setTime_in_sec(inWarmupWorkoutItem.getTime_in_sec());
                 workout.setWarmup(warmupWorkoutItem);
             }
             for (InWorkoutItem inWorkoutItem : inWorkout.getInWorkoutItems()) {
@@ -71,7 +71,7 @@ class AdminUserProgramService {
                         .setReportWeight(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
                             .map(set -> set.getWeight() == null ? null : set.getWeight().intValue()).collect(Collectors.toList()))
                         .setReportTimeInMin(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
-                            .map(set -> set.getTime_in_min()).collect(Collectors.toList()))
+                            .map(set -> set.getTime_in_sec()).collect(Collectors.toList()))
                         .setReportSpeed(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
                             .map(set -> set.getSpeed()).collect(Collectors.toList()))
                         .setReportIncline(inWorkoutItemReport.getInWorkoutItemSetReports().stream()

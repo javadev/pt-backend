@@ -36,7 +36,7 @@ public class InWorkoutItemSetReport {
     Integer repetitions;
     Float weight;
     Boolean bodyweight;
-    Integer time_in_min;
+    Integer time_in_sec;
     Integer speed;
     Integer incline;
     Integer resistance;

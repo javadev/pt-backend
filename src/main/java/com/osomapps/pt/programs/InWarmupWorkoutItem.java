@@ -37,7 +37,7 @@ public class InWarmupWorkoutItem {
     String d_exercise_name;
     Integer speed;
     Integer incline;
-    Integer time_in_min;
+    Integer time_in_sec;
     @ManyToOne
     @JoinColumn(name="in_workout_id")
     @JsonBackReference

@@ -16,7 +16,7 @@ public class WarmupWorkoutItemSetResponseDTOTest {
             .setRepetitions(null)
             .setWeight(null)
             .setBodyweight(null)
-            .setTime_in_min(null)
+            .setTime_in_sec(null)
             .setSpeed(null)
             .setIncline(null)
             .setResistance(null);
@@ -29,7 +29,7 @@ public class WarmupWorkoutItemSetResponseDTOTest {
         warmupWorkoutItemSetResponseDTO.getRepetitions();
         warmupWorkoutItemSetResponseDTO.getWeight();
         warmupWorkoutItemSetResponseDTO.getBodyweight();
-        warmupWorkoutItemSetResponseDTO.getTime_in_min();
+        warmupWorkoutItemSetResponseDTO.getTime_in_sec();
         warmupWorkoutItemSetResponseDTO.getSpeed();
         warmupWorkoutItemSetResponseDTO.getIncline();
         warmupWorkoutItemSetResponseDTO.getResistance();

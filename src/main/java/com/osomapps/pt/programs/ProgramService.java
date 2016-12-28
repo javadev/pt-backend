@@ -42,7 +42,7 @@ class ProgramService {
         inWarmupWorkoutItem111.setD_exercise_name("Treadmill");
         inWarmupWorkoutItem111.setSpeed(10);
         inWarmupWorkoutItem111.setIncline(2);
-        inWarmupWorkoutItem111.setTime_in_min(10);
+        inWarmupWorkoutItem111.setTime_in_sec(10);
         inWorkout11.setInWarmupWorkoutItems(Arrays.asList(inWarmupWorkoutItem111));
         InWorkoutItem inWorkoutItem111 = new InWorkoutItem();
         inWorkoutItem111.setId(1L);
@@ -110,26 +110,26 @@ class ProgramService {
             .setD_exercise_name("Plank")
             .setD_exercise_type("OnTime")
             .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()
-                .setTime_in_min(2)
+                .setTime_in_sec(2)
                 .setBodyweight(true)
                 .setWeight(65F)));
 
         InWorkoutItemSet inWorkoutItemSet1 = new InWorkoutItemSet()
                 .setIncline(2)
                 .setSpeed(8)
-                .setTime_in_min(4);
+                .setTime_in_sec(4);
         InWorkoutItemSet inWorkoutItemSet2 = new InWorkoutItemSet()
                 .setIncline(3)
                 .setSpeed(9)
-                .setTime_in_min(4);
+                .setTime_in_sec(4);
         InWorkoutItemSet inWorkoutItemSet3 = new InWorkoutItemSet()
                 .setIncline(4)
                 .setSpeed(10)
-                .setTime_in_min(4);
+                .setTime_in_sec(4);
         InWorkoutItemSet inWorkoutItemSet4 = new InWorkoutItemSet()
                 .setIncline(3)
                 .setSpeed(9)
-                .setTime_in_min(4);
+                .setTime_in_sec(4);
         InWorkoutItem inWorkoutItem116 = new InWorkoutItem()
             .setId(6L)
             .setD_exercise_id("820")
@@ -202,7 +202,7 @@ class ProgramService {
                 warmupWorkoutItem.setSets(Arrays.asList(new WarmupWorkoutItemSetResponseDTO()
                     .setSpeed(inWarmupWorkoutItem.getSpeed())
                     .setIncline(inWarmupWorkoutItem.getIncline())
-                    .setTime_in_min(inWarmupWorkoutItem.getTime_in_min())
+                    .setTime_in_sec(inWarmupWorkoutItem.getTime_in_sec())
                 ));
                 workout.setWarmup(warmupWorkoutItem);
             }
@@ -219,7 +219,7 @@ class ProgramService {
                         .setRepetitions(set.getRepetitions())
                         .setWeight(set.getWeight() == null ? null : set.getWeight().intValue())
                         .setBodyweight(BooleanUtils.isTrue(set.getBodyweight()))
-                        .setTime_in_min(set.getTime_in_min())
+                        .setTime_in_sec(set.getTime_in_sec())
                         .setSpeed(set.getSpeed())
                         .setIncline(set.getIncline())
                         .setResistance(set.getResistance())
