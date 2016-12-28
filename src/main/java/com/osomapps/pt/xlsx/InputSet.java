@@ -14,8 +14,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class InputSet {
-    String exercise;
-    Integer sets;
     Integer repetitions;
     Boolean repetitionsToFailure;
     Float weight;
