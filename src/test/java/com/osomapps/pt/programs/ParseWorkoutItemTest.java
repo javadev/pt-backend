@@ -26,6 +26,7 @@ public class ParseWorkoutItemTest {
     @Test
     public void getters() {
         ParseWorkoutItem parseWorkoutItem = new ParseWorkoutItem();
+        parseWorkoutItem.getCreated();
         parseWorkoutItem.getColumn_index();
         parseWorkoutItem.getRow_index();
         parseWorkoutItem.getIn_workout_item_id();
