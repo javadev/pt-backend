@@ -2,7 +2,7 @@ package com.osomapps.pt.token;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.osomapps.pt.user.UserGoalRequestDTO;
+import com.osomapps.pt.user.UserGoalResponseDTO;
 import com.osomapps.pt.user.UserLevel;
 import com.osomapps.pt.user.UserLevelDeserializer;
 import java.time.LocalDate;
@@ -30,7 +30,7 @@ class UserResponseDTO {
     LocalDate birthday;
     @JsonDeserialize(using = UserLevelDeserializer.class)
     UserLevel level;
-    List<UserGoalRequestDTO> goals;
+    List<UserGoalResponseDTO> goals;
     Long height;
     Long weight;
 }

@@ -2,10 +2,13 @@ package com.osomapps.pt.token;
 
 import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.UnauthorizedException;
+import com.osomapps.pt.user.UserGoalResponseDTO;
+import com.osomapps.pt.user.UserLevel;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -111,6 +114,12 @@ class TokenService {
         user.setAge(facebookResponse.getAge());
         user.setBirthday(inUser.getBirthday());
         user.setAvatar_dataurl(inUser.getAvatar_dataurl());
+        if (inUser.getD_level() != null) {
+            user.setLevel(UserLevel.of(Integer.parseInt(inUser.getD_level())));
+        }
+        user.setGoals(inUser.getInUserGoals().stream().map(inUserGoal ->
+                new UserGoalResponseDTO().setId(inUserGoal.getGoalId()).setValue(inUserGoal.getGoal_value())
+        ).collect(Collectors.toList()));
         user.setHeight(inUser.getHeight() == null ? null : inUser.getHeight().longValue());
         user.setWeight(inUser.getWeight() == null ? null : inUser.getWeight().longValue());
         tokenResponseDTO.setUser(user);
