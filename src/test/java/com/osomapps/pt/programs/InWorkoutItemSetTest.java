@@ -15,6 +15,7 @@ public class InWorkoutItemSetTest {
     @Test
     public void setters() {
         InWorkoutItemSet inWorkoutItemSet = new InWorkoutItemSet();
+        inWorkoutItemSet.setId(null);
         inWorkoutItemSet.setCreated(LocalDateTime.MAX);
         inWorkoutItemSet.setInWorkoutItem(null);
         assertThat(inWorkoutItemSet, notNullValue());
@@ -23,6 +24,7 @@ public class InWorkoutItemSetTest {
     @Test
     public void getters() {
         InWorkoutItemSet inWorkoutItemSet = new InWorkoutItemSet();
+        inWorkoutItemSet.getId();
         inWorkoutItemSet.getCreated();
         inWorkoutItemSet.getInWorkoutItem();
         assertThat(inWorkoutItemSet, notNullValue());

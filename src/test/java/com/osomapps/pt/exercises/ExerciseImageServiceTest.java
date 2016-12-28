@@ -1,5 +1,6 @@
 package com.osomapps.pt.exercises;
 
+import com.osomapps.pt.ResourceNotFoundException;
 import java.io.ByteArrayOutputStream;
 import org.junit.Test;
 import static org.junit.Assert.assertThat;
@@ -20,8 +21,13 @@ public class ExerciseImageServiceTest {
     @InjectMocks
     private ExerciseImageService exerciseImageService;
 
+    @Test(expected = ResourceNotFoundException.class)
+    public void findOne_not_found() throws Exception {
+        exerciseImageService.findOne(1L, "", new ByteArrayOutputStream());
+    }
+
     @Test
-    public void findAll() throws Exception {
+    public void findOne() throws Exception {
         when(exerciseFileRepository.findOne(eq(1L))).thenReturn(new ExerciseFile()
                 .setData_url("data:image/gif;base64,R0lGODlhEAAOALMAAOazToeHh0tLS/7LZv/0j"
                 + "vb29t/f3//Ub//ge8WSLf/rhf/3kdbW1mxsbP//mf///yH5BAAAAAAALAAAAAAQAA4AAA"
