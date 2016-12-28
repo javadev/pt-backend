@@ -109,7 +109,7 @@ public class XlsxProgramParser {
         }
         Integer speedInp = getIntegerOrNull(getCellData(sheet, 5 + 1, 2 + workoutIndex));
         Integer inclineInp = getIntegerOrNull(getCellData(sheet, 5 + 2, 2 + workoutIndex));
-        Integer timeInp = extractNumbers(getCellData(sheet, 5 + 3, 2 + workoutIndex));
+        Float timeInp = extractFloatNumbers(getCellData(sheet, 5 + 3, 2 + workoutIndex));
         return Optional.of(new WarmupWorkoutItem().setExercise(warmupName.get())
             .setSpeed(speedInp).setIncline(inclineInp).setTimeInMin(timeInp));
     }
@@ -137,13 +137,13 @@ public class XlsxProgramParser {
                 if (repetitionsInp instanceof String) {
                     String[] repetitionsInps = ((String) repetitionsInp).split("\\s*,\\s*");
                     if (repetitionsInps[index].contains("min") || "Time".equalsIgnoreCase(getStringOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 1)))) {
-                        inputSet.setTimeInMin(getIntegerOrNull(extractNumbers(repetitionsInps[index])));
+                        inputSet.setTimeInMin(getFloatOrNull(extractNumbers(repetitionsInps[index])));
                     } else {
                        inputSet.setRepetitions(getIntegerOrNull(extractNumbers(repetitionsInps[index])));
                     }
                 } else {
                     if ("Time".equalsIgnoreCase(getStringOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 1)))) {
-                        inputSet.setTimeInMin(getIntegerOrNull(repetitionsInp));
+                        inputSet.setTimeInMin(getFloatOrNull(repetitionsInp));
                     } else {
                        inputSet.setRepetitions(getIntegerOrNull(repetitionsInp));
                     }                    
@@ -159,7 +159,7 @@ public class XlsxProgramParser {
         } else {
             InputSet inputSet = new InputSet();
             if ("Time".equalsIgnoreCase(getStringOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 1)))) {
-                inputSet.setTimeInMin(getIntegerOrNull(repetitionsInp));
+                inputSet.setTimeInMin(getFloatOrNull(repetitionsInp));
             } else {
                inputSet.setRepetitions(getIntegerOrNull(repetitionsInp));
             }
@@ -184,6 +184,14 @@ public class XlsxProgramParser {
         if (object instanceof String) {
             String onlyNumbersValue = ((String) object).replaceAll("[^\\d]+", "");
             return onlyNumbersValue.isEmpty() ? null : Integer.parseInt(onlyNumbersValue);
+        }
+        return null;
+    }
+
+    private Float extractFloatNumbers(Object object) {
+        if (object instanceof String) {
+            String onlyNumbersValue = ((String) object).replaceAll("[^\\d\\.]+", "");
+            return onlyNumbersValue.isEmpty() ? null : Float.parseFloat(onlyNumbersValue);
         }
         return null;
     }

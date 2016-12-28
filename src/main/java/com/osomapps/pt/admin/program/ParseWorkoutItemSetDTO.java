@@ -18,7 +18,7 @@ class ParseWorkoutItemSetDTO {
     Boolean repetitions_to_failure;
     Float weight;
     Boolean bodyweight;
-    Integer time_in_sec;
+    Float time_in_min;
     Integer speed;
     Integer incline;
     Integer resistance;

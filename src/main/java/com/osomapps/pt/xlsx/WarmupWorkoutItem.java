@@ -17,5 +17,5 @@ public class WarmupWorkoutItem {
     String exercise;
     Integer speed;
     Integer incline;
-    Integer timeInMin;
+    Float timeInMin;
 }

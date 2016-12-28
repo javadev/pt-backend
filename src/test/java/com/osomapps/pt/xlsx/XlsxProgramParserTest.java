@@ -37,7 +37,7 @@ public class XlsxProgramParserTest {
         assertThat(excelGoals.get(0).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().get(0).getWorkoutItems()
                 .get(4).getInput().getExercise(), equalTo("Plank"));
         assertThat(excelGoals.get(0).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().get(0).getWorkoutItems()
-                .get(4).getInput().getSets().get(0).getTimeInMin(), equalTo(2));
+                .get(4).getInput().getSets().get(0).getTimeInMin(), equalTo(2F));
         assertThat(excelGoals.get(7).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().get(0).getWorkoutItems().size(), equalTo(5));
         assertThat(excelGoals.get(7).getUserGroups().get(0).getRounds().get(0).getParts().get(0).getWorkouts().get(0).getWorkoutItems()
                 .get(0).getInput().getExercise(), equalTo("Deadlift"));

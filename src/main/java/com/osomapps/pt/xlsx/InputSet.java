@@ -18,7 +18,7 @@ public class InputSet {
     Boolean repetitionsToFailure;
     Float weight;
     Boolean bodyweight;
-    Integer timeInMin;
+    Float timeInMin;
     Integer speed;
     Integer incline;
     Integer resistance;

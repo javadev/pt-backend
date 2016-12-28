@@ -22,7 +22,7 @@ public class ParseWarmupWorkoutItemDTOTest {
         parseWarmupWorkoutItemDTO.setName(null);
         parseWarmupWorkoutItemDTO.setSpeed(null);
         parseWarmupWorkoutItemDTO.setIncline(null);
-        parseWarmupWorkoutItemDTO.setTime_in_sec(null);
+        parseWarmupWorkoutItemDTO.setTime_in_min(null);
         assertThat(parseWarmupWorkoutItemDTO, notNullValue());
     }
 
@@ -33,7 +33,7 @@ public class ParseWarmupWorkoutItemDTOTest {
         parseWarmupWorkoutItemDTO.getName();
         parseWarmupWorkoutItemDTO.getSpeed();
         parseWarmupWorkoutItemDTO.getIncline();
-        parseWarmupWorkoutItemDTO.getTime_in_sec();
+        parseWarmupWorkoutItemDTO.getTime_in_min();
         assertThat(parseWarmupWorkoutItemDTO, notNullValue());
     }
 }

@@ -36,7 +36,7 @@ public class ParseWarmupWorkoutItem {
     String name;
     Integer speed;
     Integer incline;
-    Integer time_in_sec;
+    Float time_in_min;
     @ManyToOne
     @JoinColumn(name="parse_workout_id")
     @JsonBackReference
