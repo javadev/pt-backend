@@ -8,6 +8,12 @@ public class ProgramRequestDTOTest {
 
     @Test
     public void allArgsConstructor() {
-        assertThat(new  ProgramRequestDTO(null, null, null, null, null), notNullValue());
+        assertThat(new ProgramRequestDTO(null, null, null, null, null), notNullValue());
+    }
+
+    @Test
+    public void builder() {
+        ProgramRequestDTO programRequestDTO = ProgramRequestDTO.builder().build();
+        assertThat(programRequestDTO, notNullValue());
     }
 }
