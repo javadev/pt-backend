@@ -158,6 +158,24 @@ public class AdminUserServiceTest {
         assertThat(userResponseDTO.getName(), equalTo(null));
     }
 
+    @Test(expected = UnauthorizedException.class)
+    public void update_with_invalid_eamil() {
+        doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
+            Object[] args = invocation.getArguments();
+            ((Errors) args[1]).reject("certificate", "Invalid empty certificate");
+            return null;
+        }).when(emailValidator).validate(anyObject(), any(Errors.class));
+        when(inUserRepository.findOne(eq(1L))).thenReturn(
+                new InUser()
+            .setInUserEmails(Arrays.asList(new InUserEmail()))
+            .setInUserFacebooks(Arrays.asList(new InUserFacebook())));
+        when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
+        adminUserService.update(1L,
+                new UserRequestDTO()
+                .setType(new UserTypeRequestDTO())
+        );
+    }
+
     @Test(expected = ResourceNotFoundException.class)
     public void delete_not_found() {
         adminUserService.delete(1L);
