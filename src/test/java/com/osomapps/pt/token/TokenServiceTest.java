@@ -1,6 +1,5 @@
 package com.osomapps.pt.token;
 
-import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.UnauthorizedException;
 import java.util.Arrays;
 import java.util.Optional;
@@ -70,6 +69,8 @@ public class TokenServiceTest {
         when(inUserFacebookRepository.save(any(InUserFacebook.class))).thenReturn(null);
         InUserFacebook inUserFacebook = new InUserFacebook();
         InUser inUser = new InUser();
+        inUser.setD_level("1");
+        inUser.setInUserGoals(Arrays.asList(new InUserGoal()));
         inUserFacebook.setInUser(inUser);
         InUserLogin inUserLogin = new InUserLogin();
         inUser.setInUserLogins(Arrays.asList(inUserLogin));
@@ -99,6 +100,8 @@ public class TokenServiceTest {
         when(inUserFacebookRepository.save(any(InUserFacebook.class))).thenReturn(null);
         InUserFacebook inUserFacebook = new InUserFacebook();
         InUser inUser = new InUser();
+        inUser.setHeight(160F);
+        inUser.setWeight(60F);
         inUserFacebook.setInUser(inUser);
         InUserLogin inUserLogin = new InUserLogin();
         inUser.setInUserLogins(Arrays.asList(inUserLogin));
