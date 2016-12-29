@@ -102,7 +102,6 @@ class AdminExerciseService {
                         .file_name(file.getFile_name())
                         .file_size(file.getFile_size())
                         .file_type(file.getFile_type())
-                        .data_url(file.getData_url())
                         .build())
                         .collect(Collectors.toList()))
                 .cardioPercent(exercise.getCardio_percent())

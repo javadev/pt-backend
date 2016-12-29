@@ -120,6 +120,12 @@ define([
           exercise._inputs = exercises._inputs;
           exercise._outputs = exercises._outputs;
           if (!_.isUndefined(model)) {
+            if (!_.isEmpty(model.get('files'))) {
+              $.get('/api/v1/admin/exercise-file/' + _.map(model.get('files'), function(item) {return item.id;})).done(function(data) {
+                exercise._files.set(data);
+                exercise._files.trigger('sync');
+              });
+            }
             exercise.set({
               id: model.get('id'),
               bodypart: model.get('bodypart'),
