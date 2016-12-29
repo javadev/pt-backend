@@ -260,7 +260,7 @@ function ($, _, Backbone, Marionette, App) {
       'change': 'render'
     },
     initialize: function(options) {
-      this._model = options.model.clone();
+      this.model._model = options.model.clone();
     },
     back: function(evt) {
       evt.preventDefault();
@@ -279,7 +279,7 @@ function ($, _, Backbone, Marionette, App) {
     },
     discard: function(evt) {
       evt.preventDefault();
-      this.model.set(this._model.toJSON());
+      this.model.set(this.model._model.toJSON());
       this.model._files.set(this.model.get('files'));
       this.model.trigger('sync');
     }

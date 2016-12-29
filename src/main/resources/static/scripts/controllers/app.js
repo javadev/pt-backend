@@ -123,6 +123,7 @@ define([
             if (!_.isEmpty(model.get('files'))) {
               $.get('/api/v1/admin/exercise-file/' + _.map(model.get('files'), function(item) {return item.id;})).done(function(data) {
                 exercise._files.set(data);
+                exercise._model.set('files', data);
                 exercise._files.trigger('sync');
               });
             }
