@@ -41,5 +41,7 @@ public class ParseProgram {
     Boolean active;
     @OneToMany(mappedBy="parseProgram")
     List<ParseGoal> parseGoals;
+    @OneToMany(mappedBy="parseProgram")
+    List<ParseExercise> parseExercises;
 
 }
