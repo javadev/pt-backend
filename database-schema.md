@@ -20,7 +20,7 @@ User goal store db schema:
 
 Admin program data store db schema:
 
-![pt schema](pt-schema-program-data-v5.png)
+![pt schema](pt-schema-program-data-v6.png)
 
 Admin certificate data store db schema:
 
