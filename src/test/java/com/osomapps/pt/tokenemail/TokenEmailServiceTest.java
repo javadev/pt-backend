@@ -70,6 +70,8 @@ public class TokenEmailServiceTest {
                 new InUserEmail().setInUser(new InUser()
                         .setId(1L)
                         .setAge(20F)
+                        .setD_level("1")
+                        .setInUserGoals(Arrays.asList(new InUserGoal()))
                         .setInUserEmails(new ArrayList<>())
                         .setInUserLogins(new ArrayList<>(Arrays.asList(new InUserLogin()))))));
         when(passwordEncoder.matches(any(CharSequence.class), anyString())).thenReturn(true);
