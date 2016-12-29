@@ -99,6 +99,8 @@ function ($, _, Backbone, Marionette, App) {
       '<td>',
         '{% if(data_url !== null) { %}',
           '<img class="preview-content" src="{{ data_url }}"/>',
+        '{% } else { %}',
+          '<img class="preview-content" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="/>',
         '{% } %}',
       '</td>',
       '<td>',
