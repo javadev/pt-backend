@@ -162,7 +162,7 @@ public class AdminUserServiceTest {
     public void update_with_invalid_eamil() {
         doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
             Object[] args = invocation.getArguments();
-            ((Errors) args[1]).reject("certificate", "Invalid empty certificate");
+            ((Errors) args[1]).reject("emailValidator", "emailValidator");
             return null;
         }).when(emailValidator).validate(anyObject(), any(Errors.class));
         when(inUserRepository.findOne(eq(1L))).thenReturn(
