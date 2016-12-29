@@ -2,10 +2,13 @@ package com.osomapps.pt.admin.user;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,27 +22,27 @@ class AdminUserResource {
         this.userService = userService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     List<UserResponseDTO> findAll() {
         return userService.findAll();
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.GET)
+    @GetMapping("{id}")
     UserResponseDTO findOne(@PathVariable Long id) {
         return userService.findOne(id);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     UserResponseDTO create(@RequestBody UserRequestDTO userRequestDTO) {
         return userService.create(userRequestDTO);
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.PUT)
+    @PutMapping("{id}")
     UserResponseDTO update(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
         return userService.update(id, userRequestDTO);
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+    @DeleteMapping("{id}")
     UserResponseDTO delete(@PathVariable Long id) {
         return userService.delete(id);
     }

@@ -2,9 +2,9 @@ package com.osomapps.pt.goals;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,7 +18,7 @@ class GoalsResource {
         this.goalService = goalService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     List<GoalDTO> findAll(@RequestHeader(value = "X-Token") String token) {
         return goalService.findAll(token);
     }
