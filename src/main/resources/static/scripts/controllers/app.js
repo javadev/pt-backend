@@ -210,6 +210,7 @@ define([
               fileSize: model.get('fileSize'),
               fileType: model.get('fileType'),
               dataUrl: model.get('dataUrl'),
+              parseExercises:  model.get('parseExercises'),
               parseGoals: model.get('parseGoals')
             });
           }

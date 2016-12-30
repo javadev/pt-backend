@@ -17,9 +17,14 @@ function ($, _, Backbone, Marionette, moment, App) {
     template: _.template('<td colspan="7">There are no programs available.</td>')
   });
 
+  var EmptyExercisView = Marionette.ItemView.extend({
+    tagName: 'tr',
+    template: _.template('<td colspan="7">There are no exercises available.</td>')
+  });
+
   var EmptyParseView = Marionette.ItemView.extend({
     tagName: 'tr',
-    template: _.template('<td colspan="4">There are no parse result available.</td>')
+    template: _.template('<td colspan="4">There are no goals available.</td>')
   });
 
   var Program = Marionette.ItemView.extend({
@@ -124,6 +129,36 @@ function ($, _, Backbone, Marionette, moment, App) {
       this._model._workoutName = '';
       this._model.trigger('refresh:workouts', []);
       this._model.trigger('refresh:workoutItems', []);
+    }
+  });
+
+  var ParseExerciseResult = Marionette.ItemView.extend({
+    tagName: 'tr',
+    template: _.template([
+      '<td>',
+        '{{ exercise_id }}',
+      '</td>',
+      '<td>',
+        '{{ exercise_name }}',
+      '</td>',
+      '<td>',
+        '{{ user_group_1_percent }}',
+      '</td>',
+      '<td>',
+        '{{ user_group_2_percent }}',
+      '</td>',
+      '<td>',
+        '{{ user_group_2_percent }}',
+      '</td>',
+      '<td>',
+        '{{ user_group_4_percent }}',
+      '</td>',
+      '<td>',
+        '{{ basis_for_calculations }}',
+      '</td>'
+    ].join('')),
+    initialize: function(options) {
+      this._model = options.rootModel;
     }
   });
 
@@ -358,6 +393,7 @@ function ($, _, Backbone, Marionette, moment, App) {
         '<div id="buttons"/>',
         '<div id="inputForm"/>',
         '<div id="parseResultTable"/>',
+        '<div id="parseGoalResultTable"/>',
         '<div id="parseUserGroupResultTable"/>',
         '<div id="parseRoundResultTable"/>',
         '<div id="parsePartResultTable"/>',
@@ -379,6 +415,7 @@ function ($, _, Backbone, Marionette, moment, App) {
       buttons: '#buttons',
       inputForm: '#inputForm',
       parseResultTable: '#parseResultTable',
+      parseGoalResultTable: '#parseGoalResultTable',
       parseUserGroupResultTable: '#parseUserGroupResultTable',
       parseRoundResultTable: '#parseRoundResultTable',
       parsePartResultTable: '#parsePartResultTable',
@@ -388,7 +425,9 @@ function ($, _, Backbone, Marionette, moment, App) {
     onShow: function() {
       this.buttons.show(new NewProgramButtons({model: this.model}));
       this.inputForm.show(new NewProgramInputForm({model: this.model}));
-      this.parseResultTable.show(new ParseResultForm({model: this.model,
+      this.parseResultTable.show(new ParseExerciseResultForm({model: this.model,
+          collection: new Backbone.Collection(this.model.get('parseExercises'))}));
+      this.parseGoalResultTable.show(new ParseResultForm({model: this.model,
           collection: new Backbone.Collection(this.model.get('parseGoals'))}));
       var userGroups = new Backbone.Collection();
       this.parseUserGroupResultTable.show(new ParseUserGroupForm({model: this.model,
@@ -499,11 +538,8 @@ function ($, _, Backbone, Marionette, moment, App) {
     template: _.template([
     '<div class="panel panel-primary">',
       '<div class="panel-heading">',
-        '<h3 class="panel-title"> Parse result </h3>',
+        '<h3 class="panel-title"> Goals </h3>',
       '</div>',
-      '<button class="btn btn-primary js-parse-file" style="margin: 10px;" {{ getReparseDisabled() }}>',
-        'Reparse',
-      '</button>',
       '<table class="table">',
         '<thead>',
           '<tr>',
@@ -512,6 +548,52 @@ function ($, _, Backbone, Marionette, moment, App) {
             '<th>User groups</th>',
             '<th>Errors</th>',
             '<th></th>',
+          '</tr>',
+        '</thead>',
+        '<tbody></tbody>',
+      '</table>',
+    '</div>'
+    ].join('')),
+    modelEvents: {
+      'change': 'render'
+    },
+    collectionEvents: {
+      'sync': 'render'
+    }
+  });
+
+  var ParseExerciseResultForm = Marionette.CompositeView.extend({
+    itemViewContainer: 'tbody',
+    itemView: ParseExerciseResult,
+    emptyView: EmptyExercisView,
+    tagName: 'div',
+    className: 'js-users-mapping-config',
+    ui: {
+      table: '.table'
+    },
+    itemViewOptions : function () {
+      return { collection: this.collection, rootModel: this.model };
+    },
+    initialize: function() {
+    },
+    template: _.template([
+    '<div class="panel panel-primary">',
+      '<div class="panel-heading">',
+        '<h3 class="panel-title"> Exercises </h3>',
+      '</div>',
+      '<button class="btn btn-primary js-parse-file" style="margin: 10px;" {{ getReparseDisabled() }}>',
+        'Reparse',
+      '</button>',
+      '<table class="table">',
+        '<thead>',
+          '<tr>',
+            '<th>ID</th>',
+            '<th>Name</th>',
+            '<th>User group 1</th>',
+            '<th>User group 2</th>',
+            '<th>User group 3</th>',
+            '<th>User group 4</th>',
+            '<th>Basis for calculations</th>',
           '</tr>',
         '</thead>',
         '<tbody></tbody>',
