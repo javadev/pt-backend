@@ -425,10 +425,13 @@ function ($, _, Backbone, Marionette, moment, App) {
     onShow: function() {
       this.buttons.show(new NewProgramButtons({model: this.model}));
       this.inputForm.show(new NewProgramInputForm({model: this.model}));
+      var goalCollection = new Backbone.Collection(this.model.get('parseGoals'));
       this.parseResultTable.show(new ParseExerciseResultForm({model: this.model,
-          collection: new Backbone.Collection(this.model.get('parseExercises'))}));
+          collection: new Backbone.Collection(this.model.get('parseExercises')),
+          goalCollection: goalCollection
+      }));
       this.parseGoalResultTable.show(new ParseResultForm({model: this.model,
-          collection: new Backbone.Collection(this.model.get('parseGoals'))}));
+          collection: goalCollection}));
       var userGroups = new Backbone.Collection();
       this.parseUserGroupResultTable.show(new ParseUserGroupForm({model: this.model,
           collection: userGroups}));
@@ -574,7 +577,8 @@ function ($, _, Backbone, Marionette, moment, App) {
     itemViewOptions : function () {
       return { collection: this.collection, rootModel: this.model };
     },
-    initialize: function() {
+    initialize: function(options) {
+        this.goalCollection = options.goalCollection;
     },
     template: _.template([
     '<div class="panel panel-primary">',
@@ -623,7 +627,8 @@ function ($, _, Backbone, Marionette, moment, App) {
       var view = this;
       this.model.save().done(function() {
         view.collection.reset();
-        view.collection.set(model.get('parseGoals'));
+        view.collection.set(model.get('parseExercises'));
+        view.goalCollection.set(model.get('parseGoals'));
       })
       .fail(function (xhr) {
         App.vent.trigger('xhr:error', 'Program save was failed');
