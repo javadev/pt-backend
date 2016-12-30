@@ -1,19 +1,19 @@
-package com.osomapps.pt.xlsx;
+package com.osomapps.pt.admin.program;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.ToString;
+import lombok.Builder;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
 @Getter
 @Setter
-@ToString
-public class ExcelExercise {
+@Builder
+class ParseExerciseDTO {
     Integer exercise_id;
     String exercise_name;
     Integer user_group_1_percent;

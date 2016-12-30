@@ -28,69 +28,14 @@ public class XlsxProgramParser {
     }
 
     public ExcelSheets getExcelSheets() {
+        final List<ExcelExercise> excelExercises = new ArrayList<>();
         final List<ExcelGoal> excelGoals = new ArrayList<>();
         try (final Workbook workbook = WorkbookFactory.create(inputStream)) {
             
+            excelExercises.addAll(extractExercises(workbook.getSheetAt(3)));
             for (int index = 4; index < workbook.getNumberOfSheets(); index += 1) {
                 final Sheet sheet = workbook.getSheetAt(index);
-                final ExcelGoal excelGoal = new ExcelGoal()
-                    .setSheetIndex(index)
-                    .setName(sheet.getSheetName())
-                    .setErrors(new ArrayList<>());
-                String prevUserGroupName = "";
-                String prevRoundName = "";
-                String prevPartName = "";
-                UserGroup userGroup = new UserGroup();
-                Round round = new Round();
-                Part part = new Part();
-                for (int workoutIndex = 0; workoutIndex < sheet.getRow(0).getPhysicalNumberOfCells();
-                        workoutIndex += 1) {
-                    if (!(getCellData(sheet, 10, 2 + workoutIndex) instanceof Number)) {
-                            break;
-                        }
-                    final String userGroupName = getNumberOrNullAsString(getCellData(sheet, 2, 2 + workoutIndex));
-                    final String roundName = getNumberOrNullAsString(getCellData(sheet, 3, 2 + workoutIndex));
-                    final String partName = (String) getCellData(sheet, 4, 2 + workoutIndex);
-                    if (userGroupName != null && !prevUserGroupName.equals(userGroupName)) {
-                        userGroup = new UserGroup().setName(userGroupName);
-                        prevUserGroupName = userGroupName;
-                        excelGoal.getUserGroups().add(userGroup);
-                    }
-                    if (roundName != null && !prevRoundName.equals(roundName)) {
-                        round = new Round()
-                            .setName(roundName);
-                        prevRoundName = roundName;
-                        userGroup.getRounds().add(round);
-                    }
-                    if (partName != null && !prevPartName.equals(partName)) {
-                        part = new Part()
-                            .setName(partName);
-                        prevPartName = partName;
-                        round.getParts().add(part);
-                    }
-                    final String workoutName = new StringJoiner("_").add(excelGoal.getName())
-                            .add(userGroup.getName()).add(round.getName()).add(part.getName()).toString();
-                    final Workout workout = new Workout();
-                    workout.setRowIndex(4);
-                    workout.setColumnIndex(2 + workoutIndex);
-                    workout.setName(workoutName);
-                    final Optional<WarmupWorkoutItem> warmupWorkoutItem = extractWarmupWorkoutItem(sheet,
-                            workoutIndex, excelGoal, workoutName);
-                    workout.setWarmup(warmupWorkoutItem.orElse(null));
-                    for (int workoutItemIndex = 0; workoutItemIndex < 10; workoutItemIndex += 1) {
-                        final int multiplyCoeff = 7;
-                        if (!(getCellData(sheet, 10 + workoutItemIndex
-                                * multiplyCoeff, 2 + workoutIndex) instanceof Number)) {
-                            break;
-                        }
-                        final Optional<WorkoutItem> workoutItem = extractWorkoutItem(sheet, workoutItemIndex,
-                                workoutIndex, excelGoal, workoutName);
-                        if (workoutItem.isPresent()) {
-                            workout.getWorkoutItems().add(workoutItem.get());
-                        }
-                    }
-                    part.getWorkouts().add(workout);
-                }
+                ExcelGoal excelGoal = extractGoal(index, sheet);
                 if (!excelGoal.getUserGroups().isEmpty()) {
                     excelGoals.add(excelGoal);
                 }
@@ -98,7 +43,88 @@ public class XlsxProgramParser {
         } catch (IOException | InvalidFormatException ex) {
             log.error(ex.getMessage(), ex);
         }
-        return new ExcelSheets().setExcelGoals(excelGoals);
+        return new ExcelSheets().setExcelExercises(excelExercises).setExcelGoals(excelGoals);
+    }
+
+    private List<ExcelExercise> extractExercises(Sheet sheet) {
+        List<ExcelExercise> excelExercises = new ArrayList<>();
+        for (int exerciseIndex = 2; exerciseIndex < sheet.getLastRowNum();
+                exerciseIndex += 1) {
+            ExcelExercise excelExercise = new ExcelExercise()
+                    .setExercise_id(getIntegerOrNull(getCellData(sheet, exerciseIndex, 0)))
+                    .setExercise_name(getStringOrNull(getCellData(sheet, exerciseIndex, 1)))
+                    .setUser_group_1_percent(getIntegerOrNull(getCellData(sheet, exerciseIndex, 3)))
+                    .setUser_group_2_percent(getIntegerOrNull(getCellData(sheet, exerciseIndex, 4)))
+                    .setUser_group_3_percent(getIntegerOrNull(getCellData(sheet, exerciseIndex, 5)))
+                    .setUser_group_4_percent(getIntegerOrNull(getCellData(sheet, exerciseIndex, 6)))
+                    .setBasis_for_calculations(getStringOrNull(getCellData(sheet, exerciseIndex, 12)));
+            if (excelExercise.getUser_group_1_percent() != null) {
+                excelExercises.add(excelExercise);
+            }
+        }
+        return excelExercises;
+    }
+
+    private ExcelGoal extractGoal(int index, final Sheet sheet) {
+        final ExcelGoal excelGoal = new ExcelGoal()
+                .setSheetIndex(index)
+                .setName(sheet.getSheetName())
+                .setErrors(new ArrayList<>());
+        String prevUserGroupName = "";
+        String prevRoundName = "";
+        String prevPartName = "";
+        UserGroup userGroup = new UserGroup();
+        Round round = new Round();
+        Part part = new Part();
+        for (int workoutIndex = 0; workoutIndex < sheet.getRow(0).getPhysicalNumberOfCells();
+                workoutIndex += 1) {
+            if (!(getCellData(sheet, 10, 2 + workoutIndex) instanceof Number)) {
+                break;
+            }
+            final String userGroupName = getNumberOrNullAsString(getCellData(sheet, 2, 2 + workoutIndex));
+            final String roundName = getNumberOrNullAsString(getCellData(sheet, 3, 2 + workoutIndex));
+            final String partName = (String) getCellData(sheet, 4, 2 + workoutIndex);
+            if (userGroupName != null && !prevUserGroupName.equals(userGroupName)) {
+                userGroup = new UserGroup().setName(userGroupName);
+                prevUserGroupName = userGroupName;
+                excelGoal.getUserGroups().add(userGroup);
+            }
+            if (roundName != null && !prevRoundName.equals(roundName)) {
+                round = new Round()
+                        .setName(roundName);
+                prevRoundName = roundName;
+                userGroup.getRounds().add(round);
+            }
+            if (partName != null && !prevPartName.equals(partName)) {
+                part = new Part()
+                        .setName(partName);
+                prevPartName = partName;
+                round.getParts().add(part);
+            }
+            final String workoutName = new StringJoiner("_").add(excelGoal.getName())
+                    .add(userGroup.getName()).add(round.getName()).add(part.getName()).toString();
+            final Workout workout = new Workout();
+            workout.setRowIndex(4);
+            workout.setColumnIndex(2 + workoutIndex);
+            workout.setName(workoutName);
+            final Optional<WarmupWorkoutItem> warmupWorkoutItem = extractWarmupWorkoutItem(sheet,
+                    workoutIndex, excelGoal, workoutName);
+            workout.setWarmup(warmupWorkoutItem.orElse(null));
+            for (int workoutItemIndex = 0; workoutItemIndex < 10; workoutItemIndex += 1) {
+                final int multiplyCoeff = 7;
+                if (!(getCellData(sheet, 10 + workoutItemIndex
+                        * multiplyCoeff, 2 + workoutIndex) instanceof Number)) {
+                    break;
+                }
+                final Optional<WorkoutItem> workoutItem = extractWorkoutItem(sheet, workoutItemIndex,
+                        workoutIndex, excelGoal, workoutName);
+                if (workoutItem.isPresent()) {
+                    workout.getWorkoutItems().add(workoutItem.get());
+                }
+            }
+            part.getWorkouts().add(workout);
+        }
+        return excelGoal;
     }
 
     private Optional<WarmupWorkoutItem> extractWarmupWorkoutItem(Sheet sheet, int workoutIndex, ExcelGoal excelGoal, String workoutName) {
@@ -274,4 +300,5 @@ public class XlsxProgramParser {
         }
         return cell.getNumericCellValue();
     }
+
 }

@@ -4,6 +4,8 @@ import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.programs.InWorkoutItem;
 import com.osomapps.pt.programs.InWorkoutItemReport;
 import com.osomapps.pt.programs.InWorkoutItemSetReport;
+import com.osomapps.pt.programs.ParseExercise;
+import com.osomapps.pt.programs.ParseExerciseRepository;
 import com.osomapps.pt.programs.ParseGoal;
 import com.osomapps.pt.programs.ParseUserGroup;
 import com.osomapps.pt.programs.ParseWorkout;
@@ -43,6 +45,8 @@ public class AdminProgramServiceTest {
     @Mock
     private ProgramRepository programRepository;
     @Mock
+    private ParseExerciseRepository parseExerciseRepository;
+    @Mock
     private ParseGoalRepository parseGoalRepository;
     @Mock
     private ParseUserGroupRepository parseUserGroupRepository;
@@ -79,7 +83,9 @@ public class AdminProgramServiceTest {
 
     @Test
     public void findOne() {
-        when(programRepository.findOne(eq(1L))).thenReturn(new ParseProgram().setParseGoals(
+        when(programRepository.findOne(eq(1L))).thenReturn(new ParseProgram()
+                .setParseExercises(Arrays.asList(new ParseExercise()))
+                .setParseGoals(
                 Arrays.asList(new ParseGoal().setParseUserGroups(
                         Arrays.asList(new ParseUserGroup().setParseRounds(
                             Arrays.asList(new ParseRound().setParseParts(
@@ -154,7 +160,9 @@ public class AdminProgramServiceTest {
 
     @Test
     public void delete() {
-        when(programRepository.findOne(eq(1L))).thenReturn(new ParseProgram().setParseGoals(
+        when(programRepository.findOne(eq(1L))).thenReturn(new ParseProgram()
+                .setParseExercises(Arrays.asList(new ParseExercise()))
+                .setParseGoals(
                 Arrays.asList(new ParseGoal().setParseUserGroups(
                         Arrays.asList(new ParseUserGroup().setParseRounds(
                             Arrays.asList(new ParseRound().setParseParts(
@@ -184,6 +192,7 @@ public class AdminProgramServiceTest {
                     .setWeight(1F))))));
         when(programRepository.findOne(eq(1L))).thenReturn(new ParseProgram()
                 .setData_url(result.toString())
+                .setParseExercises(Arrays.asList(new ParseExercise()))
                 .setParseGoals(Arrays.asList(new ParseGoal()
                         .setSheet_index(0)
                         .setParseUserGroups(Arrays.asList(new ParseUserGroup()

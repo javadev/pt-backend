@@ -1,6 +1,8 @@
 package com.osomapps.pt.admin.program;
 
 import com.osomapps.pt.ResourceNotFoundException;
+import com.osomapps.pt.programs.ParseExercise;
+import com.osomapps.pt.programs.ParseExerciseRepository;
 import com.osomapps.pt.programs.ParseGoal;
 import com.osomapps.pt.programs.ParseUserGroup;
 import com.osomapps.pt.programs.ParseProgram;
@@ -30,10 +32,12 @@ import com.osomapps.pt.programs.ParsePart;
 import com.osomapps.pt.programs.ParsePartRepository;
 import com.osomapps.pt.programs.ParseRound;
 import com.osomapps.pt.programs.ParseRoundRepository;
+import com.osomapps.pt.programs.ParseSheets;
 import com.osomapps.pt.programs.ParseUserGroupRepository;
 import com.osomapps.pt.programs.ParseWarmupWorkoutItemRepository;
 import com.osomapps.pt.programs.ParseWorkoutItemSet;
 import com.osomapps.pt.programs.ParseWorkoutItemSetRepository;
+import com.osomapps.pt.xlsx.ExcelSheets;
 import com.osomapps.pt.xlsx.Round;
 import com.osomapps.pt.xlsx.UserGroup;
 import org.apache.commons.lang3.BooleanUtils;
@@ -44,6 +48,7 @@ class AdminProgramService {
     private static final String BASE64_PREFIX = ";base64,";
     private static final int BASE64_PREFIX_LENGTH = 8;
     private final ProgramRepository programRepository;
+    private final ParseExerciseRepository parseExerciseRepository;
     private final ParseGoalRepository parseGoalRepository;
     private final ParseUserGroupRepository parseUserGroupRepository;
     private final ParseRoundRepository parseRoundRepository;
@@ -52,10 +57,10 @@ class AdminProgramService {
     private final ParseWarmupWorkoutItemRepository parseWarmupWorkoutItemRepository;
     private final ParseWorkoutItemRepository parseWorkoutItemRepository;
     private final ParseWorkoutItemSetRepository parseWorkoutItemSetRepository;
-    private final InWorkoutItemRepository inWorkoutItemRepository;
     private final AdminProgramAssignService adminProgramAssignService;
 
     AdminProgramService(ProgramRepository programRepository,
+            ParseExerciseRepository parseExerciseRepository,
             ParseGoalRepository parseGoalRepository,
             ParseUserGroupRepository parseUserGroupRepository,
             ParseRoundRepository parseRoundRepository,
@@ -64,9 +69,9 @@ class AdminProgramService {
             ParseWarmupWorkoutItemRepository parseWarmupWorkoutItemRepository,
             ParseWorkoutItemRepository parseWorkoutItemRepository,
             ParseWorkoutItemSetRepository parseWorkoutItemSetRepository,
-            InWorkoutItemRepository inWorkoutItemRepository,
             AdminProgramAssignService adminProgramAssignService) {
         this.programRepository = programRepository;
+        this.parseExerciseRepository = parseExerciseRepository;
         this.parseGoalRepository = parseGoalRepository;
         this.parseUserGroupRepository = parseUserGroupRepository;
         this.parseRoundRepository = parseRoundRepository;
@@ -75,7 +80,6 @@ class AdminProgramService {
         this.parseWarmupWorkoutItemRepository = parseWarmupWorkoutItemRepository;
         this.parseWorkoutItemRepository = parseWorkoutItemRepository;
         this.parseWorkoutItemSetRepository = parseWorkoutItemSetRepository;
-        this.inWorkoutItemRepository = inWorkoutItemRepository;
         this.adminProgramAssignService = adminProgramAssignService;
     }
 
@@ -97,6 +101,16 @@ class AdminProgramService {
                 .fileType(program.getFile_type())
                 .dataUrl(program.getData_url())
                 .updated(program.getUpdated())
+                .parseExercises(program.getParseExercises().stream().map(exercise -> ParseExerciseDTO.builder()
+                        .exercise_id(exercise.getExercise_id())
+                        .exercise_name(exercise.getExercise_name())
+                        .user_group_1_percent(exercise.getUser_group_1_percent())
+                        .user_group_2_percent(exercise.getUser_group_2_percent())
+                        .user_group_3_percent(exercise.getUser_group_3_percent())
+                        .user_group_4_percent(exercise.getUser_group_4_percent())
+                        .basis_for_calculations(exercise.getBasis_for_calculations())
+                        .build()
+                ).collect(Collectors.toList()))
                 .parseGoals(program.getParseGoals().stream().map(result -> ParseGoalDTO.builder()
                     .id(result.getId())
                     .name(result.getName())
@@ -166,12 +180,16 @@ class AdminProgramService {
         program.setFile_type(programRequestDTO.getFileType());
         program.setData_url(programRequestDTO.getDataUrl());
         final ParseProgram savedProgram = programRepository.save(program);
-        program.setParseGoals(adminProgramAssignService.assign(parseDataUrlAndSaveGoals(programRequestDTO, savedProgram)));
+        final ParseSheets parseSheets = parseDataUrlAndSaveGoals(programRequestDTO, savedProgram);
+        program.setParseExercises(parseSheets.getParseExercises());
+        program.setParseGoals(adminProgramAssignService.assign(parseSheets.getParseGoals()));
         return programToDto(program);
     }
 
-    private List<ParseGoal> parseDataUrlAndSaveGoals(ProgramRequestDTO programRequestDTO, final ParseProgram savedProgram) {
-        final List<ParseGoal> savedParseGoals = parseGoalRepository.save(parseDataUrl(programRequestDTO, savedProgram));
+    private ParseSheets parseDataUrlAndSaveGoals(ProgramRequestDTO programRequestDTO, final ParseProgram savedProgram) {
+        final ParseSheets parseSheets = parseDataUrl(programRequestDTO, savedProgram);
+        parseExerciseRepository.save(parseSheets.getParseExercises());
+        final List<ParseGoal> savedParseGoals = parseGoalRepository.save(parseSheets.getParseGoals());
         savedParseGoals.forEach((parseGoal) -> {
             parseGoal.getParseUserGroups().forEach((parseUserGroup) -> {
                 parseUserGroup.setParseGoal(parseGoal);
@@ -218,7 +236,7 @@ class AdminProgramService {
                 });
             });
         });
-        return savedParseGoals;
+        return parseSheets;
     }
 
     ProgramResponseDTO update(Long id, ProgramRequestDTO programRequestDTO) {
@@ -233,16 +251,31 @@ class AdminProgramService {
         program.setData_url(programRequestDTO.getDataUrl());
         program.setUpdated(LocalDateTime.now());
         parseGoalRepository.delete(program.getParseGoals());
-        program.setParseGoals(adminProgramAssignService.assign(parseDataUrlAndSaveGoals(programRequestDTO, program)));
+        final ParseSheets parseSheets = parseDataUrlAndSaveGoals(programRequestDTO, program);
+        program.setParseExercises(parseSheets.getParseExercises());
+        program.setParseGoals(adminProgramAssignService.assign(parseSheets.getParseGoals()));
         return programToDto(programRepository.save(program));
     }
 
-    private List<ParseGoal> parseDataUrl(ProgramRequestDTO programRequestDTO, final ParseProgram program) {
+    private ParseSheets parseDataUrl(ProgramRequestDTO programRequestDTO, final ParseProgram program) {
         final ByteArrayInputStream arrayInputStream = dataUrlToInputStream(programRequestDTO.getDataUrl());
         final XlsxProgramParser xlsxProgramParser = XlsxProgramParser.of(arrayInputStream);
-        final List<ExcelGoal> excelGoals = xlsxProgramParser.getExcelSheets().getExcelGoals();
-        return excelGoals.stream().map(goal -> {
-            final ParseGoal parseGoal = new ParseGoal()
+        final ExcelSheets excelSheets = xlsxProgramParser.getExcelSheets();
+        return new ParseSheets()
+                .setParseExercises(excelSheets.getExcelExercises().stream().map(exercise ->
+                  new ParseExercise()
+                        .setExercise_id(exercise.getExercise_id())
+                        .setExercise_name(exercise.getExercise_name())
+                        .setUser_group_1_percent(exercise.getUser_group_1_percent())
+                        .setUser_group_2_percent(exercise.getUser_group_2_percent())
+                        .setUser_group_3_percent(exercise.getUser_group_3_percent())
+                        .setUser_group_4_percent(exercise.getUser_group_4_percent())
+                        .setBasis_for_calculations(exercise.getBasis_for_calculations())
+                        .setParseProgram(program)
+                ).collect(Collectors.toList()))
+                .setParseGoals(excelSheets.getExcelGoals().stream().map(goal ->
+            new ParseGoal()
+                .setErrors(goal.getErrors().stream().collect(Collectors.joining(", ")))
                 .setName(goal.getName())
                 .setSheet_index(goal.getSheetIndex())
                 .setParseProgram(program)
@@ -260,10 +293,8 @@ class AdminProgramService {
                                             ).collect(Collectors.toList()))
                                     ).collect(Collectors.toList()))
                             ).collect(Collectors.toList()))
-                ).collect(Collectors.toList()));
-            parseGoal.setErrors(goal.getErrors().stream().collect(Collectors.joining(", ")));
-            return parseGoal;
-        }).collect(Collectors.toList());
+                ).collect(Collectors.toList()))
+        ).collect(Collectors.toList()));
     }
 
     private ParseWorkout createParseWorkout(Workout workout) {

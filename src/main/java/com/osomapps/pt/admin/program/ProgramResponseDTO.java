@@ -25,5 +25,6 @@ class ProgramResponseDTO {
     String dataUrl;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     LocalDateTime updated;
+    List<ParseExerciseDTO> parseExercises;
     List<ParseGoalDTO> parseGoals;
 }

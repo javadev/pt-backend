@@ -37,7 +37,7 @@ public class ParseExercise {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ParseExerciseIdSequence")
     Long id;
     LocalDateTime created;
-    Long exercise_id;
+    Integer exercise_id;
     String exercise_name;
     Integer user_group_1_percent;
     Integer user_group_2_percent;

@@ -51,11 +51,17 @@ public class XlsxProgramParserTest {
 
     @Test
     public void parse2() throws Exception {
-        List<ExcelGoal> excelGoals;
+        ExcelSheets excelSheets;
         try (InputStream stream = XlsxProgramParserTest.class.getResourceAsStream("Dette_blir_algo2.xlsx")) {
             XlsxProgramParser parser = XlsxProgramParser.of(stream);
-            excelGoals = parser.getExcelSheets().getExcelGoals();
+            excelSheets = parser.getExcelSheets();
         }
+        List<ExcelExercise> excelExercises = excelSheets.getExcelExercises();
+        assertThat(excelExercises.size(), equalTo(57));
+        assertThat(excelExercises.get(0).getExercise_name(), equalTo("Squat"));
+        assertThat(excelExercises.get(56).getExercise_name(), equalTo("Chin-Ups"));
+        assertThat(excelExercises.get(56).getBasis_for_calculations(), equalTo("Reps"));
+        List<ExcelGoal> excelGoals = excelSheets.getExcelGoals();
         assertThat(excelGoals.size(), equalTo(12));
         assertThat(excelGoals.get(0).getName(), equalTo("Loose weight"));
         assertThat(excelGoals.get(0).getUserGroups().size(), equalTo(4));

@@ -8,7 +8,7 @@ public class ProgramResponseDTOTest {
 
     @Test
     public void allArgsConstructor() {
-        assertThat(new ProgramResponseDTO(null, null, null, null, null, null, null, null), notNullValue());
+        assertThat(new ProgramResponseDTO(null, null, null, null, null, null, null, null, null), notNullValue());
     }
     
     @Test
@@ -21,6 +21,7 @@ public class ProgramResponseDTOTest {
         programResponseDTO.setFileType(null);
         programResponseDTO.setDataUrl(null);
         programResponseDTO.setUpdated(null);
+        programResponseDTO.setParseExercises(null);
         programResponseDTO.setParseGoals(null);
         assertThat(programResponseDTO, notNullValue());
     }
@@ -35,6 +36,7 @@ public class ProgramResponseDTOTest {
         programResponseDTO.getFileType();
         programResponseDTO.getDataUrl();
         programResponseDTO.getUpdated();
+        programResponseDTO.getParseExercises();
         programResponseDTO.getParseGoals();
         assertThat(programResponseDTO, notNullValue());
     }
