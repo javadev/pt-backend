@@ -12,7 +12,7 @@ public class XlsxProgramParserTest {
         List<ExcelGoal> excelGoals;
         try (InputStream stream = XlsxProgramParserTest.class.getResourceAsStream("Dette_blir_algo.xlsx")) {
             XlsxProgramParser parser = XlsxProgramParser.of(stream);
-            excelGoals = parser.getExcelGoals();
+            excelGoals = parser.getExcelSheets().getExcelGoals();
         }
         assertThat(excelGoals.size(), equalTo(8));
         assertThat(excelGoals.get(0).getName(), equalTo("Loose weight"));
@@ -54,7 +54,7 @@ public class XlsxProgramParserTest {
         List<ExcelGoal> excelGoals;
         try (InputStream stream = XlsxProgramParserTest.class.getResourceAsStream("Dette_blir_algo2.xlsx")) {
             XlsxProgramParser parser = XlsxProgramParser.of(stream);
-            excelGoals = parser.getExcelGoals();
+            excelGoals = parser.getExcelSheets().getExcelGoals();
         }
         assertThat(excelGoals.size(), equalTo(12));
         assertThat(excelGoals.get(0).getName(), equalTo("Loose weight"));

@@ -240,7 +240,7 @@ class AdminProgramService {
     private List<ParseGoal> parseDataUrl(ProgramRequestDTO programRequestDTO, final ParseProgram program) {
         final ByteArrayInputStream arrayInputStream = dataUrlToInputStream(programRequestDTO.getDataUrl());
         final XlsxProgramParser xlsxProgramParser = XlsxProgramParser.of(arrayInputStream);
-        final List<ExcelGoal> excelGoals = xlsxProgramParser.getExcelGoals();
+        final List<ExcelGoal> excelGoals = xlsxProgramParser.getExcelSheets().getExcelGoals();
         return excelGoals.stream().map(goal -> {
             final ParseGoal parseGoal = new ParseGoal()
                 .setName(goal.getName())

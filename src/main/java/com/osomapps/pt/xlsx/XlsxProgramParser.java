@@ -27,7 +27,7 @@ public class XlsxProgramParser {
         return new XlsxProgramParser(inputStream);
     }
 
-    public List<ExcelGoal> getExcelGoals() {
+    public ExcelSheets getExcelSheets() {
         final List<ExcelGoal> excelGoals = new ArrayList<>();
         try (final Workbook workbook = WorkbookFactory.create(inputStream)) {
             
@@ -98,7 +98,7 @@ public class XlsxProgramParser {
         } catch (IOException | InvalidFormatException ex) {
             log.error(ex.getMessage(), ex);
         }
-        return excelGoals;
+        return new ExcelSheets().setExcelGoals(excelGoals);
     }
 
     private Optional<WarmupWorkoutItem> extractWarmupWorkoutItem(Sheet sheet, int workoutIndex, ExcelGoal excelGoal, String workoutName) {
