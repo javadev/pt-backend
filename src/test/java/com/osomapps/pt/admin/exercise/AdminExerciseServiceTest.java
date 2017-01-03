@@ -84,7 +84,11 @@ public class AdminExerciseServiceTest {
         exerciseRequestDTO.setTypes(Collections.emptyList());
         exerciseRequestDTO.setInputs(Collections.emptyList());
         exerciseRequestDTO.setOutputs(Collections.emptyList());
-        exerciseRequestDTO.setFiles(Arrays.asList(new ExerciseFileRequestDTO()));
+        exerciseRequestDTO.setFiles(Arrays.asList(new ExerciseFileRequestDTO().setData_url(
+                "data:image/gif;base64,"
+                + "R0lGODlhEAAOALMAAOazToeHh0tLS/7LZv/0jvb29t/f3//Ub//ge8WSLf/rhf/3kdbW1mxsbP//mf///"
+                + "yH5BAAAAAAALAAAAAAQAA4AAARe8L1Ekyky67QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjg"
+                + "aORCMxIC6e0CcguWw6aFjsVMkkIr7g77ZKPJjPZqIyd7sJAgVGoEGv2xsBxqNgYPj/gAwXEQA7")));
         ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();
         existedExerciseBodypart.setId(1L);
         existedExerciseBodypart.setDExerciseBodypartName("10");
@@ -141,7 +145,11 @@ public class AdminExerciseServiceTest {
         exerciseRequestDTO.setTypes(Collections.emptyList());
         exerciseRequestDTO.setInputs(Collections.emptyList());
         exerciseRequestDTO.setOutputs(Collections.emptyList());
-        exerciseRequestDTO.setFiles(Arrays.asList(new ExerciseFileRequestDTO()));
+        exerciseRequestDTO.setFiles(Arrays.asList(new ExerciseFileRequestDTO().setData_url(
+                "data:image/gif;base64,"
+                + "R0lGODlhEAAOALMAAOazToeHh0tLS/7LZv/0jvb29t/f3//Ub//ge8WSLf/rhf/3kdbW1mxsbP//mf///"
+                + "yH5BAAAAAAALAAAAAAQAA4AAARe8L1Ekyky67QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjg"
+                + "aORCMxIC6e0CcguWw6aFjsVMkkIr7g77ZKPJjPZqIyd7sJAgVGoEGv2xsBxqNgYPj/gAwXEQA7")));
         Exercise existedExercise = new Exercise();
         when(exerciseRepository.findOne(eq(1L))).thenReturn(existedExercise);
         ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();
