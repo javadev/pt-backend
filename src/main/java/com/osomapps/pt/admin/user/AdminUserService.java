@@ -73,6 +73,7 @@ class AdminUserService {
                 .id(inUser.getId())
                 .email(userEmail)
                 .name(userName)
+                .level(inUser.getD_level() == null ? null : Integer.parseInt(inUser.getD_level()))
                 .type(inUser.getInUserType() == null ? null : UserTypeResponseDTO.builder()
                     .id(inUser.getInUserType().getId())
                     .nameEn(dictionaryService.getEnValue(DictionaryName.user_type,
@@ -112,6 +113,7 @@ class AdminUserService {
         inUserEmail.setPassword(passwordEncoder.encode("Qwerty+1"));
         inUser.setInUserType(inUserTypeDb);
         inUser.setInUserEmails(Arrays.asList(inUserEmail));
+        inUser.setD_level(userRequestDTO.getLevel() == null ? null : "" + userRequestDTO.getLevel());
         final InUser savedInUser = inUserRepository.save(inUser);
         inUserEmail.setInUser(savedInUser);
         inUserEmailRepository.save(inUserEmail);
@@ -127,6 +129,7 @@ class AdminUserService {
                 || userRequestDTO.getType().getId() == null ? null
             : inUserTypeRepository.findOne(userRequestDTO.getType().getId());
         inUser.setInUserType(inUserTypeDb);
+        inUser.setD_level(userRequestDTO.getLevel() == null ? null : "" + userRequestDTO.getLevel());
         if (inUser.getInUserEmails().isEmpty()) {
             final InUserFacebook inUserFacebook = inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1);
             inUserFacebook.setUser_name(userRequestDTO.getName());

@@ -35,15 +35,21 @@ define([
           users._types = _.union({id: null, nameEn: ''}, data);
           users.trigger('sync');
         });
+        $.get('/api/v1/admin/user-level').done(function(data) {
+          users._levels = _.union({id: null, name: ''}, data);
+          users.trigger('sync');
+        });
         users.on('user:view', function(model) {
           var user = new UsersModels.User();
           user._types = users._types;
+          user._levels = users._levels;
           if (!_.isUndefined(model)) {
             user.set({
               id: model.get('id'),
               name: model.get('name'),
               email: model.get('email'),
               type: model.get('type'),
+              level: model.get('level'),
               programs: model.get('programs')
             });
           }
@@ -62,12 +68,14 @@ define([
         users.on('user:new', function(model) {
           var user = new UsersModels.User();
           user._types = users._types;
+          user._levels = users._levels;
           if (!_.isUndefined(model)) {
             user.set({
               id: model.get('id'),
               name: model.get('name'),
               email: model.get('email'),
               type: model.get('type'),
+              level: model.get('level'),
               programs: model.get('programs')
             });
           }

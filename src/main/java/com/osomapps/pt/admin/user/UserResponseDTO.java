@@ -19,5 +19,6 @@ class UserResponseDTO {
     String name;
     String email;
     UserTypeResponseDTO type;
+    Integer level;
     List<UserProgramResponseDTO> programs;
 }

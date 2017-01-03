@@ -11,11 +11,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-class UserRequestDTO {
-    Long id;
+class UserLevelResponseDTO {
+    Integer id;
     String name;
-    String email;
-    String password;
-    Integer level;
-    UserTypeRequestDTO type;
 }

@@ -9,7 +9,7 @@ public enum UserLevel {
         this.level = level;
     }
 
-    int getLevel() {
+    public int getLevel() {
         return level;
     }
 

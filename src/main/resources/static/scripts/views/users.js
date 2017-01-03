@@ -700,6 +700,14 @@ function ($, _, Backbone, Marionette, moment, App) {
         '</div>',
       '</div>',
       '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Level</label>',
+        '<div class="col-sm-8">',
+          '<select id="user-level" class="selectpicker show-tick">',
+            '{{ getLevels() }}',
+          '</select>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
         '<label class="col-sm-3 control-label">Name</label>',
         '<div class="col-sm-8">',
           '<textarea id="user-name" class="form-control" rows="3" placeholder="Please enter name" name="address" required="true">',
@@ -730,6 +738,18 @@ function ($, _, Backbone, Marionette, moment, App) {
               '>' + item.nameEn + '</option>';
           });
           return result;
+        },
+        getLevels: function() {
+          var levels = model._levels || [];
+          var result = _.map(levels, function(item) {
+            if (_.isNull(item.id)) {
+              return '<option></option>';
+            }
+            return '<option value="' + item.id + '"' +
+              (!!model.get('level') && model.get('level') === item.id ? ' selected' : '') +
+              '>' + item.name + '</option>';
+          });
+          return result;
         }
       };
     },
@@ -742,6 +762,7 @@ function ($, _, Backbone, Marionette, moment, App) {
     },
     ui: {
       userType: '#user-type',
+      userLevel: '#user-level',
       name: '#user-name',
       email: '#user-email'
     },
@@ -762,6 +783,9 @@ function ($, _, Backbone, Marionette, moment, App) {
       });
       this.ui.userType.on('changed.bs.select', function (e) {
         view.model.set('type', {id: parseInt(e.target.value, 10) });
+      });
+      this.ui.userLevel.on('changed.bs.select', function (e) {
+        view.model.set('level', _.isEmpty(e.target.value) ? null : parseInt(e.target.value, 10));
       });
     }
   });

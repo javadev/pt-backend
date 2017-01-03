@@ -16,7 +16,9 @@ define([
         'type': {
           'id': null,
           'nameEn': null
-        }
+        },
+        'level': null,
+        'goals': []
       },
       url: function() {
         return '/api/v1/admin/user' + (this.isNew() ? '' : '/' + this.get('id'));
