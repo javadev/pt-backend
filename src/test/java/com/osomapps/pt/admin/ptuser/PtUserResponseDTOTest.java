@@ -27,7 +27,7 @@ public class PtUserResponseDTOTest {
                 null,
                 null), notNullValue());
     }
-    
+
     @Test
     public void noArgsConstructor() {
         assertThat(new PtUserResponseDTO(), notNullValue());
@@ -48,6 +48,12 @@ public class PtUserResponseDTOTest {
         ptUserResponseDTO.setBlocked_finish(null);
         ptUserResponseDTO.setDeleted(null);
         ptUserResponseDTO.setDeleted_comment(null);
+        ptUserResponseDTO.setIs_deleted(null);
+        ptUserResponseDTO.setIs_default_password(null);
+        ptUserResponseDTO.setDescription(null);
+        ptUserResponseDTO.setPhone(null);
+        ptUserResponseDTO.setPhone2(null);
+        ptUserResponseDTO.setRoles(null);
         assertThat(ptUserResponseDTO, notNullValue());
     }
 
@@ -66,7 +72,13 @@ public class PtUserResponseDTOTest {
         ptUserResponseDTO.getBlocked_finish();
         ptUserResponseDTO.getDeleted();
         ptUserResponseDTO.getDeleted_comment();
+        ptUserResponseDTO.getIs_deleted();
+        ptUserResponseDTO.getIs_default_password();
+        ptUserResponseDTO.getDescription();
+        ptUserResponseDTO.getPhone();
+        ptUserResponseDTO.getPhone2();
+        ptUserResponseDTO.getRoles();
         assertThat(ptUserResponseDTO, notNullValue());
     }
-    
+
 }
