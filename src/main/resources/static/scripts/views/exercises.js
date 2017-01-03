@@ -6,10 +6,11 @@ define([
     'backbone',
     'marionette',
     'app',
+    'bootstrapModals',
     'bootstrapTab',
     'bootstrapSelect'
 ],
-function ($, _, Backbone, Marionette, App) {
+function ($, _, Backbone, Marionette, App, BackboneBootstrapModals) {
   'use strict';
 
   var EmptyView = Marionette.ItemView.extend({
@@ -75,15 +76,22 @@ function ($, _, Backbone, Marionette, App) {
       evt.preventDefault();
       var model = this.model;
       var collection = this.collection;
-      this.model.destroy()
-        .done(function() {
-        })
-        .fail(function (xhr) {
-          App.vent.trigger('xhr:error', 'Exercise ' + model.get('id') + ' delete was failed');
-        })
-        .always(function() {
-          collection.fetch();
-        });
+      var modal = new BackboneBootstrapModals.ConfirmationModal({
+        label: 'Confirm Action',
+        text: 'Are you sure you want to delete exercise ' + model.get('nameEn') + ' (' + model.get('exerciseId') + ')' + '?',
+          onConfirm: function() {
+            model.destroy()
+              .done(function() {
+              })
+              .fail(function (xhr) {
+                App.vent.trigger('xhr:error', 'Exercise ' + model.get('id') + ' delete was failed');
+              })
+              .always(function() {
+                collection.fetch();
+              });
+            }
+      });
+      modal.render();
     }
   });
 

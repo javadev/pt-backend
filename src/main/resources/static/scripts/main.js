@@ -6,6 +6,8 @@ require.config({
     bootstrapTab: 'external/bootstrap-tab',
     bootstrapDropdown: 'external/bootstrap-dropdown',
     bootstrapSelect: 'external/bootstrap-select',
+    bootstrapModal: 'external/bootstrap-modal',
+    bootstrapModals: 'external/backbone-bootstrap-modals',
 
     underscore: 'external/underscore',
     baseBackbone: 'external/backbone',
@@ -29,6 +31,12 @@ require.config({
     },
     bootstrapSelect: {
       deps: ['jquery', 'bootstrapDropdown']
+    },
+    bootstrapModal: {
+      deps: ['jquery']
+    },
+    bootstrapModals: {
+      deps: ['jquery', 'bootstrapModal']
     }
   }
 });
