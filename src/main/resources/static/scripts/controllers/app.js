@@ -39,10 +39,15 @@ define([
           users._levels = _.union({id: null, name: ''}, data);
           users.trigger('sync');
         });
+        $.get('/api/v1/admin/user-goal').done(function(data) {
+          users._goals = _.union({id: null, name: ''}, data);
+          users.trigger('sync');
+        });
         users.on('user:view', function(model) {
           var user = new UsersModels.User();
           user._types = users._types;
           user._levels = users._levels;
+          user._goals = users._goals;
           if (!_.isUndefined(model)) {
             user.set({
               id: model.get('id'),
@@ -50,6 +55,7 @@ define([
               email: model.get('email'),
               type: model.get('type'),
               level: model.get('level'),
+              goals: model.get('goals'),
               programs: model.get('programs')
             });
           }
@@ -69,6 +75,7 @@ define([
           var user = new UsersModels.User();
           user._types = users._types;
           user._levels = users._levels;
+          user._goals = users._goals;
           if (!_.isUndefined(model)) {
             user.set({
               id: model.get('id'),
@@ -76,6 +83,7 @@ define([
               email: model.get('email'),
               type: model.get('type'),
               level: model.get('level'),
+              goals: model.get('goals'),
               programs: model.get('programs')
             });
           }

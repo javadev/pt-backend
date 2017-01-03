@@ -4,13 +4,18 @@ import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.UnauthorizedException;
 import com.osomapps.pt.dictionary.DictionaryName;
 import com.osomapps.pt.dictionary.DictionaryService;
+import com.osomapps.pt.goals.Goal;
+import com.osomapps.pt.goals.GoalRepository;
+import com.osomapps.pt.goals.InUserGoalRepository;
 import com.osomapps.pt.token.InUser;
 import com.osomapps.pt.token.InUserFacebook;
 import com.osomapps.pt.token.InUserFacebookRepository;
+import com.osomapps.pt.token.InUserGoal;
 import com.osomapps.pt.token.InUserRepository;
 import com.osomapps.pt.tokenemail.EmailValidator;
 import com.osomapps.pt.tokenemail.InUserEmail;
 import com.osomapps.pt.tokenemail.InUserEmailRepository;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +35,8 @@ class AdminUserService {
     private final PasswordEncoder passwordEncoder;
     private final EmailValidator emailValidator;
     private final DictionaryService dictionaryService;
+    private final InUserGoalRepository inUserGoalRepository;
+    private final GoalRepository goalRepository;
     
     AdminUserService(InUserRepository inUserRepository,
             InUserEmailRepository inUserEmailRepository,
@@ -37,7 +44,9 @@ class AdminUserService {
             InUserTypeRepository inUserTypeRepository,
             PasswordEncoder passwordEncoder,
             EmailValidator emailValidator,
-            DictionaryService dictionaryService) {
+            DictionaryService dictionaryService,
+            InUserGoalRepository inUserGoalRepository,
+            GoalRepository goalRepository) {
         this.inUserRepository = inUserRepository;
         this.inUserEmailRepository = inUserEmailRepository;
         this.inUserFacebookRepository = inUserFacebookRepository;
@@ -45,6 +54,8 @@ class AdminUserService {
         this.passwordEncoder = passwordEncoder;
         this.emailValidator = emailValidator;
         this.dictionaryService = dictionaryService;
+        this.inUserGoalRepository = inUserGoalRepository;
+        this.goalRepository = goalRepository;
     }
 
     List<UserResponseDTO> findAll() {
@@ -74,6 +85,12 @@ class AdminUserService {
                 .email(userEmail)
                 .name(userName)
                 .level(inUser.getD_level() == null ? null : Integer.parseInt(inUser.getD_level()))
+                .goals(inUser.getInUserGoals() == null ? null : inUser.getInUserGoals().stream().map(goal ->
+                    new UserGoalResponseDTO()
+                            .setId(goal.getGoalId())
+                        .setTitle(dictionaryService.getEnValue(DictionaryName.goal_title, goal.getD_goal_title(), null))
+                        .setTitle2(dictionaryService.getEnValue(DictionaryName.goal_title_2, goal.getD_goal_title_2(), null))
+                ).collect(Collectors.toList()))
                 .type(inUser.getInUserType() == null ? null : UserTypeResponseDTO.builder()
                     .id(inUser.getInUserType().getId())
                     .nameEn(dictionaryService.getEnValue(DictionaryName.user_type,
@@ -114,10 +131,33 @@ class AdminUserService {
         inUser.setInUserType(inUserTypeDb);
         inUser.setInUserEmails(Arrays.asList(inUserEmail));
         inUser.setD_level(userRequestDTO.getLevel() == null ? null : "" + userRequestDTO.getLevel());
+        setupGoals(userRequestDTO, inUser);
+
         final InUser savedInUser = inUserRepository.save(inUser);
         inUserEmail.setInUser(savedInUser);
         inUserEmailRepository.save(inUserEmail);
         return inUserToDto(savedInUser);
+    }
+
+    private void setupGoals(UserRequestDTO userRequestDTO, final InUser inUser) throws UnauthorizedException {
+        if (userRequestDTO.getGoals() != null) {
+            if (userRequestDTO.getGoals().size() > 2) {
+                throw new UnauthorizedException("Amount of goals must be not more than 2");
+            }
+            inUserGoalRepository.delete(inUser.getInUserGoals());
+            inUser.setInUserGoals(new ArrayList<>());
+            userRequestDTO.getGoals().forEach((userGoalRequestDTO) -> {
+                Goal goal = goalRepository.findOne(userGoalRequestDTO.getId());
+                if (goal == null) {
+                    throw new UnauthorizedException("Goal with id " + userGoalRequestDTO.getId() + " not found");
+                }
+                inUser.getInUserGoals().add(inUserGoalRepository.save(new InUserGoal()
+                        .setGoalId(userGoalRequestDTO.getId())
+                        .setD_goal_title(goal.getDGoalTitle())
+                        .setD_goal_title_2(goal.getDGoalTitle2())
+                        .setGoal_value(userGoalRequestDTO.getValue())));
+            });
+        }
     }
 
     UserResponseDTO update(Long id, UserRequestDTO userRequestDTO) {
@@ -130,6 +170,7 @@ class AdminUserService {
             : inUserTypeRepository.findOne(userRequestDTO.getType().getId());
         inUser.setInUserType(inUserTypeDb);
         inUser.setD_level(userRequestDTO.getLevel() == null ? null : "" + userRequestDTO.getLevel());
+        setupGoals(userRequestDTO, inUser);
         if (inUser.getInUserEmails().isEmpty()) {
             final InUserFacebook inUserFacebook = inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1);
             inUserFacebook.setUser_name(userRequestDTO.getName());

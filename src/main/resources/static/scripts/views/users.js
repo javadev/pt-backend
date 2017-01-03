@@ -616,6 +616,18 @@ function ($, _, Backbone, Marionette, moment, App) {
         '</div>',
       '</div>',
       '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Level</label>',
+        '<div class="col-sm-8">',
+          '{{ getLevels() }}',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Goals</label>',
+        '<div class="col-sm-8">',
+          '{{ getGoals() }}',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
         '<label class="col-sm-3 control-label">Name</label>',
         '<div class="col-sm-8">',
           '<textarea id="user-name" class="form-control" rows="3" placeholder="Please enter name" name="address" required="true" readonly>',
@@ -644,6 +656,29 @@ function ($, _, Backbone, Marionette, moment, App) {
             return !!model.get('type') && model.get('type').id === item.id ? item.nameEn : null;
           }));
           return result.join('');
+        },
+        getLevels: function() {
+          var levels = model._levels || [];
+          var result = _.compact(_.map(levels, function(item) {
+            if (_.isNull(item.id)) {
+              return '';
+            }
+            return !!model.get('level') && model.get('level') === item.id ? item.name : null;
+          }));
+          return result.join('');
+        },
+        getGoals: function() {
+          var goals = model._goals || [];
+          var modelGoals = _.map(model.get('goals'), function(item) {
+             return item.id;
+          });
+          var result = _.map(goals, function(item) {
+            if (_.isNull(item.id)) {
+              return '';
+            }
+            return _.contains(modelGoals, item.id) ? _.compact([item.title, item.title2]).join(',') : '';
+          });
+          return _.compact(result).join(', ');
         }
       };
     },
@@ -708,6 +743,14 @@ function ($, _, Backbone, Marionette, moment, App) {
         '</div>',
       '</div>',
       '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Goals</label>',
+        '<div class="col-sm-8">',
+          '<select id="user-goal" class="selectpicker show-tick" multiple data-max-options="2">',
+            '{{ getGoals() }}',
+          '</select>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
         '<label class="col-sm-3 control-label">Name</label>',
         '<div class="col-sm-8">',
           '<textarea id="user-name" class="form-control" rows="3" placeholder="Please enter name" name="address" required="true">',
@@ -750,6 +793,21 @@ function ($, _, Backbone, Marionette, moment, App) {
               '>' + item.name + '</option>';
           });
           return result;
+        },
+        getGoals: function() {
+          var goals = model._goals || [];
+          var modelGoals = _.map(model.get('goals'), function(item) {
+             return item.id;
+          });
+          var result = _.map(goals, function(item) {
+            if (_.isNull(item.id)) {
+              return '<option data-hidden="true"></option>';
+            }
+            return '<option value="' + item.id + '"' +
+              (_.contains(modelGoals, item.id) ? ' selected' : '') +
+              '>' + item.title + (_.isNull(item.title2) ? '' : ', ' + item.title2) + '</option>';
+          });
+          return result;
         }
       };
     },
@@ -763,6 +821,7 @@ function ($, _, Backbone, Marionette, moment, App) {
     ui: {
       userType: '#user-type',
       userLevel: '#user-level',
+      userGoal: '#user-goal',
       name: '#user-name',
       email: '#user-email'
     },
@@ -786,6 +845,12 @@ function ($, _, Backbone, Marionette, moment, App) {
       });
       this.ui.userLevel.on('changed.bs.select', function (e) {
         view.model.set('level', _.isEmpty(e.target.value) ? null : parseInt(e.target.value, 10));
+      });
+      this.ui.userGoal.on('changed.bs.select', function (e) {
+        var selectedGoals = _.map(e.target.selectedOptions, function(item) {
+            return {id: parseInt(item.value, 10) };
+        });
+        view.model.set('goals', selectedGoals);
       });
     }
   });

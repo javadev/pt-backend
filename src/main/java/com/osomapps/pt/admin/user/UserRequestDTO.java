@@ -1,5 +1,6 @@
 package com.osomapps.pt.admin.user;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,5 +18,6 @@ class UserRequestDTO {
     String email;
     String password;
     Integer level;
+    List<UserGoalRequestDTO> goals;
     UserTypeRequestDTO type;
 }
