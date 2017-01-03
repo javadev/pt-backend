@@ -148,6 +148,9 @@ class AdminExerciseService {
         if (exerciseRequestDTO.getFiles() != null) {
             exercise.setExerciseFiles(exerciseRequestDTO.getFiles().stream().map(file -> {
                     final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
+                    if (file.getData_url() == null) {
+                        throw new UnauthorizedException("Invalid data_url");
+                    }
                     dataurlValidator.validate(file.getData_url(), errors);
                     if (errors.hasErrors()) {
                         throw new UnauthorizedException(errors.getAllErrors().get(0).getDefaultMessage());
@@ -204,6 +207,9 @@ class AdminExerciseService {
             exerciseFileRepository.delete(existedExercise.getExerciseFiles());
             existedExercise.setExerciseFiles(exerciseRequestDTO.getFiles().stream().map(file -> {
                     final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
+                    if (file.getData_url() == null) {
+                        throw new UnauthorizedException("Invalid data_url");
+                    }
                     dataurlValidator.validate(file.getData_url(), errors);
                     if (errors.hasErrors()) {
                         throw new UnauthorizedException(errors.getAllErrors().get(0).getDefaultMessage());

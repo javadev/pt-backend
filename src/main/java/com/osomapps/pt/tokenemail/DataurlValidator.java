@@ -19,18 +19,16 @@ public class DataurlValidator implements Validator {
     @Override
     public void validate(final Object obj, final Errors errors) {
         final String dataUrl = (String) obj;
-        if (dataUrl == null) {
-            errors.reject("dataUrl", "Invalid dataUrl");
-            return;
-        }
-        try { 
-            final String encodedString = dataUrl.substring(dataUrl.indexOf(BASE64_PREFIX) + BASE64_PREFIX_LENGTH).replaceAll("\\s+", "");
-            int length = Base64.getDecoder().decode(encodedString).length;
-            if (length > 2097152) {
-                errors.reject("dataUrl", "Image cannot be large than 2 megabytes");
+        if (dataUrl != null) {
+            try { 
+                final String encodedString = dataUrl.substring(dataUrl.indexOf(BASE64_PREFIX) + BASE64_PREFIX_LENGTH).replaceAll("\\s+", "");
+                int length = Base64.getDecoder().decode(encodedString).length;
+                if (length > 2097152) {
+                    errors.reject("dataUrl", "Image cannot be large than 2 megabytes");
+                }
+            } catch (Exception ex) {
+                errors.reject("dataUrl", "Invalid dataUrl");
             }
-        } catch (Exception ex) {
-            errors.reject("dataUrl", "Invalid dataUrl");
         }
     }
 }
