@@ -250,6 +250,7 @@ class AdminProgramService {
         program.setFile_type(programRequestDTO.getFileType());
         program.setData_url(programRequestDTO.getDataUrl());
         program.setUpdated(LocalDateTime.now());
+        parseExerciseRepository.delete(program.getParseExercises());
         parseGoalRepository.delete(program.getParseGoals());
         final ParseSheets parseSheets = parseDataUrlAndSaveGoals(programRequestDTO, program);
         program.setParseExercises(parseSheets.getParseExercises());
