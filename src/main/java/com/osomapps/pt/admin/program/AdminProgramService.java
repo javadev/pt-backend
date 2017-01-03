@@ -40,6 +40,7 @@ import com.osomapps.pt.xlsx.ExcelSheets;
 import com.osomapps.pt.xlsx.Round;
 import com.osomapps.pt.xlsx.UserGroup;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 
 @Service
 class AdminProgramService {
@@ -274,7 +275,7 @@ class AdminProgramService {
                 ).collect(Collectors.toList()))
                 .setParseGoals(excelSheets.getExcelGoals().stream().map(goal ->
             new ParseGoal()
-                .setErrors(goal.getErrors().stream().collect(Collectors.joining(", ")))
+                .setErrors(StringUtils.abbreviate(goal.getErrors().stream().collect(Collectors.joining(", ")), 1000))
                 .setName(goal.getName())
                 .setSheet_index(goal.getSheetIndex())
                 .setParseProgram(program)
@@ -313,9 +314,9 @@ class AdminProgramService {
                                 .setParseWorkoutItemSets(workoutItem.getInput().getSets().stream().map(set ->
                                         new ParseWorkoutItemSet()
                                             .setRepetitions(set.getRepetitions())
-                                            .setRepetitions_to_failure(set.getRepetitionsToFailure())
+                                            .setRepetitions_to_failure(BooleanUtils.isTrue(set.getRepetitionsToFailure()))
                                             .setWeight(set.getWeight())
-                                            .setBodyweight(set.getBodyweight())
+                                            .setBodyweight(BooleanUtils.isTrue(set.getBodyweight()))
                                             .setTime_in_min(set.getTimeInMin())
                                             .setSpeed(set.getSpeed())
                                             .setIncline(set.getIncline())
@@ -354,30 +355,6 @@ class AdminProgramService {
         xlsxModifier.updateCellData(outputStream, excelGoals);
         return programToDto(program);
     }
-
-//    private WorkoutItem createWorkoutItem(ParseWorkoutItem parseWorkoutItem) {
-//        InWorkoutItem inWorkoutItem =
-//                parseWorkoutItem.getIn_workout_item_id() == null ? null
-//                : inWorkoutItemRepository.findOne(parseWorkoutItem.getIn_workout_item_id());
-//        WorkoutItem workoutItem = new WorkoutItem()
-//                .setColumnIndex(parseWorkoutItem.getColumn_index())
-//                .setRowIndex(parseWorkoutItem.getRow_index())
-//                .setInput(new Input()
-//                        .setSets(parseWorkoutItem.getSets())
-//                        .setRepetitions(parseWorkoutItem.getRepetitions())
-//                        .setWeight(parseWorkoutItem.getWeight()));
-//        if (inWorkoutItem != null && !inWorkoutItem.getInWorkoutItemReports().isEmpty()) {
-//            InWorkoutItemReport inWorkoutItemReport = inWorkoutItem.getInWorkoutItemReports()
-//                    .get(inWorkoutItem.getInWorkoutItemReports().size() - 1);
-//            workoutItem.setOutput(new Output()
-//                    .setSets(inWorkoutItemReport.getInWorkoutItemSetReports().size())
-//                    .setRepetitions(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
-//                            .map(item -> item.getRepetitions()).collect(Collectors.toList()))
-//                    .setWeights(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
-//                            .map(item -> item.getWeight() == null ? null : item.getWeight().intValue()).collect(Collectors.toList())));
-//        }
-//        return workoutItem;
-//    }
 
     private UserGroup createUserGroup(ParseUserGroup parseUserGroup) {
         return new UserGroup()
