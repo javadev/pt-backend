@@ -24,10 +24,10 @@ public class CurveEstimation {
 
     public float calc(float value) {
         if (value < 0) {
-            return (float) (Math.abs(Math.min(Math.max((Math.pow(value / 100, baseNumber) * 100 / impact), -limit), limit *0.5F))
+            return (float) (Math.abs(Math.min(Math.max((Math.pow(value / 100, baseNumber) * 100 / impact), -limit), limit * 0.5F))
                     * Math.signum(value) + zeroAdjustmentAfter);
         }
         return (float) (Math.abs(Math.min(Math.max((Math.pow(value / 100, baseNumber) * 100 / impact), -limit), limit))
-                    * Math.signum(value) + zeroAdjustmentAfter);
+                * Math.signum(value) + zeroAdjustmentAfter);
     }
 }

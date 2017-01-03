@@ -20,7 +20,6 @@ import com.osomapps.pt.programs.ParseWorkout;
 import com.osomapps.pt.programs.ParseWorkoutItem;
 import com.osomapps.pt.programs.ParseWorkoutItemRepository;
 import com.osomapps.pt.programs.ParseWorkoutRepository;
-import com.osomapps.pt.reportworkout.InWorkoutItemRepository;
 import com.osomapps.pt.xlsx.ExcelGoal;
 import com.osomapps.pt.xlsx.XlsxModifier;
 import com.osomapps.pt.xlsx.XlsxProgramParser;

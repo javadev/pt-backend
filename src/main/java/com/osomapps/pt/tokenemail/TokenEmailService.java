@@ -1,6 +1,5 @@
 package com.osomapps.pt.tokenemail;
 
-import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.UnauthorizedException;
 import com.osomapps.pt.token.InUser;
 import com.osomapps.pt.token.InUserLogin;

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.osomapps.pt.activecertificate.InUserCertificate;
 import com.osomapps.pt.admin.user.InUserType;
-import com.osomapps.pt.exercises.ExerciseFile;
 import com.osomapps.pt.programs.InProgram;
 import com.osomapps.pt.reportweight.InUserWeight;
 import com.osomapps.pt.tokenemail.InUserEmail;

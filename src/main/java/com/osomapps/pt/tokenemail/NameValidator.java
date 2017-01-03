@@ -20,7 +20,6 @@ public class NameValidator implements Validator {
         }
         if (name.trim().length() < 2) {
             errors.reject("name", "Name should be at least 2 characters");
-            return;
         }
     }
 }

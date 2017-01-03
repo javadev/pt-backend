@@ -25,11 +25,9 @@ public class DataurlValidator implements Validator {
                 int length = Base64.getDecoder().decode(encodedString).length;
                 if (length > 2097152) {
                     errors.reject("dataUrl", "Image cannot be large than 2 megabytes");
-                    return;
                 }
             } catch (Exception ex) {
                 errors.reject("dataUrl", "Invalid dataUrl");
-                return;
             }
         }
     }

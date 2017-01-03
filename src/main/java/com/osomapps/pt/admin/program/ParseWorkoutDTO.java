@@ -1,6 +1,5 @@
 package com.osomapps.pt.admin.program;
 
-import com.osomapps.pt.programs.ParseWarmupWorkoutItem;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -7,7 +7,6 @@ import com.osomapps.pt.programs.InWarmupWorkoutItem;
 import com.osomapps.pt.programs.InWorkout;
 import com.osomapps.pt.programs.InWorkoutItem;
 import com.osomapps.pt.programs.InWorkoutItemReport;
-import com.osomapps.pt.programs.InWorkoutItemSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
