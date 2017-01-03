@@ -6,7 +6,12 @@ import org.junit.Test;
 
 public class EmailMessageTypeRequestDTOTest {
     @Test
-    public void createAllArgs() {
+    public void allArgsConstructor() {
         assertThat(new EmailMessageTypeRequestDTO(null), notNullValue());
+    }
+
+    @Test
+    public void builder() {
+        assertThat(EmailMessageTypeRequestDTO.builder().build(), notNullValue());
     }
 }
