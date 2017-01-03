@@ -5,13 +5,14 @@ import com.osomapps.pt.dictionary.DictionaryService;
 import com.osomapps.pt.goals.GoalRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
 class AdminUserGoalService {
     private final GoalRepository goalRepository;
     private final DictionaryService dictionaryService;
-    
+
     AdminUserGoalService(GoalRepository goalRepository,
             DictionaryService dictionaryService) {
         this.goalRepository = goalRepository;
@@ -19,7 +20,7 @@ class AdminUserGoalService {
     }
 
     List<UserGoalResponseDTO> findAll() {
-        return goalRepository.findAll().stream().map(goal ->
+        return goalRepository.findAll(sortByIdAsc()).stream().map(goal ->
             new UserGoalResponseDTO()
                     .setId(goal.getId())
                     .setTitle(dictionaryService.getEnValue(
@@ -27,6 +28,10 @@ class AdminUserGoalService {
                     .setTitle2(dictionaryService.getEnValue(
                             DictionaryName.goal_title_2, goal.getDGoalTitle2(), null))
         ).collect(Collectors.toList());
+    }
+
+    private Sort sortByIdAsc() {
+        return new Sort(Sort.Direction.ASC, "id");
     }
 
 }
