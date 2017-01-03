@@ -1,5 +1,6 @@
 package com.osomapps.pt.admin.exercise;
 
+import com.osomapps.pt.exercises.ExerciseFile;
 import com.osomapps.pt.exercises.ExerciseFileRepository;
 import java.util.Arrays;
 import org.junit.Test;
@@ -8,6 +9,7 @@ import org.mockito.InjectMocks;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -21,6 +23,8 @@ public class AdminExerciseFileServiceTest {
 
     @Test
     public void findOne() {
+        when(exerciseFileRepository.findAll(eq(Arrays.asList(1L)))).thenReturn(
+                Arrays.asList(new ExerciseFile()));
         adminExerciseFileService.findAll(Arrays.asList(1L));
         verify(exerciseFileRepository).findAll(eq(Arrays.asList(1L)));
     }
