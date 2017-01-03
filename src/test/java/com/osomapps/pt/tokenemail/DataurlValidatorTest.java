@@ -28,7 +28,7 @@ public class DataurlValidatorTest {
     public void valid_null() {
         final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
         new DataurlValidator().validate(null, errors);
-        assertThat(errors.getAllErrors().size(), equalTo(0));
+        assertThat(errors.getAllErrors().size(), equalTo(1));
     }
 
     @Test
