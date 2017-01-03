@@ -5,11 +5,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RestController
 @RequestMapping("api/v1/user")
@@ -31,9 +29,8 @@ class UserResource {
     }
 
     @PutMapping
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    void update(@RequestHeader(value = "X-Token") String token,
+    UserResponseDTO update(@RequestHeader(value = "X-Token") String token,
             @RequestBody UserRequestDTO userRequest) {
-        userService.updateUser(token, userRequest);
+        return userService.updateUser(token, userRequest);
     }
 }

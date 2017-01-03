@@ -104,6 +104,10 @@ public class UserService {
 
     UserResponseDTO findOne(String token) {
         final InUser inUser = checkUserToken(token).getInUser();
+        return userToDto(inUser);        
+    }
+
+    private UserResponseDTO userToDto(final InUser inUser) {
         final UserResponseDTO userResponse = new UserResponseDTO();
         userResponse.setId(inUser.getId());
         userResponse.setGender(inUser.getD_sex());
@@ -130,7 +134,7 @@ public class UserService {
         return userResponse;        
     }
 
-    void updateUser(String token, UserRequestDTO userRequest) {
+    UserResponseDTO updateUser(String token, UserRequestDTO userRequest) {
         final InUserLogin inUserLogin = checkUserToken(token);
         final InUser inUser = inUserLogin.getInUser();
         if (userRequest.getGender() != null) {
@@ -181,6 +185,6 @@ public class UserService {
         }
         inUser.setAvatar_dataurl(userRequest.getAvatar_dataurl());
         inUser.setUpdated(LocalDateTime.now());
-        inUserRepository.save(inUser);
+        return userToDto(inUserRepository.save(inUser));
     }
 }

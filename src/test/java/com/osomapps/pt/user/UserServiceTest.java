@@ -98,9 +98,10 @@ public class UserServiceTest {
     @Test
     public void updateUser_token_found() {
         InUserLogin inUserLogin = new InUserLogin();
-        inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
+        inUserLogin.setInUser(new InUser().setId(1L).setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
         when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
         when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
+        when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         userService.updateUser("1", new UserRequestDTO());
         verify(inUserRepository).save(any(InUser.class));
     }
@@ -108,10 +109,15 @@ public class UserServiceTest {
     @Test
     public void updateUser_token_found_with_data() {
         InUserLogin inUserLogin = new InUserLogin();
-        inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
+        inUserLogin.setInUser(new InUser()
+                .setId(1L)
+                .setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F)
+                .setInUserGoals(Collections.emptyList()));
         when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
         when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
         when(goalRepository.findOne(eq(1L))).thenReturn(new Goal());
+        when(inUserGoalRepository.save(any(InUserGoal.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         userService.updateUser("1", new UserRequestDTO()
             .setGender("gender")
             .setAge(10L)
