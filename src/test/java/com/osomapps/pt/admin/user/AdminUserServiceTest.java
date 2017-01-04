@@ -3,6 +3,9 @@ package com.osomapps.pt.admin.user;
 import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.UnauthorizedException;
 import com.osomapps.pt.dictionary.DictionaryService;
+import com.osomapps.pt.goals.Goal;
+import com.osomapps.pt.goals.GoalRepository;
+import com.osomapps.pt.goals.InUserGoalRepository;
 import com.osomapps.pt.programs.InProgram;
 import com.osomapps.pt.programs.InWarmupWorkoutItem;
 import com.osomapps.pt.programs.InWorkout;
@@ -13,6 +16,7 @@ import com.osomapps.pt.programs.InWorkoutItemSetReport;
 import com.osomapps.pt.token.InUser;
 import com.osomapps.pt.token.InUserFacebook;
 import com.osomapps.pt.token.InUserFacebookRepository;
+import com.osomapps.pt.token.InUserGoal;
 import com.osomapps.pt.token.InUserRepository;
 import com.osomapps.pt.tokenemail.EmailValidator;
 import com.osomapps.pt.tokenemail.InUserEmail;
@@ -27,6 +31,7 @@ import org.mockito.Mock;
 
 import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
@@ -56,6 +61,10 @@ public class AdminUserServiceTest {
     private EmailValidator emailValidator;
     @Mock
     private DictionaryService dictionaryService;
+    @Mock
+    private InUserGoalRepository inUserGoalRepository;
+    @Mock
+    private GoalRepository goalRepository;
 
     @InjectMocks
     private AdminUserService adminUserService;
@@ -105,9 +114,13 @@ public class AdminUserServiceTest {
     @Test
     public void create() {
         when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(goalRepository.findOne(anyLong())).thenReturn(new Goal().setId(1L));
+        when(inUserGoalRepository.save(any(InUserGoal.class))).thenAnswer(i -> i.getArguments()[0]);
         UserResponseDTO userResponseDTO = adminUserService.create(
                 new UserRequestDTO()
                 .setType(new UserTypeRequestDTO())
+                .setLevel(1)
+                .setGoals(Arrays.asList(new UserGoalRequestDTO()))
         );
         assertThat(userResponseDTO.getName(), equalTo(null));
     }
@@ -137,9 +150,13 @@ public class AdminUserServiceTest {
             .setInUserEmails(Collections.emptyList())
             .setInUserFacebooks(Arrays.asList(new InUserFacebook())));
         when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(goalRepository.findOne(anyLong())).thenReturn(new Goal().setId(1L));
+        when(inUserGoalRepository.save(any(InUserGoal.class))).thenAnswer(i -> i.getArguments()[0]);
         UserResponseDTO userResponseDTO = adminUserService.update(1L,
                 new UserRequestDTO()
                 .setType(new UserTypeRequestDTO())
+                .setLevel(2)
+                .setGoals(Arrays.asList(new UserGoalRequestDTO()))
         );
         assertThat(userResponseDTO.getName(), equalTo(null));
     }
