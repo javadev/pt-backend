@@ -616,6 +616,12 @@ function ($, _, Backbone, Marionette, moment, App) {
         '</div>',
       '</div>',
       '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Gender</label>',
+        '<div class="col-sm-8">',
+          '{{ getGenders() }}',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
         '<label class="col-sm-3 control-label">Level</label>',
         '<div class="col-sm-8">',
           '{{ getLevels() }}',
@@ -654,6 +660,16 @@ function ($, _, Backbone, Marionette, moment, App) {
               return '';
             }
             return !!model.get('type') && model.get('type').id === item.id ? item.nameEn : null;
+          }));
+          return result.join('');
+        },
+        getGenders: function() {
+          var genders = model._genders || [];
+          var result = _.compact(_.map(genders, function(item) {
+            if (_.isNull(item.id)) {
+              return '';
+            }
+            return !!model.get('gender') && model.get('gender') === item.id ? item.name : null;
           }));
           return result.join('');
         },
@@ -735,6 +751,14 @@ function ($, _, Backbone, Marionette, moment, App) {
         '</div>',
       '</div>',
       '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Gender</label>',
+        '<div class="col-sm-8">',
+          '<select id="user-gender" class="selectpicker show-tick">',
+            '{{ getGenders() }}',
+          '</select>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
         '<label class="col-sm-3 control-label">Level</label>',
         '<div class="col-sm-8">',
           '<select id="user-level" class="selectpicker show-tick">',
@@ -782,6 +806,18 @@ function ($, _, Backbone, Marionette, moment, App) {
           });
           return result;
         },
+        getGenders: function() {
+          var genders = model._genders || [];
+          var result = _.map(genders, function(item) {
+            if (_.isNull(item.id)) {
+              return '<option></option>';
+            }
+            return '<option value="' + item.id + '"' +
+              (!!model.get('gender') && model.get('gender') === item.id ? ' selected' : '') +
+              '>' + item.name + '</option>';
+          });
+          return result;
+        },
         getLevels: function() {
           var levels = model._levels || [];
           var result = _.map(levels, function(item) {
@@ -820,6 +856,7 @@ function ($, _, Backbone, Marionette, moment, App) {
     },
     ui: {
       userType: '#user-type',
+      userGender: '#user-gender',
       userLevel: '#user-level',
       userGoal: '#user-goal',
       name: '#user-name',
@@ -842,6 +879,9 @@ function ($, _, Backbone, Marionette, moment, App) {
       });
       this.ui.userType.on('changed.bs.select', function (e) {
         view.model.set('type', {id: parseInt(e.target.value, 10) });
+      });
+      this.ui.userGender.on('changed.bs.select', function (e) {
+        view.model.set('gender', _.isEmpty(e.target.value) ? null : e.target.value);
       });
       this.ui.userLevel.on('changed.bs.select', function (e) {
         view.model.set('level', _.isEmpty(e.target.value) ? null : parseInt(e.target.value, 10));

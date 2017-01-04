@@ -35,6 +35,10 @@ define([
           users._types = _.union({id: null, nameEn: ''}, data);
           users.trigger('sync');
         });
+        $.get('/api/v1/admin/user-gender').done(function(data) {
+          users._genders = _.union({id: null, name: ''}, data);
+          users.trigger('sync');
+        });
         $.get('/api/v1/admin/user-level').done(function(data) {
           users._levels = _.union({id: null, name: ''}, data);
           users.trigger('sync');
@@ -46,6 +50,7 @@ define([
         users.on('user:view', function(model) {
           var user = new UsersModels.User();
           user._types = users._types;
+          user._genders = users._genders;
           user._levels = users._levels;
           user._goals = users._goals;
           if (!_.isUndefined(model)) {
@@ -54,6 +59,7 @@ define([
               name: model.get('name'),
               email: model.get('email'),
               type: model.get('type'),
+              gender: model.get('gender'),
               level: model.get('level'),
               goals: model.get('goals'),
               programs: model.get('programs')
@@ -74,6 +80,7 @@ define([
         users.on('user:new', function(model) {
           var user = new UsersModels.User();
           user._types = users._types;
+          user._genders = users._genders;
           user._levels = users._levels;
           user._goals = users._goals;
           if (!_.isUndefined(model)) {
@@ -82,6 +89,7 @@ define([
               name: model.get('name'),
               email: model.get('email'),
               type: model.get('type'),
+              gender: model.get('gender'),
               level: model.get('level'),
               goals: model.get('goals'),
               programs: model.get('programs')

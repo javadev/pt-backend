@@ -84,6 +84,7 @@ class AdminUserService {
                 .id(inUser.getId())
                 .email(userEmail)
                 .name(userName)
+                .gender(inUser.getD_sex())
                 .level(inUser.getD_level() == null ? null : Integer.parseInt(inUser.getD_level()))
                 .goals(inUser.getInUserGoals() == null ? null : inUser.getInUserGoals().stream().map(goal ->
                     new UserGoalResponseDTO()
@@ -130,6 +131,7 @@ class AdminUserService {
         inUserEmail.setPassword(passwordEncoder.encode("Qwerty+1"));
         inUser.setInUserType(inUserTypeDb);
         inUser.setInUserEmails(Arrays.asList(inUserEmail));
+        inUser.setD_sex(userRequestDTO.getGender());
         inUser.setD_level(userRequestDTO.getLevel() == null ? null : "" + userRequestDTO.getLevel());
         setupGoals(userRequestDTO, inUser);
 
@@ -169,6 +171,7 @@ class AdminUserService {
                 || userRequestDTO.getType().getId() == null ? null
             : inUserTypeRepository.findOne(userRequestDTO.getType().getId());
         inUser.setInUserType(inUserTypeDb);
+        inUser.setD_sex(userRequestDTO.getGender());
         inUser.setD_level(userRequestDTO.getLevel() == null ? null : "" + userRequestDTO.getLevel());
         setupGoals(userRequestDTO, inUser);
         if (inUser.getInUserEmails().isEmpty()) {
