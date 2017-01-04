@@ -26,7 +26,7 @@ public class ExercisesResourceIntTest {
 
     @Test
     public void testList() throws Exception {
-        List<ExerciseDTO> results = exercisesResource.findAll("");
+        List<ExerciseDTO> results = exercisesResource.findAll();
         assertThat(results.size(), is(greaterThanOrEqualTo(0)));
     }
 
