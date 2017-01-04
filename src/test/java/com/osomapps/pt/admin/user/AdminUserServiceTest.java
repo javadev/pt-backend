@@ -2,6 +2,7 @@ package com.osomapps.pt.admin.user;
 
 import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.UnauthorizedException;
+import com.osomapps.pt.admin.program.AdminProgramAssignService;
 import com.osomapps.pt.dictionary.DictionaryService;
 import com.osomapps.pt.goals.Goal;
 import com.osomapps.pt.goals.GoalRepository;
@@ -65,6 +66,8 @@ public class AdminUserServiceTest {
     private InUserGoalRepository inUserGoalRepository;
     @Mock
     private GoalRepository goalRepository;
+    @Mock
+    private AdminProgramAssignService adminProgramAssignService;
 
     @InjectMocks
     private AdminUserService adminUserService;
@@ -113,6 +116,7 @@ public class AdminUserServiceTest {
 
     @Test
     public void create() {
+        when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         when(goalRepository.findOne(anyLong())).thenReturn(new Goal().setId(1L));
         when(inUserGoalRepository.save(any(InUserGoal.class))).thenAnswer(i -> i.getArguments()[0]);
@@ -149,6 +153,7 @@ public class AdminUserServiceTest {
                 new InUser()
             .setInUserEmails(Collections.emptyList())
             .setInUserFacebooks(Arrays.asList(new InUserFacebook())));
+        when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         when(goalRepository.findOne(anyLong())).thenReturn(new Goal().setId(1L));
         when(inUserGoalRepository.save(any(InUserGoal.class))).thenAnswer(i -> i.getArguments()[0]);
@@ -167,6 +172,7 @@ public class AdminUserServiceTest {
                 new InUser()
             .setInUserEmails(Arrays.asList(new InUserEmail()))
             .setInUserFacebooks(Arrays.asList(new InUserFacebook())));
+        when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         UserResponseDTO userResponseDTO = adminUserService.update(1L,
                 new UserRequestDTO()

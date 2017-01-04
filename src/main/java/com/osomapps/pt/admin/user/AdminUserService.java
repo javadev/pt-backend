@@ -3,6 +3,7 @@ package com.osomapps.pt.admin.user;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.UnauthorizedException;
+import com.osomapps.pt.admin.program.AdminProgramAssignService;
 import com.osomapps.pt.dictionary.DictionaryName;
 import com.osomapps.pt.dictionary.DictionaryService;
 import com.osomapps.pt.goals.Goal;
@@ -39,6 +40,7 @@ class AdminUserService {
     private final DictionaryService dictionaryService;
     private final InUserGoalRepository inUserGoalRepository;
     private final GoalRepository goalRepository;
+    private final AdminProgramAssignService adminProgramAssignService;
     
     AdminUserService(InUserRepository inUserRepository,
             InUserEmailRepository inUserEmailRepository,
@@ -48,7 +50,8 @@ class AdminUserService {
             EmailValidator emailValidator,
             DictionaryService dictionaryService,
             InUserGoalRepository inUserGoalRepository,
-            GoalRepository goalRepository) {
+            GoalRepository goalRepository,
+            AdminProgramAssignService adminProgramAssignService) {
         this.inUserRepository = inUserRepository;
         this.inUserEmailRepository = inUserEmailRepository;
         this.inUserFacebookRepository = inUserFacebookRepository;
@@ -58,6 +61,7 @@ class AdminUserService {
         this.dictionaryService = dictionaryService;
         this.inUserGoalRepository = inUserGoalRepository;
         this.goalRepository = goalRepository;
+        this.adminProgramAssignService = adminProgramAssignService;
     }
 
     List<UserResponseDTO> findAll() {
@@ -140,7 +144,7 @@ class AdminUserService {
         final InUser savedInUser = inUserRepository.save(inUser);
         inUserEmail.setInUser(savedInUser);
         inUserEmailRepository.save(inUserEmail);
-        return inUserToDto(savedInUser);
+        return inUserToDto(adminProgramAssignService.assign(savedInUser));
     }
 
     private void setupGoals(UserRequestDTO userRequestDTO, final InUser inUser) throws UnauthorizedException {
@@ -195,7 +199,7 @@ class AdminUserService {
             inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1).setLogin(userRequestDTO.getEmail());
             inUserEmailRepository.save(inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1));
         }
-        return inUserToDto(inUser);
+        return inUserToDto(adminProgramAssignService.assign(inUser));
     }
 
     UserResponseDTO delete(Long id) {

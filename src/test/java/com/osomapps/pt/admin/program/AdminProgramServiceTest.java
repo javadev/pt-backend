@@ -37,7 +37,7 @@ import com.osomapps.pt.programs.ParseUserGroupRepository;
 import com.osomapps.pt.programs.ParseWarmupWorkoutItemRepository;
 import com.osomapps.pt.programs.ParseWorkoutItemSet;
 import com.osomapps.pt.programs.ParseWorkoutItemSetRepository;
-import static org.mockito.Matchers.anyList;
+import com.osomapps.pt.token.InUser;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminProgramServiceTest {
@@ -114,7 +114,7 @@ public class AdminProgramServiceTest {
         when(parseGoalRepository.save(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
         when(parseWorkoutRepository.save(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
         when(programRepository.save(any(ParseProgram.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(adminProgramAssignService.assign(anyList())).thenAnswer(i -> i.getArguments()[0]);
+        when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         adminProgramService.create(programRequestDTO);
         verify(programRepository).save(any(ParseProgram.class));
     }
@@ -148,7 +148,7 @@ public class AdminProgramServiceTest {
         when(parseGoalRepository.save(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
         when(parseWorkoutRepository.save(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
         when(programRepository.save(any(ParseProgram.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(adminProgramAssignService.assign(anyList())).thenAnswer(i -> i.getArguments()[0]);
+        when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         adminProgramService.update(1L, programRequestDTO);
         verify(programRepository).save(any(ParseProgram.class));
     }

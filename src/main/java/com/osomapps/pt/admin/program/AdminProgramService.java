@@ -57,7 +57,6 @@ class AdminProgramService {
     private final ParseWarmupWorkoutItemRepository parseWarmupWorkoutItemRepository;
     private final ParseWorkoutItemRepository parseWorkoutItemRepository;
     private final ParseWorkoutItemSetRepository parseWorkoutItemSetRepository;
-    private final AdminProgramAssignService adminProgramAssignService;
 
     AdminProgramService(ProgramRepository programRepository,
             ParseExerciseRepository parseExerciseRepository,
@@ -68,8 +67,7 @@ class AdminProgramService {
             ParseWorkoutRepository parseWorkoutRepository,
             ParseWarmupWorkoutItemRepository parseWarmupWorkoutItemRepository,
             ParseWorkoutItemRepository parseWorkoutItemRepository,
-            ParseWorkoutItemSetRepository parseWorkoutItemSetRepository,
-            AdminProgramAssignService adminProgramAssignService) {
+            ParseWorkoutItemSetRepository parseWorkoutItemSetRepository) {
         this.programRepository = programRepository;
         this.parseExerciseRepository = parseExerciseRepository;
         this.parseGoalRepository = parseGoalRepository;
@@ -80,7 +78,6 @@ class AdminProgramService {
         this.parseWarmupWorkoutItemRepository = parseWarmupWorkoutItemRepository;
         this.parseWorkoutItemRepository = parseWorkoutItemRepository;
         this.parseWorkoutItemSetRepository = parseWorkoutItemSetRepository;
-        this.adminProgramAssignService = adminProgramAssignService;
     }
 
     List<ProgramResponseDTO> findAll() {
@@ -182,7 +179,7 @@ class AdminProgramService {
         final ParseProgram savedProgram = programRepository.save(program);
         final ParseSheets parseSheets = parseDataUrlAndSaveGoals(programRequestDTO, savedProgram);
         program.setParseExercises(parseSheets.getParseExercises());
-        program.setParseGoals(adminProgramAssignService.assign(parseSheets.getParseGoals()));
+        program.setParseGoals(parseSheets.getParseGoals());
         return programToDto(program);
     }
 
@@ -254,7 +251,7 @@ class AdminProgramService {
         parseGoalRepository.delete(program.getParseGoals());
         final ParseSheets parseSheets = parseDataUrlAndSaveGoals(programRequestDTO, program);
         program.setParseExercises(parseSheets.getParseExercises());
-        program.setParseGoals(adminProgramAssignService.assign(parseSheets.getParseGoals()));
+        program.setParseGoals(parseSheets.getParseGoals());
         return programToDto(programRepository.save(program));
     }
 

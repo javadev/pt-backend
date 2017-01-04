@@ -6,6 +6,7 @@ import com.osomapps.pt.programs.InWarmupWorkoutItem;
 import com.osomapps.pt.programs.InWarmupWorkoutItemRepository;
 import com.osomapps.pt.programs.InWorkout;
 import com.osomapps.pt.programs.InWorkoutItem;
+import com.osomapps.pt.programs.InWorkoutItemSet;
 import com.osomapps.pt.programs.InWorkoutRepository;
 import com.osomapps.pt.programs.ParseGoal;
 import com.osomapps.pt.programs.ParseUserGroup;
@@ -21,14 +22,17 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import com.osomapps.pt.programs.ParseGoalRepository;
+import com.osomapps.pt.reportworkout.InWorkoutItemSetRepository;
+import java.util.Collections;
 
 @Service
-class AdminProgramAssignService {
+public class AdminProgramAssignService {
 
     private final InUserRepository inUserRepository;
     private final InProgramRepository inProgramRepository;
     private final InWorkoutRepository inWorkoutRepository;
     private final InWorkoutItemRepository inWorkoutItemRepository;
+    private final InWorkoutItemSetRepository inWorkoutItemSetRepository;
     private final ParseGoalRepository parseGoalRepository;
     private final InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository;
     private final AdminProgramScanExerciseService adminProgramScanExerciseService;
@@ -37,6 +41,7 @@ class AdminProgramAssignService {
             InProgramRepository inProgramRepository,
             InWorkoutRepository inWorkoutRepository,
             InWorkoutItemRepository inWorkoutItemRepository,
+            InWorkoutItemSetRepository inWorkoutItemSetRepository,
             ParseGoalRepository parseGoalRepository,
             InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository,
             AdminProgramScanExerciseService adminProgramScanExerciseService) {
@@ -44,6 +49,7 @@ class AdminProgramAssignService {
         this.inProgramRepository = inProgramRepository;
         this.inWorkoutRepository = inWorkoutRepository;
         this.inWorkoutItemRepository = inWorkoutItemRepository;
+        this.inWorkoutItemSetRepository = inWorkoutItemSetRepository;
         this.parseGoalRepository = parseGoalRepository;
         this.inWarmupWorkoutItemRepository = inWarmupWorkoutItemRepository;
         this.adminProgramScanExerciseService = adminProgramScanExerciseService;
@@ -53,7 +59,7 @@ class AdminProgramAssignService {
 //        return str != null && !str.isEmpty();
 //    }
 
-    List<ParseGoal> assign(List<ParseGoal> parseGoals) {
+    public InUser assign(InUser inUser) {
 //        parseGoals.stream().forEachOrdered(parseUser -> {
 //            final List<InUser> inUsers = inUserRepository.findAll();
 //            final List<InUser> inUsersWithName = inUsers.stream().filter(inUser -> 
@@ -110,7 +116,44 @@ class AdminProgramAssignService {
 //                }
 //            }
 //        });
-        return parseGoalRepository.save(parseGoals);
+        final InProgram inProgram = new InProgram()
+                .setName("Test program for user with id " + inUser.getId())
+                .setInWorkouts(Arrays.asList(new InWorkout()
+                        .setD_workout_name("Test workout")
+                        .setInWarmupWorkoutItems(Arrays.asList(
+                                new InWarmupWorkoutItem()
+                                        .setD_exercise_name("Test warmup workout item")))
+                                        .setInWorkoutItems(Arrays.asList(
+                                                new InWorkoutItem()
+                                                        .setD_exercise_name("Test workout item")
+                                                .setInWorkoutItemSets(Arrays.asList(
+                                                        new InWorkoutItemSet()))
+                                                .setInWorkoutItemReports(Collections.emptyList())
+                                        ))));
+        inProgram.setInUser(inUser);
+        inProgram.getInWorkouts().forEach(inWorkout -> {
+            inWorkout.setInProgram(inProgram);
+            inWorkout.getInWarmupWorkoutItems().forEach(inWarmupWorkoutItem -> {
+                inWarmupWorkoutItem.setInWorkout(inWorkout);
+            });
+            inWorkout.getInWorkoutItems().forEach(inWorkoutItem -> {
+                inWorkoutItem.setInWorkout(inWorkout);
+                inWorkoutItem.getInWorkoutItemSets().forEach(inWorkoutItemSet -> {
+                    inWorkoutItemSet.setInWorkoutItem(inWorkoutItem);
+                });
+            });
+        });
+        inUserRepository.save(inUser);
+        inProgramRepository.save(inProgram);
+        inWorkoutRepository.save(inProgram.getInWorkouts());
+        inProgram.getInWorkouts().forEach(inWorkout -> {
+            inWarmupWorkoutItemRepository.save(inWorkout.getInWarmupWorkoutItems());
+            inWorkoutItemRepository.save(inWorkout.getInWorkoutItems());
+            inWorkout.getInWorkoutItems().forEach(inWorkoutItem -> {
+                inWorkoutItemSetRepository.save(inWorkoutItem.getInWorkoutItemSets());
+            });
+        });
+        return inUser;
     }
 
 //    private Optional<String> getUserName(InUser inUser) {
