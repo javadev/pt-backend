@@ -40,7 +40,7 @@ public class InUserGoal {
     Long goalId;
     String d_goal_title;
     String d_goal_title_2;
-    Integer goal_value;
+    String goal_value;
     @ManyToMany
     @JoinTable(
             name = "in_user_has_in_user_goal",

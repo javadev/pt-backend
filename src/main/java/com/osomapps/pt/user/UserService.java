@@ -1,6 +1,7 @@
 package com.osomapps.pt.user;
 
-import com.osomapps.pt.ResourceNotFoundException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osomapps.pt.UnauthorizedException;
 import com.osomapps.pt.goals.Goal;
 import com.osomapps.pt.goals.GoalRepository;
@@ -13,10 +14,12 @@ import com.osomapps.pt.token.InUserLogoutRepository;
 import com.osomapps.pt.token.InUserRepository;
 import com.osomapps.pt.tokenemail.DataurlValidator;
 import com.osomapps.pt.tokenemail.NameValidator;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,8 +126,16 @@ public class UserService {
         if (inUser.getD_level() != null) {
             userResponse.setLevel(UserLevel.of(Integer.parseInt(inUser.getD_level())));
         }
-        userResponse.setGoals(inUser.getInUserGoals().stream().map(inUserGoal ->
-                new UserGoalResponseDTO().setId(inUserGoal.getGoalId()).setValue(inUserGoal.getGoal_value())
+        userResponse.setGoals(inUser.getInUserGoals().stream().map(inUserGoal -> {
+            Map<String, Integer> map = null;
+            try {
+                 map = inUserGoal.getGoal_value() == null ? null : new ObjectMapper()
+                         .readValue(inUserGoal.getGoal_value(),
+                        new TypeReference<Map<String, Integer>>(){});
+            } catch (IOException ex) {
+            }
+            return new UserGoalResponseDTO().setId(inUserGoal.getGoalId()).setValues(map);
+        }
         ).collect(Collectors.toList()));
         userResponse.setAvatar_dataurl(inUser.getAvatar_dataurl());
         userResponse.setName(getUserName(inUser).orElse("?"));
@@ -176,11 +187,16 @@ public class UserService {
                 if (goal == null) {
                     throw new UnauthorizedException("Goal with id " + userGoalRequestDTO.getId() + " not found");
                 }
+                String value = null;
+                try {
+                    value = new ObjectMapper().writeValueAsString(userGoalRequestDTO.getValues());
+                } catch (IOException ex) {
+                }
                 inUser.getInUserGoals().add(inUserGoalRepository.save(new InUserGoal()
                         .setGoalId(userGoalRequestDTO.getId())
                         .setD_goal_title(goal.getDGoalTitle())
                         .setD_goal_title_2(goal.getDGoalTitle2())
-                        .setGoal_value(userGoalRequestDTO.getValue())));
+                        .setGoal_value(value)));
             });
         }
         inUser.setAvatar_dataurl(userRequest.getAvatar_dataurl());

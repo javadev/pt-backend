@@ -1,5 +1,6 @@
 package com.osomapps.pt.admin.user;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.UnauthorizedException;
 import com.osomapps.pt.dictionary.DictionaryName;
@@ -15,6 +16,7 @@ import com.osomapps.pt.token.InUserRepository;
 import com.osomapps.pt.tokenemail.EmailValidator;
 import com.osomapps.pt.tokenemail.InUserEmail;
 import com.osomapps.pt.tokenemail.InUserEmailRepository;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -153,11 +155,16 @@ class AdminUserService {
                 if (goal == null) {
                     throw new UnauthorizedException("Goal with id " + userGoalRequestDTO.getId() + " not found");
                 }
+                String value = null;
+                try {
+                    value = new ObjectMapper().writeValueAsString(userGoalRequestDTO.getValues());
+                } catch (IOException ex) {
+                }
                 inUser.getInUserGoals().add(inUserGoalRepository.save(new InUserGoal()
                         .setGoalId(userGoalRequestDTO.getId())
                         .setD_goal_title(goal.getDGoalTitle())
                         .setD_goal_title_2(goal.getDGoalTitle2())
-                        .setGoal_value(userGoalRequestDTO.getValue())));
+                        .setGoal_value(value)));
             });
         }
     }

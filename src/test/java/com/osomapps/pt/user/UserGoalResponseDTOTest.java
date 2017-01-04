@@ -14,7 +14,7 @@ public class UserGoalResponseDTOTest {
     public void setters() {
         UserGoalResponseDTO userGoalResponseDTO = new UserGoalResponseDTO();
         userGoalResponseDTO.setId(null);
-        userGoalResponseDTO.setValue(null);
+        userGoalResponseDTO.setValues(null);
         assertThat(userGoalResponseDTO, notNullValue());
     }
 
@@ -22,7 +22,7 @@ public class UserGoalResponseDTOTest {
     public void getters() {
         UserGoalResponseDTO userGoalResponseDTO = new UserGoalResponseDTO();
         userGoalResponseDTO.getId();
-        userGoalResponseDTO.getValue();
+        userGoalResponseDTO.getValues();
         assertThat(userGoalResponseDTO, notNullValue());
     }
 }

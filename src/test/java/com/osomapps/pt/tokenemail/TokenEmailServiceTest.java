@@ -50,7 +50,7 @@ public class TokenEmailServiceTest {
                 new InUserEmail().setInUser(new InUser()
                         .setId(1L)
                         .setD_level("1")
-                        .setInUserGoals(new ArrayList<>(Arrays.asList(new InUserGoal())))
+                        .setInUserGoals(new ArrayList<>(Arrays.asList(new InUserGoal().setGoal_value("{\"key\":10}"))))
                         .setHeight(160F)
                         .setWeight(80F)
                         .setInUserEmails(new ArrayList<>())
@@ -71,7 +71,7 @@ public class TokenEmailServiceTest {
                         .setId(1L)
                         .setAge(20F)
                         .setD_level("1")
-                        .setInUserGoals(Arrays.asList(new InUserGoal()))
+                        .setInUserGoals(Arrays.asList(new InUserGoal().setGoal_value("{\"key\":10}")))
                         .setInUserEmails(new ArrayList<>())
                         .setInUserLogins(new ArrayList<>(Arrays.asList(new InUserLogin()))))));
         when(passwordEncoder.matches(any(CharSequence.class), anyString())).thenReturn(true);

@@ -58,7 +58,7 @@ public class UserServiceTest {
     public void findOne_token_found() {
         InUserLogin inUserLogin = new InUserLogin();
         inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F)
-                .setWeight(50F).setD_level("1").setInUserGoals(Arrays.asList(new InUserGoal())));
+                .setWeight(50F).setD_level("1").setInUserGoals(Arrays.asList(new InUserGoal().setGoal_value("{\"key\":10}"))));
         when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
         when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
         UserResponseDTO userResponseDTO = userService.findOne("1");

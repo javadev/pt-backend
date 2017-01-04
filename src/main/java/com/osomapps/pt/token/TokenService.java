@@ -1,12 +1,16 @@
 package com.osomapps.pt.token;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.UnauthorizedException;
 import com.osomapps.pt.user.UserGoalResponseDTO;
 import com.osomapps.pt.user.UserLevel;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,9 +121,16 @@ class TokenService {
         if (inUser.getD_level() != null) {
             user.setLevel(UserLevel.of(Integer.parseInt(inUser.getD_level())));
         }
-        user.setGoals(inUser.getInUserGoals().stream().map(inUserGoal ->
-                new UserGoalResponseDTO().setId(inUserGoal.getGoalId()).setValue(inUserGoal.getGoal_value())
-        ).collect(Collectors.toList()));
+        user.setGoals(inUser.getInUserGoals().stream().map(inUserGoal -> {
+            Map<String, Integer> map = null;
+            try {
+                 map = inUserGoal.getGoal_value() == null ? null : new ObjectMapper()
+                         .readValue(inUserGoal.getGoal_value(),
+                        new TypeReference<Map<String, Integer>>(){});
+            } catch (IOException ex) {
+            }
+            return new UserGoalResponseDTO().setId(inUserGoal.getGoalId()).setValues(map);
+        }).collect(Collectors.toList()));
         user.setHeight(inUser.getHeight() == null ? null : inUser.getHeight().longValue());
         user.setWeight(inUser.getWeight() == null ? null : inUser.getWeight().longValue());
         tokenResponseDTO.setUser(user);

@@ -1,5 +1,6 @@
 package com.osomapps.pt.user;
 
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,5 +14,5 @@ import lombok.experimental.Accessors;
 @Setter
 public class UserGoalResponseDTO {
     Long id;
-    Integer value;
+    Map<String, Integer> values;
 }

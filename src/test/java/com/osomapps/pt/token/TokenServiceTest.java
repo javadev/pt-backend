@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.times;
@@ -67,7 +66,7 @@ public class TokenServiceTest {
         when(inUserFacebookRepository.findByUserId(anyString())).thenReturn(Arrays.asList(
                 new InUserFacebook().setInUser(new InUser()
                         .setD_level("1")
-                        .setInUserGoals(Arrays.asList(new InUserGoal()))
+                        .setInUserGoals(Arrays.asList(new InUserGoal().setGoal_value("{\"key\":10}")))
                         .setInUserFacebooks(new ArrayList<>(Arrays.asList(new InUserFacebook())))
                         .setInUserLogins(new ArrayList<>(Arrays.asList(new InUserLogin())))
                 )));
