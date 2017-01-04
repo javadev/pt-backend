@@ -8,7 +8,7 @@ public class InUserGoalTest {
     @Test
     public void createAllArgs() {
         assertThat(new InUserGoal(
-                1L, null, null, null, null, null, null), notNullValue());
+                1L, null, null, null, null, null, null, null), notNullValue());
     }
 
     @Test
@@ -20,7 +20,8 @@ public class InUserGoalTest {
             .setD_goal_title(null)
             .setD_goal_title_2(null)
             .setGoal_value(null)
-            .setInUsers(null);
+            .setInUsers(null)
+            .setInUserGoalType(null);
         assertThat(inUserGoal, notNullValue());
     }
 
@@ -34,6 +35,7 @@ public class InUserGoalTest {
         inUserGoal.getD_goal_title_2();
         inUserGoal.getGoal_value();
         inUserGoal.getInUsers();
+        inUserGoal.getInUserGoalType();
         assertThat(inUserGoal, notNullValue());
     }
 }

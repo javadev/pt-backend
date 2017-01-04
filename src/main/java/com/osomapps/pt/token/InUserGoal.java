@@ -1,5 +1,8 @@
 package com.osomapps.pt.token;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.osomapps.pt.admin.user.InUserGoalType;
+import com.osomapps.pt.admin.user.InUserType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +20,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
@@ -49,4 +53,9 @@ public class InUserGoal {
             inverseJoinColumns = { @JoinColumn(name = "in_user_id") }
     )
     List<InUser> inUsers = new ArrayList<>(0);
+    @ManyToOne
+    @JoinColumn(name="in_user_goal_type_id")
+    @JsonBackReference
+    InUserGoalType inUserGoalType;
+
 }
