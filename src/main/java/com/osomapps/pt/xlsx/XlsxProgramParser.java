@@ -89,13 +89,17 @@ public class XlsxProgramParser {
                 prevUserGroupName = userGroupName;
                 excelGoal.getUserGroups().add(userGroup);
             }
+            final boolean roundNameWasCreated;
             if (roundName != null && !prevRoundName.equals(roundName)) {
                 round = new Round()
                         .setName(roundName);
                 prevRoundName = roundName;
                 userGroup.getRounds().add(round);
+                roundNameWasCreated = true;
+            } else {
+                roundNameWasCreated = false;
             }
-            if (partName != null && !prevPartName.equals(partName)) {
+            if (partName != null && (roundNameWasCreated || !prevPartName.equals(partName))) {
                 part = new Part()
                         .setName(partName);
                 prevPartName = partName;
