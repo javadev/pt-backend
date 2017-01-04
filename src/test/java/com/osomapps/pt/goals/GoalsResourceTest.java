@@ -3,7 +3,6 @@ package com.osomapps.pt.goals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -19,8 +18,8 @@ public class GoalsResourceTest {
 
     @Test
     public void findAll() {
-        goalsResource.findAll("");
-        verify(goalService).findAll(eq(""));
+        goalsResource.findAll();
+        verify(goalService).findAll();
     }
 }
 

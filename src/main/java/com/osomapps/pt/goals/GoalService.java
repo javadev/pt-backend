@@ -2,7 +2,6 @@ package com.osomapps.pt.goals;
 
 import com.osomapps.pt.dictionary.DictionaryName;
 import com.osomapps.pt.dictionary.DictionaryService;
-import com.osomapps.pt.user.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -11,20 +10,14 @@ import org.springframework.stereotype.Service;
 class GoalService {
     private final GoalRepository goalRepository;
     private final DictionaryService dictionaryService;
-    private final UserService userService;
 
     GoalService(GoalRepository goalRepository,
-            DictionaryService dictionaryService,
-            UserService userService) {
+            DictionaryService dictionaryService) {
         this.goalRepository = goalRepository;
         this.dictionaryService = dictionaryService;
-        this.userService = userService;
     }
 
-    List<GoalDTO> findAll(String token) {
-        if (!token.isEmpty()) {
-            userService.checkUserToken(token);
-        }
+    List<GoalDTO> findAll() {
         List<Goal> goals = goalRepository.findAll();
         return goals.stream().map(goal ->
             new GoalDTO()

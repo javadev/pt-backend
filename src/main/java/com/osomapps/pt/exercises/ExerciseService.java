@@ -2,7 +2,6 @@ package com.osomapps.pt.exercises;
 
 import com.osomapps.pt.dictionary.DictionaryName;
 import com.osomapps.pt.dictionary.DictionaryService;
-import com.osomapps.pt.user.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,21 +11,15 @@ import org.springframework.stereotype.Service;
 class ExerciseService {
     private final ExerciseRepository exerciseRepository;
     private final DictionaryService dictionaryService;
-    private final UserService userService;
 
     @Autowired
     ExerciseService(ExerciseRepository exerciseRepository,
-            DictionaryService dictionaryService,
-            UserService userService) {
+            DictionaryService dictionaryService) {
         this.exerciseRepository = exerciseRepository;
         this.dictionaryService = dictionaryService;
-        this.userService = userService;
     }
 
-    List<ExerciseDTO> findAll(String token) {
-        if (!token.isEmpty()) {
-            userService.checkUserToken(token);
-        }
+    List<ExerciseDTO> findAll() {
         List<Exercise> exercises = exerciseRepository.findAll();
         return exercises.stream().map(exercise -> {
             ExerciseDTO exerciseDTO = new ExerciseDTO();

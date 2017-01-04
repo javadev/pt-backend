@@ -20,8 +20,6 @@ public class ExerciseServiceTest {
     private ExerciseRepository exerciseRepository;
     @Mock
     private DictionaryService dictionaryService;
-    @Mock
-    private UserService userService;
     @InjectMocks
     private ExerciseService exerciseService;
     
@@ -34,7 +32,7 @@ public class ExerciseServiceTest {
                 .setId(1L)
                 .setFile_name("test")))
         ));
-        List<ExerciseDTO> exerciseDTOs = exerciseService.findAll("1");
+        List<ExerciseDTO> exerciseDTOs = exerciseService.findAll();
         verify(exerciseRepository).findAll();
         assertThat(exerciseDTOs.size(), equalTo(1));
         assertThat(exerciseDTOs.get(0).getImages().get(0), equalTo("/api/v1/exercise-image/1/test"));

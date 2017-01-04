@@ -20,7 +20,7 @@ public class ExercisesResourceTest {
 
     @Test
     public void findAll() throws Exception {
-        exercisesResource.findAll("");
-        verify(exerciseService).findAll(eq(""));
+        exercisesResource.findAll();
+        verify(exerciseService).findAll();
     }
 }

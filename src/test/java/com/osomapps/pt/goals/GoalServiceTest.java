@@ -18,22 +18,20 @@ public class GoalServiceTest {
     private GoalRepository goalRepository;
     @Mock
     private DictionaryService dictionaryService;
-    @Mock
-    private UserService userService;
     @InjectMocks
     private GoalService goalService;
 
     @Test
-    public void foindAll_empty_token() {
-        goalService.findAll("");
+    public void findAll_empty_token() {
+        goalService.findAll();
         verify(goalRepository).findAll();
     }
 
     @Test
-    public void foindAll() {
+    public void findAll() {
         when(goalRepository.findAll()).thenReturn(Arrays.asList(
                 new Goal().setGoalParameters(Arrays.asList(new GoalParameter()))));
-        goalService.findAll("1");
+        goalService.findAll();
         verify(goalRepository).findAll();
     }
 
