@@ -57,7 +57,7 @@ function ($, _, Backbone, Marionette, moment, App) {
   
   var EmptyView = Marionette.ItemView.extend({
         tagName: 'tr',
-        template: _.template('<td colspan="7">There are no users available.</td>')
+        template: _.template('<td colspan="8">There are no users available.</td>')
   });
   
   var EmptyProgramTableItemView = Marionette.ItemView.extend({
@@ -89,6 +89,11 @@ function ($, _, Backbone, Marionette, moment, App) {
       '</td>',
       '<td>',
         '{{ type == null ? "" : type.nameEn }}',
+      '</td>',
+      '<td>',
+        '<a type="button" class="btn btn-default btn-sm" href="/api/v1/admin/user-program-file/{{ id }}/program_for_user_{{ id }}.xlsx" download>',
+          '<i class="glyphicon glyphicon-download"></i>',
+        '</a>',
       '</td>',
       '<td>',
         '<button type="button" class="btn btn-default btn-sm js-view-value">',
