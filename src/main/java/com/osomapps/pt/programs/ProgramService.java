@@ -42,7 +42,7 @@ class ProgramService {
         inWarmupWorkoutItem111.setD_exercise_name("Treadmill");
         inWarmupWorkoutItem111.setSpeed(10);
         inWarmupWorkoutItem111.setIncline(2);
-        inWarmupWorkoutItem111.setTime_in_sec(10);
+        inWarmupWorkoutItem111.setTime_in_sec(600);
         inWorkout11.setInWarmupWorkoutItems(Arrays.asList(inWarmupWorkoutItem111));
         InWorkoutItem inWorkoutItem111 = new InWorkoutItem();
         inWorkoutItem111.setId(1L);
@@ -110,7 +110,7 @@ class ProgramService {
             .setD_exercise_name("Plank")
             .setD_exercise_type("OnTime")
             .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()
-                .setTime_in_sec(2)
+                .setTime_in_sec(120)
                 .setBodyweight(true)
                 .setWeight(65F)));
 
