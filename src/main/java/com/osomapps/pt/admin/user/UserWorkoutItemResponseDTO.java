@@ -21,7 +21,7 @@ class UserWorkoutItemResponseDTO {
     List<Boolean> repetitionsToFailure;
     List<Integer> weight;
     List<Boolean> bodyweight;
-    List<Integer> timeInMin;
+    List<Integer> timeInSec;
     List<Integer> speed;
     List<Integer> incline;
     List<Integer> resistance;

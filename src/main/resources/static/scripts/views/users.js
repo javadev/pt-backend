@@ -449,8 +449,9 @@ function ($, _, Backbone, Marionette, moment, App, BackboneBootstrapModals) {
       return {
         getInputs: function () {
           return 'sets ' + model.get('sets') +
-                  (model.get('repetitions') === null ? '' : ', repetitions ' + model.get('repetitions')) +
-                  (model.get('weight') === null ? '' : ', weight ' + model.get('weight'));
+                  (_.isEmpty(_.compact(model.get('timeInSec'))) ? '' : ', time in sec ' + model.get('timeInSec')) +
+                  (_.isEmpty(_.compact(model.get('repetitions'))) ? '' : ', repetitions ' + model.get('repetitions')) +
+                  (_.isEmpty(_.compact(model.get('weight'))) ? '' : ', weight ' + model.get('weight'));
         },
         getOutputs: function () {
           return (_.isNull(model.get('reportSets')) ? '' : 'sets ' + model.get('reportSets')) +
