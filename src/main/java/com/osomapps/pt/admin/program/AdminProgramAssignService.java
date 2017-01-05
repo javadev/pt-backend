@@ -147,20 +147,26 @@ public class AdminProgramAssignService {
         }
         List<ParseRound> parseRounds = getRoundsGorGoalAndUserGroup(parsePrograms,
                 inUser.getInUserGoals().get(0), userGroup.get());
+        List<ParseWorkout> parseWorkouts = getParseWorkouts(parseRounds);
         final InProgram inProgram = new InProgram()
                 .setName("Test program for user with id " + inUser.getId())
-                .setInWorkouts(Arrays.asList(new InWorkout()
-                        .setD_workout_name("Test workout")
-                        .setInWarmupWorkoutItems(Arrays.asList(
+                .setInWorkouts(parseWorkouts.stream().map(parseWorkout ->
+                    new InWorkout()
+                        .setD_workout_name(parseWorkout.getName())
+                        .setInWarmupWorkoutItems(parseWorkout.getParseWarmupWorkoutItems().stream().map(parseWarmupWorkoutItem ->
                                 new InWarmupWorkoutItem()
-                                        .setD_exercise_name("Test warmup workout item")))
-                                        .setInWorkoutItems(Arrays.asList(
+                                        .setD_exercise_name(parseWarmupWorkoutItem.getName())
+                                        .setTime_in_sec(minToSec(parseWarmupWorkoutItem.getTime_in_min()))
+                                        .setSpeed(parseWarmupWorkoutItem.getSpeed())
+                                        .setIncline(parseWarmupWorkoutItem.getIncline())
+                        ).collect(Collectors.toList()))
+                        .setInWorkoutItems(Arrays.asList(
                                                 new InWorkoutItem()
                                                         .setD_exercise_name("Test workout item")
                                                 .setInWorkoutItemSets(Arrays.asList(
                                                         new InWorkoutItemSet()))
                                                 .setInWorkoutItemReports(Collections.emptyList())
-                                        ))));
+                                        ))).collect(Collectors.toList()));
         inProgram.setInUser(inUser);
         inProgram.getInWorkouts().forEach(inWorkout -> {
             inWorkout.setInProgram(inProgram);
@@ -184,6 +190,10 @@ public class AdminProgramAssignService {
             });
         });
         return inUser;
+    }
+    
+    private Integer minToSec(Float value) {
+        return value == null ? null : value.intValue() * 60;
     }
 
     private List<ParseRound> getRoundsGorGoalAndUserGroup(List<ParseProgram> parsePrograms,
@@ -214,6 +224,17 @@ public class AdminProgramAssignService {
                     inUserGoal.getD_goal_title_2(), null)).stream().filter(Objects::nonNull).collect(Collectors.joining(", "));
     }
 
+    private List<ParseWorkout> getParseWorkouts(List<ParseRound> parseRounds) {
+        final List<ParseWorkout> parseWorkouts = new ArrayList<>();
+        parseRounds.forEach(parseRound -> {
+            parseRound.getParseParts().forEach(parsePart -> {
+                parsePart.getParseWorkouts().forEach(parseWorkout -> {
+                    parseWorkouts.add(parseWorkout);
+                });
+            });
+        });
+        return parseWorkouts;
+    }
 
 //    private Optional<String> getUserName(InUser inUser) {
 //        final Optional<String> userName;

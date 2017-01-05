@@ -8,6 +8,7 @@ import com.osomapps.pt.programs.InWarmupWorkoutItemRepository;
 import com.osomapps.pt.programs.InWorkoutItem;
 import com.osomapps.pt.programs.InWorkoutRepository;
 import com.osomapps.pt.programs.ParseGoal;
+import com.osomapps.pt.programs.ParsePart;
 import com.osomapps.pt.programs.ParseProgram;
 import com.osomapps.pt.reportworkout.InWorkoutItemRepository;
 import com.osomapps.pt.token.InUser;
@@ -26,6 +27,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.osomapps.pt.programs.ParseProgramRepository;
 import com.osomapps.pt.programs.ParseRound;
 import com.osomapps.pt.programs.ParseUserGroup;
+import com.osomapps.pt.programs.ParseWarmupWorkoutItem;
+import com.osomapps.pt.programs.ParseWorkout;
+import com.osomapps.pt.programs.ParseWorkoutItem;
 import com.osomapps.pt.reportworkout.InWorkoutItemSetRepository;
 import com.osomapps.pt.token.InUserGoal;
 import static org.mockito.Matchers.eq;
@@ -71,8 +75,15 @@ public class AdminProgramAssignServiceTest {
                         .setParseUserGroups(Arrays.asList(
                                 new ParseUserGroup()
                                         .setName("1")
-                        .setParseRounds(Arrays.asList(new ParseRound()))))
-                ))));
+                        .setParseRounds(Arrays.asList(
+                                new ParseRound().setParseParts(Arrays.asList(
+                                        new ParsePart().setParseWorkouts(Arrays.asList(
+                                                new ParseWorkout()
+                                        .setParseWarmupWorkoutItems(Arrays.asList(
+                                                new ParseWarmupWorkoutItem()))
+                                        .setParseWorkoutItems(Arrays.asList(new ParseWorkoutItem()))
+                                        )))))))))
+                )));
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
         adminProgramAssignService.assign(new InUser().setD_level("2")
                 .setD_sex("male").setInUserGoals(Arrays.asList(new InUserGoal())));
