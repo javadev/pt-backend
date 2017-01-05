@@ -160,13 +160,22 @@ public class AdminProgramAssignService {
                                         .setSpeed(parseWarmupWorkoutItem.getSpeed())
                                         .setIncline(parseWarmupWorkoutItem.getIncline())
                         ).collect(Collectors.toList()))
-                        .setInWorkoutItems(Arrays.asList(
+                        .setInWorkoutItems(parseWorkout.getParseWorkoutItems().stream().map(parseWorkoutItem ->
                                                 new InWorkoutItem()
-                                                        .setD_exercise_name("Test workout item")
-                                                .setInWorkoutItemSets(Arrays.asList(
-                                                        new InWorkoutItemSet()))
+                                                        .setD_exercise_name(parseWorkoutItem.getName())
+                                                .setInWorkoutItemSets(parseWorkoutItem.getParseWorkoutItemSets().stream().map(parseWorkoutItemSet ->
+                                                        new InWorkoutItemSet()
+                                                                .setRepetitions(parseWorkoutItemSet.getRepetitions())
+                                                        .setRepetitions_to_failure(parseWorkoutItemSet.getRepetitions_to_failure())
+                                                        .setWeight(parseWorkoutItemSet.getWeight())
+                                                        .setBodyweight(parseWorkoutItemSet.getBodyweight())
+                                                        .setTime_in_sec(minToSec(parseWorkoutItemSet.getTime_in_min()))
+                                                        .setSpeed(parseWorkoutItemSet.getSpeed())
+                                                        .setIncline(parseWorkoutItemSet.getIncline())
+                                                        .setResistance(parseWorkoutItemSet.getResistance())
+                                                ).collect(Collectors.toList()))
                                                 .setInWorkoutItemReports(Collections.emptyList())
-                                        ))).collect(Collectors.toList()));
+                                        ).collect(Collectors.toList()))).collect(Collectors.toList()));
         inProgram.setInUser(inUser);
         inProgram.getInWorkouts().forEach(inWorkout -> {
             inWorkout.setInProgram(inProgram);

@@ -30,6 +30,7 @@ import com.osomapps.pt.programs.ParseUserGroup;
 import com.osomapps.pt.programs.ParseWarmupWorkoutItem;
 import com.osomapps.pt.programs.ParseWorkout;
 import com.osomapps.pt.programs.ParseWorkoutItem;
+import com.osomapps.pt.programs.ParseWorkoutItemSet;
 import com.osomapps.pt.reportworkout.InWorkoutItemSetRepository;
 import com.osomapps.pt.token.InUserGoal;
 import static org.mockito.Matchers.eq;
@@ -81,7 +82,9 @@ public class AdminProgramAssignServiceTest {
                                                 new ParseWorkout()
                                         .setParseWarmupWorkoutItems(Arrays.asList(
                                                 new ParseWarmupWorkoutItem()))
-                                        .setParseWorkoutItems(Arrays.asList(new ParseWorkoutItem()))
+                                        .setParseWorkoutItems(Arrays.asList(
+                                                new ParseWorkoutItem().setParseWorkoutItemSets(Arrays.asList(
+                                                        new ParseWorkoutItemSet()))))
                                         )))))))))
                 )));
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
