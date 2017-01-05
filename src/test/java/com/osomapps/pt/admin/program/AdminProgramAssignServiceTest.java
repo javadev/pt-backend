@@ -1,10 +1,13 @@
 package com.osomapps.pt.admin.program;
 
+import com.osomapps.pt.dictionary.DictionaryName;
+import com.osomapps.pt.dictionary.DictionaryService;
 import com.osomapps.pt.programs.InProgram;
 import com.osomapps.pt.programs.InProgramRepository;
 import com.osomapps.pt.programs.InWarmupWorkoutItemRepository;
 import com.osomapps.pt.programs.InWorkoutItem;
 import com.osomapps.pt.programs.InWorkoutRepository;
+import com.osomapps.pt.programs.ParseGoal;
 import com.osomapps.pt.programs.ParseProgram;
 import com.osomapps.pt.reportworkout.InWorkoutItemRepository;
 import com.osomapps.pt.token.InUser;
@@ -21,7 +24,11 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
 import com.osomapps.pt.programs.ParseProgramRepository;
+import com.osomapps.pt.programs.ParseRound;
+import com.osomapps.pt.programs.ParseUserGroup;
 import com.osomapps.pt.reportworkout.InWorkoutItemSetRepository;
+import com.osomapps.pt.token.InUserGoal;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import org.springframework.data.domain.Sort;
 
@@ -44,6 +51,8 @@ public class AdminProgramAssignServiceTest {
     private InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository;
     @Mock
     private AdminProgramScanExerciseService adminProgramScanExerciseService;
+    @Mock
+    private DictionaryService dictionaryService;
     @InjectMocks
     private AdminProgramAssignService adminProgramAssignService;
 
@@ -55,8 +64,18 @@ public class AdminProgramAssignServiceTest {
                         new InUserFacebook().setUser_name("user_name")))));
         when(adminProgramScanExerciseService.getExerciseIdByName(anyString())).thenReturn(Optional.empty());
         when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(new ParseProgram()));
-        adminProgramAssignService.assign(new InUser());
+        when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(
+                Arrays.asList(new ParseProgram().setParseGoals(Arrays.asList(
+                        new ParseGoal()
+                                .setName("Loose weight")
+                        .setParseUserGroups(Arrays.asList(
+                                new ParseUserGroup()
+                                        .setName("1")
+                        .setParseRounds(Arrays.asList(new ParseRound()))))
+                ))));
+        when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
+        adminProgramAssignService.assign(new InUser().setD_level("2")
+                .setD_sex("male").setInUserGoals(Arrays.asList(new InUserGoal())));
         verify(inProgramRepository).save(any(InProgram.class));
     }
 

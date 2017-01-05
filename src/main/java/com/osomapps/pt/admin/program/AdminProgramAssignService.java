@@ -1,6 +1,8 @@
 package com.osomapps.pt.admin.program;
 
 import com.osomapps.pt.UnauthorizedException;
+import com.osomapps.pt.dictionary.DictionaryName;
+import com.osomapps.pt.dictionary.DictionaryService;
 import com.osomapps.pt.programs.InProgram;
 import com.osomapps.pt.programs.InProgramRepository;
 import com.osomapps.pt.programs.InWarmupWorkoutItem;
@@ -23,12 +25,19 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import com.osomapps.pt.programs.ParseGoalRepository;
+import com.osomapps.pt.programs.ParsePart;
 import com.osomapps.pt.programs.ParseProgram;
 import com.osomapps.pt.programs.ParseProgramRepository;
+import com.osomapps.pt.programs.ParseRound;
 import com.osomapps.pt.reportworkout.InWorkoutItemSetRepository;
+import com.osomapps.pt.token.InUserGoal;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 
+@Slf4j
 @Service
 public class AdminProgramAssignService {
 
@@ -40,6 +49,7 @@ public class AdminProgramAssignService {
     private final ParseProgramRepository parseProgramRepository;
     private final InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository;
     private final AdminProgramScanExerciseService adminProgramScanExerciseService;
+    private final DictionaryService dictionaryService;
 
     AdminProgramAssignService(InUserRepository inUserRepository,
             InProgramRepository inProgramRepository,
@@ -48,7 +58,8 @@ public class AdminProgramAssignService {
             InWorkoutItemSetRepository inWorkoutItemSetRepository,
             ParseProgramRepository parseProgramRepository,
             InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository,
-            AdminProgramScanExerciseService adminProgramScanExerciseService) {
+            AdminProgramScanExerciseService adminProgramScanExerciseService,
+            DictionaryService dictionaryService) {
         this.inUserRepository = inUserRepository;
         this.inProgramRepository = inProgramRepository;
         this.inWorkoutRepository = inWorkoutRepository;
@@ -57,6 +68,7 @@ public class AdminProgramAssignService {
         this.parseProgramRepository = parseProgramRepository;
         this.inWarmupWorkoutItemRepository = inWarmupWorkoutItemRepository;
         this.adminProgramScanExerciseService = adminProgramScanExerciseService;
+        this.dictionaryService = dictionaryService;
     }
 
 //    private static boolean isNotNullOrEmpty (String str) {
@@ -124,6 +136,17 @@ public class AdminProgramAssignService {
         if (parsePrograms.isEmpty()) {
             throw new UnauthorizedException("There are no programs found.");
         }
+        Optional<Integer> userGroup = getUserGroup(inUser);
+        if (!userGroup.isPresent()) {
+            log.warn("User group not recognized, level - {}, gender - {}", inUser.getD_level(), inUser.getD_sex());
+            return inUser;
+        }
+        if (inUser.getInUserGoals().isEmpty()) {
+            log.warn("Cannot create program for user without goals.");
+            return inUser;            
+        }
+        List<ParseRound> parseRounds = getRoundsGorGoalAndUserGroup(parsePrograms,
+                inUser.getInUserGoals().get(0), userGroup.get());
         final InProgram inProgram = new InProgram()
                 .setName("Test program for user with id " + inUser.getId())
                 .setInWorkouts(Arrays.asList(new InWorkout()
@@ -163,6 +186,35 @@ public class AdminProgramAssignService {
         return inUser;
     }
 
+    private List<ParseRound> getRoundsGorGoalAndUserGroup(List<ParseProgram> parsePrograms,
+            InUserGoal inUserGoal, Integer userGroup) {
+        final List<ParseRound> parseRounds = new ArrayList<>();
+        parsePrograms.get(0).getParseGoals().forEach(parseGoal -> {
+                boolean nameFound = getOnlySymbols(parseGoal.getName()).equalsIgnoreCase(
+                        getOnlySymbols(getGoalName(inUserGoal)));
+                if (nameFound) {
+                     parseGoal.getParseUserGroups().forEach(parseUserGroup -> {
+                        if (parseUserGroup.getName().equals("" + userGroup)) {
+                            parseRounds.addAll(parseUserGroup.getParseRounds());
+                        }
+                     });
+                }
+        });
+        return parseRounds;
+    }
+    
+    private String getOnlySymbols(String value) {
+        return value.replaceAll("[^\\D\\.]+", "");
+    }
+
+    private String getGoalName(InUserGoal inUserGoal) {
+        return Arrays.asList(dictionaryService.getEnValue(DictionaryName.goal_title,
+                    inUserGoal.getD_goal_title(), null),
+                dictionaryService.getEnValue(DictionaryName.goal_title_2,
+                    inUserGoal.getD_goal_title_2(), null)).stream().filter(Objects::nonNull).collect(Collectors.joining(", "));
+    }
+
+
 //    private Optional<String> getUserName(InUser inUser) {
 //        final Optional<String> userName;
 //        if (inUser.getInUserFacebooks() == null || inUser.getInUserFacebooks().isEmpty()) {
@@ -176,4 +228,44 @@ public class AdminProgramAssignService {
 //        }
 //        return userName;
 //    }
+
+    enum Gender {
+        male, female, unknown
+    }
+
+    enum Level {
+        unexperienced, experienced, unknown
+    }
+
+    private Optional<Integer> getUserGroup(InUser inUser) {
+        final Gender gender;
+        if ("male".equalsIgnoreCase(inUser.getD_sex())) {
+            gender = Gender.male;
+        } else if ("female".equalsIgnoreCase(inUser.getD_sex())) {
+            gender = Gender.female;            
+        } else {
+            gender = Gender.unknown;
+        }
+        final Level level;
+        if ("1".equalsIgnoreCase(inUser.getD_level())) {
+            level = Level.unexperienced;
+        } else if ("2".equalsIgnoreCase(inUser.getD_level())) {
+            level = Level.experienced;
+        } else {
+            level = Level.unknown;
+        }
+        final Integer userGroup;
+        if (gender == Gender.male && level == Level.experienced) {
+            userGroup = 1;
+        } else if (gender == Gender.male && level == Level.unexperienced) {
+            userGroup = 2;
+        } else if (gender == Gender.female && level == Level.experienced) {
+            userGroup = 3;
+        } else if (gender == Gender.female && level == Level.unexperienced) {
+            userGroup = 4;
+        } else {
+            userGroup = null;
+        }
+        return Optional.ofNullable(userGroup);
+    }
 }
