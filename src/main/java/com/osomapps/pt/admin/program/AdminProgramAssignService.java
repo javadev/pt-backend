@@ -190,8 +190,12 @@ public class AdminProgramAssignService {
     List<ParseWorkout> mergeLists(List<ParseWorkout> parseWorkouts1, List<ParseWorkout> parseWorkouts2) {
         List<ParseWorkout> parseWorkouts = new ArrayList<>();
         for (int index = 0; index < Math.max(parseWorkouts1.size(), parseWorkouts2.size()); index += 1) {
-            parseWorkouts.add(parseWorkouts1.get(index % parseWorkouts1.size()));
-            parseWorkouts.add(parseWorkouts2.get(index % parseWorkouts2.size()));
+            if (!parseWorkouts1.isEmpty()) {
+                parseWorkouts.add(parseWorkouts1.get(index % parseWorkouts1.size()));
+            }
+            if (!parseWorkouts2.isEmpty()) {
+                parseWorkouts.add(parseWorkouts2.get(index % parseWorkouts2.size()));
+            }
         }
         return parseWorkouts;
     }
