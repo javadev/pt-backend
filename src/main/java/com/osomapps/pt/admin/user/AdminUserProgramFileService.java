@@ -1,5 +1,11 @@
 package com.osomapps.pt.admin.user;
 
+import com.osomapps.pt.ResourceNotFoundException;
+import com.osomapps.pt.dictionary.DictionaryService;
+import com.osomapps.pt.token.InUser;
+import com.osomapps.pt.token.InUserRepository;
+import com.osomapps.pt.xlsx.XlsxModifier;
+import com.osomapps.pt.xlsx.XlsxProgramModifier;
 import com.osomapps.pt.xlsx.XlsxProgramParser;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,16 +17,33 @@ import org.springframework.util.FastByteArrayOutputStream;
 @Slf4j        
 class AdminUserProgramFileService {
 
+    private final DictionaryService dictionaryService;
+    private final InUserRepository inUserRepository;
+    
+    AdminUserProgramFileService(DictionaryService dictionaryService,
+            InUserRepository inUserRepository) {
+        this.dictionaryService = dictionaryService;
+        this.inUserRepository = inUserRepository;
+    }
+
     ProgramResponseDTO createXlsx(Long id, FastByteArrayOutputStream outputStream) {
+        final InUser inUser = inUserRepository.findOne(id);
+        if (inUser == null) {
+            throw new ResourceNotFoundException("User with id " + id + " not found.");
+        }
+        FastByteArrayOutputStream localOutputStream = new FastByteArrayOutputStream();
         final byte[] buffer = new byte[1024];
         try (InputStream inputStream = XlsxProgramParser.class.getResourceAsStream("program01.xlsx")) {
             int length;
             while ((length = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, length);
+                localOutputStream.write(buffer, 0, length);
             }
         } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
         }
+        final XlsxProgramModifier xlsxProgramModifier = XlsxProgramModifier.of(
+                localOutputStream.getInputStream(), dictionaryService);
+        xlsxProgramModifier.updateCellData(outputStream, inUser);
         return new ProgramResponseDTO().setFileName("program_for_user_" + id + ".xlsx")
                 .setFileType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     }

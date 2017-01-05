@@ -9,13 +9,14 @@ public class InProgramTest {
     @Test
     public void createAllArgs() {
         assertThat(new InProgram(
-                1L, null, null, null, null, null), notNullValue());
+                1L, null, null, null, null, null, null), notNullValue());
     }
 
     @Test
     public void setters() {
         InProgram inProgram = new InProgram();
         inProgram.setCreated(LocalDateTime.MAX);
+        inProgram.setCurrent_workout_index(null);
         assertThat(inProgram, notNullValue());
     }
 
@@ -23,6 +24,7 @@ public class InProgramTest {
     public void getters() {
         InProgram inProgram = new InProgram();
         inProgram.getCreated();
+        inProgram.getCurrent_workout_index();
         assertThat(inProgram, notNullValue());
     }
 }
