@@ -17,6 +17,7 @@ public class UserResponseDTOTest {
         userResponseDTO.setEmail(null);
         userResponseDTO.setType(null);
         userResponseDTO.setPrograms(null);
+        userResponseDTO.setWeight(null);
         assertThat(userResponseDTO, notNullValue());
     }
 
@@ -27,6 +28,7 @@ public class UserResponseDTOTest {
         userResponseDTO.getEmail();
         userResponseDTO.getType();
         userResponseDTO.getPrograms();
+        userResponseDTO.getWeight();
         assertThat(userResponseDTO, notNullValue());
     }
 }

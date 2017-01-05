@@ -147,7 +147,7 @@ function ($, _, Backbone, Marionette, moment, App, BackboneBootstrapModals) {
             });
         }
       });
-      modal.render();        
+      modal.render();
     }
   });
 
@@ -648,6 +648,14 @@ function ($, _, Backbone, Marionette, moment, App, BackboneBootstrapModals) {
         '</div>',
       '</div>',
       '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Weight, kg</label>',
+        '<div class="col-sm-8">',
+          '<textarea id="user-weight" class="form-control" rows="3" placeholder="Please enter weight" name="address" required="true" readonly>',
+            '{{ weight }}',
+          '</textarea>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
         '<label class="col-sm-3 control-label">Name</label>',
         '<div class="col-sm-8">',
           '<textarea id="user-name" class="form-control" rows="3" placeholder="Please enter name" name="address" required="true" readonly>',
@@ -716,13 +724,18 @@ function ($, _, Backbone, Marionette, moment, App, BackboneBootstrapModals) {
       'sync': 'render'
     },
     events: {
+      'input #user-weight': 'inputWeight',
       'input #user-name': 'inputName',
       'input #user-email': 'inputEmail'
     },
     ui: {
+      weight: '#user-weight',
       userType: '#user-type',
       name: '#user-name',
       email: '#user-email'
+    },
+    inputWeight: function() {
+      this.model.set('weight', _.isEmpty(this.ui.weight.val()) ? null : parseInt(this.ui.weight.val(), 10));
     },
     inputName: function() {
       this.model.set('name', this.ui.name.val());
@@ -786,6 +799,14 @@ function ($, _, Backbone, Marionette, moment, App, BackboneBootstrapModals) {
           '<select id="user-goal" class="selectpicker show-tick" multiple data-max-options="2">',
             '{{ getGoals() }}',
           '</select>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Weight, kg</label>',
+        '<div class="col-sm-8">',
+          '<textarea id="user-weight" class="form-control" rows="3" placeholder="Please enter weight" name="address" required="true">',
+            '{{ weight }}',
+          '</textarea>',
         '</div>',
       '</div>',
       '<div class="form-group">',
@@ -865,6 +886,7 @@ function ($, _, Backbone, Marionette, moment, App, BackboneBootstrapModals) {
       'sync': 'render'
     },
     events: {
+      'input #user-weight': 'inputWeight',
       'input #user-name': 'inputName',
       'input #user-email': 'inputEmail'
     },
@@ -873,8 +895,12 @@ function ($, _, Backbone, Marionette, moment, App, BackboneBootstrapModals) {
       userGender: '#user-gender',
       userLevel: '#user-level',
       userGoal: '#user-goal',
+      weight: '#user-weight',
       name: '#user-name',
       email: '#user-email'
+    },
+    inputWeight: function() {
+      this.model.set('weight', _.isEmpty(this.ui.weight.val()) ? null : parseInt(this.ui.weight.val(), 10));
     },
     inputName: function() {
       this.model.set('name', this.ui.name.val());

@@ -62,6 +62,7 @@ define([
               gender: model.get('gender'),
               level: model.get('level'),
               goals: model.get('goals'),
+              weight: model.get('weight'),
               programs: model.get('programs')
             });
           }
@@ -92,6 +93,7 @@ define([
               gender: model.get('gender'),
               level: model.get('level'),
               goals: model.get('goals'),
+              weight: model.get('weight'),
               programs: model.get('programs')
             });
           }

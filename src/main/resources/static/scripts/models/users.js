@@ -18,7 +18,8 @@ define([
           'nameEn': null
         },
         'level': null,
-        'goals': []
+        'goals': [],
+        'weight': null
       },
       url: function() {
         return '/api/v1/admin/user' + (this.isNew() ? '' : '/' + this.get('id'));

@@ -105,6 +105,7 @@ class AdminUserService {
                     .nameNo(dictionaryService.getNoValue(DictionaryName.user_type,
                             inUser.getInUserType().getD_user_type(), ""))
                     .build())
+                .weight(inUser.getWeight() == null ? null : inUser.getWeight().intValue())
                 .programs(inUser.getInPrograms() == null ? null : inUser.getInPrograms().stream()
                     .map(AdminUserProgramService::inProgramToDto).collect(Collectors.toList()))
                 .build();
@@ -139,6 +140,7 @@ class AdminUserService {
         inUser.setInUserEmails(Arrays.asList(inUserEmail));
         inUser.setD_sex(userRequestDTO.getGender());
         inUser.setD_level(userRequestDTO.getLevel() == null ? null : "" + userRequestDTO.getLevel());
+        inUser.setWeight(userRequestDTO.getWeight() == null ? null : userRequestDTO.getWeight().floatValue());
         setupGoals(userRequestDTO, inUser);
 
         final InUser savedInUser = inUserRepository.save(inUser);
@@ -184,6 +186,7 @@ class AdminUserService {
         inUser.setInUserType(inUserTypeDb);
         inUser.setD_sex(userRequestDTO.getGender());
         inUser.setD_level(userRequestDTO.getLevel() == null ? null : "" + userRequestDTO.getLevel());
+        inUser.setWeight(userRequestDTO.getWeight() == null ? null : userRequestDTO.getWeight().floatValue());
         setupGoals(userRequestDTO, inUser);
         if (inUser.getInUserEmails().isEmpty()) {
             final InUserFacebook inUserFacebook = inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1);

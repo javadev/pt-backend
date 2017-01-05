@@ -7,7 +7,7 @@ import org.junit.Test;
 public class UserRequestDTOTest {
     @Test
     public void allArgsConstructor() {
-        assertThat(new UserRequestDTO(1L, null, null, null, null, null, null, null), notNullValue());
+        assertThat(new UserRequestDTO(1L, null, null, null, null, null, null, null, null), notNullValue());
     }
 
     @Test
@@ -18,6 +18,7 @@ public class UserRequestDTOTest {
         userRequestDTO.setGender(null);
         userRequestDTO.setLevel(null);
         userRequestDTO.setGoals(null);
+        userRequestDTO.setWeight(null);
         assertThat(userRequestDTO, notNullValue());
     }
 
@@ -29,6 +30,7 @@ public class UserRequestDTOTest {
         userRequestDTO.getGender();
         userRequestDTO.getLevel();
         userRequestDTO.getGoals();
+        userRequestDTO.getWeight();
         assertThat(userRequestDTO, notNullValue());
     }
 

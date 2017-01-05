@@ -21,6 +21,7 @@ class UserResponseDTO {
     UserTypeResponseDTO type;
     String gender;
     Integer level;
+    Integer weight;
     List<UserGoalResponseDTO> goals;
     List<UserProgramResponseDTO> programs;
 }

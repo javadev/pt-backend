@@ -19,6 +19,7 @@ class UserRequestDTO {
     String password;
     String gender;
     Integer level;
+    Integer weight;
     List<UserGoalRequestDTO> goals;
     UserTypeRequestDTO type;
 }
