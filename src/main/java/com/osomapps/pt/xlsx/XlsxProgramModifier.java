@@ -66,8 +66,8 @@ public class XlsxProgramModifier {
                     inUserGoal.getD_goal_title_2(), null)).stream().filter(Objects::nonNull).collect(Collectors.joining(", "));
     }
     
-    private String emptyOrInteger(Float value) {
-        return value == null ? "" : "" + value.intValue();
+    private Integer emptyOrInteger(Float value) {
+        return value == null ? null : value.intValue();
     }
 
     private Integer nullOrInteger(String value) {
@@ -84,7 +84,11 @@ public class XlsxProgramModifier {
     private void fillCell(XSSFSheet sheet, int columnNumber, int rowNumber, Integer value) {
         XSSFRow row = sheet.getRow(rowNumber);
         XSSFCell cell = row.getCell(columnNumber);
-        cell.setCellValue(value);
+        if (value == null) {
+            cell.setCellValue("");
+        } else {
+            cell.setCellValue(value);
+        }
         cell.setCellFormula(null);
     }
 }
