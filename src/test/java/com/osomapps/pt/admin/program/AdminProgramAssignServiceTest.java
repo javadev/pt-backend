@@ -33,6 +33,9 @@ import com.osomapps.pt.programs.ParseWorkoutItem;
 import com.osomapps.pt.programs.ParseWorkoutItemSet;
 import com.osomapps.pt.reportworkout.InWorkoutItemSetRepository;
 import com.osomapps.pt.token.InUserGoal;
+import java.util.List;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import org.springframework.data.domain.Sort;
@@ -91,6 +94,50 @@ public class AdminProgramAssignServiceTest {
         adminProgramAssignService.assign(new InUser().setD_level("2")
                 .setD_sex("male").setInUserGoals(Arrays.asList(new InUserGoal())));
         verify(inProgramRepository).save(any(InProgram.class));
+    }
+
+    @Test
+    public void mergeLists_two_elements() {
+        List<ParseWorkout> parseWorkouts1 = Arrays.asList(new ParseWorkout().setName("1_1"));
+        List<ParseWorkout> parseWorkouts2 = Arrays.asList(new ParseWorkout().setName("2_1"));
+        List<ParseWorkout> result = adminProgramAssignService.mergeLists(parseWorkouts1, parseWorkouts2);
+        assertThat(result.size(), equalTo(2));
+        assertThat(result.get(0).getName(), equalTo("1_1"));
+        assertThat(result.get(1).getName(), equalTo("2_1"));
+    }
+
+    @Test
+    public void mergeLists_five_elements() {
+        List<ParseWorkout> parseWorkouts1 = Arrays.asList(new ParseWorkout().setName("1_1"),
+                new ParseWorkout().setName("1_2"));
+        List<ParseWorkout> parseWorkouts2 = Arrays.asList(new ParseWorkout().setName("2_1"),
+                new ParseWorkout().setName("2_2"),
+                new ParseWorkout().setName("2_3"));
+        List<ParseWorkout> result = adminProgramAssignService.mergeLists(parseWorkouts1, parseWorkouts2);
+        assertThat(result.size(), equalTo(6));
+        assertThat(result.get(0).getName(), equalTo("1_1"));
+        assertThat(result.get(1).getName(), equalTo("2_1"));
+        assertThat(result.get(2).getName(), equalTo("1_2"));
+        assertThat(result.get(3).getName(), equalTo("2_2"));
+        assertThat(result.get(4).getName(), equalTo("1_1"));
+        assertThat(result.get(5).getName(), equalTo("2_3"));
+    }
+
+    @Test
+    public void mergeLists_five_elements2() {
+        List<ParseWorkout> parseWorkouts1 = Arrays.asList(new ParseWorkout().setName("1_1"),
+                new ParseWorkout().setName("1_2"),
+                new ParseWorkout().setName("1_3"));
+        List<ParseWorkout> parseWorkouts2 = Arrays.asList(new ParseWorkout().setName("2_1"),
+                new ParseWorkout().setName("2_2"));
+        List<ParseWorkout> result = adminProgramAssignService.mergeLists(parseWorkouts1, parseWorkouts2);
+        assertThat(result.size(), equalTo(6));
+        assertThat(result.get(0).getName(), equalTo("1_1"));
+        assertThat(result.get(1).getName(), equalTo("2_1"));
+        assertThat(result.get(2).getName(), equalTo("1_2"));
+        assertThat(result.get(3).getName(), equalTo("2_2"));
+        assertThat(result.get(4).getName(), equalTo("1_3"));
+        assertThat(result.get(5).getName(), equalTo("2_1"));
     }
 
 }

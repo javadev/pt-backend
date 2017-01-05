@@ -82,7 +82,14 @@ public class AdminProgramAssignService {
         }
         List<ParseRound> parseRounds = getRoundsGorGoalAndUserGroup(parsePrograms,
                 inUser.getInUserGoals().get(0), userGroup.get());
-        List<ParseWorkout> parseWorkouts = getParseWorkouts(parseRounds);
+        final List<ParseWorkout> parseWorkouts;
+        if (inUser.getInUserGoals().size() > 1) {
+            List<ParseRound> parseRounds2 = getRoundsGorGoalAndUserGroup(parsePrograms,
+                    inUser.getInUserGoals().get(1), userGroup.get());
+            parseWorkouts = mergeLists(getParseWorkouts(parseRounds), getParseWorkouts(parseRounds2));
+        } else {
+            parseWorkouts = getParseWorkouts(parseRounds);
+        }
         final InProgram inProgram = new InProgram()
                 .setName("Test program for user " + inUser.getId())
                 .setInWorkouts(parseWorkouts.stream().map(parseWorkout
@@ -135,7 +142,7 @@ public class AdminProgramAssignService {
         });
         return inUser;
     }
-    
+
     private Integer minToSec(Float value) {
         return value == null ? null : Float.valueOf(value * 60).intValue();
     }
@@ -144,28 +151,28 @@ public class AdminProgramAssignService {
             InUserGoal inUserGoal, Integer userGroup) {
         final List<ParseRound> parseRounds = new ArrayList<>();
         parsePrograms.get(0).getParseGoals().forEach(parseGoal -> {
-                boolean nameFound = getOnlySymbols(parseGoal.getName()).equalsIgnoreCase(
-                        getOnlySymbols(getGoalName(inUserGoal)));
-                if (nameFound) {
-                     parseGoal.getParseUserGroups().forEach(parseUserGroup -> {
-                        if (parseUserGroup.getName().equals("" + userGroup)) {
-                            parseRounds.addAll(parseUserGroup.getParseRounds());
-                        }
-                     });
-                }
+            boolean nameFound = getOnlySymbols(parseGoal.getName()).equalsIgnoreCase(
+                    getOnlySymbols(getGoalName(inUserGoal)));
+            if (nameFound) {
+                parseGoal.getParseUserGroups().forEach(parseUserGroup -> {
+                    if (parseUserGroup.getName().equals("" + userGroup)) {
+                        parseRounds.addAll(parseUserGroup.getParseRounds());
+                    }
+                });
+            }
         });
         return parseRounds;
     }
-    
+
     private String getOnlySymbols(String value) {
         return value.replaceAll("[^\\D\\.]+", "");
     }
 
     private String getGoalName(InUserGoal inUserGoal) {
         return Arrays.asList(dictionaryService.getEnValue(DictionaryName.goal_title,
-                    inUserGoal.getD_goal_title(), null),
+                inUserGoal.getD_goal_title(), null),
                 dictionaryService.getEnValue(DictionaryName.goal_title_2,
-                    inUserGoal.getD_goal_title_2(), null)).stream().filter(Objects::nonNull).collect(Collectors.joining(", "));
+                        inUserGoal.getD_goal_title_2(), null)).stream().filter(Objects::nonNull).collect(Collectors.joining(", "));
     }
 
     private List<ParseWorkout> getParseWorkouts(List<ParseRound> parseRounds) {
@@ -177,6 +184,15 @@ public class AdminProgramAssignService {
                 });
             });
         });
+        return parseWorkouts;
+    }
+
+    List<ParseWorkout> mergeLists(List<ParseWorkout> parseWorkouts1, List<ParseWorkout> parseWorkouts2) {
+        List<ParseWorkout> parseWorkouts = new ArrayList<>();
+        for (int index = 0; index < Math.max(parseWorkouts1.size(), parseWorkouts2.size()); index += 1) {
+            parseWorkouts.add(parseWorkouts1.get(index % parseWorkouts1.size()));
+            parseWorkouts.add(parseWorkouts2.get(index % parseWorkouts2.size()));
+        }
         return parseWorkouts;
     }
 
@@ -193,7 +209,7 @@ public class AdminProgramAssignService {
         if ("male".equalsIgnoreCase(inUser.getD_sex())) {
             gender = Gender.male;
         } else if ("female".equalsIgnoreCase(inUser.getD_sex())) {
-            gender = Gender.female;            
+            gender = Gender.female;
         } else {
             gender = Gender.unknown;
         }
