@@ -151,7 +151,6 @@ public class AdminProgramAssignService {
                 });
             });
         });
-        inUserRepository.save(inUser);
         inProgramRepository.save(inProgram);
         inWorkoutRepository.save(inProgram.getInWorkouts());
         inProgram.getInWorkouts().forEach(inWorkout -> {

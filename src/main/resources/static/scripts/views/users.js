@@ -7,9 +7,10 @@ define([
     'marionette',
     'moment',
     'app',
+    'bootstrapModals',
     'bootstrapTab'
 ],
-function ($, _, Backbone, Marionette, moment, App) {
+function ($, _, Backbone, Marionette, moment, App, BackboneBootstrapModals) {
   'use strict';
 
   var Layout = Marionette.Layout.extend({
@@ -130,15 +131,23 @@ function ($, _, Backbone, Marionette, moment, App) {
       evt.preventDefault();
       var model = this.model;
       var collection = this.collection;
-      this.model.destroy()
-        .done(function() {
-        })
-        .fail(function (xhr) {
-          App.vent.trigger('xhr:error', 'User ' + model.get('id') + ' delete was failed');
-        })
-        .always(function() {
-          collection.fetch();
-        });
+      var modal = new BackboneBootstrapModals.ConfirmationModal({
+        label: 'Confirm Action',
+        text: 'Are you sure you want to delete user ' + model.get('name') + ' (' + model.get('id') + ')' + '?',
+        onConfirm: function() {
+
+          model.destroy()
+            .done(function() {
+            })
+            .fail(function (xhr) {
+              App.vent.trigger('xhr:error', 'User ' + model.get('id') + ' delete was failed');
+            })
+            .always(function() {
+              collection.fetch();
+            });
+        }
+      });
+      modal.render();        
     }
   });
 

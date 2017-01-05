@@ -1,5 +1,6 @@
 package com.osomapps.pt.admin.program;
 
+import com.osomapps.pt.programs.InProgram;
 import com.osomapps.pt.programs.InProgramRepository;
 import com.osomapps.pt.programs.InWarmupWorkoutItemRepository;
 import com.osomapps.pt.programs.InWorkoutItem;
@@ -56,7 +57,7 @@ public class AdminProgramAssignServiceTest {
         when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
         when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(new ParseProgram()));
         adminProgramAssignService.assign(new InUser());
-        verify(inUserRepository).save(any(InUser.class));
+        verify(inProgramRepository).save(any(InProgram.class));
     }
 
 }
