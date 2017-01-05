@@ -78,6 +78,9 @@ function ($, _, Backbone, Marionette, moment, App, BackboneBootstrapModals) {
 
   var User = Marionette.ItemView.extend({
     tagName: 'tr',
+    className: function() {
+      return this.collection._modelId === this.model.get('id') ? 'selectedId' : '';
+    },
     template: _.template([
       '<td>',
         '{{ id }}',
@@ -293,7 +296,7 @@ function ($, _, Backbone, Marionette, moment, App, BackboneBootstrapModals) {
     },
     back: function(evt) {
       evt.preventDefault();
-      this.model.trigger('user:back');
+      this.model.trigger('user:back', this.model.get('id'));
     }
   });
 
@@ -332,13 +335,13 @@ function ($, _, Backbone, Marionette, moment, App, BackboneBootstrapModals) {
     },
     back: function(evt) {
       evt.preventDefault();
-      this.model.trigger('user:back');
+      this.model.trigger('user:back', this.model.get('id'));
     },
     save: function(evt) {
       evt.preventDefault();
       var model = this.model;
       this.model.save().done(function() {
-        model.trigger('user:back');
+        model.trigger('user:back', model.get('id'));
       })
       .fail(function (xhr) {
         App.vent.trigger('xhr:error', 'User save was failed');

@@ -69,7 +69,8 @@ define([
           var userEditView = new UsersViews.ViewUserLayout({
             model: user
           });
-          user.on('user:back', function() {
+          user.on('user:back', function(modelId) {
+            users._modelId = modelId;
             var usersView = new UsersViews.Users({
               collection: users
             });
@@ -100,7 +101,8 @@ define([
           var userEditView = new UsersViews.NewUserLayout({
             model: user
           });
-          user.on('user:back', function() {
+          user.on('user:back', function(modelId) {
+            users._modelId = modelId;
             var usersView = new UsersViews.Users({
               collection: users
             });
