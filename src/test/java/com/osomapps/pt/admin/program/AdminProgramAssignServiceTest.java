@@ -4,6 +4,7 @@ import com.osomapps.pt.programs.InProgramRepository;
 import com.osomapps.pt.programs.InWarmupWorkoutItemRepository;
 import com.osomapps.pt.programs.InWorkoutItem;
 import com.osomapps.pt.programs.InWorkoutRepository;
+import com.osomapps.pt.programs.ParseProgram;
 import com.osomapps.pt.reportworkout.InWorkoutItemRepository;
 import com.osomapps.pt.token.InUser;
 import com.osomapps.pt.token.InUserFacebook;
@@ -18,9 +19,10 @@ import static org.mockito.Matchers.anyString;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
-import com.osomapps.pt.programs.ParseGoalRepository;
+import com.osomapps.pt.programs.ParseProgramRepository;
 import com.osomapps.pt.reportworkout.InWorkoutItemSetRepository;
 import static org.mockito.Mockito.verify;
+import org.springframework.data.domain.Sort;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminProgramAssignServiceTest {
@@ -36,7 +38,7 @@ public class AdminProgramAssignServiceTest {
     @Mock
     private InWorkoutItemSetRepository inWorkoutItemSetRepository;
     @Mock
-    private ParseGoalRepository parseUserRepository;
+    private ParseProgramRepository parseProgramRepository;
     @Mock
     private InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository;
     @Mock
@@ -52,7 +54,7 @@ public class AdminProgramAssignServiceTest {
                         new InUserFacebook().setUser_name("user_name")))));
         when(adminProgramScanExerciseService.getExerciseIdByName(anyString())).thenReturn(Optional.empty());
         when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(parseUserRepository.save(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(new ParseProgram()));
         adminProgramAssignService.assign(new InUser());
         verify(inUserRepository).save(any(InUser.class));
     }

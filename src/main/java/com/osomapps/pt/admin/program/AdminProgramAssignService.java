@@ -1,5 +1,6 @@
 package com.osomapps.pt.admin.program;
 
+import com.osomapps.pt.UnauthorizedException;
 import com.osomapps.pt.programs.InProgram;
 import com.osomapps.pt.programs.InProgramRepository;
 import com.osomapps.pt.programs.InWarmupWorkoutItem;
@@ -22,8 +23,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import com.osomapps.pt.programs.ParseGoalRepository;
+import com.osomapps.pt.programs.ParseProgram;
+import com.osomapps.pt.programs.ParseProgramRepository;
 import com.osomapps.pt.reportworkout.InWorkoutItemSetRepository;
 import java.util.Collections;
+import org.springframework.data.domain.Sort;
 
 @Service
 public class AdminProgramAssignService {
@@ -33,7 +37,7 @@ public class AdminProgramAssignService {
     private final InWorkoutRepository inWorkoutRepository;
     private final InWorkoutItemRepository inWorkoutItemRepository;
     private final InWorkoutItemSetRepository inWorkoutItemSetRepository;
-    private final ParseGoalRepository parseGoalRepository;
+    private final ParseProgramRepository parseProgramRepository;
     private final InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository;
     private final AdminProgramScanExerciseService adminProgramScanExerciseService;
 
@@ -42,7 +46,7 @@ public class AdminProgramAssignService {
             InWorkoutRepository inWorkoutRepository,
             InWorkoutItemRepository inWorkoutItemRepository,
             InWorkoutItemSetRepository inWorkoutItemSetRepository,
-            ParseGoalRepository parseGoalRepository,
+            ParseProgramRepository parseProgramRepository,
             InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository,
             AdminProgramScanExerciseService adminProgramScanExerciseService) {
         this.inUserRepository = inUserRepository;
@@ -50,7 +54,7 @@ public class AdminProgramAssignService {
         this.inWorkoutRepository = inWorkoutRepository;
         this.inWorkoutItemRepository = inWorkoutItemRepository;
         this.inWorkoutItemSetRepository = inWorkoutItemSetRepository;
-        this.parseGoalRepository = parseGoalRepository;
+        this.parseProgramRepository = parseProgramRepository;
         this.inWarmupWorkoutItemRepository = inWarmupWorkoutItemRepository;
         this.adminProgramScanExerciseService = adminProgramScanExerciseService;
     }
@@ -116,6 +120,10 @@ public class AdminProgramAssignService {
 //                }
 //            }
 //        });
+        List<ParseProgram> parsePrograms = parseProgramRepository.findAll(new Sort(Sort.Direction.DESC, "id"));
+        if (parsePrograms.isEmpty()) {
+            throw new UnauthorizedException("There are no programs found.");
+        }
         final InProgram inProgram = new InProgram()
                 .setName("Test program for user with id " + inUser.getId())
                 .setInWorkouts(Arrays.asList(new InWorkout()
