@@ -276,6 +276,7 @@ class AdminProgramService {
                 .setErrors(StringUtils.abbreviate(goal.getErrors().stream().collect(Collectors.joining(", ")), 1000))
                 .setName(goal.getName())
                 .setSheet_index(goal.getSheetIndex())
+                .setLoops(goal.getLoops())
                 .setParseProgram(program)
                 .setParseUserGroups(goal.getUserGroups().stream().map(userGroup ->
                         new ParseUserGroup()

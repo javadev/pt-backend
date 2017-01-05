@@ -69,6 +69,7 @@ public class XlsxProgramParser {
         final ExcelGoal excelGoal = new ExcelGoal()
                 .setSheetIndex(index)
                 .setName(sheet.getSheetName())
+                .setLoops(getIntegerOrNull(getCellData(sheet, 0, 1)))
                 .setErrors(new ArrayList<>());
         String prevUserGroupName = "";
         String prevRoundName = "";

@@ -7,11 +7,11 @@ import org.junit.Test;
 public class ExcelGoalTest {
     @Test
     public void allArgsConstructor() {
-        assertThat(new ExcelGoal(null, 0, null, null), notNullValue());
+        assertThat(new ExcelGoal(null, 0, null, null, null), notNullValue());
     }
 
     @Test
     public void tostring() {
-        assertThat(new ExcelGoal(null, 0, null, null).toString(), notNullValue());
+        assertThat(new ExcelGoal(null, 0, null, null, null).toString(), notNullValue());
     }
 }

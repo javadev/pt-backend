@@ -18,6 +18,7 @@ import lombok.ToString;
 public class ExcelGoal {
     String name;
     int sheetIndex;
+    Integer loops;
     List<UserGroup> userGroups = new ArrayList<>();
     List<String> errors = new ArrayList<>();
 }

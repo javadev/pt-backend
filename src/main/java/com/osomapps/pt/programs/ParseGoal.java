@@ -40,6 +40,7 @@ public class ParseGoal {
     String name;
     Integer sheet_index;
     String errors;
+    Integer loops;
     @ManyToOne
     @JoinColumn(name="parse_program_id")
     @JsonBackReference
