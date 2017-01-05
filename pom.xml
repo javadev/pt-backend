@@ -215,7 +215,7 @@
         <version>0.7.7.201606060606</version>
         <configuration>
           <excludes>
-            <exclude>**/program01.xlsx</exclude>
+            <exclude>**/*.xlsx</exclude>
           </excludes>
         </configuration>
         <executions>
