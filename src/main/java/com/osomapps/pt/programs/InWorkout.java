@@ -36,6 +36,7 @@ public class InWorkout {
     Long id;
     LocalDateTime created;
     String d_workout_name;
+    Integer workout_index;
     @ManyToOne
     @JoinColumn(name="in_program_id")
     @JsonBackReference
