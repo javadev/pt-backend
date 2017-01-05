@@ -237,6 +237,7 @@
           <exclude>**/target/**/*</exclude>
           <exclude>**/*.woff</exclude>
           <exclude>**/*.ttf</exclude>
+          <exclude>**/*.xlsx</exclude>
         </excludes>
       </resource>
       <resource>
@@ -245,6 +246,7 @@
         <includes>
           <include>**/*.woff</include>
           <include>**/*.ttf</include>
+          <include>**/*.xlsx</include>
         </includes>
       </resource>
     </resources>
