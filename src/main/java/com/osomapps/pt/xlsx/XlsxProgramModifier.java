@@ -39,7 +39,7 @@ public class XlsxProgramModifier {
             fillCell(inputSheet, 2, 2, emptyOrInteger(inUser.getAge()));
             fillCell(inputSheet, 2, 3, emptyOrInteger(inUser.getWeight()));
             fillCell(inputSheet, 2, 4, emptyOrInteger(inUser.getHeight()));
-            fillCell(inputSheet, 2, 5, inUser.getD_level());
+            fillCell(inputSheet, 2, 5, nullOrInteger(inUser.getD_level()));
             if (inUser.getInUserGoals().size() > 0) {
                 fillCell(inputSheet, 2, 7, getGoalName(inUser.getInUserGoals().get(0)));
             } else {
@@ -70,10 +70,21 @@ public class XlsxProgramModifier {
         return value == null ? "" : "" + value.intValue();
     }
 
+    private Integer nullOrInteger(String value) {
+        return value == null ? null : Integer.parseInt(value);
+    }
+
     private void fillCell(XSSFSheet sheet, int columnNumber, int rowNumber, String value) {
         XSSFRow row = sheet.getRow(rowNumber);
         XSSFCell cell = row.getCell(columnNumber);
         cell.setCellValue(value == null ? "" : value);
+        cell.setCellFormula(null);
+    }
+
+    private void fillCell(XSSFSheet sheet, int columnNumber, int rowNumber, Integer value) {
+        XSSFRow row = sheet.getRow(rowNumber);
+        XSSFCell cell = row.getCell(columnNumber);
+        cell.setCellValue(value);
         cell.setCellFormula(null);
     }
 }
