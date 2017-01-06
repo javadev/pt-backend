@@ -7,7 +7,7 @@ import org.junit.Test;
 public class ParseGoalDTOTest {
     @Test
     public void allArgsConstructor() {
-        assertThat(new ParseGoalDTO(1L, null, null, null), notNullValue());
+        assertThat(new ParseGoalDTO(1L, null, null, null, null), notNullValue());
     }
 
     @Test

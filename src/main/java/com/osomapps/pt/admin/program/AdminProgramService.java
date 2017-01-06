@@ -108,6 +108,7 @@ class AdminProgramService {
                 .parseGoals(program.getParseGoals().stream().map(result -> ParseGoalDTO.builder()
                     .id(result.getId())
                     .name(result.getName())
+                    .loops(result.getLoops())
                     .errors(result.getErrors())
                     .userGroups(result.getParseUserGroups().stream().map(userGroup -> ParseUserGroupDTO.builder()
                         .id(userGroup.getId())

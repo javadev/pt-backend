@@ -135,7 +135,7 @@ public class XlsxProgramParser {
     private Optional<WarmupWorkoutItem> extractWarmupWorkoutItem(Sheet sheet, int workoutIndex, ExcelGoal excelGoal, String workoutName) {
         final Optional<String> warmupName = getStringOrEmpty(getCellData(sheet, 5, 2 + workoutIndex));
         if (!warmupName.isPresent()) {
-            excelGoal.getErrors().add("Warmup name not found. User " + excelGoal.getName() + ", workout " + workoutName + ".");
+            excelGoal.getErrors().add("Warmup name not found. Goal " + excelGoal.getName() + ", workout " + workoutName + ".");
             return Optional.empty();
         }
         Integer speedInp = getIntegerOrNull(getCellData(sheet, 5 + 1, 2 + workoutIndex));
@@ -154,7 +154,7 @@ public class XlsxProgramParser {
         final Optional<String> exerciseName = getStringOrEmpty(getCellData(sheet, 5 + 4
                 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
         if (!exerciseName.isPresent()) {
-            excelGoal.getErrors().add("Exercise name not found. User " + excelGoal.getName() + ", workout " + workoutName + ".");
+            excelGoal.getErrors().add("Exercise name not found. Goal " + excelGoal.getName() + ", workout " + workoutName + ".");
             return Optional.empty();
         }
         Number setsInp = getNumberOrNull(getCellData(sheet, 5 + 5 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));

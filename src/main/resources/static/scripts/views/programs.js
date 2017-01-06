@@ -24,7 +24,7 @@ function ($, _, Backbone, Marionette, moment, App) {
 
   var EmptyParseView = Marionette.ItemView.extend({
     tagName: 'tr',
-    template: _.template('<td colspan="4">There are no goals available.</td>')
+    template: _.template('<td colspan="6">There are no goals available.</td>')
   });
 
   var Program = Marionette.ItemView.extend({
@@ -99,6 +99,9 @@ function ($, _, Backbone, Marionette, moment, App) {
       '</td>',
       '<td>',
         '{{ name }}',
+      '</td>',
+      '<td>',
+        '{{ loops }}',
       '</td>',
       '<td>',
         '{{ _.map(userGroups, function(item) {return item.name;}) }}',
@@ -548,6 +551,7 @@ function ($, _, Backbone, Marionette, moment, App) {
           '<tr>',
             '<th>ID</th>',
             '<th>Goal name</th>',
+            '<th>Loops</th>',
             '<th>User groups</th>',
             '<th>Errors</th>',
             '<th></th>',

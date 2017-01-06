@@ -17,6 +17,7 @@ import lombok.Builder;
 class ParseGoalDTO {
     Long id;
     String name;
+    Integer loops;
     List<ParseUserGroupDTO> userGroups;
     String errors;
 }
