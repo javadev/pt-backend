@@ -165,7 +165,7 @@ public class AdminProgramAssignService {
     }
 
     private String getOnlySymbols(String value) {
-        return value.replaceAll("[^\\D\\.]+", "");
+        return value.replace("on a specific distance", "").replaceAll("[\\s\\.\\,]+", "");
     }
 
     private String getGoalName(InUserGoal inUserGoal) {

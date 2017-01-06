@@ -85,13 +85,17 @@ public class XlsxProgramParser {
             final String userGroupName = getNumberOrNullAsString(getCellData(sheet, 2, 2 + workoutIndex));
             final String roundName = getNumberOrNullAsString(getCellData(sheet, 3, 2 + workoutIndex));
             final String partName = (String) getCellData(sheet, 4, 2 + workoutIndex);
+            final boolean userGroupNameWasCreated;
             if (userGroupName != null && !prevUserGroupName.equals(userGroupName)) {
                 userGroup = new UserGroup().setName(userGroupName);
                 prevUserGroupName = userGroupName;
                 excelGoal.getUserGroups().add(userGroup);
+                userGroupNameWasCreated = true;
+            } else {
+                userGroupNameWasCreated = false;                
             }
             final boolean roundNameWasCreated;
-            if (roundName != null && !prevRoundName.equals(roundName)) {
+            if (roundName != null && (userGroupNameWasCreated || !prevRoundName.equals(roundName))) {
                 round = new Round()
                         .setName(roundName);
                 prevRoundName = roundName;
@@ -100,7 +104,7 @@ public class XlsxProgramParser {
             } else {
                 roundNameWasCreated = false;
             }
-            if (partName != null && (roundNameWasCreated || !prevPartName.equals(partName))) {
+            if (partName != null && (userGroupNameWasCreated || roundNameWasCreated || !prevPartName.equals(partName))) {
                 part = new Part()
                         .setName(partName);
                 prevPartName = partName;
