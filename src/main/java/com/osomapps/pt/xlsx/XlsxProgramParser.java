@@ -183,7 +183,7 @@ public class XlsxProgramParser {
                 }
                 if (weightInp instanceof String) {
                     String[] weightInps = ((String) weightInp).split("\\s*,\\s*");
-                    inputSet.setWeight(getFloatOrNull(extractNumbers(weightInps[Math.min(index, weightInps.length - 1)])));
+                    inputSet.setWeight(getFloatOrNull(extractFloatNumbers(weightInps[Math.min(index, weightInps.length - 1)])));
                 } else {
                     inputSet.setWeight(getFloatOrNull(weightInp));
                 }
