@@ -31,7 +31,7 @@ public class AdminProgramFileResourceIntTest {
 
     @Test
     public void findOne() throws Exception {
-        given(this.programService.createXlsx(eq(1L), any(ByteArrayOutputStream.class))).willReturn(new ProgramResponseDTO().setDataUrl(""));
+        given(this.programService.findOne(eq(1L))).willReturn(new ProgramResponseDTO().setDataUrl(""));
         HttpServletResponse httpServletResponse = new MockHttpServletResponse();
         adminProgramFileResource.findOne(1L, "fileName", httpServletResponse);
         Assert.assertThat(httpServletResponse.getStatus(), equalTo(HttpStatus.OK.value()));

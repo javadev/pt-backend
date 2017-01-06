@@ -20,8 +20,6 @@ import com.osomapps.pt.programs.ParseWorkout;
 import com.osomapps.pt.programs.ParseWorkoutItem;
 import com.osomapps.pt.programs.ParseWorkoutItemRepository;
 import com.osomapps.pt.programs.ParseWorkoutRepository;
-import com.osomapps.pt.xlsx.ExcelGoal;
-import com.osomapps.pt.xlsx.XlsxModifier;
 import com.osomapps.pt.xlsx.XlsxProgramParser;
 import java.io.OutputStream;
 import java.util.Arrays;
@@ -37,8 +35,7 @@ import com.osomapps.pt.programs.ParseWarmupWorkoutItemRepository;
 import com.osomapps.pt.programs.ParseWorkoutItemSet;
 import com.osomapps.pt.programs.ParseWorkoutItemSetRepository;
 import com.osomapps.pt.xlsx.ExcelSheets;
-import com.osomapps.pt.xlsx.Round;
-import com.osomapps.pt.xlsx.UserGroup;
+import java.io.IOException;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -329,6 +326,14 @@ class AdminProgramService {
         return new ByteArrayInputStream(Base64.getDecoder().decode(encodedString));
     }
 
+    void dataUrlToOutputStream(String dataUrl, OutputStream outputStream) {
+        final String encodedString = dataUrl.substring(dataUrl.indexOf(BASE64_PREFIX) + BASE64_PREFIX_LENGTH);
+        try {
+            outputStream.write(Base64.getDecoder().decode(encodedString));
+        } catch (IOException ex) {
+        }
+    }
+
     ProgramResponseDTO delete(Long id) {
         final ParseProgram program = programRepository.findOne(id);
         if (program == null) {
@@ -337,31 +342,5 @@ class AdminProgramService {
         final ProgramResponseDTO responseDTO = programToDto(program);
         programRepository.delete(program);
         return responseDTO;
-    }
-
-    ProgramResponseDTO createXlsx(Long programId, OutputStream outputStream) {
-        final ParseProgram program = programRepository.findOne(programId);
-        final ByteArrayInputStream inputStream = dataUrlToInputStream(program.getData_url());
-        final XlsxModifier xlsxModifier = XlsxModifier.of(inputStream);
-        final List<ParseGoal> parseGoals = program.getParseGoals();
-        final List<ExcelGoal> excelGoals = parseGoals.stream().map(parseGoal ->
-                new ExcelGoal()
-                    .setSheetIndex(parseGoal.getSheet_index())
-                    .setUserGroups(parseGoal.getParseUserGroups().stream().map(parseUserGroup ->
-                        createUserGroup(parseUserGroup)
-                    ).collect(Collectors.toList()))
-        ).collect(Collectors.toList());
-        xlsxModifier.updateCellData(outputStream, excelGoals);
-        return programToDto(program);
-    }
-
-    private UserGroup createUserGroup(ParseUserGroup parseUserGroup) {
-        return new UserGroup()
-                .setRounds(parseUserGroup.getParseRounds().stream().map(
-                        parseRound -> createRound(parseRound)).collect(Collectors.toList()));
-    }
-
-    private Round createRound(ParseRound parseRound) {
-        return new Round();
     }
 }

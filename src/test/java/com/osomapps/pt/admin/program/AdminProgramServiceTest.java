@@ -1,9 +1,6 @@
 package com.osomapps.pt.admin.program;
 
 import com.osomapps.pt.ResourceNotFoundException;
-import com.osomapps.pt.programs.InWorkoutItem;
-import com.osomapps.pt.programs.InWorkoutItemReport;
-import com.osomapps.pt.programs.InWorkoutItemSetReport;
 import com.osomapps.pt.programs.ParseExercise;
 import com.osomapps.pt.programs.ParseExerciseRepository;
 import com.osomapps.pt.programs.ParseGoal;
@@ -173,39 +170,5 @@ public class AdminProgramServiceTest {
                                                 .setParseWorkoutItemSets(Arrays.asList(new ParseWorkoutItemSet())))))))))))))));
         adminProgramService.delete(1L);
         verify(programRepository).delete(any(ParseProgram.class));
-    }
-    
-    @Test
-    public void createXlsx() throws IOException {
-        final java.io.ByteArrayOutputStream result = new java.io.ByteArrayOutputStream();
-        final byte[] buffer = new byte[1024];
-        try (InputStream inputStream = AdminProgramServiceTest.class.getResourceAsStream("dataurl02.txt")) {
-            int length;
-            while ((length = inputStream.read(buffer)) != -1) {
-                result.write(buffer, 0, length);
-            }
-        }
-        when(inWorkoutItemRepository.findOne(eq(1L))).thenReturn(new InWorkoutItem()
-            .setInWorkoutItemReports(Arrays.asList(new InWorkoutItemReport()
-                .setInWorkoutItemSetReports(Arrays.asList(new InWorkoutItemSetReport()
-                    .setRepetitions(1)
-                    .setWeight(1F))))));
-        when(programRepository.findOne(eq(1L))).thenReturn(new ParseProgram()
-                .setData_url(result.toString())
-                .setParseExercises(Arrays.asList(new ParseExercise()))
-                .setParseGoals(Arrays.asList(new ParseGoal()
-                        .setSheet_index(0)
-                        .setParseUserGroups(Arrays.asList(new ParseUserGroup()
-                                .setParseRounds(Arrays.asList(new ParseRound()
-                                        .setParseParts(Arrays.asList(new ParsePart()
-                                                .setParseWorkouts(Arrays.asList(new ParseWorkout()
-                            .setRow_index(5)
-                            .setColumn_index(10)
-                            .setParseWorkoutItems(Arrays.asList(new ParseWorkoutItem()
-                                .setParseWorkoutItemSets(Arrays.asList(new ParseWorkoutItemSet()))
-                                .setIn_workout_item_id(1L)
-                                .setColumn_index(1)
-                                .setRow_index(1))))))))))))));
-        adminProgramService.createXlsx(1L, new java.io.ByteArrayOutputStream());
     }
 }
