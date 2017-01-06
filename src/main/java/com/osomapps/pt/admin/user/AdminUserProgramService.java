@@ -57,7 +57,7 @@ class AdminUserProgramService {
                         .setSets(inWorkoutItem.getInWorkoutItemSets().size())
                         .setRepetitions(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> set.getRepetitions()).collect(Collectors.toList()))
                         .setRepetitionsToFailure(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> BooleanUtils.isTrue(set.getRepetitions_to_failure())).collect(Collectors.toList()))
-                        .setWeight(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> set.getWeight() == null ? null : set.getWeight().intValue()).collect(Collectors.toList()))
+                        .setWeight(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> set.getWeight()).collect(Collectors.toList()))
                         .setBodyweight(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> BooleanUtils.isTrue(set.getBodyweight())).collect(Collectors.toList()))
                         .setTimeInSec(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> set.getTime_in_sec()).collect(Collectors.toList()))
                         .setSpeed(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> set.getSpeed()).collect(Collectors.toList()))

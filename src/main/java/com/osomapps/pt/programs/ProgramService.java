@@ -217,7 +217,7 @@ class ProgramService {
                 workoutItem.setSets(inWorkoutItem.getInWorkoutItemSets().stream().map(set ->
                         new WorkoutItemSetResponseDTO()
                         .setRepetitions(set.getRepetitions())
-                        .setWeight(set.getWeight() == null ? null : set.getWeight().intValue())
+                        .setWeight(set.getWeight())
                         .setBodyweight(BooleanUtils.isTrue(set.getBodyweight()))
                         .setTime_in_sec(set.getTime_in_sec())
                         .setSpeed(set.getSpeed())

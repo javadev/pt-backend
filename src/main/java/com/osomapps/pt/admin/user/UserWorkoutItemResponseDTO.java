@@ -19,7 +19,7 @@ class UserWorkoutItemResponseDTO {
     Integer sets;
     List<Integer> repetitions;
     List<Boolean> repetitionsToFailure;
-    List<Integer> weight;
+    List<Float> weight;
     List<Boolean> bodyweight;
     List<Integer> timeInSec;
     List<Integer> speed;

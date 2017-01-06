@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 @Setter
 class WorkoutItemSetResponseDTO {
     Integer repetitions;
-    Integer weight;
+    Float weight;
     Boolean bodyweight;
     Integer time_in_sec;
     Integer speed;
