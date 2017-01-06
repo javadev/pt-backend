@@ -66,35 +66,79 @@ public class AdminProgramAssignServiceTest {
     private AdminProgramAssignService adminProgramAssignService;
 
     @Test
-    @SuppressWarnings("unchecked")
-    public void assign() {
+    public void assign_user_group_1() {
         when(inUserRepository.findAll()).thenReturn(Arrays.asList(
                 new InUser().setInUserFacebooks(Arrays.asList(
                         new InUserFacebook().setUser_name("user_name")))));
         when(adminProgramScanExerciseService.getExerciseIdByName(anyString())).thenReturn(Optional.empty());
         when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(
-                Arrays.asList(new ParseProgram().setParseGoals(Arrays.asList(
-                        new ParseGoal()
-                                .setName("Loose weight")
-                        .setParseUserGroups(Arrays.asList(
-                                new ParseUserGroup()
-                                        .setName("1")
-                        .setParseRounds(Arrays.asList(
-                                new ParseRound().setParseParts(Arrays.asList(
-                                        new ParsePart().setParseWorkouts(Arrays.asList(
-                                                new ParseWorkout()
-                                        .setParseWarmupWorkoutItems(Arrays.asList(
-                                                new ParseWarmupWorkoutItem()))
-                                        .setParseWorkoutItems(Arrays.asList(
-                                                new ParseWorkoutItem().setParseWorkoutItemSets(Arrays.asList(
-                                                        new ParseWorkoutItemSet()))))
-                                        )))))))))
-                )));
+        when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
         adminProgramAssignService.assign(new InUser().setD_level("2")
                 .setD_sex("male").setInUserGoals(Arrays.asList(new InUserGoal())));
         verify(inProgramRepository).save(any(InProgram.class));
+    }
+
+    @Test
+    public void assign_user_group_2() {
+        when(inUserRepository.findAll()).thenReturn(Arrays.asList(
+                new InUser().setInUserFacebooks(Arrays.asList(
+                        new InUserFacebook().setUser_name("user_name")))));
+        when(adminProgramScanExerciseService.getExerciseIdByName(anyString())).thenReturn(Optional.empty());
+        when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
+        when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
+        adminProgramAssignService.assign(new InUser().setD_level("1")
+                .setD_sex("male").setInUserGoals(Arrays.asList(new InUserGoal())));
+        verify(inProgramRepository).save(any(InProgram.class));
+    }
+    
+    @Test
+    public void assign_user_group_3() {
+        when(inUserRepository.findAll()).thenReturn(Arrays.asList(
+                new InUser().setInUserFacebooks(Arrays.asList(
+                        new InUserFacebook().setUser_name("user_name")))));
+        when(adminProgramScanExerciseService.getExerciseIdByName(anyString())).thenReturn(Optional.empty());
+        when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
+        when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
+        adminProgramAssignService.assign(new InUser().setD_level("2")
+                .setD_sex("female").setInUserGoals(Arrays.asList(new InUserGoal())));
+        verify(inProgramRepository).save(any(InProgram.class));
+    }
+    
+    @Test
+    public void assign_user_group_4() {
+        when(inUserRepository.findAll()).thenReturn(Arrays.asList(
+                new InUser().setInUserFacebooks(Arrays.asList(
+                        new InUserFacebook().setUser_name("user_name")))));
+        when(adminProgramScanExerciseService.getExerciseIdByName(anyString())).thenReturn(Optional.empty());
+        when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
+        when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
+        adminProgramAssignService.assign(new InUser().setD_level("1")
+                .setD_sex("female").setInUserGoals(Arrays.asList(new InUserGoal())));
+        verify(inProgramRepository).save(any(InProgram.class));
+    }
+
+    private static ParseProgram getParseProgram() {
+        return new ParseProgram().setParseGoals(Arrays.asList(
+                new ParseGoal()
+                        .setName("Loose weight")
+                        .setParseUserGroups(Arrays.asList(
+                                new ParseUserGroup()
+                                        .setName("1")
+                                        .setParseRounds(Arrays.asList(
+                                                new ParseRound().setParseParts(Arrays.asList(
+                                                        new ParsePart().setParseWorkouts(Arrays.asList(
+                                                                new ParseWorkout()
+                                                                        .setParseWarmupWorkoutItems(Arrays.asList(
+                                                                                new ParseWarmupWorkoutItem()))
+                                                                        .setParseWorkoutItems(Arrays.asList(
+                                                                                new ParseWorkoutItem().setParseWorkoutItemSets(Arrays.asList(
+                                                                                        new ParseWorkoutItemSet()))))
+                                                        )))))))))
+        );
     }
 
     @Test
