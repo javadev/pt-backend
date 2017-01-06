@@ -12,13 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FastByteArrayOutputStream;
 
+@Slf4j
 @Service
-@Slf4j        
 class AdminUserProgramFileService {
 
     private final DictionaryService dictionaryService;
     private final InUserRepository inUserRepository;
-    
+
     AdminUserProgramFileService(DictionaryService dictionaryService,
             InUserRepository inUserRepository) {
         this.dictionaryService = dictionaryService;
