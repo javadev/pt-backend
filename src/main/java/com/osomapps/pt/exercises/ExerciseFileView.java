@@ -26,7 +26,7 @@ import javax.persistence.Table;
 @Setter
 @Entity
 @Table (name = "exercise_file", schema = "ptcore")
-public class ExerciseFileView {
+class ExerciseFileView {
     @Id
     @SequenceGenerator(name = "ExerciseFileViewIdSequence", sequenceName = "ptcore.exercise_file_id_seq",
             allocationSize = 1, initialValue = 1)

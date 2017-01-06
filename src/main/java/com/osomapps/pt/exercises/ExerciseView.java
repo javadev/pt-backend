@@ -20,7 +20,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import org.hibernate.annotations.DynamicInsert;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,8 +28,7 @@ import org.hibernate.annotations.DynamicInsert;
 @Setter
 @Entity
 @Table (name = "exercise", schema = "ptcore")
-@DynamicInsert
-public class ExerciseView {
+class ExerciseView {
     @Id
     @SequenceGenerator(name = "ExerciseViewIdSequence", sequenceName = "ptcore.exercise_id_seq",
             allocationSize = 1, initialValue = 1)
