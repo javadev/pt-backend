@@ -52,7 +52,6 @@ public class XlsxProgramModifier {
                 fillCell(inputSheet, 1, 8, "");
                 fillCell(inputSheet, 2, 8, "");
             }
-            inputStream.close();
             book.write(outputStream);
         } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
