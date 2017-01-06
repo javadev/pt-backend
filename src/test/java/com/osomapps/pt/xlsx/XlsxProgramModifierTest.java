@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.mockito.Matchers.anyString;
@@ -22,15 +23,7 @@ public class XlsxProgramModifierTest {
 
     @Test
     public void updateCellData() {
-        FastByteArrayOutputStream localOutputStream = new FastByteArrayOutputStream();
-        final byte[] buffer = new byte[1024];
-        try (InputStream inputStream = XlsxProgramParser.class.getResourceAsStream("program01.xlsx")) {
-            int length;
-            while ((length = inputStream.read(buffer)) != -1) {
-                localOutputStream.write(buffer, 0, length);
-            }
-        } catch (IOException ex) {
-        }
+        FastByteArrayOutputStream localOutputStream = getOutputStream();
 
         DictionaryService dictionaryService = mock(DictionaryService.class);
         XlsxProgramModifier xlsxProgramModifier = XlsxProgramModifier.of(
@@ -40,6 +33,45 @@ public class XlsxProgramModifierTest {
         xlsxProgramModifier.updateCellData(mock(OutputStream.class), new InUser()
                 .setWeight(60F)
                 .setInUserGoals(Arrays.asList(new InUserGoal(), new InUserGoal())));
+    }
+
+    @Test
+    public void updateCellData_no_goals() {
+        FastByteArrayOutputStream localOutputStream = getOutputStream();
+
+        DictionaryService dictionaryService = mock(DictionaryService.class);
+        XlsxProgramModifier xlsxProgramModifier = XlsxProgramModifier.of(
+                localOutputStream.getInputStream(), dictionaryService);
+        when(dictionaryService.getEnValue(eq(DictionaryName.goal_title),
+                    anyString(), anyString())).thenReturn("Loose weight");
+        xlsxProgramModifier.updateCellData(mock(OutputStream.class), new InUser()
+                .setWeight(60F)
+                .setInUserGoals(Collections.emptyList()));
+    }
+
+    @Test
+    public void updateCellData_one_goal() {
+        FastByteArrayOutputStream localOutputStream = getOutputStream();
+
+        DictionaryService dictionaryService = mock(DictionaryService.class);
+        XlsxProgramModifier xlsxProgramModifier = XlsxProgramModifier.of(
+                localOutputStream.getInputStream(), dictionaryService);
+        xlsxProgramModifier.updateCellData(mock(OutputStream.class), new InUser()
+                .setWeight(60F)
+                .setInUserGoals(Arrays.asList(new InUserGoal())));
+    }
+
+    private FastByteArrayOutputStream getOutputStream() {
+        FastByteArrayOutputStream localOutputStream = new FastByteArrayOutputStream();
+        final byte[] buffer = new byte[1024];
+        try (InputStream inputStream = XlsxProgramParser.class.getResourceAsStream("program01.xlsx")) {
+            int length;
+            while ((length = inputStream.read(buffer)) != -1) {
+                localOutputStream.write(buffer, 0, length);
+            }
+        } catch (IOException ex) {
+        }
+        return localOutputStream;
     }
 
 }
