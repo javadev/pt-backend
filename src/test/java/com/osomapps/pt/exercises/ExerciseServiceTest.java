@@ -9,15 +9,17 @@ import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import static org.mockito.Matchers.any;
 import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.Sort;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ExerciseServiceTest {
     @Mock
-    private ExerciseRepository exerciseRepository;
+    private ExerciseViewRepository exerciseViewRepository;
     @Mock
     private DictionaryService dictionaryService;
     @InjectMocks
@@ -25,15 +27,15 @@ public class ExerciseServiceTest {
     
     @Test
     public void findAll() {
-        when(exerciseRepository.findAll()).thenReturn(Arrays.asList(
-                new Exercise()
+        when(exerciseViewRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(
+                new ExerciseView()
         .setExerciseTypes(Arrays.asList(new ExerciseType()))
-        .setExerciseFiles(Arrays.asList(new ExerciseFile()
+        .setExerciseFiles(Arrays.asList(new ExerciseFileView()
                 .setId(1L)
                 .setFile_name("test")))
         ));
         List<ExerciseDTO> exerciseDTOs = exerciseService.findAll();
-        verify(exerciseRepository).findAll();
+        verify(exerciseViewRepository).findAll(any(Sort.class));
         assertThat(exerciseDTOs.size(), equalTo(1));
         assertThat(exerciseDTOs.get(0).getImages().get(0), equalTo("/api/v1/exercise-image/1/test"));
     }

@@ -5,22 +5,23 @@ import com.osomapps.pt.dictionary.DictionaryService;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
 class ExerciseService {
-    private final ExerciseRepository exerciseRepository;
+    private final ExerciseViewRepository exerciseViewRepository;
     private final DictionaryService dictionaryService;
 
     @Autowired
-    ExerciseService(ExerciseRepository exerciseRepository,
+    ExerciseService(ExerciseViewRepository exerciseViewRepository,
             DictionaryService dictionaryService) {
-        this.exerciseRepository = exerciseRepository;
+        this.exerciseViewRepository = exerciseViewRepository;
         this.dictionaryService = dictionaryService;
     }
 
     List<ExerciseDTO> findAll() {
-        List<Exercise> exercises = exerciseRepository.findAll();
+        List<ExerciseView> exercises = exerciseViewRepository.findAll(new Sort(Sort.Direction.ASC, "exerciseId"));
         return exercises.stream().map(exercise -> {
             ExerciseDTO exerciseDTO = new ExerciseDTO();
             exerciseDTO.setId(exercise.getExerciseId());
