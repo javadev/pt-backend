@@ -35,6 +35,10 @@ import com.osomapps.pt.programs.ParseWarmupWorkoutItemRepository;
 import com.osomapps.pt.programs.ParseWorkoutItemSet;
 import com.osomapps.pt.programs.ParseWorkoutItemSetRepository;
 import com.osomapps.pt.token.InUser;
+import java.io.OutputStream;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminProgramServiceTest {
@@ -171,4 +175,22 @@ public class AdminProgramServiceTest {
         adminProgramService.delete(1L);
         verify(programRepository).delete(any(ParseProgram.class));
     }
+
+    @Test
+    public void dataUrlToOutputStream() throws IOException {
+        OutputStream outputStream = mock(OutputStream.class);
+        adminProgramService.dataUrlToOutputStream("data:image/gif;base64,R0lGODlhEAAOALMAAOazToeHh0tLS/7LZv/0j"
+                + "vb29t/f3//Ub//ge8WSLf/rhf/3kdbW1mxsbP//mf///yH5BAAAAAAALAAAAAAQAA4AAA"
+                + "Re8L1Ekyky67QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjgaORCMxIC6e0Cc"
+                + "guWw6aFjsVMkkIr7g77ZKPJjPZqIyd7sJAgVGoEGv2xsBxqNgYPj/gAwXEQA7", outputStream);
+        verify(outputStream).write(anyObject());
+    }
+
+    @Test
+    public void dataUrlToOutputStream_wrong_data() throws IOException {
+        OutputStream outputStream = mock(OutputStream.class);
+        adminProgramService.dataUrlToOutputStream("data:image/gif;base64,!!!", outputStream);
+        verify(outputStream, never()).write(anyObject());
+    }
+
 }

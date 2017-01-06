@@ -41,7 +41,7 @@ import org.apache.commons.lang3.StringUtils;
 
 @Service
 class AdminProgramService {
-    
+
     private static final String BASE64_PREFIX = ";base64,";
     private static final int BASE64_PREFIX_LENGTH = 8;
     private final ProgramRepository programRepository;
@@ -330,7 +330,7 @@ class AdminProgramService {
         final String encodedString = dataUrl.substring(dataUrl.indexOf(BASE64_PREFIX) + BASE64_PREFIX_LENGTH);
         try {
             outputStream.write(Base64.getDecoder().decode(encodedString));
-        } catch (IOException ex) {
+        } catch (IOException | IllegalArgumentException ex) {
         }
     }
 

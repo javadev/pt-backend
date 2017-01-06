@@ -1,7 +1,6 @@
 package com.osomapps.pt.exercises;
 
 import com.osomapps.pt.dictionary.DictionaryService;
-import com.osomapps.pt.user.UserService;
 import java.util.Arrays;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
