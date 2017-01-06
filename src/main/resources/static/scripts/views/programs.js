@@ -314,7 +314,7 @@ function ($, _, Backbone, Marionette, moment, App) {
       return {
         getInputs: function () {
           var repetitions = _.compact(_.map(model.get('sets'), function(item) { return item.repetitions; }));
-          var weight = _.compact(_.map(model.get('sets'), function(item) { return item.weigh; }));
+          var weight = _.compact(_.map(model.get('sets'), function(item) { return item.weight; }));
           var timeInMin = _.compact(_.map(model.get('sets'), function(item) { return item['time_in_min']; }));
           return 'sets ' + model.get('sets').length +
                   (_.isEmpty(repetitions) ? '' : ', repetitions ' + repetitions.join(',')) +
