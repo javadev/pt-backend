@@ -13,7 +13,7 @@ import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHtt
 
 @Configuration
 @EnableCaching
-@EnableJdbcHttpSession
+@EnableJdbcHttpSession(tableName = "ptcore.SPRING_SESSION")
 class CachingConfig {
 
     @Bean
