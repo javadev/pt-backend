@@ -1,5 +1,6 @@
 package com.osomapps.pt.admin.ptuser;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ import org.hibernate.annotations.DynamicInsert;
 @Entity
 @Table (name = "pt_role", schema = "ptcore")
 @DynamicInsert
-public class PtRole {
+public class PtRole implements Serializable {
     @Id
     @SequenceGenerator(name = "PtRoleIdSequence", sequenceName = "ptcore.pt_role_id_seq",
             allocationSize = 1, initialValue = 1)
