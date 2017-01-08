@@ -101,8 +101,11 @@ define([
           var userEditView = new UsersViews.NewUserLayout({
             model: user
           });
-          user.on('user:back', function(modelId) {
+          user.on('user:back', function(modelId, data) {
             users._modelId = modelId;
+            if (!!data && !!users.get(modelId)) {
+              users.get(modelId).set(data);
+            }
             var usersView = new UsersViews.Users({
               collection: users
             });
@@ -174,8 +177,11 @@ define([
           var exerciseEditView = new ExercisesViews.NewExerciseLayout({
             model: exercise
           });
-          exercise.on('exercise:back', function(modelId) {
+          exercise.on('exercise:back', function(modelId, data) {
             exercises._modelId = modelId;
+            if (!!data && !!exercises.get(modelId)) {
+              exercises.get(modelId).set(data);
+            }
             var exercisesView = new ExercisesViews.Exercises({
               collection: exercises
             });
@@ -211,8 +217,11 @@ define([
           var goalEditView = new GoalsViews.NewGoalLayout({
             model: goal
           });
-          goal.on('goal:back', function(modelId) {
+          goal.on('goal:back', function(modelId, data) {
             goals._modelId = modelId;
+            if (!!data && !!goals.get(modelId)) {
+              goals.get(modelId).set(data);
+            }
             var goalsView = new GoalsViews.Goals({
               collection: goals
             });
@@ -245,7 +254,11 @@ define([
           var programEditView = new ProgramsViews.NewProgramLayout({
             model: program
           });
-          program.on('program:back', function() {
+          program.on('program:back', function(modelId, data) {
+            programs._modelId = modelId;
+            if (!!data && !!programs.get(modelId)) {
+              programs.get(modelId).set(data);
+            }
             var programsView = new ProgramsViews.Programs({
               collection: programs
             });
@@ -276,7 +289,11 @@ define([
           var certificateEditView = new CertificatesViews.NewCertificateLayout({
             model: certificate
           });
-          certificate.on('certificate:back', function() {
+          certificate.on('certificate:back', function(modelId, data) {
+            certificates._modelId = modelId;
+            if (!!data && !!certificates.get(modelId)) {
+              certificates.get(modelId).set(data);
+            }
             var certificatesView = new CertificatesViews.Certificates({
               collection: certificates
             });
@@ -312,7 +329,11 @@ define([
           var emailEditView = new EmailsViews.NewEmailLayout({
             model: email
           });
-          email.on('email:back', function() {
+          email.on('email:back', function(modelId, data) {
+            emails._modelId = modelId;
+            if (!!data && !!emails.get(modelId)) {
+              emails.get(modelId).set(data);
+            }
             var emailsView = new EmailsViews.Emails({
               collection: emails
             });

@@ -508,13 +508,13 @@ function ($, _, Backbone, Marionette, moment, App) {
     },
     back: function(evt) {
       evt.preventDefault();
-      this.model.trigger('program:back');
+      this.model.trigger('program:back', this.model.get('id'));
     },
     save: function(evt) {
       evt.preventDefault();
       var model = this.model;
-      this.model.save().done(function() {
-        model.trigger('program:back');
+      this.model.save().done(function(data) {
+        model.trigger('program:back', model.get('id'), data);
       })
       .fail(function (xhr) {
         App.vent.trigger('xhr:error', 'Program save was failed');

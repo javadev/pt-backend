@@ -284,8 +284,8 @@ function ($, _, Backbone, Marionette, App, BackboneBootstrapModals) {
       evt.preventDefault();
       var model = this.model;
       model.set('files', model._files.toJSON());
-      this.model.save().done(function() {
-        model.trigger('exercise:back', model.get('id'));
+      this.model.save().done(function(data) {
+        model.trigger('exercise:back', model.get('id'), data);
       })
       .fail(function (xhr) {
         App.vent.trigger('xhr:error', 'Exercise save was failed');

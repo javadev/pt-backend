@@ -340,8 +340,8 @@ function ($, _, Backbone, Marionette, moment, App, BackboneBootstrapModals) {
     save: function(evt) {
       evt.preventDefault();
       var model = this.model;
-      this.model.save().done(function() {
-        model.trigger('user:back', model.get('id'));
+      this.model.save().done(function(data) {
+        model.trigger('user:back', model.get('id'), data);
       })
       .fail(function (xhr) {
         App.vent.trigger('xhr:error', 'User save was failed');

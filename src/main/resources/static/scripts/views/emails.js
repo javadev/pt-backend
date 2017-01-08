@@ -177,13 +177,13 @@ function ($, _, Marionette, App) {
     },
     back: function(evt) {
       evt.preventDefault();
-      this.model.trigger('email:back');
+      this.model.trigger('email:back', this.model.get('id'));
     },
     save: function(evt) {
       evt.preventDefault();
       var model = this.model;
-      this.model.save().done(function() {
-        model.trigger('email:back');
+      this.model.save().done(function(data) {
+        model.trigger('email:back', model.get('id'), data);
       })
       .fail(function (xhr) {
         App.vent.trigger('xhr:error', 'Email template save was failed');

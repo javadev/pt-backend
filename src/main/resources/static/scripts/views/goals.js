@@ -190,8 +190,8 @@ function ($, _, Marionette, App) {
     save: function(evt) {
       evt.preventDefault();
       var model = this.model;
-      this.model.save().done(function() {
-        model.trigger('goal:back', model.get('id'));
+      this.model.save().done(function(data) {
+        model.trigger('goal:back', model.get('id'), data);
       })
       .fail(function (xhr) {
         App.vent.trigger('xhr:error', 'Goal save was failed');

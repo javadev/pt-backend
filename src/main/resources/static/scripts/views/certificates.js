@@ -181,13 +181,13 @@ function ($, _, Marionette, App) {
     },
     back: function(evt) {
       evt.preventDefault();
-      this.model.trigger('certificate:back');
+      this.model.trigger('certificate:back', this.model.get('id'));
     },
     save: function(evt) {
       evt.preventDefault();
       var model = this.model;
-      this.model.save().done(function() {
-        model.trigger('certificate:back');
+      this.model.save().done(function(data) {
+        model.trigger('certificate:back', model.get('id'), data);
       })
       .fail(function (xhr) {
         App.vent.trigger('xhr:error', 'Certificate save was failed');

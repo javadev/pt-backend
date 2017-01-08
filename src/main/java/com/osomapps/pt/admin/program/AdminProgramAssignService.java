@@ -69,7 +69,8 @@ public class AdminProgramAssignService {
 
         List<ParseProgram> parsePrograms = parseProgramRepository.findAll(new Sort(Sort.Direction.DESC, "id"));
         if (parsePrograms.isEmpty()) {
-            throw new UnauthorizedException("There are no programs found.");
+            log.warn("There are no programs found.");
+            return inUser;
         }
         Optional<Integer> userGroup = getUserGroup(inUser);
         if (!userGroup.isPresent()) {
