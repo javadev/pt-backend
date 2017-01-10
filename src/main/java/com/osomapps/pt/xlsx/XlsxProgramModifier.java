@@ -132,7 +132,11 @@ public class XlsxProgramModifier {
         if (cell == null) {
             cell = row.createCell(columnNumber, CELL_TYPE_NUMERIC);
         }
-        cell.setCellValue(value);
+        if (value == null) {
+            cell.setCellValue("");
+        } else {
+            cell.setCellValue(value);
+        }
         cell.setCellFormula(null);
     }
 
