@@ -78,7 +78,7 @@ public class UserService {
                 userName = Optional.of(inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1).getUser_name());
             }
         } else {
-            userName = Optional.of(inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1).getUser_name());
+            userName = Optional.ofNullable(inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1).getUser_name());
         }
         return userName;
     }
