@@ -9,7 +9,7 @@ public class ParseWorkoutItemTest {
     @Test
     public void createAllArgs() {
         assertThat(new ParseWorkoutItem(
-                1L, null, null, null, null, null, null, null), notNullValue());
+                1L, null, null, null, null, null, null, null, null), notNullValue());
     }
 
     @Test

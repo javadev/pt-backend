@@ -300,6 +300,7 @@ class AdminProgramService {
                 .setParseWarmupWorkoutItems(workout.getWarmup() == null ? Collections.emptyList()
                         : Arrays.asList(new ParseWarmupWorkoutItem()
                                 .setName(workout.getWarmup().getExercise())
+                                .setExercise_id(workout.getWarmup().getExerciseId())
                                 .setSpeed(workout.getWarmup().getSpeed())
                                 .setIncline(workout.getWarmup().getIncline())
                                 .setTime_in_min(workout.getWarmup().getTimeInMin())))
@@ -308,6 +309,7 @@ class AdminProgramService {
                                 .setColumn_index(workoutItem.getColumnIndex())
                                 .setRow_index(workoutItem.getRowIndex())
                                 .setName(workoutItem.getInput().getExercise())
+                                .setExercise_id(workoutItem.getExerciseId())
                                 .setParseWorkoutItemSets(workoutItem.getInput().getSets().stream().map(set ->
                                         new ParseWorkoutItemSet()
                                             .setRepetitions(set.getRepetitions())

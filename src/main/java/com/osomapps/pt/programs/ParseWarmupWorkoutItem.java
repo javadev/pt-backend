@@ -34,6 +34,7 @@ public class ParseWarmupWorkoutItem {
     Long id;
     LocalDateTime created;
     String name;
+    Integer exercise_id;
     Integer speed;
     Integer incline;
     Float time_in_min;

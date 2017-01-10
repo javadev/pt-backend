@@ -38,6 +38,7 @@ public class ParseWorkoutItem {
     Long id;
     LocalDateTime created;
     String name;
+    Integer exercise_id;
     Integer column_index;
     Integer row_index;
     Long in_workout_item_id;

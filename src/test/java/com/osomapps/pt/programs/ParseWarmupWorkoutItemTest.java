@@ -9,7 +9,7 @@ public class ParseWarmupWorkoutItemTest {
     @Test
     public void createAllArgs() {
         assertThat(new ParseWarmupWorkoutItem(
-                1L, null, null, null, null, null, null), notNullValue());
+                1L, null, null, null, null, null, null, null), notNullValue());
     }
 
     @Test
