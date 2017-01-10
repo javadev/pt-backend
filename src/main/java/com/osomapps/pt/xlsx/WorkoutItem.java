@@ -16,6 +16,7 @@ import lombok.ToString;
 public class WorkoutItem {
     int columnIndex;
     int rowIndex;
+    int exerciseId;
     Input input = new Input();
     Output output = new Output();
 }

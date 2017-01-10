@@ -20,7 +20,7 @@ public class XlsxProgramParser {
     private final InputStream inputStream;
 
     private XlsxProgramParser(InputStream inputStream) {
-       this.inputStream = inputStream; 
+       this.inputStream = inputStream;
     }
 
     public static XlsxProgramParser of(InputStream inputStream) {
@@ -31,11 +31,11 @@ public class XlsxProgramParser {
         final List<ExcelExercise> excelExercises = new ArrayList<>();
         final List<ExcelGoal> excelGoals = new ArrayList<>();
         try (final Workbook workbook = WorkbookFactory.create(inputStream)) {
-            
+
             excelExercises.addAll(extractExercises(workbook.getSheetAt(3)));
             for (int index = 4; index < workbook.getNumberOfSheets(); index += 1) {
                 final Sheet sheet = workbook.getSheetAt(index);
-                ExcelGoal excelGoal = extractGoal(index, sheet);
+                ExcelGoal excelGoal = extractGoal(index, sheet, excelExercises);
                 if (!excelGoal.getUserGroups().isEmpty()) {
                     excelGoals.add(excelGoal);
                 }
@@ -65,7 +65,7 @@ public class XlsxProgramParser {
         return excelExercises;
     }
 
-    private ExcelGoal extractGoal(int index, final Sheet sheet) {
+    private ExcelGoal extractGoal(int index, final Sheet sheet, List<ExcelExercise> excelExercises) {
         final ExcelGoal excelGoal = new ExcelGoal()
                 .setSheetIndex(index)
                 .setName(sheet.getSheetName())
@@ -92,7 +92,7 @@ public class XlsxProgramParser {
                 excelGoal.getUserGroups().add(userGroup);
                 userGroupNameWasCreated = true;
             } else {
-                userGroupNameWasCreated = false;                
+                userGroupNameWasCreated = false;
             }
             final boolean roundNameWasCreated;
             if (roundName != null && (userGroupNameWasCreated || !prevRoundName.equals(roundName))) {
@@ -126,7 +126,7 @@ public class XlsxProgramParser {
                     break;
                 }
                 final Optional<WorkoutItem> workoutItem = extractWorkoutItem(sheet, workoutItemIndex,
-                        workoutIndex, excelGoal, workoutName);
+                        workoutIndex, excelGoal, workoutName, excelExercises);
                 if (workoutItem.isPresent()) {
                     workout.getWorkoutItems().add(workoutItem.get());
                 }
@@ -134,6 +134,12 @@ public class XlsxProgramParser {
             part.getWorkouts().add(workout);
         }
         return excelGoal;
+    }
+
+    private String getOnlySymbols(String value) {
+        return value.replace("(Weight loss)", "").replace("Leg Press strenght", "Legpress")
+                .replace("Chest Press", "Bench Press").replace("Bike, Steady Pace Walk or Jog", "Bike, Steady Pace")
+                .replaceAll("[\\s\\.\\,]+", "");
     }
 
     private Optional<WarmupWorkoutItem> extractWarmupWorkoutItem(Sheet sheet, int workoutIndex, ExcelGoal excelGoal, String workoutName) {
@@ -150,7 +156,7 @@ public class XlsxProgramParser {
     }
 
     private Optional<WorkoutItem> extractWorkoutItem(final Sheet sheet, int workoutItemIndex,
-            int workoutIndex, ExcelGoal excelGoal, String workoutName) {
+            int workoutIndex, ExcelGoal excelGoal, String workoutName, List<ExcelExercise> excelExercises) {
         final int multiplyCoeff = 7;
         WorkoutItem workoutItem = new WorkoutItem();
         workoutItem.setRowIndex(4 + 4 + workoutItemIndex * multiplyCoeff);
@@ -160,6 +166,15 @@ public class XlsxProgramParser {
         if (!exerciseName.isPresent()) {
             excelGoal.getErrors().add("Exercise name not found. Goal " + excelGoal.getName() + ", workout " + workoutName + ".");
             return Optional.empty();
+        }
+        Optional<ExcelExercise> excelExercise = excelExercises.stream().filter(exercise ->
+            getOnlySymbols(exercise.getExercise_name()).equalsIgnoreCase(getOnlySymbols(exerciseName.get()))
+        ).findFirst();
+        if (!excelExercise.isPresent()) {
+            excelGoal.getErrors().add("Exercise name (" + exerciseName.get() + ") not recognized. Goal "
+                    + excelGoal.getName() + ", workout " + workoutName + ".");
+        } else {
+            workoutItem.setExerciseId(excelExercise.get().getExercise_id());
         }
         Number setsInp = getNumberOrNull(getCellData(sheet, 5 + 5 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
         Object repetitionsInp = getStringOrNumberOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
@@ -183,7 +198,7 @@ public class XlsxProgramParser {
                         inputSet.setTimeInMin(getFloatOrNull(repetitionsInp));
                     } else {
                        inputSet.setRepetitions(getIntegerOrNull(repetitionsInp));
-                    }                    
+                    }
                 }
                 if (weightInp instanceof String) {
                     String[] weightInps = ((String) weightInp).split("\\s*,\\s*");
@@ -204,7 +219,7 @@ public class XlsxProgramParser {
             workoutItem.getInput().setSets(new ArrayList<>());
             for (int index = 0; index < getIntegerOrNull(setsInp); index += 1) {
                 workoutItem.getInput().getSets().add(inputSet);
-            }            
+            }
         }
         return Optional.of(workoutItem);
     }
@@ -250,11 +265,11 @@ public class XlsxProgramParser {
     private Integer getIntegerOrNull(Object object) {
         return object instanceof Number ? ((Number) object).intValue() : null;
     }
-    
+
     private Float getFloatOrNull(Object object) {
         return object instanceof Number ? ((Number) object).floatValue() : null;
     }
-    
+
     private Optional<String> getStringOrEmpty(Object object) {
         if (object instanceof String) {
             return Optional.of((String) object);
@@ -276,18 +291,18 @@ public class XlsxProgramParser {
         if (type == Cell.CELL_TYPE_STRING) {
             return cleanString(cell.getStringCellValue());
         }
-		
+
         if (type == Cell.CELL_TYPE_BOOLEAN) {
             return cell.getBooleanCellValue();
         }
-		
+
         if (type == Cell.CELL_TYPE_NUMERIC) {
             if (cell.getCellStyle().getDataFormatString().contains("%")) {
                 return cell.getNumericCellValue() * 100;
             }
             return numeric(cell);
         }
-		
+
         if (type == Cell.CELL_TYPE_FORMULA) {
             switch(cell.getCachedFormulaResultType()) {
                 case Cell.CELL_TYPE_NUMERIC:
@@ -298,11 +313,11 @@ public class XlsxProgramParser {
         }
         return null;
     }
-    
+
     private String cleanString(String str) {
         return str.replace("\n", "").replace("\r", "");
     }
-    
+
     private Object numeric(Cell cell) {
         if (HSSFDateUtil.isCellDateFormatted(cell)) {
             return cell.getDateCellValue();
