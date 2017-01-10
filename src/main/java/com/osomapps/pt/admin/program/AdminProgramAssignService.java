@@ -27,6 +27,7 @@ import com.osomapps.pt.token.InUserGoal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -91,11 +92,13 @@ public class AdminProgramAssignService {
         } else {
             parseWorkouts = getParseWorkouts(parseRounds);
         }
+        final AtomicInteger index = new AtomicInteger(-1);
         final InProgram inProgram = new InProgram()
                 .setName("Test program for user " + inUser.getId())
                 .setInWorkouts(parseWorkouts.stream().map(parseWorkout
                         -> new InWorkout()
                         .setD_workout_name(parseWorkout.getName())
+                        .setWorkout_index(index.incrementAndGet())
                         .setInWarmupWorkoutItems(parseWorkout.getParseWarmupWorkoutItems().stream().map(parseWarmupWorkoutItem
                                 -> new InWarmupWorkoutItem()
                                 .setD_exercise_name(parseWarmupWorkoutItem.getName())
@@ -206,7 +209,7 @@ public class AdminProgramAssignService {
     }
 
     List<ParseWorkout> mergeLists(List<ParseWorkout> parseWorkouts1, List<ParseWorkout> parseWorkouts2) {
-        List<ParseWorkout> parseWorkouts = new ArrayList<>();
+        final List<ParseWorkout> parseWorkouts = new ArrayList<>();
         for (int index = 0; index < Math.max(parseWorkouts1.size(), parseWorkouts2.size()); index += 1) {
             if (!parseWorkouts1.isEmpty()) {
                 parseWorkouts.add(parseWorkouts1.get(index % parseWorkouts1.size()));
