@@ -131,9 +131,8 @@ public class XlsxProgramModifier {
         XSSFCell cell = row.getCell(columnNumber);
         if (cell == null) {
             cell = row.createCell(columnNumber, CELL_TYPE_NUMERIC);
-        } else {
-            cell.setCellValue(value);
         }
+        cell.setCellValue(value);
         cell.setCellFormula(null);
     }
 
