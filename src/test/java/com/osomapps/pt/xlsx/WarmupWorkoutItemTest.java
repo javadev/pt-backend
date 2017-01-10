@@ -7,11 +7,11 @@ import org.junit.Test;
 public class WarmupWorkoutItemTest {
     @Test
     public void allArgsConstructor() {
-        assertThat(new WarmupWorkoutItem(null, null, null, null), notNullValue());
+        assertThat(new WarmupWorkoutItem(null, 0, null, null, null), notNullValue());
     }
 
     @Test
     public void tostring() {
-        assertThat(new WarmupWorkoutItem(null, null, null, null).toString(), notNullValue());
+        assertThat(new WarmupWorkoutItem(null, 0, null, null, null).toString(), notNullValue());
     }
 }

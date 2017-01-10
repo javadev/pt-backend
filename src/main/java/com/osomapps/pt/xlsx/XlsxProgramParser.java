@@ -117,7 +117,7 @@ public class XlsxProgramParser {
             workout.setColumnIndex(2 + workoutIndex);
             workout.setName(workoutName);
             final Optional<WarmupWorkoutItem> warmupWorkoutItem = extractWarmupWorkoutItem(sheet,
-                    workoutIndex, excelGoal, workoutName);
+                    workoutIndex, excelGoal, workoutName, excelExercises);
             workout.setWarmup(warmupWorkoutItem.orElse(null));
             for (int workoutItemIndex = 0; workoutItemIndex < 10; workoutItemIndex += 1) {
                 final int multiplyCoeff = 7;
@@ -142,16 +142,26 @@ public class XlsxProgramParser {
                 .replaceAll("[\\s\\.\\,]+", "");
     }
 
-    private Optional<WarmupWorkoutItem> extractWarmupWorkoutItem(Sheet sheet, int workoutIndex, ExcelGoal excelGoal, String workoutName) {
+    private Optional<WarmupWorkoutItem> extractWarmupWorkoutItem(Sheet sheet, int workoutIndex,
+            ExcelGoal excelGoal, String workoutName, List<ExcelExercise> excelExercises) {
         final Optional<String> warmupName = getStringOrEmpty(getCellData(sheet, 5, 2 + workoutIndex));
         if (!warmupName.isPresent()) {
             excelGoal.getErrors().add("Warmup name not found. Goal " + excelGoal.getName() + ", workout " + workoutName + ".");
             return Optional.empty();
         }
+        Optional<ExcelExercise> excelExercise = excelExercises.stream().filter(exercise ->
+            getOnlySymbols(exercise.getExercise_name()).equalsIgnoreCase(getOnlySymbols(warmupName.get()))
+        ).findFirst();
+        if (!excelExercise.isPresent()) {
+            excelGoal.getErrors().add("Exercise warmup name (" + warmupName.get() + ") not recognized. Goal "
+                    + excelGoal.getName() + ", workout " + workoutName + ".");
+        }
+
         Integer speedInp = getIntegerOrNull(getCellData(sheet, 5 + 1, 2 + workoutIndex));
         Integer inclineInp = getIntegerOrNull(getCellData(sheet, 5 + 2, 2 + workoutIndex));
         Float timeInp = extractFloatNumbers(getCellData(sheet, 5 + 3, 2 + workoutIndex));
         return Optional.of(new WarmupWorkoutItem().setExercise(warmupName.get())
+            .setExerciseId(excelExercise.orElse(new ExcelExercise().setExercise_id(0)).getExercise_id())
             .setSpeed(speedInp).setIncline(inclineInp).setTimeInMin(timeInp));
     }
 

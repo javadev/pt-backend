@@ -15,6 +15,7 @@ import lombok.ToString;
 @ToString
 public class WarmupWorkoutItem {
     String exercise;
+    int exerciseId;
     Integer speed;
     Integer incline;
     Float timeInMin;
