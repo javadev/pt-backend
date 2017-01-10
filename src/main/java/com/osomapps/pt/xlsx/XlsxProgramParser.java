@@ -157,7 +157,7 @@ public class XlsxProgramParser {
                     + excelGoal.getName() + ", workout " + workoutName + ".");
         }
 
-        Integer speedInp = getIntegerOrNull(getCellData(sheet, 5 + 1, 2 + workoutIndex));
+        Integer speedInp = extractNumbers(getCellData(sheet, 5 + 1, 2 + workoutIndex));
         Integer inclineInp = getIntegerOrNull(getCellData(sheet, 5 + 2, 2 + workoutIndex));
         Float timeInp = extractFloatNumbers(getCellData(sheet, 5 + 3, 2 + workoutIndex));
         return Optional.of(new WarmupWorkoutItem().setExercise(warmupName.get())
