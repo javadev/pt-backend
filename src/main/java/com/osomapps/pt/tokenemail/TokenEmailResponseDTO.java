@@ -13,5 +13,5 @@ import lombok.experimental.Accessors;
 @Setter
 class TokenEmailResponseDTO {
     String token;
-    UserResponseDTO user;    
+    UserSignupResponseDTO user;
 }

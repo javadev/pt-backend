@@ -13,6 +13,7 @@ import com.osomapps.pt.token.InUserLogoutRepository;
 import com.osomapps.pt.token.InUserRepository;
 import com.osomapps.pt.tokenemail.DataurlValidator;
 import com.osomapps.pt.tokenemail.NameValidator;
+import com.osomapps.pt.tokenemail.SendEmailService;
 import java.util.Arrays;
 import java.util.Collections;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -45,6 +46,8 @@ public class UserServiceTest {
     private DataurlValidator dataurlValidator;
     @Mock
     private NameValidator nameValidator;
+    @Mock
+    private SendEmailService sendEmailService;
 
     @InjectMocks
     private UserService userService;

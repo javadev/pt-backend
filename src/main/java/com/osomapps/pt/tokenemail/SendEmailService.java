@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-class SendEmailService {
+public class SendEmailService {
     private final MailSender mailSender;
     private final EmailMessageTypeRepository emailMessageTypeRepository;
     private final DictionaryService dictionaryService;
@@ -63,7 +63,7 @@ class SendEmailService {
                         .getDEmailText(), defaultValue);
     }
 
-    void send(InUserEmail inUserEmail) {
+    public void send(InUserEmail inUserEmail) {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("user_name", inUserEmail.getUser_name());
         parameters.put("email_confirm_link", emailConfirmUrl + inUserEmail.getConfirmToken());

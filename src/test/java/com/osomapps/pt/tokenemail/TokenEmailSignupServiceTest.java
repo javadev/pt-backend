@@ -42,8 +42,6 @@ public class TokenEmailSignupServiceTest {
     private InUserLoginRepository inUserLoginRepository;
     @Mock
     private DataurlValidator dataurlValidator;
-    @Mock
-    private NameValidator nameValidator;
     @InjectMocks
     private TokenEmailSignupService tokenEmailSignupService;
 
@@ -71,17 +69,6 @@ public class TokenEmailSignupServiceTest {
             ((Errors) args[1]).reject("dataurlValidator", "dataurlValidator");
             return null;
         }).when(dataurlValidator).validate(anyObject(), any(Errors.class));
-        tokenEmailSignupService.createInUserEmail(new TokenEmailSignupRequestDTO().setUser(
-                new UserSignupRequestDTO().setEmail("test@mail.com")));
-    }
-
-    @Test(expected = UnauthorizedException.class)
-    public void createInUserEmail_wrong_name() {
-        doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
-            Object[] args = invocation.getArguments();
-            ((Errors) args[1]).reject("dataurlValidator", "dataurlValidator");
-            return null;
-        }).when(nameValidator).validate(anyObject(), any(Errors.class));
         tokenEmailSignupService.createInUserEmail(new TokenEmailSignupRequestDTO().setUser(
                 new UserSignupRequestDTO().setEmail("test@mail.com")));
     }

@@ -14,6 +14,7 @@ import com.osomapps.pt.token.InUserLogoutRepository;
 import com.osomapps.pt.token.InUserRepository;
 import com.osomapps.pt.tokenemail.DataurlValidator;
 import com.osomapps.pt.tokenemail.NameValidator;
+import com.osomapps.pt.tokenemail.SendEmailService;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class UserService {
     private final InUserGoalRepository inUserGoalRepository;
     private final DataurlValidator dataurlValidator;
     private final NameValidator nameValidator;
+    private final SendEmailService sendEmailService;
 
     @Autowired
     UserService(InUserRepository inUserRepository,
@@ -43,7 +45,8 @@ public class UserService {
             GoalRepository goalRepository,
             InUserGoalRepository inUserGoalRepository,
             DataurlValidator dataurlValidator,
-            NameValidator nameValidator) {
+            NameValidator nameValidator,
+            SendEmailService sendEmailService) {
         this.inUserRepository = inUserRepository;
         this.inUserLoginRepository = inUserLoginRepository;
         this.inUserLogoutRepository = inUserLogoutRepository;
@@ -51,6 +54,7 @@ public class UserService {
         this.inUserGoalRepository = inUserGoalRepository;
         this.dataurlValidator = dataurlValidator;
         this.nameValidator = nameValidator;
+        this.sendEmailService = sendEmailService;
     }
 
     public InUserLogin checkUserToken(String token) {
@@ -82,7 +86,13 @@ public class UserService {
     private void setUserName(InUser inUser, String userName) {
         if (inUser.getInUserFacebooks() == null || inUser.getInUserFacebooks().isEmpty()) {
             if (inUser.getInUserEmails() != null && !inUser.getInUserEmails().isEmpty()) {
+                String prevUserName = inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1).getUser_name();
                 inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1).setUser_name(userName);
+                if (prevUserName == null) {
+                    new Thread(() -> {
+                        sendEmailService.send(inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1));
+                    }, "Send-email").start();
+                }
             }
         } else {
             inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1).setUser_name(userName);

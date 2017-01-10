@@ -83,7 +83,7 @@ class TokenEmailService {
         inUserEmailRepository.save(inUserEmail);
         final TokenEmailResponseDTO tokenEmailResponseDTO = new TokenEmailResponseDTO();
         tokenEmailResponseDTO.setToken(inUserLogin.getToken());
-        final UserResponseDTO user = new UserResponseDTO();
+        final UserSignupResponseDTO user = new UserSignupResponseDTO();
         user.setId(inUserEmail.getInUser().getId());
         user.setName(inUserEmail.getUser_name());
         user.setEmail(inUserEmail.getLogin());

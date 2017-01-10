@@ -7,6 +7,7 @@ import com.osomapps.pt.token.InUserLoginRepository;
 import com.osomapps.pt.token.InUserRepository;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +27,6 @@ class TokenEmailSignupService {
     private final InUserRepository inUserRepository;
     private final InUserLoginRepository inUserLoginRepository;
     private final DataurlValidator dataurlValidator;
-    private final NameValidator nameValidator;
 
     TokenEmailSignupService(SendEmailService sendEmailService,
             InUserEmailRepository inUserEmailRepository,
@@ -34,8 +34,7 @@ class TokenEmailSignupService {
             PasswordEncoder passwordEncoder,
             InUserRepository inUserRepository,
             InUserLoginRepository inUserLoginRepository,
-            DataurlValidator dataurlValidator,
-            NameValidator nameValidator) {
+            DataurlValidator dataurlValidator) {
         this.sendEmailService = sendEmailService;
         this.inUserEmailRepository = inUserEmailRepository;
         this.emailValidator = emailValidator;
@@ -43,7 +42,6 @@ class TokenEmailSignupService {
         this.inUserRepository = inUserRepository;
         this.inUserLoginRepository = inUserLoginRepository;
         this.dataurlValidator = dataurlValidator;
-        this.nameValidator = nameValidator;
     }
 
     InUserEmail createInUserEmail(TokenEmailSignupRequestDTO tokenEmailSignupRequestDTO) {
@@ -61,11 +59,6 @@ class TokenEmailSignupService {
             dataurlValidator.validate(tokenEmailSignupRequestDTO.getUser().getAvatar_dataurl(), errorsDataurl);
             if (errorsDataurl.hasErrors()) {
                 throw new UnauthorizedException(errorsDataurl.getAllErrors().get(0).getDefaultMessage());
-            }
-            final MapBindingResult errorsName = new MapBindingResult(new HashMap<>(), String.class.getName());
-            nameValidator.validate(tokenEmailSignupRequestDTO.getUser().getName(), errorsName);
-            if (errorsName.hasErrors()) {
-                throw new UnauthorizedException(errorsName.getAllErrors().get(0).getDefaultMessage());
             }
             inUserEmail.setLogin(email);
             inUserEmail.setUser_name(tokenEmailSignupRequestDTO.getUser().getName());
@@ -89,15 +82,16 @@ class TokenEmailSignupService {
         inUserLogin.setIp_address(remoteAddr);
         inUserLoginRepository.saveAndFlush(inUserLogin);
         inUserEmail.setInUser(savedInUser);
-        new Thread(() -> {
-            sendEmailService.send(inUserEmail);
-        }, "Send-email").start();
         inUserEmailRepository.save(inUserEmail);
         final UserSignupResponseDTO user = new UserSignupResponseDTO();
         user.setId(inUserEmail.getInUser().getId());
         user.setName(inUserEmail.getUser_name());
         user.setEmail(inUserEmail.getLogin());
-        user.setAvatar_dataurl(inUser.getAvatar_dataurl());
+        user.setGender(inUserEmail.getInUser().getD_sex());
+        user.setAge(inUserEmail.getInUser().getAge() == null ? null : inUserEmail.getInUser().getAge().intValue());
+        user.setBirthday(inUserEmail.getInUser().getBirthday());
+        user.setAvatar_dataurl(inUserEmail.getInUser().getAvatar_dataurl());
+        user.setGoals(Collections.emptyList());
         return new TokenEmailSignupResponseDTO().setToken(inUserLogin.getToken()).setUser(user);
     }
 
