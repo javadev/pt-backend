@@ -40,8 +40,7 @@ class AdminUserProgramService {
                 InWarmupWorkoutItem inWarmupWorkoutItem = inWorkout.getInWarmupWorkoutItems().get(0);
                 UserWarmupWorkoutItemResponseDTO warmupWorkoutItem = new UserWarmupWorkoutItemResponseDTO();
                 warmupWorkoutItem.setId(inWarmupWorkoutItem.getId());
-                warmupWorkoutItem.setExercise_id(inWarmupWorkoutItem.getD_exercise_id() == null ? 0L
-                        : Long.parseLong(inWarmupWorkoutItem.getD_exercise_id()));
+                warmupWorkoutItem.setExercise_id(inWarmupWorkoutItem.getExercise_id());
                 warmupWorkoutItem.setExercise_name(inWarmupWorkoutItem.getD_exercise_name());
                 warmupWorkoutItem.setSpeed(inWarmupWorkoutItem.getSpeed());
                 warmupWorkoutItem.setIncline(inWarmupWorkoutItem.getIncline());
@@ -51,8 +50,7 @@ class AdminUserProgramService {
             for (InWorkoutItem inWorkoutItem : inWorkout.getInWorkoutItems()) {
                 UserWorkoutItemResponseDTO userWorkoutItemResponseDTO = new UserWorkoutItemResponseDTO()
                         .setId(inWorkoutItem.getId())
-                        .setExercise_id(inWorkoutItem.getD_exercise_id() == null ? 0L
-                                : Long.parseLong(inWorkoutItem.getD_exercise_id()))
+                        .setExercise_id(inWorkoutItem.getExercise_id())
                         .setExercise_name(inWorkoutItem.getD_exercise_name())
                         .setSets(inWorkoutItem.getInWorkoutItemSets().size())
                         .setRepetitions(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> set.getRepetitions()).collect(Collectors.toList()))

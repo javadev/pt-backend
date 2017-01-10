@@ -35,7 +35,7 @@ public class InWorkoutItem {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "InWorkoutItemIdSequence")
     Long id;
     LocalDateTime created;
-    String d_exercise_id;
+    Integer exercise_id;
     String d_exercise_name;
     String d_exercise_type;
     @ManyToOne

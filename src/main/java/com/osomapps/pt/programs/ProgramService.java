@@ -38,7 +38,7 @@ class ProgramService {
         inProgram1.setInWorkouts(Arrays.asList(inWorkout11, inWorkout12));
         InWarmupWorkoutItem inWarmupWorkoutItem111 = new InWarmupWorkoutItem();
         inWarmupWorkoutItem111.setId(0L);
-        inWarmupWorkoutItem111.setD_exercise_id("800");
+        inWarmupWorkoutItem111.setExercise_id(800);
         inWarmupWorkoutItem111.setD_exercise_name("Treadmill");
         inWarmupWorkoutItem111.setSpeed(10);
         inWarmupWorkoutItem111.setIncline(2);
@@ -46,7 +46,7 @@ class ProgramService {
         inWorkout11.setInWarmupWorkoutItems(Arrays.asList(inWarmupWorkoutItem111));
         InWorkoutItem inWorkoutItem111 = new InWorkoutItem();
         inWorkoutItem111.setId(1L);
-        inWorkoutItem111.setD_exercise_id("210");
+        inWorkoutItem111.setExercise_id(210);
         inWorkoutItem111.setD_exercise_name("Deadlift");
         InWorkoutItemSet inWorkoutItemSet111 = new InWorkoutItemSet();
         inWorkoutItemSet111.setRepetitions(10);
@@ -54,7 +54,7 @@ class ProgramService {
         inWorkoutItem111.setInWorkoutItemSets(Arrays.asList(inWorkoutItemSet111));
         InWorkoutItem inWorkoutItem112 = new InWorkoutItem()
             .setId(2L)
-            .setD_exercise_id("260")
+            .setExercise_id(260)
             .setD_exercise_name("Bench Press")
             .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()
                     .setRepetitions(10)
@@ -68,7 +68,7 @@ class ProgramService {
 
         InWorkoutItem inWorkoutItem113 = new InWorkoutItem()
             .setId(3L)
-            .setD_exercise_id("150")
+            .setExercise_id(150)
             .setD_exercise_name("Pull Up")
             .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()
                     .setRepetitions(10)
@@ -89,7 +89,7 @@ class ProgramService {
 
         InWorkoutItem inWorkoutItem114 = new InWorkoutItem()
             .setId(4L)
-            .setD_exercise_id("530")
+            .setExercise_id(530)
             .setD_exercise_name("Dips")
            .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()
                     .setRepetitions(10)
@@ -106,7 +106,7 @@ class ProgramService {
 
         InWorkoutItem inWorkoutItem115 = new InWorkoutItem()
             .setId(5L)
-            .setD_exercise_id("440")
+            .setExercise_id(440)
             .setD_exercise_name("Plank")
             .setD_exercise_type("OnTime")
             .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()
@@ -132,7 +132,7 @@ class ProgramService {
                 .setTime_in_sec(4);
         InWorkoutItem inWorkoutItem116 = new InWorkoutItem()
             .setId(6L)
-            .setD_exercise_id("820")
+            .setExercise_id(820)
             .setD_exercise_name("Treadmill 4x4")
             .setD_exercise_type("OnIntervals")
             .setInWorkoutItemSets(Arrays.asList(inWorkoutItemSet1, inWorkoutItemSet2, inWorkoutItemSet3, inWorkoutItemSet4));
@@ -195,8 +195,7 @@ class ProgramService {
                 InWarmupWorkoutItem inWarmupWorkoutItem = inWorkout.getInWarmupWorkoutItems().get(0);
                 WarmupWorkoutItemResponseDTO warmupWorkoutItem = new WarmupWorkoutItemResponseDTO();
                 warmupWorkoutItem.setId(inWarmupWorkoutItem.getId());
-                warmupWorkoutItem.setExercise_id(inWarmupWorkoutItem.getD_exercise_id() == null ? 0L
-                        : Long.parseLong(inWarmupWorkoutItem.getD_exercise_id()));
+                warmupWorkoutItem.setExercise_id(inWarmupWorkoutItem.getExercise_id());
                 warmupWorkoutItem.setExercise_name(inWarmupWorkoutItem.getD_exercise_name());
                 warmupWorkoutItem.setExercise_type("OnTime");
                 warmupWorkoutItem.setSets(Arrays.asList(new WarmupWorkoutItemSetResponseDTO()
@@ -209,8 +208,7 @@ class ProgramService {
             for (InWorkoutItem inWorkoutItem : inWorkout.getInWorkoutItems()) {
                 WorkoutItemResponseDTO workoutItem = new WorkoutItemResponseDTO();
                 workoutItem.setId(inWorkoutItem.getId());
-                workoutItem.setExercise_id(inWorkoutItem.getD_exercise_id() == null ? 0L
-                        : Long.parseLong(inWorkoutItem.getD_exercise_id()));
+                workoutItem.setExercise_id(inWorkoutItem.getExercise_id());
                 workoutItem.setExercise_name(inWorkoutItem.getD_exercise_name());
                 workoutItem.setExercise_type(inWorkoutItem.getD_exercise_type() == null ? "OnRepetitions"
                         : inWorkoutItem.getD_exercise_type());

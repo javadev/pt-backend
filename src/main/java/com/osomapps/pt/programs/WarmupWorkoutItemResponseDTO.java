@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 @Setter
 class WarmupWorkoutItemResponseDTO {
     Long id;
-    Long exercise_id;
+    Integer exercise_id;
     String exercise_name;
     String exercise_type;
     List<WarmupWorkoutItemSetResponseDTO> sets;

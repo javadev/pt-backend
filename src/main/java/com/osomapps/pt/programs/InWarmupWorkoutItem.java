@@ -33,7 +33,7 @@ public class InWarmupWorkoutItem {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "InWarmupWorkoutItemIdSequence")
     Long id;
     LocalDateTime created;
-    String d_exercise_id;
+    Integer exercise_id;
     String d_exercise_name;
     Integer speed;
     Integer incline;

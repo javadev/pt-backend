@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 @Setter
 class UserWorkoutItemResponseDTO {
     Long id;
-    Long exercise_id;
+    Integer exercise_id;
     String exercise_name;
     Integer sets;
     List<Integer> repetitions;

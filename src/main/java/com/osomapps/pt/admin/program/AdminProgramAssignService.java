@@ -99,6 +99,7 @@ public class AdminProgramAssignService {
                         .setInWarmupWorkoutItems(parseWorkout.getParseWarmupWorkoutItems().stream().map(parseWarmupWorkoutItem
                                 -> new InWarmupWorkoutItem()
                                 .setD_exercise_name(parseWarmupWorkoutItem.getName())
+                                .setExercise_id(parseWarmupWorkoutItem.getExercise_id())
                                 .setTime_in_sec(minToSec(parseWarmupWorkoutItem.getTime_in_min()))
                                 .setSpeed(parseWarmupWorkoutItem.getSpeed())
                                 .setIncline(parseWarmupWorkoutItem.getIncline())
@@ -106,6 +107,7 @@ public class AdminProgramAssignService {
                         .setInWorkoutItems(parseWorkout.getParseWorkoutItems().stream().map(parseWorkoutItem
                                 -> new InWorkoutItem()
                                 .setD_exercise_name(parseWorkoutItem.getName())
+                                .setExercise_id(parseWorkoutItem.getExercise_id())
                                 .setInWorkoutItemSets(parseWorkoutItem.getParseWorkoutItemSets().stream().map(parseWorkoutItemSet
                                         -> new InWorkoutItemSet()
                                         .setRepetitions(parseWorkoutItemSet.getRepetitions())

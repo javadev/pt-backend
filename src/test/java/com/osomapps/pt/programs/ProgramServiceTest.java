@@ -104,9 +104,9 @@ public class ProgramServiceTest {
         InUser inUserForLogin = new InUser();
         inUserForLogin.setId(10L);
         InWorkout inWorkout = new InWorkout()
-                .setInWarmupWorkoutItems(Arrays.asList(new InWarmupWorkoutItem().setD_exercise_id("1")))
+                .setInWarmupWorkoutItems(Arrays.asList(new InWarmupWorkoutItem().setExercise_id(1)))
                 .setInWorkoutItems(Arrays.asList(new InWorkoutItem()
-                        .setD_exercise_id("1").setD_exercise_type("T")
+                        .setExercise_id(1).setD_exercise_type("T")
                         .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()))));
         InProgram inProgram = new InProgram()
                 .setId(1L)
