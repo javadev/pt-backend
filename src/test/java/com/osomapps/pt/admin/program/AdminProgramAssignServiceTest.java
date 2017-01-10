@@ -38,6 +38,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import org.springframework.data.domain.Sort;
 
@@ -66,6 +67,45 @@ public class AdminProgramAssignServiceTest {
     private AdminProgramAssignService adminProgramAssignService;
 
     @Test
+    public void assign_user_group_1_two_goals() {
+        when(inUserRepository.findAll()).thenReturn(Arrays.asList(
+                new InUser().setInUserFacebooks(Arrays.asList(
+                        new InUserFacebook().setUser_name("user_name")))));
+        when(adminProgramScanExerciseService.getExerciseIdByName(anyString())).thenReturn(Optional.empty());
+        when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
+        when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
+        adminProgramAssignService.assign(new InUser().setD_level("2")
+                .setD_sex("male").setInUserGoals(Arrays.asList(new InUserGoal(), new InUserGoal())));
+        verify(inProgramRepository).save(any(InProgram.class));
+    }
+
+    @Test
+    public void assign_empty_program() {
+        when(inUserRepository.findAll()).thenReturn(Arrays.asList(
+                new InUser().setInUserFacebooks(Arrays.asList(
+                        new InUserFacebook().setUser_name("user_name")))));
+        when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Collections.emptyList());
+        adminProgramAssignService.assign(new InUser().setD_level("3")
+                .setD_sex("male2").setInUserGoals(Arrays.asList(new InUserGoal())));
+        verify(inProgramRepository, never()).save(any(InProgram.class));
+    }
+
+    @Test
+    public void assign_user_unknown() {
+        when(inUserRepository.findAll()).thenReturn(Arrays.asList(
+                new InUser().setInUserFacebooks(Arrays.asList(
+                        new InUserFacebook().setUser_name("user_name")))));
+        when(adminProgramScanExerciseService.getExerciseIdByName(anyString())).thenReturn(Optional.empty());
+        when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
+        when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
+        adminProgramAssignService.assign(new InUser().setD_level("3")
+                .setD_sex("male2").setInUserGoals(Arrays.asList(new InUserGoal())));
+        verify(inProgramRepository, never()).save(any(InProgram.class));
+    }
+
+    @Test
     public void assign_user_group_1() {
         when(inUserRepository.findAll()).thenReturn(Arrays.asList(
                 new InUser().setInUserFacebooks(Arrays.asList(
@@ -77,6 +117,20 @@ public class AdminProgramAssignServiceTest {
         adminProgramAssignService.assign(new InUser().setD_level("2")
                 .setD_sex("male").setInUserGoals(Arrays.asList(new InUserGoal())));
         verify(inProgramRepository).save(any(InProgram.class));
+    }
+
+    @Test
+    public void assign_empty_goals() {
+        when(inUserRepository.findAll()).thenReturn(Arrays.asList(
+                new InUser().setInUserFacebooks(Arrays.asList(
+                        new InUserFacebook().setUser_name("user_name")))));
+        when(adminProgramScanExerciseService.getExerciseIdByName(anyString())).thenReturn(Optional.empty());
+        when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
+        when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
+        adminProgramAssignService.assign(new InUser().setD_level("2")
+                .setD_sex("male").setInUserGoals(Collections.emptyList()));
+        verify(inProgramRepository, never()).save(any(InProgram.class));
     }
 
     @Test
