@@ -153,7 +153,7 @@ public class XlsxProgramParser {
             getOnlySymbols(exercise.getExercise_name()).equalsIgnoreCase(getOnlySymbols(warmupName.get()))
         ).findFirst();
         if (!excelExercise.isPresent()) {
-            excelGoal.getErrors().add("Exercise warmup name (" + warmupName.get() + ") not recognized. Goal "
+            excelGoal.getErrors().add("Exercise warmup name (" + warmupName.get() + ") not recognised. Goal "
                     + excelGoal.getName() + ", workout " + workoutName + ".");
         }
 
@@ -181,7 +181,7 @@ public class XlsxProgramParser {
             getOnlySymbols(exercise.getExercise_name()).equalsIgnoreCase(getOnlySymbols(exerciseName.get()))
         ).findFirst();
         if (!excelExercise.isPresent()) {
-            excelGoal.getErrors().add("Exercise name (" + exerciseName.get() + ") not recognized. Goal "
+            excelGoal.getErrors().add("Exercise name (" + exerciseName.get() + ") not recognised. Goal "
                     + excelGoal.getName() + ", workout " + workoutName + ".");
         } else {
             workoutItem.setExerciseId(excelExercise.get().getExercise_id());
