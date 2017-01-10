@@ -146,7 +146,7 @@ public class AdminProgramAssignServiceTest {
                 .setD_sex("male").setInUserGoals(Arrays.asList(new InUserGoal())));
         verify(inProgramRepository).save(any(InProgram.class));
     }
-    
+
     @Test
     public void assign_user_group_3() {
         when(inUserRepository.findAll()).thenReturn(Arrays.asList(
@@ -160,7 +160,7 @@ public class AdminProgramAssignServiceTest {
                 .setD_sex("female").setInUserGoals(Arrays.asList(new InUserGoal())));
         verify(inProgramRepository).save(any(InProgram.class));
     }
-    
+
     @Test
     public void assign_user_group_4() {
         when(inUserRepository.findAll()).thenReturn(Arrays.asList(
@@ -193,6 +193,44 @@ public class AdminProgramAssignServiceTest {
                                                                                         new ParseWorkoutItemSet()))))
                                                         )))))))))
         );
+    }
+
+    @Test
+    public void multiplyLists_one_element() {
+        List<ParseRound> parseRounds1 = Arrays.asList(new ParseRound().setName("1_1"));
+        List<ParseRound> result = adminProgramAssignService.multiplyLists(parseRounds1, 1);
+        assertThat(result.size(), equalTo(1));
+        assertThat(result.get(0).getName(), equalTo("1_1"));
+    }
+
+    @Test
+    public void multiplyLists_one_element_loops_2() {
+        List<ParseRound> parseRounds1 = Arrays.asList(new ParseRound().setName("1_1"));
+        List<ParseRound> result = adminProgramAssignService.multiplyLists(parseRounds1, 2);
+        assertThat(result.size(), equalTo(2));
+        assertThat(result.get(0).getName(), equalTo("1_1"));
+    }
+
+    @Test
+    public void multiplyLists_two_elements() {
+        List<ParseRound> parseRounds1 = Arrays.asList(new ParseRound().setName("1_1"),
+                new ParseRound().setName("1_2"));
+        List<ParseRound> result = adminProgramAssignService.multiplyLists(parseRounds1, 1);
+        assertThat(result.size(), equalTo(2));
+        assertThat(result.get(0).getName(), equalTo("1_1"));
+        assertThat(result.get(1).getName(), equalTo("1_2"));
+    }
+
+    @Test
+    public void multiplyLists_two_elements_loops_2() {
+        List<ParseRound> parseRounds1 = Arrays.asList(new ParseRound().setName("1_1"),
+                new ParseRound().setName("1_2"));
+        List<ParseRound> result = adminProgramAssignService.multiplyLists(parseRounds1, 2);
+        assertThat(result.size(), equalTo(4));
+        assertThat(result.get(0).getName(), equalTo("1_1"));
+        assertThat(result.get(1).getName(), equalTo("1_1"));
+        assertThat(result.get(2).getName(), equalTo("1_2"));
+        assertThat(result.get(3).getName(), equalTo("1_2"));
     }
 
     @Test

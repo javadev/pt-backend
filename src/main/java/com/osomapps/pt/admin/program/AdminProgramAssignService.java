@@ -1,6 +1,5 @@
 package com.osomapps.pt.admin.program;
 
-import com.osomapps.pt.UnauthorizedException;
 import com.osomapps.pt.dictionary.DictionaryName;
 import com.osomapps.pt.dictionary.DictionaryService;
 import com.osomapps.pt.programs.InProgram;
@@ -28,6 +27,7 @@ import com.osomapps.pt.token.InUserGoal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 
@@ -157,14 +157,29 @@ public class AdminProgramAssignService {
             boolean nameFound = getOnlySymbols(parseGoal.getName()).equalsIgnoreCase(
                     getOnlySymbols(getGoalName(inUserGoal)));
             if (nameFound) {
+                final List<ParseRound> localParseRounds = new ArrayList<>();
                 parseGoal.getParseUserGroups().forEach(parseUserGroup -> {
                     if (parseUserGroup.getName().equals("" + userGroup)) {
-                        parseRounds.addAll(parseUserGroup.getParseRounds());
+                        localParseRounds.addAll(parseUserGroup.getParseRounds());
                     }
                 });
+                parseRounds.addAll(multiplyLists(localParseRounds, parseGoal.getLoops()));
             }
         });
         return parseRounds;
+    }
+
+    List<ParseRound> multiplyLists(List<ParseRound> parseRounds, Integer loops) {
+        if (loops == null) {
+            return parseRounds;
+        }
+        final List<ParseRound> result = new ArrayList<>(parseRounds.size() * loops);
+        parseRounds.forEach(parseRound -> {
+            for (int index = 0; index < loops; index += 1) {
+                result.add(parseRound);
+            }
+        });
+        return result;
     }
 
     private String getOnlySymbols(String value) {
