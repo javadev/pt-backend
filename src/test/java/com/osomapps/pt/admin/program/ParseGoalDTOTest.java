@@ -20,6 +20,7 @@ public class ParseGoalDTOTest {
         ParseGoalDTO parseGoalDTO = new ParseGoalDTO();
         parseGoalDTO.setId(null);
         parseGoalDTO.setName(null);
+        parseGoalDTO.setLoops(null);
         parseGoalDTO.setUserGroups(null);
         parseGoalDTO.setErrors(null);
         assertThat(parseGoalDTO, notNullValue());
@@ -30,6 +31,7 @@ public class ParseGoalDTOTest {
         ParseGoalDTO parseGoalDTO = new ParseGoalDTO();
         parseGoalDTO.getId();
         parseGoalDTO.getName();
+        parseGoalDTO.getLoops();
         parseGoalDTO.getUserGroups();
         parseGoalDTO.getErrors();
         assertThat(parseGoalDTO, notNullValue());
