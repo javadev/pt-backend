@@ -67,9 +67,14 @@ public class XlsxProgramModifier {
 
     private void fillProgram(XSSFSheet programSheet, InProgram inProgram) {
         for (int index = 0; index < 15; index += 1) {
+            fillCell(programSheet, 2 + index, 3, "");
+            fillCell(programSheet, 2 + index, 4, "");
             fillCell(programSheet, 2 + index, 5, "");
         }
         for (int index = 0; index < inProgram.getInWorkouts().size(); index += 1) {
+            fillCell(programSheet, 2 + index, 3, "Goal "
+                    + (inProgram.getInWorkouts().get(index).getGoal_index() + 1));
+            fillCell(programSheet, 2 + index, 4, inProgram.getInWorkouts().get(index).getPart_name());
             fillCell(programSheet, 2 + index, 5, "Workout "
                     + (inProgram.getInWorkouts().get(index).getWorkout_index() + 1));
             final InWarmupWorkoutItem inWarmupWorkoutItem = inProgram.getInWorkouts().get(index)

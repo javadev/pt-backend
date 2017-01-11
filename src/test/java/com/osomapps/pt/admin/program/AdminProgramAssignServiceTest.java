@@ -183,9 +183,13 @@ public class AdminProgramAssignServiceTest {
                                 new ParseUserGroup()
                                         .setName("1")
                                         .setParseRounds(Arrays.asList(
-                                                new ParseRound().setParseParts(Arrays.asList(
+                                                new ParseRound()
+                                                        .setParseUserGroup(
+                                                                new ParseUserGroup().setParseGoal(new ParseGoal()))
+                                                        .setParseParts(Arrays.asList(
                                                         new ParsePart().setParseWorkouts(Arrays.asList(
                                                                 new ParseWorkout()
+                                                                        .setParsePart(new ParsePart().setParseRound(new ParseRound().setParseUserGroup(new ParseUserGroup().setParseGoal(new ParseGoal()))))
                                                                         .setParseWarmupWorkoutItems(Arrays.asList(
                                                                                 new ParseWarmupWorkoutItem()))
                                                                         .setParseWorkoutItems(Arrays.asList(

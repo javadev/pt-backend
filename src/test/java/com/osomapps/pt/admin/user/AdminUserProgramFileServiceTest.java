@@ -42,6 +42,7 @@ public class AdminUserProgramFileServiceTest {
                 Arrays.asList(new InProgram().setInWorkouts(Arrays.asList(
                 new InWorkout()
                         .setWorkout_index(0)
+                        .setGoal_index(0)
                         .setInWarmupWorkoutItems(Arrays.asList(
                                 new InWarmupWorkoutItem().setTime_in_sec(60)))
                         .setInWorkoutItems(Arrays.asList(

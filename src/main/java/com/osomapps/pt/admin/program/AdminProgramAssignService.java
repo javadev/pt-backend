@@ -85,10 +85,15 @@ public class AdminProgramAssignService {
         List<ParseRound> parseRounds = getRoundsGorGoalAndUserGroup(parsePrograms,
                 inUser.getInUserGoals().get(0), userGroup.get());
         final List<ParseWorkout> parseWorkouts;
+        final List<String> goalNames = new ArrayList<>();
+        if (!parseRounds.isEmpty()) {
+            goalNames.add(parseRounds.get(0).getParseUserGroup().getParseGoal().getName());
+        }
         if (inUser.getInUserGoals().size() > 1) {
             List<ParseRound> parseRounds2 = getRoundsGorGoalAndUserGroup(parsePrograms,
                     inUser.getInUserGoals().get(1), userGroup.get());
             parseWorkouts = mergeLists(getParseWorkouts(parseRounds), getParseWorkouts(parseRounds2));
+            goalNames.add(parseRounds2.get(0).getParseUserGroup().getParseGoal().getName());
         } else {
             parseWorkouts = getParseWorkouts(parseRounds);
         }
@@ -99,6 +104,8 @@ public class AdminProgramAssignService {
                         -> new InWorkout()
                         .setD_workout_name(parseWorkout.getName())
                         .setWorkout_index(index.incrementAndGet())
+                        .setPart_name(parseWorkout.getParsePart().getName())
+                        .setGoal_index(goalNames.indexOf(parseWorkout.getParsePart().getParseRound().getParseUserGroup().getParseGoal().getName()))
                         .setInWarmupWorkoutItems(parseWorkout.getParseWarmupWorkoutItems().stream().map(parseWarmupWorkoutItem
                                 -> new InWarmupWorkoutItem()
                                 .setD_exercise_name(parseWarmupWorkoutItem.getName())

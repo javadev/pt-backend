@@ -9,7 +9,7 @@ public class InWorkoutTest {
     @Test
     public void createAllArgs() {
         assertThat(new InWorkout(
-                1L, null, null, null, null, null, null), notNullValue());
+                1L, null, null, null, null, null, null, null, null), notNullValue());
     }
 
     @Test
@@ -17,6 +17,8 @@ public class InWorkoutTest {
         InWorkout inWorkout = new InWorkout();
         inWorkout.setCreated(LocalDateTime.MAX);
         inWorkout.setWorkout_index(null);
+        inWorkout.setGoal_index(null);
+        inWorkout.setPart_name(null);
         assertThat(inWorkout, notNullValue());
     }
 
@@ -25,6 +27,8 @@ public class InWorkoutTest {
         InWorkout inWorkout = new InWorkout();
         inWorkout.getCreated();
         inWorkout.getWorkout_index();
+        inWorkout.getGoal_index();
+        inWorkout.getPart_name();
         assertThat(inWorkout, notNullValue());
     }
 }
