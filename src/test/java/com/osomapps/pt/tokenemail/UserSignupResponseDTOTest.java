@@ -22,10 +22,15 @@ public class UserSignupResponseDTOTest {
             .setId(1L)
             .setName(null)
             .setEmail(null)
+            .setAvatar(null)
             .setAvatar_dataurl(null)
             .setGender(null)
             .setAge(null)
-            .setBirthday(null);
+            .setBirthday(null)
+            .setLevel(null)
+            .setGoals(null)
+            .setHeight(null)
+            .setWeight(null);
         assertThat(userSignupResponseDTO, notNullValue());
     }
 
@@ -35,10 +40,15 @@ public class UserSignupResponseDTOTest {
         userSignupResponseDTO.getId();
         userSignupResponseDTO.getName();
         userSignupResponseDTO.getEmail();
+        userSignupResponseDTO.getAvatar();
         userSignupResponseDTO.getAvatar_dataurl();
         userSignupResponseDTO.getGender();
         userSignupResponseDTO.getAge();
         userSignupResponseDTO.getBirthday();
+        userSignupResponseDTO.getLevel();
+        userSignupResponseDTO.getGoals();
+        userSignupResponseDTO.getHeight();
+        userSignupResponseDTO.getWeight();
         assertThat(userSignupResponseDTO, notNullValue());
     }
 }

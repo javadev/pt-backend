@@ -25,4 +25,10 @@ public class CertificateRequestDTOTest {
         certificateRequestDTO.getAmountOfDays();
         assertThat(certificateRequestDTO, notNullValue());
     }
+
+    @Test
+    public void builder() {
+        CertificateRequestDTO certificateRequestDTO = CertificateRequestDTO.builder().build();
+        assertThat(certificateRequestDTO, notNullValue());
+    }
 }
