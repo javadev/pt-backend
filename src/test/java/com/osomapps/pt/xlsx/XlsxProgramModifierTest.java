@@ -2,6 +2,11 @@ package com.osomapps.pt.xlsx;
 
 import com.osomapps.pt.dictionary.DictionaryName;
 import com.osomapps.pt.dictionary.DictionaryService;
+import com.osomapps.pt.programs.InProgram;
+import com.osomapps.pt.programs.InWarmupWorkoutItem;
+import com.osomapps.pt.programs.InWorkout;
+import com.osomapps.pt.programs.InWorkoutItem;
+import com.osomapps.pt.programs.InWorkoutItemSet;
 import com.osomapps.pt.token.InUser;
 import com.osomapps.pt.token.InUserGoal;
 import java.io.IOException;
@@ -21,6 +26,20 @@ import org.springframework.util.FastByteArrayOutputStream;
 @RunWith(MockitoJUnitRunner.class)
 public class XlsxProgramModifierTest {
 
+    private InUser getInUserWithProgram() {
+        return new InUser().setInPrograms(
+                Arrays.asList(new InProgram().setInWorkouts(Arrays.asList(
+                new InWorkout()
+                        .setWorkout_index(0)
+                        .setInWarmupWorkoutItems(Arrays.asList(
+                                new InWarmupWorkoutItem().setTime_in_sec(60)))
+                        .setInWorkoutItems(Arrays.asList(
+                                new InWorkoutItem().setInWorkoutItemSets(Arrays.asList(
+                                        new InWorkoutItemSet()
+                                ))))
+                ))));
+    }
+
     @Test
     public void updateCellData() {
         FastByteArrayOutputStream localOutputStream = getOutputStream();
@@ -30,7 +49,7 @@ public class XlsxProgramModifierTest {
                 localOutputStream.getInputStream(), dictionaryService);
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title),
                     anyString(), anyString())).thenReturn("Loose weight");
-        xlsxProgramModifier.updateCellData(mock(OutputStream.class), new InUser()
+        xlsxProgramModifier.updateCellData(mock(OutputStream.class), getInUserWithProgram()
                 .setWeight(60F)
                 .setInUserGoals(Arrays.asList(new InUserGoal(), new InUserGoal())));
     }
@@ -44,7 +63,7 @@ public class XlsxProgramModifierTest {
                 localOutputStream.getInputStream(), dictionaryService);
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title),
                     anyString(), anyString())).thenReturn("Loose weight");
-        xlsxProgramModifier.updateCellData(mock(OutputStream.class), new InUser()
+        xlsxProgramModifier.updateCellData(mock(OutputStream.class), getInUserWithProgram()
                 .setWeight(60F)
                 .setInUserGoals(Collections.emptyList()));
     }
@@ -56,7 +75,7 @@ public class XlsxProgramModifierTest {
         DictionaryService dictionaryService = mock(DictionaryService.class);
         XlsxProgramModifier xlsxProgramModifier = XlsxProgramModifier.of(
                 localOutputStream.getInputStream(), dictionaryService);
-        xlsxProgramModifier.updateCellData(mock(OutputStream.class), new InUser()
+        xlsxProgramModifier.updateCellData(mock(OutputStream.class), getInUserWithProgram()
                 .setWeight(60F)
                 .setInUserGoals(Arrays.asList(new InUserGoal())));
     }

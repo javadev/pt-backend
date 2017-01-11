@@ -77,7 +77,9 @@ class TokenService {
         Optional<String> pictureUrl = 
             facebookService.getProfilePictureUrl(tokenRequest.getFacebook_token());
         inUserFacebook.setUserId(facebookResponse.getId());
-        inUserFacebook.setUser_name(facebookResponse.getName());
+        if (inUserFacebook.getUser_name() == null) {
+            inUserFacebook.setUser_name(facebookResponse.getName());
+        }
         inUserFacebook.setPicture_url(pictureUrl.orElse(null));
         inUserFacebook.setBirthday(facebookResponse.getBirthday());
         final List<InUserFacebook> inUserFacebooksNew = inUserFacebookRepository.findByUserId(
