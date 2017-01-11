@@ -101,7 +101,7 @@ public class TokenServiceTest {
         inUserFacebook.setInUser(inUser);
         InUserLogin inUserLogin = new InUserLogin();
         inUser.setInUserLogins(Arrays.asList(inUserLogin));
-        when(inUserFacebookRepository.findByTokenAndDeviceId(anyString(), anyString())).thenReturn(
+        when(inUserFacebookRepository.findByDeviceId(anyString())).thenReturn(
                 Arrays.asList(inUserFacebook));
         TokenResponseDTO tokenResponseDTO = tokenService.createOrReadNewToken(tokenRequest, "");
         TokenResponseDTO tokenResponseDTO2 = tokenService.createOrReadNewToken(tokenRequest, "");
@@ -134,7 +134,7 @@ public class TokenServiceTest {
         inUser.setInUserLogins(Arrays.asList(inUserLogin));
         InUserLogout inUserLogout = new InUserLogout();
         inUser.setInUserLogouts(Arrays.asList(inUserLogout));
-        when(inUserFacebookRepository.findByTokenAndDeviceId(anyString(), anyString())).thenReturn(
+        when(inUserFacebookRepository.findByDeviceId(anyString())).thenReturn(
                 Arrays.asList(inUserFacebook));
         TokenResponseDTO tokenResponseDTO = tokenService.createOrReadNewToken(tokenRequest, "");
         TokenResponseDTO tokenResponseDTO2 = tokenService.createOrReadNewToken(tokenRequest, "");
@@ -165,7 +165,7 @@ public class TokenServiceTest {
         inUser.setInUserLogins(Arrays.asList(inUserLogin));
         InUserLogout inUserLogout = new InUserLogout();
         inUser.setInUserLogouts(Arrays.asList(inUserLogout));
-        when(inUserFacebookRepository.findByTokenAndDeviceId(anyString(), anyString())).thenReturn(
+        when(inUserFacebookRepository.findByDeviceId(anyString())).thenReturn(
                 Arrays.asList(inUserFacebook));
         when(inUserLogoutRepository.findByToken(anyString())).thenReturn(
                 Arrays.asList(new InUserLogout()));

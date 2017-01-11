@@ -41,8 +41,8 @@ class TokenService {
     Pair<Boolean, InUserFacebook> readOrCreateInUserFacebook(TokenRequestDTO tokenRequest) {
         final InUserFacebook inUserFacebook;
         final boolean isNewLogin;
-        final List<InUserFacebook> inUserFacebooks = inUserFacebookRepository.findByTokenAndDeviceId(
-            tokenRequest.getFacebook_token(), tokenRequest.getDevice_id());
+        final List<InUserFacebook> inUserFacebooks = inUserFacebookRepository.findByDeviceId(
+            tokenRequest.getDevice_id());
         if (inUserFacebooks.isEmpty()) {
             inUserFacebook = new InUserFacebook();
             inUserFacebook.setToken(tokenRequest.getFacebook_token());

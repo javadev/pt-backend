@@ -7,6 +7,6 @@ public interface InUserFacebookRepository extends JpaRepository<InUserFacebook, 
 
     List<InUserFacebook> findByUserId(String userId);
     
-    List<InUserFacebook> findByTokenAndDeviceId(String token, String deviceId);
+    List<InUserFacebook> findByDeviceId(String deviceId);
 
 }
