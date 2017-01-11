@@ -6,6 +6,7 @@ import com.osomapps.pt.goals.Goal;
 import com.osomapps.pt.goals.GoalParameter;
 import com.osomapps.pt.goals.GoalParameterRepository;
 import com.osomapps.pt.goals.GoalRepository;
+import com.osomapps.pt.goals.GoalType;
 import com.osomapps.pt.goals.GoalTypeRepository;
 import java.util.Arrays;
 import java.util.List;
@@ -55,7 +56,8 @@ public class AdminGoalServiceTest {
     @Test
     public void findOne() {
         when(goalRepository.findOne(eq(1L))).thenReturn(
-                new Goal().setGoalParameters(Arrays.asList(new GoalParameter())));
+                new Goal().setGoalParameters(Arrays.asList(new GoalParameter()))
+                    .setGoalType(new GoalType()));
         GoalResponseDTO goalResponseDTO = adminGoalService.findOne(1L);
         assertThat(goalResponseDTO, notNullValue());
     }
@@ -66,6 +68,15 @@ public class AdminGoalServiceTest {
         GoalResponseDTO goalResponseDTO = adminGoalService.create(
             new GoalRequestDTO().setParameters(Arrays.asList(new GoalParameterRequestDTO()))
                     .setType(new GoalTypeRequestDTO().setId(1L)));
+        assertThat(goalResponseDTO, notNullValue());
+    }
+
+    @Test
+    public void create_type_is_null() {
+        when(goalRepository.save((Goal) anyObject())).thenAnswer(i -> i.getArguments()[0]);
+        GoalResponseDTO goalResponseDTO = adminGoalService.create(
+            new GoalRequestDTO().setParameters(Arrays.asList(new GoalParameterRequestDTO()))
+                    .setType(new GoalTypeRequestDTO()));
         assertThat(goalResponseDTO, notNullValue());
     }
 
@@ -83,6 +94,17 @@ public class AdminGoalServiceTest {
         GoalResponseDTO goalResponseDTO = adminGoalService.update(1L,
             new GoalRequestDTO().setParameters(Arrays.asList(new GoalParameterRequestDTO()))
                 .setType(new GoalTypeRequestDTO().setId(1L)));
+        assertThat(goalResponseDTO, notNullValue());
+    }
+
+    @Test
+    public void update_type_is_null() {
+        when(goalRepository.findOne(eq(1L))).thenReturn(
+                new Goal().setGoalParameters(Arrays.asList(new GoalParameter())));
+        when(goalRepository.save((Goal) anyObject())).thenAnswer(i -> i.getArguments()[0]);
+        GoalResponseDTO goalResponseDTO = adminGoalService.update(1L,
+            new GoalRequestDTO().setParameters(Arrays.asList(new GoalParameterRequestDTO()))
+                .setType(new GoalTypeRequestDTO()));
         assertThat(goalResponseDTO, notNullValue());
     }
 
