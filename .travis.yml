@@ -24,8 +24,8 @@ before_script:
   - pip install --user codecov
 
 script:
-  - mvn clean package jacoco:report
+  - mvn -T 1C clean package jacoco:report
 
 after_success:
   - codecov
-  - python <(curl -s https://raw.githubusercontent.com/TouK/sputnik-ci/master/sputnik-ci.py)
+
