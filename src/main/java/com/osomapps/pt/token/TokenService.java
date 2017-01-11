@@ -53,15 +53,8 @@ class TokenService {
             final List<InUserLogout> inUserLogouts = inUserLogoutRepository.findByToken(
                     inUserFacebookOld.getInUser().getInUserLogins().get(
                     inUserFacebookOld.getInUser().getInUserLogins().size() - 1).getToken());
-            if (inUserLogouts.isEmpty()) {
-                inUserFacebook = inUserFacebookOld;
-                isNewLogin = false;
-            } else {
-                inUserFacebook = new InUserFacebook();
-                inUserFacebook.setToken(tokenRequest.getFacebook_token());
-                inUserFacebook.setDeviceId(tokenRequest.getDevice_id());                
-                isNewLogin = true;
-            }
+            inUserFacebook = inUserFacebookOld;
+            isNewLogin = !inUserLogouts.isEmpty();
         }
         return Pair.of(isNewLogin, inUserFacebook);
     }
