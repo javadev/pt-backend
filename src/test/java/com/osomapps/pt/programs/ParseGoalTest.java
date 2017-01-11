@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class ParseGoalTest {
     @Test
-    public void createAllArgs() {
+    public void allArgsConstructor() {
         assertThat(new ParseGoal(
                 1L, null, null, null, null, null, null, null), notNullValue());
     }
@@ -16,6 +16,7 @@ public class ParseGoalTest {
     public void setters() {
         ParseGoal parseGoal = new ParseGoal();
         parseGoal.setCreated(LocalDateTime.MAX);
+        parseGoal.setSheet_index(null);
         parseGoal.setParseProgram(null);
         assertThat(parseGoal, notNullValue());
     }
@@ -24,6 +25,7 @@ public class ParseGoalTest {
     public void getters() {
         ParseGoal parseGoal = new ParseGoal();
         parseGoal.getCreated();
+        parseGoal.getSheet_index();
         parseGoal.getParseProgram();
         assertThat(parseGoal, notNullValue());
     }

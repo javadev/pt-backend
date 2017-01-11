@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class ParseRoundTest {
     @Test
-    public void createAllArgs() {
+    public void allArgsConstructor() {
         assertThat(new ParseRound(
                 1L, null, null, null, null), notNullValue());
     }
