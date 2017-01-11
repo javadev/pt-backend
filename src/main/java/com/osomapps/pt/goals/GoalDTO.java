@@ -16,5 +16,6 @@ class GoalDTO {
     Long id;
     String title;
     String title2;
+    String type;
     List<String> parameters;
 }

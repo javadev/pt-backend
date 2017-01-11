@@ -201,13 +201,19 @@ define([
           goals._parameters = _.union({id: null, name: ''}, data);
           goals.trigger('sync');
         });
+        $.get('/api/v1/admin/goal-type').done(function(data) {
+          goals._types = _.union({id: null, name: ''}, data);
+          goals.trigger('sync');
+        });
         goals.on('goal:new', function(model) {
           var goal = new GoalsModels.Goal();
           goal._parameters = goals._parameters;
+          goal._types = goals._types;
           if (!_.isUndefined(model)) {
             goal.set({
               id: model.get('id'),
               parameters: model.get('parameters'),
+              type: model.get('type'),
               titleEn: model.get('titleEn'),
               titleNo: model.get('titleNo'),
               title2En: model.get('title2En'),

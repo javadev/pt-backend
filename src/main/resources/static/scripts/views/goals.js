@@ -13,7 +13,7 @@ function ($, _, Marionette, App) {
 
   var EmptyView = Marionette.ItemView.extend({
         tagName: 'tr',
-        template: _.template('<td colspan="8">There are no goals available.</td>')
+        template: _.template('<td colspan="7">There are no goals available.</td>')
   });
 
   var Goal = Marionette.ItemView.extend({
@@ -30,6 +30,9 @@ function ($, _, Marionette, App) {
       '</td>',
       '<td>',
         '{{ title2En }}',
+      '</td>',
+      '<td>',
+        '{{ type == null ? "" : type.name }}',
       '</td>',
       '<td>',
         '{{ _.map(parameters, function(item) {return item.name;}).join(", ") }}',
@@ -100,6 +103,7 @@ function ($, _, Marionette, App) {
             '<th>ID</th>',
             '<th>Title</th>',
             '<th>Title2</th>',
+            '<th>Type</th>',
             '<th>Parameters</th>',
             '<th></th>',
             '<th></th>',
@@ -216,6 +220,14 @@ function ($, _, Marionette, App) {
         '</div>',
       '</div>',
       '<div class="form-group">',
+        '<label class="col-sm-3 control-label">Type</label>',
+        '<div class="col-sm-8">',
+          '<select id="goal-type" class="selectpicker show-tick">',
+            '{{ getTypes() }}',
+          '</select>',
+        '</div>',
+      '</div>',
+      '<div class="form-group">',
         '<label class="col-sm-3 control-label">Parameters</label>',
         '<div class="col-sm-8">',
           '<select id="goal-parameters" class="selectpicker show-tick" multiple>',
@@ -259,6 +271,18 @@ function ($, _, Marionette, App) {
     templateHelpers: function() {
       var model = this.model;
       return {
+        getTypes: function() {
+          var types = model._types || [];
+          var result = _.map(types, function(item) {
+            if (_.isNull(item.id)) {
+              return '<option></option>';
+            }
+            return '<option value="' + item.id + '"' +
+              (!!model.get('type') && model.get('type').id === item.id ? ' selected' : '') +
+              '>' + item.name + '</option>';
+          });
+          return result;
+        },
         getParameters: function() {
           var parameters = model._parameters || [];
           var modelParameters = _.map(model.get('parameters'), function(item) {
@@ -286,6 +310,7 @@ function ($, _, Marionette, App) {
       'input #goal-title2No': 'inputTitle2No'
     },
     ui: {
+      goalType: '#goal-type',
       goalParameters: '#goal-parameters',
       titleEn: '#goal-titleEn',
       titleNo: '#goal-titleNo',
@@ -312,6 +337,9 @@ function ($, _, Marionette, App) {
       $('.selectpicker').selectpicker({
         style: 'btn-default',
         size: false
+      });
+      this.ui.goalType.on('changed.bs.select', function (e) {
+        view.model.set('type', {id: parseInt(e.target.value, 10) });
       });
       this.ui.goalParameters.on('changed.bs.select', function (e) {
         var selectedParameters = _.map(e.target.selectedOptions, function(item) {

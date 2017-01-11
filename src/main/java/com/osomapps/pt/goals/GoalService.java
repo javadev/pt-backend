@@ -26,6 +26,7 @@ class GoalService {
                     goal.getDGoalTitle(), null))
                 .setTitle2(dictionaryService.getEnValue(DictionaryName.goal_title_2,
                     goal.getDGoalTitle2(), null))
+                .setType(goal.getGoalType() == null ? null : goal.getGoalType().getName())
                 .setParameters(goal.getGoalParameters()
                     .stream().map(parameter -> parameter.getName()).collect(Collectors.toList()))
         ).sorted((e1, e2) -> Long.compare(e1.getId(), e2.getId()))
