@@ -15,7 +15,10 @@ define([
         'titleNo': null,
         'title2En': null,
         'title2No': null,
-        'parameters': []
+        'parameters': [],
+        'type': {
+            id: null
+        }
       },
       url: function() {
         return '/api/v1/admin/goal' + (this.isNew() ? '' : '/' + this.get('id'));
