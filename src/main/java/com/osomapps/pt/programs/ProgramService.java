@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,28 +156,11 @@ class ProgramService {
         if (inPrograms.isEmpty()) {
             return Collections.emptyList();
         }
-        class InProgramWrapper {
-            private final String name;
-            private final InProgram inProgram;
-            InProgramWrapper(String name, InProgram inProgram) {
-                this.name = name;
-                this.inProgram = inProgram;
-            }
-            @Override
-            public boolean equals(Object object) {
-                return object instanceof InProgramWrapper && name.equals(((InProgramWrapper) object).name);
-            }
-            @Override
-            public int hashCode() {
-                return name.hashCode();
-            }
-        }
         return inPrograms.stream()
                 .sorted((p1, p2) -> Long.compare(p2.getId(), p1.getId()))
-                .map(inProgram -> new InProgramWrapper(inProgram.getName(), inProgram))
-                .distinct()
-                .map(inProgramWrapper -> createProgramResponseDTO(inProgramWrapper.inProgram))
-                .collect(Collectors.toList());
+                .findFirst()
+                .map(inProgram -> Arrays.asList(createProgramResponseDTO(inProgram)))
+                .orElse(Collections.emptyList());
     }
 
     private static ProgramResponseDTO createProgramResponseDTO(InProgram inProgram) {
@@ -186,6 +170,9 @@ class ProgramService {
         program.setType(inProgram.getD_program_type() == null ? "personal" : inProgram.getD_program_type());
         program.setWorkouts(new ArrayList<>());
         for (InWorkout inWorkout : inProgram.getInWorkouts()) {
+            if (!Objects.equals(inProgram.getCurrent_workout_index(), inWorkout.getWorkout_index())) {
+                continue;
+            }
             WorkoutResponseDTO workout = new WorkoutResponseDTO();
             workout.setId(inWorkout.getId());
             workout.setName(inWorkout.getD_workout_name());

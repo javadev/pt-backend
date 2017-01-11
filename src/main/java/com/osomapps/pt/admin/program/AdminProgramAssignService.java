@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 
@@ -36,33 +35,27 @@ import org.springframework.data.domain.Sort;
 @Service
 public class AdminProgramAssignService {
 
-    private final InUserRepository inUserRepository;
     private final InProgramRepository inProgramRepository;
     private final InWorkoutRepository inWorkoutRepository;
     private final InWorkoutItemRepository inWorkoutItemRepository;
     private final InWorkoutItemSetRepository inWorkoutItemSetRepository;
     private final ParseProgramRepository parseProgramRepository;
     private final InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository;
-    private final AdminProgramScanExerciseService adminProgramScanExerciseService;
     private final DictionaryService dictionaryService;
 
-    AdminProgramAssignService(InUserRepository inUserRepository,
-            InProgramRepository inProgramRepository,
+    AdminProgramAssignService(InProgramRepository inProgramRepository,
             InWorkoutRepository inWorkoutRepository,
             InWorkoutItemRepository inWorkoutItemRepository,
             InWorkoutItemSetRepository inWorkoutItemSetRepository,
             ParseProgramRepository parseProgramRepository,
             InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository,
-            AdminProgramScanExerciseService adminProgramScanExerciseService,
             DictionaryService dictionaryService) {
-        this.inUserRepository = inUserRepository;
         this.inProgramRepository = inProgramRepository;
         this.inWorkoutRepository = inWorkoutRepository;
         this.inWorkoutItemRepository = inWorkoutItemRepository;
         this.inWorkoutItemSetRepository = inWorkoutItemSetRepository;
         this.parseProgramRepository = parseProgramRepository;
         this.inWarmupWorkoutItemRepository = inWarmupWorkoutItemRepository;
-        this.adminProgramScanExerciseService = adminProgramScanExerciseService;
         this.dictionaryService = dictionaryService;
     }
 

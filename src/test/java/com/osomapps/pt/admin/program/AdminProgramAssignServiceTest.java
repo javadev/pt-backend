@@ -12,10 +12,7 @@ import com.osomapps.pt.programs.ParsePart;
 import com.osomapps.pt.programs.ParseProgram;
 import com.osomapps.pt.reportworkout.InWorkoutItemRepository;
 import com.osomapps.pt.token.InUser;
-import com.osomapps.pt.token.InUserFacebook;
-import com.osomapps.pt.token.InUserRepository;
 import java.util.Arrays;
-import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -46,8 +43,6 @@ import org.springframework.data.domain.Sort;
 public class AdminProgramAssignServiceTest {
 
     @Mock
-    private InUserRepository inUserRepository;
-    @Mock
     private InProgramRepository inProgramRepository;
     @Mock
     private InWorkoutRepository inWorkoutRepository;
@@ -60,18 +55,12 @@ public class AdminProgramAssignServiceTest {
     @Mock
     private InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository;
     @Mock
-    private AdminProgramScanExerciseService adminProgramScanExerciseService;
-    @Mock
     private DictionaryService dictionaryService;
     @InjectMocks
     private AdminProgramAssignService adminProgramAssignService;
 
     @Test
     public void assign_user_group_1_two_goals() {
-        when(inUserRepository.findAll()).thenReturn(Arrays.asList(
-                new InUser().setInUserFacebooks(Arrays.asList(
-                        new InUserFacebook().setUser_name("user_name")))));
-        when(adminProgramScanExerciseService.getExerciseIdByName(anyString())).thenReturn(Optional.empty());
         when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
         when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
@@ -82,9 +71,6 @@ public class AdminProgramAssignServiceTest {
 
     @Test
     public void assign_empty_program() {
-        when(inUserRepository.findAll()).thenReturn(Arrays.asList(
-                new InUser().setInUserFacebooks(Arrays.asList(
-                        new InUserFacebook().setUser_name("user_name")))));
         when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Collections.emptyList());
         adminProgramAssignService.assign(new InUser().setD_level("3")
                 .setD_sex("male2").setInUserGoals(Arrays.asList(new InUserGoal())));
@@ -93,10 +79,6 @@ public class AdminProgramAssignServiceTest {
 
     @Test
     public void assign_user_unknown() {
-        when(inUserRepository.findAll()).thenReturn(Arrays.asList(
-                new InUser().setInUserFacebooks(Arrays.asList(
-                        new InUserFacebook().setUser_name("user_name")))));
-        when(adminProgramScanExerciseService.getExerciseIdByName(anyString())).thenReturn(Optional.empty());
         when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
         when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
@@ -107,10 +89,6 @@ public class AdminProgramAssignServiceTest {
 
     @Test
     public void assign_user_group_1() {
-        when(inUserRepository.findAll()).thenReturn(Arrays.asList(
-                new InUser().setInUserFacebooks(Arrays.asList(
-                        new InUserFacebook().setUser_name("user_name")))));
-        when(adminProgramScanExerciseService.getExerciseIdByName(anyString())).thenReturn(Optional.empty());
         when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
         when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
@@ -121,10 +99,6 @@ public class AdminProgramAssignServiceTest {
 
     @Test
     public void assign_empty_goals() {
-        when(inUserRepository.findAll()).thenReturn(Arrays.asList(
-                new InUser().setInUserFacebooks(Arrays.asList(
-                        new InUserFacebook().setUser_name("user_name")))));
-        when(adminProgramScanExerciseService.getExerciseIdByName(anyString())).thenReturn(Optional.empty());
         when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
         when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
@@ -135,10 +109,6 @@ public class AdminProgramAssignServiceTest {
 
     @Test
     public void assign_user_group_2() {
-        when(inUserRepository.findAll()).thenReturn(Arrays.asList(
-                new InUser().setInUserFacebooks(Arrays.asList(
-                        new InUserFacebook().setUser_name("user_name")))));
-        when(adminProgramScanExerciseService.getExerciseIdByName(anyString())).thenReturn(Optional.empty());
         when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
         when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
@@ -149,10 +119,6 @@ public class AdminProgramAssignServiceTest {
 
     @Test
     public void assign_user_group_3() {
-        when(inUserRepository.findAll()).thenReturn(Arrays.asList(
-                new InUser().setInUserFacebooks(Arrays.asList(
-                        new InUserFacebook().setUser_name("user_name")))));
-        when(adminProgramScanExerciseService.getExerciseIdByName(anyString())).thenReturn(Optional.empty());
         when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
         when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
@@ -163,10 +129,6 @@ public class AdminProgramAssignServiceTest {
 
     @Test
     public void assign_user_group_4() {
-        when(inUserRepository.findAll()).thenReturn(Arrays.asList(
-                new InUser().setInUserFacebooks(Arrays.asList(
-                        new InUserFacebook().setUser_name("user_name")))));
-        when(adminProgramScanExerciseService.getExerciseIdByName(anyString())).thenReturn(Optional.empty());
         when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
         when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
