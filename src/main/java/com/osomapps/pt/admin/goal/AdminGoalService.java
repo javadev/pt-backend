@@ -6,6 +6,8 @@ import com.osomapps.pt.dictionary.DictionaryService;
 import com.osomapps.pt.goals.Goal;
 import com.osomapps.pt.goals.GoalParameterRepository;
 import com.osomapps.pt.goals.GoalRepository;
+import com.osomapps.pt.goals.GoalType;
+import com.osomapps.pt.goals.GoalTypeRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Sort;
@@ -16,13 +18,16 @@ class AdminGoalService {
     private final GoalRepository goalRepository;
     private final GoalParameterRepository goalParameterRepository;
     private final DictionaryService dictionaryService;
+    private final GoalTypeRepository goalTypeRepository;
     
     AdminGoalService(GoalRepository goalRepository,
         GoalParameterRepository goalParameterRepository,
-        DictionaryService dictionaryService) {
+        DictionaryService dictionaryService,
+        GoalTypeRepository goalTypeRepository) {
         this.goalRepository = goalRepository;
         this.goalParameterRepository = goalParameterRepository;
         this.dictionaryService = dictionaryService;
+        this.goalTypeRepository = goalTypeRepository;
     }
     
     List<GoalResponseDTO> findAll() {
@@ -48,6 +53,10 @@ class AdminGoalService {
                         .name(parameter.getName())
                         .build())
                         .collect(Collectors.toList()))
+                .type(goal.getGoalType() == null ? null : GoalTypeResponseDTO.builder()
+                        .id(goal.getGoalType().getId())
+                        .name(goal.getGoalType().getName())
+                        .build())
                 .build();
     }
 
@@ -60,6 +69,8 @@ class AdminGoalService {
     }
 
     GoalResponseDTO create(GoalRequestDTO goalRequestDTO) {
+        final GoalType goalTypeDb = goalRequestDTO.getType().getId() == null ? null
+                : goalTypeRepository.findOne(goalRequestDTO.getType().getId());
         final String dataKey = dictionaryService.getNewDictionaryDataKey(DictionaryName.goal_title);
         dictionaryService.createDictionaryDataKey(DictionaryName.goal_title, dataKey,
                 goalRequestDTO.getTitleEn(), goalRequestDTO.getTitleNo());
@@ -71,6 +82,7 @@ class AdminGoalService {
         goal.setDGoalTitle2(data2Key);
         goal.setGoalParameters(goalParameterRepository.findAll(
             goalRequestDTO.getParameters().stream().map(type -> type.getId()).collect(Collectors.toList())));
+        goal.setGoalType(goalTypeDb);
         return goalToDto(goalRepository.save(goal));
     }
 
@@ -79,6 +91,8 @@ class AdminGoalService {
         if (existedGoal == null) {
             throw new ResourceNotFoundException("Goal with id not found: " + id);
         }
+        final GoalType goalTypeDb = goalRequestDTO.getType().getId() == null ? null
+                : goalTypeRepository.findOne(goalRequestDTO.getType().getId());
         final String dataKey = existedGoal.getDGoalTitle();
         dictionaryService.createDictionaryDataKey(DictionaryName.goal_title, dataKey,
                 goalRequestDTO.getTitleEn(), goalRequestDTO.getTitleNo());
@@ -89,6 +103,7 @@ class AdminGoalService {
         existedGoal.setDGoalTitle2(data2Key);
         existedGoal.setGoalParameters(goalParameterRepository.findAll(
                 goalRequestDTO.getParameters().stream().map(type -> type.getId()).collect(Collectors.toList())));
+        existedGoal.setGoalType(goalTypeDb);
         final Goal savedGoal = goalRepository.save(existedGoal);
         return goalToDto(savedGoal);
     }

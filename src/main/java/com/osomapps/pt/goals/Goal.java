@@ -1,5 +1,6 @@
 package com.osomapps.pt.goals;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -47,4 +49,9 @@ public class Goal {
             inverseJoinColumns = { @JoinColumn(name = "goal_parameter_id") }
     )
     List<GoalParameter> goalParameters = new ArrayList<>(0);
+    @ManyToOne
+    @JoinColumn(name="goal_type_id")
+    @JsonBackReference
+    GoalType goalType;
+
 }

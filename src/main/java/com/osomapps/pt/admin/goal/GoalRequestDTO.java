@@ -18,4 +18,5 @@ class GoalRequestDTO {
     String title2En;
     String title2No;
     List<GoalParameterRequestDTO> parameters;
+    GoalTypeRequestDTO type;
 }

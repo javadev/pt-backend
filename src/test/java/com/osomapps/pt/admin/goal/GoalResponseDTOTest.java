@@ -7,7 +7,7 @@ import org.junit.Test;
 public class GoalResponseDTOTest {
     @Test
     public void createAllArgs() {
-        assertThat(new GoalResponseDTO(1L, null, null, null, null, null), notNullValue());
+        assertThat(new GoalResponseDTO(1L, null, null, null, null, null, null), notNullValue());
     }
 
     @Test
@@ -19,6 +19,7 @@ public class GoalResponseDTOTest {
         goalResponseDTO.setTitle2En(null);
         goalResponseDTO.setTitle2No(null);
         goalResponseDTO.setParameters(null);
+        goalResponseDTO.setType(null);
         assertThat(goalResponseDTO, notNullValue());
     }
 
@@ -31,6 +32,7 @@ public class GoalResponseDTOTest {
         goalResponseDTO.getTitle2En();
         goalResponseDTO.getTitle2No();
         goalResponseDTO.getParameters();
+        goalResponseDTO.getType();
         assertThat(goalResponseDTO, notNullValue());
     }
 }

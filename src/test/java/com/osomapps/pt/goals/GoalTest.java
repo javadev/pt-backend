@@ -7,7 +7,7 @@ import org.junit.Test;
 public class GoalTest {
     @Test
     public void createAllArgs() {
-        assertThat(new Goal(1L, null, null, null, null), notNullValue());
+        assertThat(new Goal(1L, null, null, null, null, null), notNullValue());
     }
 
     @Test

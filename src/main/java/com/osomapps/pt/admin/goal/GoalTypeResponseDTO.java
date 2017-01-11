@@ -1,6 +1,5 @@
 package com.osomapps.pt.admin.goal;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,12 +13,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Builder
-class GoalResponseDTO {
+class GoalTypeResponseDTO {
     Long id;
-    String titleEn;
-    String titleNo;
-    String title2En;
-    String title2No;
-    List<GoalParameterResponseDTO> parameters;
-    GoalTypeResponseDTO type;
+    String name;
 }

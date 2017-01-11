@@ -6,6 +6,7 @@ import com.osomapps.pt.goals.Goal;
 import com.osomapps.pt.goals.GoalParameter;
 import com.osomapps.pt.goals.GoalParameterRepository;
 import com.osomapps.pt.goals.GoalRepository;
+import com.osomapps.pt.goals.GoalTypeRepository;
 import java.util.Arrays;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -31,6 +32,9 @@ public class AdminGoalServiceTest {
     private GoalParameterRepository goalParameterRepository;
     @Mock
     private DictionaryService dictionaryService;
+    @Mock
+    private GoalTypeRepository goalTypeRepository;
+
     @InjectMocks
     private AdminGoalService adminGoalService;
 
@@ -60,7 +64,8 @@ public class AdminGoalServiceTest {
     public void create() {
         when(goalRepository.save((Goal) anyObject())).thenAnswer(i -> i.getArguments()[0]);
         GoalResponseDTO goalResponseDTO = adminGoalService.create(
-            new GoalRequestDTO().setParameters(Arrays.asList(new GoalParameterRequestDTO())));
+            new GoalRequestDTO().setParameters(Arrays.asList(new GoalParameterRequestDTO()))
+                    .setType(new GoalTypeRequestDTO().setId(1L)));
         assertThat(goalResponseDTO, notNullValue());
     }
 
@@ -76,7 +81,8 @@ public class AdminGoalServiceTest {
                 new Goal().setGoalParameters(Arrays.asList(new GoalParameter())));
         when(goalRepository.save((Goal) anyObject())).thenAnswer(i -> i.getArguments()[0]);
         GoalResponseDTO goalResponseDTO = adminGoalService.update(1L,
-            new GoalRequestDTO().setParameters(Arrays.asList(new GoalParameterRequestDTO())));
+            new GoalRequestDTO().setParameters(Arrays.asList(new GoalParameterRequestDTO()))
+                .setType(new GoalTypeRequestDTO().setId(1L)));
         assertThat(goalResponseDTO, notNullValue());
     }
 
