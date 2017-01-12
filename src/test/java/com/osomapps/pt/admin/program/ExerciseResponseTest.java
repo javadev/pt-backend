@@ -13,6 +13,8 @@ public class ExerciseResponseTest {
     public void setters() {
          ExerciseResponse exerciseResponse = new ExerciseResponse()
             .setId(null)
+            .setExerciseId(null)
+            .setNameEn(null)
             .setCardioPercent(null);
         assertThat(exerciseResponse, notNullValue());        
     }
@@ -21,6 +23,8 @@ public class ExerciseResponseTest {
     public void getters() {
         ExerciseResponse exerciseResponse = new ExerciseResponse();
         exerciseResponse.getId();
+        exerciseResponse.getExerciseId();
+        exerciseResponse.getNameEn();
         exerciseResponse.getCardioPercent();
         assertThat(exerciseResponse, notNullValue());
     }
