@@ -1,5 +1,6 @@
 package com.osomapps.pt.exercises;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,4 +30,10 @@ public class ExercisesImageResourceTest {
         verify(exerciseImageService).findOne(eq(1L), eq(""), any(OutputStream.class));
     }
 
+    @Test(expected = IOException.class)
+    public void findOne_with_error() throws Exception {
+        when(exerciseImageService.findOne(eq(1L), eq(""), any(OutputStream.class)))
+                .thenThrow(new IOException());
+        exercisesImageResource.findOne(1L, "", new MockHttpServletResponse());
+    }
 }
