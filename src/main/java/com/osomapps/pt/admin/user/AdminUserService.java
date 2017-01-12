@@ -30,7 +30,7 @@ import org.springframework.validation.MapBindingResult;
 
 @Service
 class AdminUserService {
-    
+
     private final InUserRepository inUserRepository;
     private final InUserEmailRepository inUserEmailRepository;
     private final InUserFacebookRepository inUserFacebookRepository;
@@ -41,7 +41,7 @@ class AdminUserService {
     private final InUserGoalRepository inUserGoalRepository;
     private final GoalRepository goalRepository;
     private final AdminProgramAssignService adminProgramAssignService;
-    
+
     AdminUserService(InUserRepository inUserRepository,
             InUserEmailRepository inUserEmailRepository,
             InUserFacebookRepository inUserFacebookRepository,
@@ -85,7 +85,16 @@ class AdminUserService {
             userName = inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1).getUser_name();
             userEmail = "Facebook user";
         }
-        
+
+        final List<UserProgramResponseDTO> programs;
+        if (inUser.getInPrograms() == null) {
+            programs = null;
+        } else {
+            final long inProgramsCount = inUser.getInPrograms().stream().count();
+            programs = inUser.getInPrograms().stream().skip(inProgramsCount < 3 ? 0 : inProgramsCount - 3)
+                .map(AdminUserProgramService::inProgramToDto).collect(Collectors.toList());
+        }
+
         return UserResponseDTO.builder()
                 .id(inUser.getId())
                 .email(userEmail)
@@ -106,8 +115,7 @@ class AdminUserService {
                             inUser.getInUserType().getD_user_type(), ""))
                     .build())
                 .weight(inUser.getWeight() == null ? null : inUser.getWeight().intValue())
-                .programs(inUser.getInPrograms() == null ? null : inUser.getInPrograms().stream()
-                    .map(AdminUserProgramService::inProgramToDto).collect(Collectors.toList()))
+                .programs(programs)
                 .build();
     }
 
