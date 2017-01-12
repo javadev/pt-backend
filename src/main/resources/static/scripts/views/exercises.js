@@ -26,7 +26,11 @@ function ($, _, Backbone, Marionette, App, BackboneBootstrapModals) {
   var Exercise = Marionette.ItemView.extend({
     tagName: 'tr',
     className: function() {
-      return this.collection._modelId === this.model.get('id') ? 'selectedId' : '';
+      var selectCss = this.collection._modelId === this.model.get('id') ? 'selectedId' : '';
+      if (_.isEmpty(selectCss)) {
+          selectCss = _.isEmpty(this.model.get('descriptionEn')) ? 'empty-description': '';
+      }
+      return selectCss;
     },
     template: _.template([
       '<td>',
