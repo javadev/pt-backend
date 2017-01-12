@@ -282,4 +282,54 @@ public class AdminProgramAssignServiceTest {
         assertThat(adminProgramAssignService.roundToEven(2.1F), equalTo(2F));
     }
 
+    @Test
+    public void getWeightForUserGroup_1_weight_80() {
+        assertThat(adminProgramAssignService.getWeightForUserGroup(80F, 1), equalTo(80F));
+    }
+
+    @Test
+    public void getWeightForUserGroup_1_weight_120() {
+        assertThat(adminProgramAssignService.getWeightForUserGroup(120F, 1), equalTo(100F));
+    }
+
+    @Test
+    public void getWeightForUserGroup_2_weight_80() {
+        assertThat(adminProgramAssignService.getWeightForUserGroup(80F, 2), equalTo(80F));
+    }
+
+    @Test
+    public void getWeightForUserGroup_2_weight_120() {
+        assertThat(adminProgramAssignService.getWeightForUserGroup(120F, 2), equalTo(100F));
+    }
+
+    @Test
+    public void getWeightForUserGroup_3_weight_60() {
+        assertThat(adminProgramAssignService.getWeightForUserGroup(60F, 3), equalTo(60F));
+    }
+
+    @Test
+    public void getWeightForUserGroup_3_weight_90() {
+        assertThat(adminProgramAssignService.getWeightForUserGroup(90F, 3), equalTo(75F));
+    }
+
+    @Test
+    public void getWeightForUserGroup_4_weight_60() {
+        assertThat(adminProgramAssignService.getWeightForUserGroup(60F, 4), equalTo(60F));
+    }
+
+    @Test
+    public void getWeightForUserGroup_4_weight_90() {
+        assertThat(adminProgramAssignService.getWeightForUserGroup(90F, 4), equalTo(75F));
+    }
+
+    @Test
+    public void getWeightForUserGroup_5_weight_60() {
+        assertThat(adminProgramAssignService.getWeightForUserGroup(60F, 5), equalTo(60F));
+    }
+
+    @Test
+    public void getWeightForUserGroup_5_weight_90() {
+        assertThat(adminProgramAssignService.getWeightForUserGroup(90F, 5), equalTo(90F));
+    }
+
 }

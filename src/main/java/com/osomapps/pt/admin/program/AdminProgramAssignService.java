@@ -113,7 +113,8 @@ public class AdminProgramAssignService {
                                 .setD_exercise_name(parseWorkoutItem.getName())
                                 .setExercise_id(parseWorkoutItem.getExercise_id())
                                 .setInWorkoutItemSets(parseWorkoutItem.getParseWorkoutItemSets().stream().map(parseWorkoutItemSet
-                                        -> generateInWorkoutItemSet(parseWorkoutItemSet, parsePrograms.get(0).getParseExercises(), inUser.getWeight())
+                                        -> generateInWorkoutItemSet(parseWorkoutItemSet,
+                                                parsePrograms.get(0).getParseExercises(), inUser.getWeight())
                                 ).collect(Collectors.toList()))
                                 .setInWorkoutItemReports(Collections.emptyList())
                         ).collect(Collectors.toList()))).collect(Collectors.toList()));
@@ -178,7 +179,8 @@ public class AdminProgramAssignService {
                 .setRepetitions_to_failure(parseWorkoutItemSet.getRepetitions_to_failure())
                 .setExercise_weight_percent(exerciseWeightPercent)
                 .setGoal_weight_coef(parseWorkoutItemSet.getWeight())
-                .setWeight(generateWeight(parseWorkoutItemSet.getWeight(), exerciseWeightPercent, userWeight))
+                .setWeight(generateWeight(parseWorkoutItemSet.getWeight(),
+                        exerciseWeightPercent, getWeightForUserGroup(userWeight, userGroup)))
                 .setBodyweight(parseWorkoutItemSet.getBodyweight())
                 .setExercise_time_percent(exerciseTimePercent)
                 .setGoal_time_in_sec(minToSec(parseWorkoutItemSet.getTime_in_min()))
@@ -189,6 +191,19 @@ public class AdminProgramAssignService {
                 .setIncline(parseWorkoutItemSet.getIncline())
                 .setResistance(parseWorkoutItemSet.getResistance())
                 .setExercise_basis(exerciseBasis);
+    }
+
+    Float getWeightForUserGroup(Float userWeight, Integer userGroup) {
+        switch (userGroup) {
+            case 1:
+            case 2:
+                return Math.max(100F, userWeight);
+            case 3:
+            case 4:
+                return Math.max(75F, userWeight);
+            default:
+                return userWeight;
+        }
     }
 
     private Float generateWeight(Float goalWeightCoef, Integer exerciseWeightPercent, Float userWeight) {
