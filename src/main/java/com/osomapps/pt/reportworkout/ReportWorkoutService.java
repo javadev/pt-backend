@@ -56,18 +56,24 @@ class ReportWorkoutService {
     WorkoutReportResponseDTO create(String token, WorkoutReportRequestDTO workoutReportRequestDTO) {
         if (!token.isEmpty()) {
             final InUser inUser = userService.checkUserToken(token).getInUser();
-            InWorkout inWorkout = inWorkoutRepository.findOne(workoutReportRequestDTO.getId());
+            final InWorkout inWorkout = inWorkoutRepository.findOne(workoutReportRequestDTO.getId());
             if (inWorkout == null) {
                 throw new ResourceNotFoundException("Workout with id (" + workoutReportRequestDTO.getId()
                     + ") not found");
             }
-            int workoutsSize = inWorkout.getInProgram().getInWorkouts().size();
+            final List<Long> inWorkoutItemIds = inWorkout.getInWorkoutItems().stream().map(inWorkoutItem
+                    -> inWorkoutItem.getId()).collect(Collectors.toList());
+            final int workoutsSize = inWorkout.getInProgram().getInWorkouts().size();
             inWorkout.getInProgram().setCurrent_workout_index((inWorkout.getInProgram().getCurrent_workout_index() + 1) % workoutsSize);
             inProgramRepository.save(inWorkout.getInProgram());
-            WorkoutReportResponseDTO workoutReportResponseDTO = new WorkoutReportResponseDTO();
+            final WorkoutReportResponseDTO workoutReportResponseDTO = new WorkoutReportResponseDTO();
             workoutReportResponseDTO.setItems(new ArrayList<>());
             for (WorkoutItemReportRequestDTO workoutItemReportRequestDTO : workoutReportRequestDTO.getItems()) {
-                List<InWorkoutItem> inWorkoutItems = inWorkoutItemRepository.findById(workoutItemReportRequestDTO.getId());
+                if (!inWorkoutItemIds.contains(workoutItemReportRequestDTO.getId())) {
+                    log.warn("Id {} for inWorkoutItem not found", workoutItemReportRequestDTO.getId());
+                    continue;
+                }
+                final List<InWorkoutItem> inWorkoutItems = inWorkoutItemRepository.findById(workoutItemReportRequestDTO.getId());
                 if (inWorkoutItems.isEmpty()) {
                     throw new ResourceNotFoundException("Workout item with id (" + workoutItemReportRequestDTO.getId()
                             + ") not found");
@@ -95,7 +101,7 @@ class ReportWorkoutService {
                     inWorkoutItemSetReportRepository.save(inWorkoutItemSetReport);
                     inWorkoutItemReport.getInWorkoutItemSetReports().add(inWorkoutItemSetReport);
                 }
-                WorkoutItemReportResponseDTO workoutItemReportResponseDTO = new WorkoutItemReportResponseDTO();
+                final WorkoutItemReportResponseDTO workoutItemReportResponseDTO = new WorkoutItemReportResponseDTO();
                 workoutItemReportResponseDTO.setId(savedInWorkoutItemReport.getId());
                 workoutItemReportResponseDTO.setSets(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
                 .map(itemSetReport -> new WorkoutItemSetReportResponseDTO()
@@ -111,7 +117,6 @@ class ReportWorkoutService {
                 workoutReportResponseDTO.setId(inWorkoutItem.getInWorkout().getId());
                 workoutReportResponseDTO.getItems().add(workoutItemReportResponseDTO);
             }
-            
             return workoutReportResponseDTO;
         }
         return new WorkoutReportResponseDTO();

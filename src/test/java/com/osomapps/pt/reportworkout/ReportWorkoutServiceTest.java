@@ -82,7 +82,8 @@ public class ReportWorkoutServiceTest {
     private InWorkout getInWorkout() {
         return new InWorkout().setInProgram(new InProgram()
                 .setCurrent_workout_index(0)
-                .setInWorkouts(Arrays.asList(new InWorkout())));
+                .setInWorkouts(Arrays.asList(new InWorkout())))
+                .setInWorkoutItems(Arrays.asList(new InWorkoutItem().setId(1L)));
     }
 
     @Test
