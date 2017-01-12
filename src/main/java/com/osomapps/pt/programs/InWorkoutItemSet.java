@@ -41,6 +41,16 @@ public class InWorkoutItemSet {
     Integer speed;
     Integer incline;
     Integer resistance;
+    Integer exercise_weight_percent;
+    Float exercise_weight_in_kg;
+    Float goal_weight_coef;
+    Integer exercise_repetitions_percent;
+    Integer goal_repetitions;
+    Integer exercise_time_percent;
+    Integer goal_time_in_sec;
+    Integer exercise_speed_percent;
+    Integer goal_speed;
+    String exercise_basis;
     @ManyToOne
     @JoinColumn(name="in_workout_item_id")
     @JsonBackReference

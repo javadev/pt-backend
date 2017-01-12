@@ -7,6 +7,7 @@ import com.osomapps.pt.programs.InProgramRepository;
 import com.osomapps.pt.programs.InWarmupWorkoutItemRepository;
 import com.osomapps.pt.programs.InWorkoutItem;
 import com.osomapps.pt.programs.InWorkoutRepository;
+import com.osomapps.pt.programs.ParseExercise;
 import com.osomapps.pt.programs.ParseGoal;
 import com.osomapps.pt.programs.ParsePart;
 import com.osomapps.pt.programs.ParseProgram;
@@ -138,7 +139,9 @@ public class AdminProgramAssignServiceTest {
     }
 
     private static ParseProgram getParseProgram() {
-        return new ParseProgram().setParseGoals(Arrays.asList(
+        return new ParseProgram()
+                .setParseExercises(Arrays.asList(new ParseExercise()))
+                .setParseGoals(Arrays.asList(
                 new ParseGoal()
                         .setName("Loose weight")
                         .setParseUserGroups(Arrays.asList(
@@ -156,7 +159,12 @@ public class AdminProgramAssignServiceTest {
                                                                                 new ParseWarmupWorkoutItem()))
                                                                         .setParseWorkoutItems(Arrays.asList(
                                                                                 new ParseWorkoutItem().setParseWorkoutItemSets(Arrays.asList(
-                                                                                        new ParseWorkoutItemSet()))))
+                                                                                        new ParseWorkoutItemSet()
+                                                                                                .setParseWorkoutItem(new ParseWorkoutItem()
+                                                                                                        .setParseWorkout(new ParseWorkout()
+                                                                                                                .setParsePart(new ParsePart()
+                                                                                                                        .setParseRound(new ParseRound()
+                                                                                                                        .setParseUserGroup(new ParseUserGroup().setName("1"))))))))))
                                                         )))))))))
         );
     }
@@ -257,6 +265,21 @@ public class AdminProgramAssignServiceTest {
         assertThat(result.get(3).getName(), equalTo("2_2"));
         assertThat(result.get(4).getName(), equalTo("1_3"));
         assertThat(result.get(5).getName(), equalTo("2_1"));
+    }
+
+    @Test
+    public void roundToEven_11() {
+        assertThat(adminProgramAssignService.roundToEven(11F), equalTo(10F));
+    }
+
+    @Test
+    public void roundToEven_12() {
+        assertThat(adminProgramAssignService.roundToEven(12F), equalTo(12F));
+    }
+
+    @Test
+    public void roundToEven_2_1() {
+        assertThat(adminProgramAssignService.roundToEven(2.1F), equalTo(2F));
     }
 
 }

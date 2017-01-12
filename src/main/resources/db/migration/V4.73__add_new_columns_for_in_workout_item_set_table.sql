@@ -1,0 +1,10 @@
+ALTER TABLE ptcore.in_workout_item_set ADD COLUMN exercise_weight_percent INT;
+ALTER TABLE ptcore.in_workout_item_set ADD COLUMN exercise_weight_in_kg DECIMAL(9,2);
+ALTER TABLE ptcore.in_workout_item_set ADD COLUMN goal_weight_coef DECIMAL(9,2);
+ALTER TABLE ptcore.in_workout_item_set ADD COLUMN exercise_repetitions_percent INT;
+ALTER TABLE ptcore.in_workout_item_set ADD COLUMN goal_repetitions INT;
+ALTER TABLE ptcore.in_workout_item_set ADD COLUMN exercise_time_percent INT;
+ALTER TABLE ptcore.in_workout_item_set ADD COLUMN goal_time_in_sec INT;
+ALTER TABLE ptcore.in_workout_item_set ADD COLUMN exercise_speed_percent INT;
+ALTER TABLE ptcore.in_workout_item_set ADD COLUMN goal_speed INT;
+ALTER TABLE ptcore.in_workout_item_set ADD COLUMN exercise_basis VARCHAR(30);

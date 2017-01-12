@@ -10,10 +10,10 @@ import com.osomapps.pt.programs.InWorkout;
 import com.osomapps.pt.programs.InWorkoutItem;
 import com.osomapps.pt.programs.InWorkoutItemSet;
 import com.osomapps.pt.programs.InWorkoutRepository;
+import com.osomapps.pt.programs.ParseExercise;
 import com.osomapps.pt.programs.ParseWorkout;
 import com.osomapps.pt.reportworkout.InWorkoutItemRepository;
 import com.osomapps.pt.token.InUser;
-import com.osomapps.pt.token.InUserRepository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import com.osomapps.pt.programs.ParseProgram;
 import com.osomapps.pt.programs.ParseProgramRepository;
 import com.osomapps.pt.programs.ParseRound;
+import com.osomapps.pt.programs.ParseWorkoutItemSet;
 import com.osomapps.pt.reportworkout.InWorkoutItemSetRepository;
 import com.osomapps.pt.token.InUserGoal;
 import java.util.ArrayList;
@@ -112,15 +113,7 @@ public class AdminProgramAssignService {
                                 .setD_exercise_name(parseWorkoutItem.getName())
                                 .setExercise_id(parseWorkoutItem.getExercise_id())
                                 .setInWorkoutItemSets(parseWorkoutItem.getParseWorkoutItemSets().stream().map(parseWorkoutItemSet
-                                        -> new InWorkoutItemSet()
-                                        .setRepetitions(parseWorkoutItemSet.getRepetitions())
-                                        .setRepetitions_to_failure(parseWorkoutItemSet.getRepetitions_to_failure())
-                                        .setWeight(parseWorkoutItemSet.getWeight())
-                                        .setBodyweight(parseWorkoutItemSet.getBodyweight())
-                                        .setTime_in_sec(minToSec(parseWorkoutItemSet.getTime_in_min()))
-                                        .setSpeed(parseWorkoutItemSet.getSpeed())
-                                        .setIncline(parseWorkoutItemSet.getIncline())
-                                        .setResistance(parseWorkoutItemSet.getResistance())
+                                        -> generateInWorkoutItemSet(parseWorkoutItemSet, parsePrograms.get(0).getParseExercises(), inUser.getWeight())
                                 ).collect(Collectors.toList()))
                                 .setInWorkoutItemReports(Collections.emptyList())
                         ).collect(Collectors.toList()))).collect(Collectors.toList()));
@@ -147,6 +140,66 @@ public class AdminProgramAssignService {
             });
         });
         return inUser;
+    }
+
+    private InWorkoutItemSet generateInWorkoutItemSet(ParseWorkoutItemSet parseWorkoutItemSet,
+            List<ParseExercise> parseExercises, Float userWeight) {
+        Optional<ParseExercise> parseExercise = parseExercises.stream().filter(
+                exercise -> Objects.equals(exercise.getExercise_id(),
+                parseWorkoutItemSet.getParseWorkoutItem().getExercise_id())).findFirst();
+        Integer userGroup = Integer.parseInt(parseWorkoutItemSet.getParseWorkoutItem()
+                .getParseWorkout().getParsePart().getParseRound().getParseUserGroup().getName());
+        final Integer exercise_percent;
+        switch (userGroup) {
+            case 1:
+                exercise_percent = parseExercise.get().getUser_group_1_percent();
+                break;
+            case 2:
+                exercise_percent = parseExercise.get().getUser_group_2_percent();
+                break;
+            case 3:
+                exercise_percent = parseExercise.get().getUser_group_3_percent();
+                break;
+            case 4:
+                exercise_percent = parseExercise.get().getUser_group_4_percent();
+                break;
+            default:
+                exercise_percent = 100;
+        }
+        final String exerciseBasis = parseExercise.get().getBasis_for_calculations();
+        final Integer exerciseWeightPercent = "Weight".equals(exerciseBasis) ? exercise_percent : null;
+        final Integer exerciseRepetitionsPercent = "Reps".equals(exerciseBasis) ? exercise_percent : null;
+        final Integer exerciseTimePercent = "Time".equals(exerciseBasis) ? exercise_percent : null;
+        final Integer exerciseSpeedPercent = "Speed".equals(exerciseBasis) ? exercise_percent : null;
+        return new InWorkoutItemSet()
+                .setExercise_repetitions_percent(exerciseRepetitionsPercent)
+                .setGoal_repetitions(parseWorkoutItemSet.getRepetitions())
+                .setRepetitions(parseWorkoutItemSet.getRepetitions())
+                .setRepetitions_to_failure(parseWorkoutItemSet.getRepetitions_to_failure())
+                .setExercise_weight_percent(exerciseWeightPercent)
+                .setGoal_weight_coef(parseWorkoutItemSet.getWeight())
+                .setWeight(generateWeight(parseWorkoutItemSet.getWeight(), exerciseWeightPercent, userWeight))
+                .setBodyweight(parseWorkoutItemSet.getBodyweight())
+                .setExercise_time_percent(exerciseTimePercent)
+                .setGoal_time_in_sec(minToSec(parseWorkoutItemSet.getTime_in_min()))
+                .setTime_in_sec(minToSec(parseWorkoutItemSet.getTime_in_min()))
+                .setExercise_speed_percent(exerciseSpeedPercent)
+                .setGoal_speed(parseWorkoutItemSet.getSpeed())
+                .setSpeed(parseWorkoutItemSet.getSpeed())
+                .setIncline(parseWorkoutItemSet.getIncline())
+                .setResistance(parseWorkoutItemSet.getResistance())
+                .setExercise_basis(exerciseBasis);
+    }
+
+    private Float generateWeight(Float goalWeightCoef, Integer exerciseWeightPercent, Float userWeight) {
+        if (goalWeightCoef != null && exerciseWeightPercent != null && userWeight != null) {
+            return roundToEven(userWeight * goalWeightCoef * exerciseWeightPercent / 100);
+        }
+        return goalWeightCoef;
+    }
+
+    float roundToEven(Float floatValue) {
+        return floatValue.intValue() - floatValue.intValue() % 2;
     }
 
     private Integer minToSec(Float value) {
