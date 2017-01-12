@@ -1,7 +1,6 @@
 package com.osomapps.pt.goals;
 
 import com.osomapps.pt.dictionary.DictionaryService;
-import com.osomapps.pt.user.UserService;
 import java.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,4 +34,12 @@ public class GoalServiceTest {
         verify(goalRepository).findAll();
     }
 
+    @Test
+    public void findAll_with_type() {
+        when(goalRepository.findAll()).thenReturn(Arrays.asList(
+                new Goal().setGoalType(new GoalType())
+                        .setGoalParameters(Arrays.asList(new GoalParameter()))));
+        goalService.findAll();
+        verify(goalRepository).findAll();
+    }
 }
