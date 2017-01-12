@@ -2,6 +2,8 @@ package com.osomapps.pt.admin.program;
 
 import com.osomapps.pt.dictionary.DictionaryName;
 import com.osomapps.pt.dictionary.DictionaryService;
+import com.osomapps.pt.exercises.Exercise;
+import com.osomapps.pt.exercises.ExerciseRepository;
 import com.osomapps.pt.programs.InProgram;
 import com.osomapps.pt.programs.InProgramRepository;
 import com.osomapps.pt.programs.InWarmupWorkoutItem;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import com.osomapps.pt.programs.ParseProgram;
 import com.osomapps.pt.programs.ParseProgramRepository;
 import com.osomapps.pt.programs.ParseRound;
+import com.osomapps.pt.programs.ParseWorkoutItem;
 import com.osomapps.pt.programs.ParseWorkoutItemSet;
 import com.osomapps.pt.reportworkout.InWorkoutItemSetRepository;
 import com.osomapps.pt.token.InUserGoal;
@@ -43,6 +46,7 @@ public class AdminProgramAssignService {
     private final ParseProgramRepository parseProgramRepository;
     private final InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository;
     private final DictionaryService dictionaryService;
+    private final ExerciseRepository exerciseRepository;
 
     AdminProgramAssignService(InProgramRepository inProgramRepository,
             InWorkoutRepository inWorkoutRepository,
@@ -50,7 +54,8 @@ public class AdminProgramAssignService {
             InWorkoutItemSetRepository inWorkoutItemSetRepository,
             ParseProgramRepository parseProgramRepository,
             InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository,
-            DictionaryService dictionaryService) {
+            DictionaryService dictionaryService,
+            ExerciseRepository exerciseRepository) {
         this.inProgramRepository = inProgramRepository;
         this.inWorkoutRepository = inWorkoutRepository;
         this.inWorkoutItemRepository = inWorkoutItemRepository;
@@ -58,6 +63,7 @@ public class AdminProgramAssignService {
         this.parseProgramRepository = parseProgramRepository;
         this.inWarmupWorkoutItemRepository = inWarmupWorkoutItemRepository;
         this.dictionaryService = dictionaryService;
+        this.exerciseRepository = exerciseRepository;
     }
 
     public InUser assign(InUser inUser) {
@@ -94,6 +100,7 @@ public class AdminProgramAssignService {
         final AtomicInteger index = new AtomicInteger(-1);
         final InProgram inProgram = new InProgram()
                 .setName("Test program for user " + inUser.getId())
+                .setCurrent_workout_index(getCurrentWorkoutIndex(inUser, parseWorkouts))
                 .setInWorkouts(parseWorkouts.stream().map(parseWorkout
                         -> new InWorkout()
                         .setD_workout_name(parseWorkout.getName())
@@ -112,6 +119,7 @@ public class AdminProgramAssignService {
                                 -> new InWorkoutItem()
                                 .setD_exercise_name(parseWorkoutItem.getName())
                                 .setExercise_id(parseWorkoutItem.getExercise_id())
+                                .setD_exercise_type(getExerciseType(parseWorkoutItem))
                                 .setInWorkoutItemSets(parseWorkoutItem.getParseWorkoutItemSets().stream().map(parseWorkoutItemSet
                                         -> generateInWorkoutItemSet(parseWorkoutItemSet,
                                                 parsePrograms.get(0).getParseExercises(), inUser.getWeight())
@@ -141,6 +149,21 @@ public class AdminProgramAssignService {
             });
         });
         return inUser;
+    }
+
+    int getCurrentWorkoutIndex(InUser inUser, List<ParseWorkout> parseWorkouts) {
+        if (inUser.getInPrograms().isEmpty()) {
+            return 0;
+        }
+        final InProgram inProgram = inUser.getInPrograms().get(inUser.getInPrograms().size() - 1);
+        if (parseWorkouts.size() != inProgram.getInWorkouts().size()) {
+            return 0;
+        }
+        final InWorkout inWorkout = inProgram.getInWorkouts().get(inProgram.getCurrent_workout_index());
+        if (parseWorkouts.get(inProgram.getCurrent_workout_index()).getName().equals(inWorkout.getD_workout_name())) {
+            return inProgram.getCurrent_workout_index();
+        }
+        return 0;
     }
 
     private InWorkoutItemSet generateInWorkoutItemSet(ParseWorkoutItemSet parseWorkoutItemSet,
@@ -290,6 +313,21 @@ public class AdminProgramAssignService {
             }
         }
         return parseWorkouts;
+    }
+
+    private String getExerciseType(ParseWorkoutItem parseWorkoutItem) {
+        List<Exercise> exercises = exerciseRepository.findByExerciseId(parseWorkoutItem.getExercise_id());
+        if (exercises.isEmpty()) {
+            return "OnRepetitions";
+        }
+        if (exercises.get(0).getExerciseTypes().size() == 1) {
+            return exercises.get(0).getExerciseTypes().get(0).getName();
+        }
+        if (parseWorkoutItem.getParseWorkoutItemSets().stream()
+                .filter(set -> set.getTime_in_min() != null).findFirst().isPresent()) {
+            return "OnTime";
+        }
+        return "OnRepetitions";
     }
 
     enum Gender {

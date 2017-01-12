@@ -16,7 +16,7 @@ import lombok.Builder;
 @Builder
 class ExerciseResponseDTO {
     Long id;
-    Long exerciseId;
+    Integer exerciseId;
     String nameEn;
     String nameNo;
     String descriptionEn;

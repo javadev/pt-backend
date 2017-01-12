@@ -1,6 +1,7 @@
 package com.osomapps.pt.user;
 
 import com.osomapps.pt.UnauthorizedException;
+import com.osomapps.pt.admin.program.AdminProgramAssignService;
 import com.osomapps.pt.goals.Goal;
 import com.osomapps.pt.goals.GoalRepository;
 import com.osomapps.pt.goals.InUserGoalRepository;
@@ -48,6 +49,8 @@ public class UserServiceTest {
     private NameValidator nameValidator;
     @Mock
     private SendEmailService sendEmailService;
+    @Mock
+    private AdminProgramAssignService adminProgramAssignService;
 
     @InjectMocks
     private UserService userService;
@@ -105,6 +108,7 @@ public class UserServiceTest {
         when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
         when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
         when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         userService.updateUser("1", new UserRequestDTO());
         verify(inUserRepository).save(any(InUser.class));
     }
@@ -121,6 +125,7 @@ public class UserServiceTest {
         when(goalRepository.findOne(eq(1L))).thenReturn(new Goal());
         when(inUserGoalRepository.save(any(InUserGoal.class))).thenAnswer(i -> i.getArguments()[0]);
         when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         userService.updateUser("1", new UserRequestDTO()
             .setGender("gender")
             .setAge(10L)

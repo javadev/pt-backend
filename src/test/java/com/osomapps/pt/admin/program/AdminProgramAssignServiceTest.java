@@ -2,9 +2,11 @@ package com.osomapps.pt.admin.program;
 
 import com.osomapps.pt.dictionary.DictionaryName;
 import com.osomapps.pt.dictionary.DictionaryService;
+import com.osomapps.pt.exercises.ExerciseRepository;
 import com.osomapps.pt.programs.InProgram;
 import com.osomapps.pt.programs.InProgramRepository;
 import com.osomapps.pt.programs.InWarmupWorkoutItemRepository;
+import com.osomapps.pt.programs.InWorkout;
 import com.osomapps.pt.programs.InWorkoutItem;
 import com.osomapps.pt.programs.InWorkoutRepository;
 import com.osomapps.pt.programs.ParseExercise;
@@ -57,6 +59,9 @@ public class AdminProgramAssignServiceTest {
     private InWarmupWorkoutItemRepository inWarmupWorkoutItemRepository;
     @Mock
     private DictionaryService dictionaryService;
+    @Mock
+    private ExerciseRepository exerciseRepository;
+
     @InjectMocks
     private AdminProgramAssignService adminProgramAssignService;
 
@@ -66,7 +71,9 @@ public class AdminProgramAssignServiceTest {
         when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
         adminProgramAssignService.assign(new InUser().setD_level("2")
-                .setD_sex("male").setInUserGoals(Arrays.asList(new InUserGoal(), new InUserGoal())));
+                .setD_sex("male").setInUserGoals(Arrays.asList(new InUserGoal(), new InUserGoal()))
+                .setInPrograms(Arrays.asList(
+                        new InProgram().setInWorkouts(Arrays.asList(new InWorkout())))));
         verify(inProgramRepository).save(any(InProgram.class));
     }
 
@@ -94,7 +101,11 @@ public class AdminProgramAssignServiceTest {
         when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
         adminProgramAssignService.assign(new InUser().setD_level("2")
-                .setD_sex("male").setInUserGoals(Arrays.asList(new InUserGoal())));
+                .setD_sex("male").setInUserGoals(Arrays.asList(new InUserGoal()))
+                .setInPrograms(Arrays.asList(
+                        new InProgram()
+                                .setCurrent_workout_index(0)
+                                .setInWorkouts(Arrays.asList(new InWorkout())))));
         verify(inProgramRepository).save(any(InProgram.class));
     }
 
@@ -114,7 +125,12 @@ public class AdminProgramAssignServiceTest {
         when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
         adminProgramAssignService.assign(new InUser().setD_level("1")
-                .setD_sex("male").setInUserGoals(Arrays.asList(new InUserGoal())));
+                .setD_sex("male").setInUserGoals(Arrays.asList(new InUserGoal()))
+                .setInPrograms(Arrays.asList(
+                        new InProgram()
+                                .setCurrent_workout_index(0)
+                                .setInWorkouts(Arrays.asList(new InWorkout())))));
+
         verify(inProgramRepository).save(any(InProgram.class));
     }
 
@@ -124,7 +140,11 @@ public class AdminProgramAssignServiceTest {
         when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
         adminProgramAssignService.assign(new InUser().setD_level("2")
-                .setD_sex("female").setInUserGoals(Arrays.asList(new InUserGoal())));
+                .setD_sex("female").setInUserGoals(Arrays.asList(new InUserGoal()))
+                .setInPrograms(Arrays.asList(
+                        new InProgram()
+                                .setCurrent_workout_index(0)
+                                .setInWorkouts(Arrays.asList(new InWorkout())))));
         verify(inProgramRepository).save(any(InProgram.class));
     }
 
@@ -134,7 +154,11 @@ public class AdminProgramAssignServiceTest {
         when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
         adminProgramAssignService.assign(new InUser().setD_level("1")
-                .setD_sex("female").setInUserGoals(Arrays.asList(new InUserGoal())));
+                .setD_sex("female").setInUserGoals(Arrays.asList(new InUserGoal()))
+                .setInPrograms(Arrays.asList(
+                        new InProgram()
+                                .setCurrent_workout_index(0)
+                                .setInWorkouts(Arrays.asList(new InWorkout())))));
         verify(inProgramRepository).save(any(InProgram.class));
     }
 
@@ -154,6 +178,7 @@ public class AdminProgramAssignServiceTest {
                                                         .setParseParts(Arrays.asList(
                                                         new ParsePart().setParseWorkouts(Arrays.asList(
                                                                 new ParseWorkout()
+                                                                        .setName("")
                                                                         .setParsePart(new ParsePart().setParseRound(new ParseRound().setParseUserGroup(new ParseUserGroup().setParseGoal(new ParseGoal()))))
                                                                         .setParseWarmupWorkoutItems(Arrays.asList(
                                                                                 new ParseWarmupWorkoutItem()))

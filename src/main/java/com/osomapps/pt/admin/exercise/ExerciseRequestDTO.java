@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 class ExerciseRequestDTO {
-    Long exerciseId;
+    Integer exerciseId;
     String nameEn;
     String nameNo;
     String descriptionEn;

@@ -3,6 +3,7 @@ package com.osomapps.pt.user;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osomapps.pt.UnauthorizedException;
+import com.osomapps.pt.admin.program.AdminProgramAssignService;
 import com.osomapps.pt.goals.Goal;
 import com.osomapps.pt.goals.GoalRepository;
 import com.osomapps.pt.goals.InUserGoalRepository;
@@ -37,6 +38,7 @@ public class UserService {
     private final DataurlValidator dataurlValidator;
     private final NameValidator nameValidator;
     private final SendEmailService sendEmailService;
+    private final AdminProgramAssignService adminProgramAssignService;
 
     @Autowired
     UserService(InUserRepository inUserRepository,
@@ -46,7 +48,8 @@ public class UserService {
             InUserGoalRepository inUserGoalRepository,
             DataurlValidator dataurlValidator,
             NameValidator nameValidator,
-            SendEmailService sendEmailService) {
+            SendEmailService sendEmailService,
+            AdminProgramAssignService adminProgramAssignService) {
         this.inUserRepository = inUserRepository;
         this.inUserLoginRepository = inUserLoginRepository;
         this.inUserLogoutRepository = inUserLogoutRepository;
@@ -55,6 +58,7 @@ public class UserService {
         this.dataurlValidator = dataurlValidator;
         this.nameValidator = nameValidator;
         this.sendEmailService = sendEmailService;
+        this.adminProgramAssignService = adminProgramAssignService;
     }
 
     public InUserLogin checkUserToken(String token) {
@@ -211,6 +215,6 @@ public class UserService {
         }
         inUser.setAvatar_dataurl(userRequest.getAvatar_dataurl());
         inUser.setUpdated(LocalDateTime.now());
-        return userToDto(inUserRepository.save(inUser));
+        return userToDto(inUserRepository.save(adminProgramAssignService.assign(inUser)));
     }
 }

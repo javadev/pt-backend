@@ -2,7 +2,6 @@ package com.osomapps.pt.token;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.osomapps.pt.admin.user.InUserGoalType;
-import com.osomapps.pt.admin.user.InUserType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
