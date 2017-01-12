@@ -3,6 +3,7 @@ package com.osomapps.pt.reportworkout;
 import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.UnauthorizedException;
 import com.osomapps.pt.programs.InProgram;
+import com.osomapps.pt.programs.InProgramRepository;
 import com.osomapps.pt.programs.InWorkout;
 import com.osomapps.pt.programs.InWorkoutItem;
 import com.osomapps.pt.programs.InWorkoutItemReport;
@@ -27,6 +28,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ReportWorkoutServiceTest {
 
+    @Mock
+    private InProgramRepository inProgramRepository;
     @Mock
     private InWorkoutRepository inWorkoutRepository;
     @Mock
@@ -71,9 +74,15 @@ public class ReportWorkoutServiceTest {
         inProgram.setInUser(inUser);
         when(inWorkoutItemReportRepository.save(any(InWorkoutItemReport.class))).thenAnswer(i -> i.getArguments()[0]);
         when(inWorkoutItemRepository.findById(eq(1L))).thenReturn(Arrays.asList(inWorkoutItem));
-        when(inWorkoutRepository.findOne(eq(1L))).thenReturn(new InWorkout());
+        when(inWorkoutRepository.findOne(eq(1L))).thenReturn(getInWorkout());
         reportWorkoutService.create("1", workoutReportRequestDTO);
         verify(userService).checkUserToken(eq("1"));
+    }
+
+    private InWorkout getInWorkout() {
+        return new InWorkout().setInProgram(new InProgram()
+                .setCurrent_workout_index(0)
+                .setInWorkouts(Arrays.asList(new InWorkout())));
     }
 
     @Test
@@ -100,7 +109,7 @@ public class ReportWorkoutServiceTest {
         inProgram.setInUser(inUser);
         when(inWorkoutItemReportRepository.save(any(InWorkoutItemReport.class))).thenAnswer(i -> i.getArguments()[0]);
         when(inWorkoutItemRepository.findById(eq(1L))).thenReturn(Arrays.asList(inWorkoutItem));
-        when(inWorkoutRepository.findOne(eq(1L))).thenReturn(new InWorkout());
+        when(inWorkoutRepository.findOne(eq(1L))).thenReturn(getInWorkout());
         reportWorkoutService.create("1", workoutReportRequestDTO);
         verify(userService).checkUserToken(eq("1"));
     }
@@ -137,7 +146,7 @@ public class ReportWorkoutServiceTest {
         inProgram.setInUser(inUser);
         when(inWorkoutItemReportRepository.save(any(InWorkoutItemReport.class))).thenAnswer(i -> i.getArguments()[0]);
         when(inWorkoutItemRepository.findById(eq(1L))).thenReturn(Collections.emptyList());
-        when(inWorkoutRepository.findOne(eq(1L))).thenReturn(new InWorkout());
+        when(inWorkoutRepository.findOne(eq(1L))).thenReturn(getInWorkout());
         reportWorkoutService.create("1", workoutReportRequestDTO);
     }
 
@@ -187,7 +196,7 @@ public class ReportWorkoutServiceTest {
         inProgram.setInUser(inUser);
         when(inWorkoutItemReportRepository.save(any(InWorkoutItemReport.class))).thenAnswer(i -> i.getArguments()[0]);
         when(inWorkoutItemRepository.findById(eq(1L))).thenReturn(Arrays.asList(inWorkoutItem));
-        when(inWorkoutRepository.findOne(eq(1L))).thenReturn(new InWorkout());
+        when(inWorkoutRepository.findOne(eq(1L))).thenReturn(getInWorkout());
         reportWorkoutService.create("1", workoutReportRequestDTO);
     }
 }

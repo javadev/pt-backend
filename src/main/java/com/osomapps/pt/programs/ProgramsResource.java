@@ -21,6 +21,6 @@ class ProgramsResource {
 
     @GetMapping
     List<ProgramResponseDTO> findAll(@RequestHeader(value = "X-Token") String token) {
-        return programService.getPredefinedPrograms(token);
+        return programService.getExamples(token);
     }
 }

@@ -2,6 +2,7 @@ package com.osomapps.pt.reportworkout;
 
 import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.UnauthorizedException;
+import com.osomapps.pt.programs.InProgramRepository;
 import com.osomapps.pt.programs.InWorkout;
 import com.osomapps.pt.programs.InWorkoutItem;
 import com.osomapps.pt.programs.InWorkoutItemReport;
@@ -17,10 +18,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
 class ReportWorkoutService {
+    private final InProgramRepository inProgramRepository;
     private final InWorkoutRepository inWorkoutRepository;
     private final InWorkoutItemRepository inWorkoutItemRepository;
     private final InWorkoutItemReportRepository inWorkoutItemReportRepository;
@@ -28,11 +31,13 @@ class ReportWorkoutService {
     private final UserService userService;
 
     @Autowired
-    ReportWorkoutService(InWorkoutRepository inWorkoutRepository,
+    ReportWorkoutService(InProgramRepository inProgramRepository,
+            InWorkoutRepository inWorkoutRepository,
             InWorkoutItemRepository inWorkoutItemRepository,
             InWorkoutItemReportRepository inWorkoutItemReportRepository,
             InWorkoutItemSetReportRepository inWorkoutItemSetReportRepository,
             UserService userService) {
+        this.inProgramRepository = inProgramRepository;
         this.inWorkoutRepository = inWorkoutRepository;
         this.inWorkoutItemRepository = inWorkoutItemRepository;
         this.inWorkoutItemReportRepository = inWorkoutItemReportRepository;
@@ -47,6 +52,7 @@ class ReportWorkoutService {
         return Collections.emptyList();
     }
 
+    @Transactional
     WorkoutReportResponseDTO create(String token, WorkoutReportRequestDTO workoutReportRequestDTO) {
         if (!token.isEmpty()) {
             final InUser inUser = userService.checkUserToken(token).getInUser();
@@ -55,6 +61,9 @@ class ReportWorkoutService {
                 throw new ResourceNotFoundException("Workout with id (" + workoutReportRequestDTO.getId()
                     + ") not found");
             }
+            int workoutsSize = inWorkout.getInProgram().getInWorkouts().size();
+            inWorkout.getInProgram().setCurrent_workout_index((inWorkout.getInProgram().getCurrent_workout_index() + 1) % workoutsSize);
+            inProgramRepository.save(inWorkout.getInProgram());
             WorkoutReportResponseDTO workoutReportResponseDTO = new WorkoutReportResponseDTO();
             workoutReportResponseDTO.setItems(new ArrayList<>());
             for (WorkoutItemReportRequestDTO workoutItemReportRequestDTO : workoutReportRequestDTO.getItems()) {
@@ -102,6 +111,7 @@ class ReportWorkoutService {
                 workoutReportResponseDTO.setId(inWorkoutItem.getInWorkout().getId());
                 workoutReportResponseDTO.getItems().add(workoutItemReportResponseDTO);
             }
+            
             return workoutReportResponseDTO;
         }
         return new WorkoutReportResponseDTO();

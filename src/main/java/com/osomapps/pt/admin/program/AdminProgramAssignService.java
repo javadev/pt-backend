@@ -194,13 +194,16 @@ public class AdminProgramAssignService {
     }
 
     Float getWeightForUserGroup(Float userWeight, Integer userGroup) {
+        if (userWeight == null) {
+            return null;
+        }
         switch (userGroup) {
             case 1:
             case 2:
-                return Math.max(100F, userWeight);
+                return Math.min(100F, userWeight);
             case 3:
             case 4:
-                return Math.max(75F, userWeight);
+                return Math.min(75F, userWeight);
             default:
                 return userWeight;
         }
