@@ -323,7 +323,7 @@ public class AdminProgramAssignService {
         return parseWorkouts;
     }
 
-    private String getExerciseType(ParseWorkoutItem parseWorkoutItem) {
+    String getExerciseType(ParseWorkoutItem parseWorkoutItem) {
         List<Exercise> exercises = exerciseRepository.findByExerciseId(parseWorkoutItem.getExercise_id());
         if (exercises.isEmpty()) {
             return "OnRepetitions";

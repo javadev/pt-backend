@@ -2,7 +2,9 @@ package com.osomapps.pt.admin.program;
 
 import com.osomapps.pt.dictionary.DictionaryName;
 import com.osomapps.pt.dictionary.DictionaryService;
+import com.osomapps.pt.exercises.Exercise;
 import com.osomapps.pt.exercises.ExerciseRepository;
+import com.osomapps.pt.exercises.ExerciseType;
 import com.osomapps.pt.programs.InProgram;
 import com.osomapps.pt.programs.InProgramRepository;
 import com.osomapps.pt.programs.InWarmupWorkoutItemRepository;
@@ -37,6 +39,8 @@ import java.util.Collections;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import org.mockito.Matchers;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -372,6 +376,24 @@ public class AdminProgramAssignServiceTest {
     @Test
     public void getWeightForUserGroup_5_weight_90() {
         assertThat(adminProgramAssignService.getWeightForUserGroup(90F, 5), equalTo(90F));
+    }
+
+    @Test
+    public void getExerciseType_size_1() {
+        when(exerciseRepository.findByExerciseId(anyInt()))
+                .thenReturn(Arrays.asList(new Exercise().setExerciseTypes(
+                        Arrays.asList(new ExerciseType().setName("test")))));
+        assertThat(adminProgramAssignService.getExerciseType(new ParseWorkoutItem()), equalTo("test"));
+    }
+
+    @Test
+    public void getExerciseType_size_2() {
+        when(exerciseRepository.findByExerciseId(anyInt()))
+                .thenReturn(Arrays.asList(new Exercise().setExerciseTypes(
+                        Arrays.asList(new ExerciseType().setName("test1"), new ExerciseType().setName("test2")))));
+        assertThat(adminProgramAssignService.getExerciseType(new ParseWorkoutItem()
+            .setParseWorkoutItemSets(Arrays.asList(new ParseWorkoutItemSet().setTime_in_min(1F)))),
+                equalTo("OnTime"));
     }
 
 }
