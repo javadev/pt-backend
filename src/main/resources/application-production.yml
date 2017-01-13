@@ -1,0 +1,13 @@
+app:
+    name: PT Production
+
+spring:
+    profiles:
+        active: production
+
+app:
+    email:
+        confirm:
+            url: https://pt-backend-app.herokuapp.com/email/confirm/
+        reset:
+            url: https://pt-backend-app.herokuapp.com/email/reset/
