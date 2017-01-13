@@ -162,6 +162,23 @@ public class AdminProgramAssignServiceTest {
         verify(inProgramRepository).save(any(InProgram.class));
     }
 
+    @Test
+    public void getCurrentWorkoutIndex_empty_programs() {
+        assertThat(adminProgramAssignService.getCurrentWorkoutIndex(
+                new InUser().setInPrograms(Collections.emptyList()), Collections.emptyList()), equalTo(0));
+    }
+
+    @Test
+    public void getCurrentWorkoutIndex_same_names() {
+        assertThat(adminProgramAssignService.getCurrentWorkoutIndex(
+                new InUser().setInPrograms(
+                        Arrays.asList(new InProgram().setCurrent_workout_index(1)
+                        .setInWorkouts(Arrays.asList(new InWorkout().setD_workout_name("name1"),
+                                new InWorkout().setD_workout_name("name2"))))),
+                Arrays.asList(new ParseWorkout().setName("name1"),
+                        new ParseWorkout().setName("name2"))), equalTo(1));
+    }
+
     private static ParseProgram getParseProgram() {
         return new ParseProgram()
                 .setParseExercises(Arrays.asList(new ParseExercise()))
