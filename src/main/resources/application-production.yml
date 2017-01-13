@@ -1,11 +1,9 @@
-app:
-    name: PT Production
-
 spring:
     profiles:
         active: production
 
 app:
+    name: PT Production
     email:
         confirm:
             url: https://pt-backend-app.herokuapp.com/email/confirm/
