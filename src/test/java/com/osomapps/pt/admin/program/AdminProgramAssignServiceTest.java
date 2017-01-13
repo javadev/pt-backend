@@ -39,7 +39,6 @@ import java.util.Collections;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
-import org.mockito.Matchers;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
@@ -396,4 +395,13 @@ public class AdminProgramAssignServiceTest {
                 equalTo("OnTime"));
     }
 
+    @Test
+    public void getExerciseType_size_2_with_null_time() {
+        when(exerciseRepository.findByExerciseId(anyInt()))
+                .thenReturn(Arrays.asList(new Exercise().setExerciseTypes(
+                        Arrays.asList(new ExerciseType().setName("test1"), new ExerciseType().setName("test2")))));
+        assertThat(adminProgramAssignService.getExerciseType(new ParseWorkoutItem()
+            .setParseWorkoutItemSets(Arrays.asList(new ParseWorkoutItemSet().setTime_in_min(null)))),
+                equalTo("OnRepetitions"));
+    }
 }
