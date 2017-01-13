@@ -89,7 +89,27 @@ public class AdminProgramAssignServiceTest {
     }
 
     @Test
-    public void assign_user_unknown() {
+    public void assign_user_unknown_gender() {
+        when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
+        when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
+        adminProgramAssignService.assign(new InUser().setD_level("2")
+                .setD_sex("male2").setInUserGoals(Arrays.asList(new InUserGoal())));
+        verify(inProgramRepository, never()).save(any(InProgram.class));
+    }
+
+    @Test
+    public void assign_user_unknown_level() {
+        when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
+        when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
+        adminProgramAssignService.assign(new InUser().setD_level("3")
+                .setD_sex("male").setInUserGoals(Arrays.asList(new InUserGoal())));
+        verify(inProgramRepository, never()).save(any(InProgram.class));
+    }
+
+    @Test
+    public void assign_user_unknown_level_and_gender() {
         when(inWorkoutItemRepository.save(any(InWorkoutItem.class))).thenAnswer(i -> i.getArguments()[0]);
         when(parseProgramRepository.findAll(any(Sort.class))).thenReturn(Arrays.asList(getParseProgram()));
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyString(), anyString())).thenReturn("Loose weight");
