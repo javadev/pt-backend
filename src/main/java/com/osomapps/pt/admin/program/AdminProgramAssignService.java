@@ -160,7 +160,7 @@ public class AdminProgramAssignService {
             return 0;
         }
         final InWorkout inWorkout = inProgram.getInWorkouts().get(inProgram.getCurrent_workout_index());
-        if (parseWorkouts.get(inProgram.getCurrent_workout_index()).getName().equals(inWorkout.getD_workout_name())) {
+        if (parseWorkouts.isEmpty() || parseWorkouts.get(inProgram.getCurrent_workout_index()).getName().equals(inWorkout.getD_workout_name())) {
             return inProgram.getCurrent_workout_index();
         }
         return 0;
