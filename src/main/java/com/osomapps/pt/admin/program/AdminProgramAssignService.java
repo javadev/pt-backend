@@ -93,7 +93,9 @@ public class AdminProgramAssignService {
             List<ParseRound> parseRounds2 = getRoundsGorGoalAndUserGroup(parsePrograms,
                     inUser.getInUserGoals().get(1), userGroup.get());
             parseWorkouts = mergeLists(getParseWorkouts(parseRounds), getParseWorkouts(parseRounds2));
-            goalNames.add(parseRounds2.get(0).getParseUserGroup().getParseGoal().getName());
+            if (!parseRounds2.isEmpty()) {
+                goalNames.add(parseRounds2.get(0).getParseUserGroup().getParseGoal().getName());
+            }
         } else {
             parseWorkouts = getParseWorkouts(parseRounds);
         }
