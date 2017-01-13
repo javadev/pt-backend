@@ -156,11 +156,11 @@ public class AdminProgramAssignService {
             return 0;
         }
         final InProgram inProgram = inUser.getInPrograms().get(inUser.getInPrograms().size() - 1);
-        if (parseWorkouts.size() != inProgram.getInWorkouts().size()) {
+        if (parseWorkouts.isEmpty() || parseWorkouts.size() != inProgram.getInWorkouts().size()) {
             return 0;
         }
         final InWorkout inWorkout = inProgram.getInWorkouts().get(inProgram.getCurrent_workout_index());
-        if (parseWorkouts.isEmpty() || parseWorkouts.get(inProgram.getCurrent_workout_index()).getName().equals(inWorkout.getD_workout_name())) {
+        if (parseWorkouts.get(inProgram.getCurrent_workout_index()).getName().equals(inWorkout.getD_workout_name())) {
             return inProgram.getCurrent_workout_index();
         }
         return 0;
