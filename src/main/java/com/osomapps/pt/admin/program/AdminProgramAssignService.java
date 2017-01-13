@@ -176,23 +176,28 @@ public class AdminProgramAssignService {
         Integer userGroup = Integer.parseInt(parseWorkoutItemSet.getParseWorkoutItem()
                 .getParseWorkout().getParsePart().getParseRound().getParseUserGroup().getName());
         final Integer exercise_percent;
-        switch (userGroup) {
-            case 1:
-                exercise_percent = parseExercise.get().getUser_group_1_percent();
-                break;
-            case 2:
-                exercise_percent = parseExercise.get().getUser_group_2_percent();
-                break;
-            case 3:
-                exercise_percent = parseExercise.get().getUser_group_3_percent();
-                break;
-            case 4:
-                exercise_percent = parseExercise.get().getUser_group_4_percent();
-                break;
-            default:
-                exercise_percent = 100;
+        if (parseExercise.isPresent()) {
+            switch (userGroup) {
+                case 1:
+                    exercise_percent = parseExercise.get().getUser_group_1_percent();
+                    break;
+                case 2:
+                    exercise_percent = parseExercise.get().getUser_group_2_percent();
+                    break;
+                case 3:
+                    exercise_percent = parseExercise.get().getUser_group_3_percent();
+                    break;
+                case 4:
+                    exercise_percent = parseExercise.get().getUser_group_4_percent();
+                    break;
+                default:
+                    exercise_percent = 100;
+            }
+        } else {
+            exercise_percent = 100;
         }
-        final String exerciseBasis = parseExercise.get().getBasis_for_calculations();
+        final String exerciseBasis = parseExercise.isPresent()
+                ? parseExercise.get().getBasis_for_calculations() : "";
         final Integer exerciseWeightPercent = "Weight".equals(exerciseBasis) ? exercise_percent : null;
         final Integer exerciseRepetitionsPercent = "Reps".equals(exerciseBasis) ? exercise_percent : null;
         final Integer exerciseTimePercent = "Time".equals(exerciseBasis) ? exercise_percent : null;
@@ -282,7 +287,8 @@ public class AdminProgramAssignService {
     }
 
     private String getOnlySymbols(String value) {
-        return value.replace("on a specific distance", "").replaceAll("[\\s\\.\\,]+", "");
+        return value.replace("on a specific distance", "").replace("ednurance", "endurance")
+                .replaceAll("[\\s\\.\\,]+", "");
     }
 
     private String getGoalName(InUserGoal inUserGoal) {
