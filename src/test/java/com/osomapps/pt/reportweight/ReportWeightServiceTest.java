@@ -4,7 +4,6 @@ import com.osomapps.pt.token.InUser;
 import com.osomapps.pt.token.InUserLogin;
 import com.osomapps.pt.user.UserService;
 import java.util.Arrays;
-import java.util.Collections;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
