@@ -8,6 +8,8 @@ import com.osomapps.pt.exercises.Exercise;
 import com.osomapps.pt.exercises.ExerciseBodypart;
 import com.osomapps.pt.exercises.ExerciseEquipmentType;
 import com.osomapps.pt.exercises.ExerciseFile;
+import com.osomapps.pt.exercises.ExerciseFilePreview;
+import com.osomapps.pt.exercises.ExerciseFilePreviewRepository;
 import com.osomapps.pt.exercises.ExerciseFileRepository;
 import com.osomapps.pt.exercises.ExerciseRepository;
 import com.osomapps.pt.tokenemail.DataurlValidator;
@@ -28,6 +30,7 @@ class AdminExerciseService {
     private final ExerciseInputRepository exerciseInputRepository;
     private final ExerciseOutputRepository exerciseOutputRepository;
     private final ExerciseFileRepository exerciseFileRepository;
+    private final ExerciseFilePreviewRepository exerciseFilePreviewRepository;
     private final DataurlValidator dataurlValidator;
 
     AdminExerciseService(ExerciseRepository exerciseRepository,
@@ -38,6 +41,7 @@ class AdminExerciseService {
             ExerciseInputRepository exerciseInputRepository,
             ExerciseOutputRepository exerciseOutputRepository,
             ExerciseFileRepository exerciseFileRepository,
+            ExerciseFilePreviewRepository exerciseFilePreviewRepository,
             DataurlValidator dataurlValidator) {
         this.exerciseRepository = exerciseRepository;
         this.exerciseBodypartRepository = exerciseBodypartRepository;
@@ -47,6 +51,7 @@ class AdminExerciseService {
         this.exerciseInputRepository = exerciseInputRepository;
         this.exerciseOutputRepository = exerciseOutputRepository;
         this.exerciseFileRepository = exerciseFileRepository;
+        this.exerciseFilePreviewRepository = exerciseFilePreviewRepository;
         this.dataurlValidator = dataurlValidator;
     }
 
@@ -146,7 +151,7 @@ class AdminExerciseService {
                 exerciseRequestDTO.getOutputs().stream().map(output -> output.getId()).collect(Collectors.toList())));
         }
         if (exerciseRequestDTO.getFiles() != null) {
-            exercise.setExerciseFiles(exerciseRequestDTO.getFiles().stream().map(file -> {
+            List<ExerciseFile> exerciseFiles = exerciseRequestDTO.getFiles().stream().map(file -> {
                     final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
                     if (file.getData_url() == null) {
                         throw new UnauthorizedException("Invalid data_url");
@@ -160,8 +165,15 @@ class AdminExerciseService {
                             .setFile_size(file.getFile_size())
                             .setFile_type(file.getFile_type())
                             .setData_url(file.getData_url());
-            }).collect(Collectors.toList()));
-            exerciseFileRepository.save(exercise.getExerciseFiles());
+            }).collect(Collectors.toList());
+            List<ExerciseFile> savedExerciseFiles = exerciseFileRepository.save(exerciseFiles);
+            exercise.setExerciseFiles(savedExerciseFiles.stream().map(file
+            -> new ExerciseFilePreview().setId(file.getId())
+                    .setCreated(file.getCreated()).setFile_name(file.getFile_name())
+                    .setFile_size(file.getFile_size())
+                    .setFile_type(file.getFile_type())
+                    .setExercises(file.getExercises())
+            ).collect(Collectors.toList()));
         }
         exercise.setCardio_percent(exerciseRequestDTO.getCardioPercent());
         return exerciseToDto(exerciseRepository.save(exercise));
@@ -204,8 +216,8 @@ class AdminExerciseService {
                 exerciseRequestDTO.getOutputs().stream().map(output -> output.getId()).collect(Collectors.toList())));
         }
         if (exerciseRequestDTO.getFiles() != null) {
-            exerciseFileRepository.delete(existedExercise.getExerciseFiles());
-            existedExercise.setExerciseFiles(exerciseRequestDTO.getFiles().stream().map(file -> {
+            exerciseFilePreviewRepository.delete(existedExercise.getExerciseFiles());
+            List<ExerciseFile> exerciseFiles = exerciseRequestDTO.getFiles().stream().map(file -> {
                     final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
                     if (file.getData_url() == null) {
                         throw new UnauthorizedException("Invalid data_url");
@@ -219,8 +231,15 @@ class AdminExerciseService {
                             .setFile_size(file.getFile_size())
                             .setFile_type(file.getFile_type())
                             .setData_url(file.getData_url());
-            }).collect(Collectors.toList()));
-            exerciseFileRepository.save(existedExercise.getExerciseFiles());
+            }).collect(Collectors.toList());
+            List<ExerciseFile> savedExerciseFiles = exerciseFileRepository.save(exerciseFiles);
+            existedExercise.setExerciseFiles(savedExerciseFiles.stream().map(file
+            -> new ExerciseFilePreview().setId(file.getId())
+                    .setCreated(file.getCreated()).setFile_name(file.getFile_name())
+                    .setFile_size(file.getFile_size())
+                    .setFile_type(file.getFile_type())
+                    .setExercises(file.getExercises())
+            ).collect(Collectors.toList()));
         }
         final Exercise savedExercise = exerciseRepository.save(existedExercise);
         return exerciseToDto(savedExercise);

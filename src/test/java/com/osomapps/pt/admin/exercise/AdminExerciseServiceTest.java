@@ -6,6 +6,8 @@ import com.osomapps.pt.dictionary.DictionaryService;
 import com.osomapps.pt.exercises.Exercise;
 import com.osomapps.pt.exercises.ExerciseBodypart;
 import com.osomapps.pt.exercises.ExerciseFile;
+import com.osomapps.pt.exercises.ExerciseFilePreview;
+import com.osomapps.pt.exercises.ExerciseFilePreviewRepository;
 import com.osomapps.pt.exercises.ExerciseFileRepository;
 import com.osomapps.pt.exercises.ExerciseRepository;
 import com.osomapps.pt.tokenemail.DataurlValidator;
@@ -42,6 +44,8 @@ public class AdminExerciseServiceTest {
     private ExerciseOutputRepository exerciseOutputRepository;
     @Mock
     private ExerciseFileRepository exerciseFileRepository;
+    @Mock
+    private ExerciseFilePreviewRepository exerciseFilePreviewRepository;
     @Mock
     private DictionaryService dictionaryService;
     @Mock
@@ -97,7 +101,7 @@ public class AdminExerciseServiceTest {
         savedExercise.setId(1L);
         savedExercise.setDExerciseName("10");
         savedExercise.setExerciseBodypart(existedExerciseBodypart);
-        savedExercise.setExerciseFiles(Arrays.asList(new ExerciseFile()));
+        savedExercise.setExerciseFiles(Arrays.asList(new ExerciseFilePreview()));
         when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
         tokenService.create(exerciseRequestDTO);
         verify(exerciseRepository).save(any(Exercise.class));
@@ -121,7 +125,7 @@ public class AdminExerciseServiceTest {
         savedExercise.setId(1L);
         savedExercise.setDExerciseName("10");
         savedExercise.setExerciseBodypart(existedExerciseBodypart);
-        savedExercise.setExerciseFiles(Arrays.asList(new ExerciseFile()));
+        savedExercise.setExerciseFiles(Arrays.asList(new ExerciseFilePreview()));
         when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
         doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
             Object[] args = invocation.getArguments();
@@ -160,7 +164,7 @@ public class AdminExerciseServiceTest {
         savedExercise.setId(1L);
         savedExercise.setDExerciseName("10");
         savedExercise.setExerciseBodypart(existedExerciseBodypart);
-        savedExercise.setExerciseFiles(Arrays.asList(new ExerciseFile()));
+        savedExercise.setExerciseFiles(Arrays.asList(new ExerciseFilePreview()));
         when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
         tokenService.update(1L, exerciseRequestDTO);
         verify(exerciseRepository).save(any(Exercise.class));
@@ -186,7 +190,7 @@ public class AdminExerciseServiceTest {
         savedExercise.setId(1L);
         savedExercise.setDExerciseName("10");
         savedExercise.setExerciseBodypart(existedExerciseBodypart);
-        savedExercise.setExerciseFiles(Arrays.asList(new ExerciseFile()));
+        savedExercise.setExerciseFiles(Arrays.asList(new ExerciseFilePreview()));
         when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
         doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
             Object[] args = invocation.getArguments();

@@ -84,5 +84,5 @@ public class Exercise {
             joinColumns = { @JoinColumn(name = "exercise_id") },
             inverseJoinColumns = { @JoinColumn(name = "exercise_file_id") }
     )
-    List<ExerciseFile> exerciseFiles = new ArrayList<>(0);
+    List<ExerciseFilePreview> exerciseFiles = new ArrayList<>(0);
 }
