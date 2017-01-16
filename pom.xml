@@ -224,7 +224,7 @@
         <configuration>
           <excludes>
             <exclude>**/*.xlsx</exclude>
-            <exclude>**/App.java</exclude>
+            <exclude>**/App.*</exclude>
           </excludes>
         </configuration>
         <executions>
