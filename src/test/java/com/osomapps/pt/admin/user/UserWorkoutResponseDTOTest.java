@@ -22,8 +22,8 @@ public class UserWorkoutResponseDTOTest {
     @Test
     public void getters() {
         UserWorkoutResponseDTO userWorkoutResponseDTO = new UserWorkoutResponseDTO();
-        userWorkoutResponseDTO.setId(null);
-        userWorkoutResponseDTO.setName(null);
+        userWorkoutResponseDTO.getId();
+        userWorkoutResponseDTO.getName();
         userWorkoutResponseDTO.getWarmup();
         assertThat(userWorkoutResponseDTO, notNullValue());
     }
