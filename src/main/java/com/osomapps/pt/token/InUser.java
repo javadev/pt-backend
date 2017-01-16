@@ -81,5 +81,12 @@ public class InUser {
             inverseJoinColumns = { @JoinColumn(name = "in_user_goal_id") }
     )
     List<InUserGoal> inUserGoals = new ArrayList<>(0);
-
+    @ManyToMany
+    @JoinTable(
+            name = "in_user_has_in_user_photo",
+            schema = "ptcore",
+            joinColumns = { @JoinColumn(name = "in_user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "in_user_photo_id") }
+    )
+    List<InUserPhoto> inUserPhotos = new ArrayList<>(0);
 }

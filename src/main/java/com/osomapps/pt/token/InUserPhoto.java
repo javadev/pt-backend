@@ -26,25 +26,26 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 @Setter
 @Entity
-@Table (name = "in_user_goal_photo", schema = "ptcore")
+@Table (name = "in_user_photo", schema = "ptcore")
 @DynamicInsert
-public class InUserGoalPhoto {
+public class InUserPhoto {
     @Id
-    @SequenceGenerator(name = "InUserGoalPhotoIdSequence", sequenceName = "ptcore.in_user_goal_photo_id_seq",
+    @SequenceGenerator(name = "InUserPhotoIdSequence", sequenceName = "ptcore.in_user_photo_id_seq",
             allocationSize = 1, initialValue = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "InUserGoalPhotoIdSequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "InUserPhotoIdSequence")
     Long id;
     LocalDateTime created;
+    Long goal_id;
     String file_name;
     Long file_size;
     String file_type;
     String data_url;
     @ManyToMany
     @JoinTable(
-            name = "in_user_goal_has_in_user_goal_photo",
+            name = "in_user_has_in_user_photo",
             schema = "ptcore",
-            joinColumns = { @JoinColumn(name = "in_user_goal_photo_id") },
-            inverseJoinColumns = { @JoinColumn(name = "in_user_goal_id") }
+            joinColumns = { @JoinColumn(name = "in_user_photo_id") },
+            inverseJoinColumns = { @JoinColumn(name = "in_user_id") }
     )
-    List<InUserGoal> inUserGoals = new ArrayList<>(0);
+    List<InUser> inUsers = new ArrayList<>(0);
 }

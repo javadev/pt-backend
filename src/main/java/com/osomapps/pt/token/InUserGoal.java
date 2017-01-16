@@ -56,12 +56,4 @@ public class InUserGoal {
     @JoinColumn(name="in_user_goal_type_id")
     @JsonBackReference
     InUserGoalType inUserGoalType;
-    @ManyToMany
-    @JoinTable(
-            name = "in_user_goal_has_in_user_goal_photo",
-            schema = "ptcore",
-            joinColumns = { @JoinColumn(name = "in_user_goal_id") },
-            inverseJoinColumns = { @JoinColumn(name = "in_user_goal_photo_id") }
-    )
-    List<InUserGoalPhoto> inUserGoalPhotos = new ArrayList<>(0);
 }

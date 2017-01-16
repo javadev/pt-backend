@@ -1,10 +1,8 @@
 package com.osomapps.pt.reportphoto;
 
-import com.osomapps.pt.goals.InUserGoalPhotoRepository;
 import com.osomapps.pt.reportweight.InUserWeight;
 import com.osomapps.pt.token.InUser;
 import com.osomapps.pt.token.InUserGoal;
-import com.osomapps.pt.token.InUserGoalPhoto;
 import com.osomapps.pt.token.InUserLogin;
 import com.osomapps.pt.user.UserService;
 import java.util.Arrays;
@@ -19,14 +17,19 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
+import com.osomapps.pt.goals.InUserPhotoRepository;
+import com.osomapps.pt.token.InUserPhoto;
+import com.osomapps.pt.tokenemail.DataurlValidator;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReportPhotoServiceTest {
 
     @Mock
-    private InUserGoalPhotoRepository inUserGoalPhotoRepository;
+    private InUserPhotoRepository inUserPhotoRepository;
     @Mock
     private UserService userService;
+    @Mock
+    private DataurlValidator dataurlValidator;
 
     @InjectMocks
     private ReportPhotoService reportPhotoService;
@@ -50,7 +53,7 @@ public class ReportPhotoServiceTest {
         inUserForLogin.setId(10L);
         inUserLogin.setInUser(inUserForLogin);
         when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
-        when(inUserGoalPhotoRepository.save(any(InUserGoalPhoto.class))).thenReturn(new InUserGoalPhoto().setId(1L));
+        when(inUserPhotoRepository.save(any(InUserPhoto.class))).thenReturn(new InUserPhoto().setId(1L));
         reportPhotoService.create("1", new PhotoRequestDTO().setGoal_id(1L).setDataurl(
                 "data:image/gif;base64,R0lGODlhEAAOALMAAOazToeHh0tLS/7LZv/0j"
                 + "vb29t/f3//Ub//ge8WSLf/rhf/3kdbW1mxsbP//mf///yH5BAAAAAAALAAAAAAQAA4AAA"
