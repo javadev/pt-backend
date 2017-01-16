@@ -36,7 +36,9 @@ public class XlsxProgramModifierTest {
                                 new InWarmupWorkoutItem().setTime_in_sec(60)))
                         .setInWorkoutItems(Arrays.asList(
                                 new InWorkoutItem().setInWorkoutItemSets(Arrays.asList(
-                                        new InWorkoutItemSet()
+                                        new InWorkoutItemSet().setRepetitions(1)
+                                        .setTime_in_sec(60)
+                                        .setWeight(60.1F)
                                 ))))
                 ))));
     }
