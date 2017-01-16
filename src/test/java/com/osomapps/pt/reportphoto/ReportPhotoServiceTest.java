@@ -113,6 +113,22 @@ public class ReportPhotoServiceTest {
     }
 
     @Test
+    public void create_photo_jpg() {
+        InUserLogin inUserLogin = new InUserLogin();
+        InUser inUserForLogin = new InUser().setInUserGoals(Arrays.asList(new InUserGoal().setGoalId(1L)));
+        inUserForLogin.setId(10L);
+        inUserLogin.setInUser(inUserForLogin);
+        when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
+        when(inUserPhotoRepository.save(any(InUserPhoto.class))).thenReturn(new InUserPhoto().setId(1L));
+        reportPhotoService.create("1", new PhotoRequestDTO().setGoal_id(1L).setDataurl(
+                "data:image/jpeg;base64,R0lGODlhEAAOALMAAOazToeHh0tLS/7LZv/0j"
+                + "vb29t/f3//Ub//ge8WSLf/rhf/3kdbW1mxsbP//mf///yH5BAAAAAAALAAAAAAQAA4AAA"
+                + "Re8L1Ekyky67QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjgaORCMxIC6e0Cc"
+                + "guWw6aFjsVMkkIr7g77ZKPJjPZqIyd7sJAgVGoEGv2xsBxqNgYPj/gAwXEQA7"));
+        verify(userService).checkUserToken(eq("1"));
+    }
+
+    @Test
     public void create_with_empty_token() {
         reportPhotoService.create("", new PhotoRequestDTO().setGoal_id(1L).setDataurl(
                 "data:image/gif;base64,R0lGODlhEAAOALMAAOazToeHh0tLS/7LZv/0j"
