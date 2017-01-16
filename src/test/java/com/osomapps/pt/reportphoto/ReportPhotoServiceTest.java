@@ -20,6 +20,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.osomapps.pt.goals.InUserPhotoRepository;
 import com.osomapps.pt.token.InUserPhoto;
 import com.osomapps.pt.tokenemail.DataurlValidator;
+import java.util.List;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doAnswer;
@@ -50,6 +53,12 @@ public class ReportPhotoServiceTest {
         when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
         reportPhotoService.findAll("1");
         verify(userService).checkUserToken(eq("1"));
+    }
+
+    @Test
+    public void findAll_empty_token() {
+        List<PhotoResponseDTO> photoResponseDTOs = reportPhotoService.findAll("");
+        assertThat(photoResponseDTOs, notNullValue());
     }
 
     @Test

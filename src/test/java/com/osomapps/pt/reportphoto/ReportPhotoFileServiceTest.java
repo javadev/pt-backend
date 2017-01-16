@@ -6,6 +6,8 @@ import com.osomapps.pt.token.InUserLogin;
 import com.osomapps.pt.token.InUserPhoto;
 import com.osomapps.pt.user.UserService;
 import java.io.ByteArrayOutputStream;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -31,6 +33,13 @@ public class ReportPhotoFileServiceTest {
     public void findOne_not_found() throws Exception {
         when(userService.checkUserToken(anyString())).thenReturn(new InUserLogin());
         reportPhotoFileService.findOne("1", 1L, "", new ByteArrayOutputStream());
+    }
+
+    @Test
+    public void findOne_empty_token() throws Exception {
+        ReportPhotoFileDTO reportPhotoFileDTO = reportPhotoFileService.findOne(
+                "", 1L, "", new ByteArrayOutputStream());
+        assertThat(reportPhotoFileDTO, notNullValue());
     }
 
     @Test
