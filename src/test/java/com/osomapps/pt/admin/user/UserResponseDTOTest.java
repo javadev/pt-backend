@@ -16,8 +16,11 @@ public class UserResponseDTOTest {
         userResponseDTO.setId(null);
         userResponseDTO.setEmail(null);
         userResponseDTO.setType(null);
+        userResponseDTO.setGender(null);
+        userResponseDTO.setLevel(null);
         userResponseDTO.setPrograms(null);
         userResponseDTO.setWeight(null);
+        userResponseDTO.setGoals(null);
         assertThat(userResponseDTO, notNullValue());
     }
 
@@ -27,8 +30,11 @@ public class UserResponseDTOTest {
         userResponseDTO.getId();
         userResponseDTO.getEmail();
         userResponseDTO.getType();
+        userResponseDTO.getGender();
+        userResponseDTO.getLevel();
         userResponseDTO.getPrograms();
         userResponseDTO.getWeight();
+        userResponseDTO.getGoals();
         assertThat(userResponseDTO, notNullValue());
     }
 }
