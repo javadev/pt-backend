@@ -107,7 +107,7 @@ public class UserService {
         if (inUser.getInUserFacebooks() == null || inUser.getInUserFacebooks().isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(inUser.getInUserFacebooks()
+        return Optional.ofNullable(inUser.getInUserFacebooks()
                 .get(inUser.getInUserFacebooks().size() - 1).getPicture_url());
     }
 

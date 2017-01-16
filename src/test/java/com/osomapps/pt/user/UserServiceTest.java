@@ -6,6 +6,7 @@ import com.osomapps.pt.goals.Goal;
 import com.osomapps.pt.goals.GoalRepository;
 import com.osomapps.pt.goals.InUserGoalRepository;
 import com.osomapps.pt.token.InUser;
+import com.osomapps.pt.token.InUserFacebook;
 import com.osomapps.pt.token.InUserGoal;
 import com.osomapps.pt.token.InUserLogin;
 import com.osomapps.pt.token.InUserLoginRepository;
@@ -13,6 +14,7 @@ import com.osomapps.pt.token.InUserLogout;
 import com.osomapps.pt.token.InUserLogoutRepository;
 import com.osomapps.pt.token.InUserRepository;
 import com.osomapps.pt.tokenemail.DataurlValidator;
+import com.osomapps.pt.tokenemail.InUserEmail;
 import com.osomapps.pt.tokenemail.NameValidator;
 import com.osomapps.pt.tokenemail.SendEmailService;
 import java.util.Arrays;
@@ -74,6 +76,40 @@ public class UserServiceTest {
         assertThat(userResponseDTO.level, equalTo(UserLevel.Unexperienced));
     }
 
+    @Test
+    public void findOne_token_found_with_facebook_user() {
+        InUserLogin inUserLogin = new InUserLogin();
+        inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F)
+                .setWeight(50F).setD_level("1")
+                .setInUserGoals(Arrays.asList(new InUserGoal().setGoal_value("{\"key\":10}")))
+                .setInUserFacebooks(Arrays.asList(new InUserFacebook().setUser_name("Name")))
+        );
+        when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
+        when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
+        UserResponseDTO userResponseDTO = userService.findOne("1");
+        assertThat(userResponseDTO.age, equalTo(32L));
+        assertThat(userResponseDTO.height, equalTo(180L));
+        assertThat(userResponseDTO.weight, equalTo(50L));
+        assertThat(userResponseDTO.level, equalTo(UserLevel.Unexperienced));
+    }
+
+    @Test
+    public void findOne_token_found_with_email_user() {
+        InUserLogin inUserLogin = new InUserLogin();
+        inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F)
+                .setWeight(50F).setD_level("1")
+                .setInUserGoals(Arrays.asList(new InUserGoal().setGoal_value("{\"key\":10}")))
+                .setInUserEmails(Arrays.asList(new InUserEmail().setUser_name("Name").setLogin("user")))
+        );
+        when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
+        when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
+        UserResponseDTO userResponseDTO = userService.findOne("1");
+        assertThat(userResponseDTO.age, equalTo(32L));
+        assertThat(userResponseDTO.height, equalTo(180L));
+        assertThat(userResponseDTO.weight, equalTo(50L));
+        assertThat(userResponseDTO.level, equalTo(UserLevel.Unexperienced));
+    }
+
     @Test(expected = UnauthorizedException.class)
     public void findOne_token_with_logout() {
         InUserLogin inUserLogin = new InUserLogin();
@@ -114,6 +150,34 @@ public class UserServiceTest {
     }
 
     @Test
+    public void updateUser_token_found_from_facebook() {
+        InUserLogin inUserLogin = new InUserLogin();
+        inUserLogin.setInUser(new InUser()
+                .setId(1L).setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F).setInUserFacebooks(
+                        Arrays.asList(new InUserFacebook().setUser_name("User"))));
+        when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
+        when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
+        when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
+        userService.updateUser("1", new UserRequestDTO());
+        verify(inUserRepository).save(any(InUser.class));
+    }
+
+    @Test
+    public void updateUser_token_found_from_email() {
+        InUserLogin inUserLogin = new InUserLogin();
+        inUserLogin.setInUser(new InUser()
+                .setId(1L).setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F).setInUserEmails(
+                        Arrays.asList(new InUserEmail().setUser_name("User").setLogin("user"))));
+        when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
+        when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
+        when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
+        userService.updateUser("1", new UserRequestDTO());
+        verify(inUserRepository).save(any(InUser.class));
+    }
+
+    @Test
     public void updateUser_token_found_with_data() {
         InUserLogin inUserLogin = new InUserLogin();
         inUserLogin.setInUser(new InUser()
@@ -135,6 +199,22 @@ public class UserServiceTest {
             .setLevel(UserLevel.Experienced)
             .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L))));
         verify(inUserRepository).save(any(InUser.class));
+    }
+
+    @Test(expected = UnauthorizedException.class)
+    public void updateUser_token_found_with_wrong_name() {
+        InUserLogin inUserLogin = new InUserLogin();
+        inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
+        when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
+        when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
+        userService.updateUser("1", new UserRequestDTO()
+            .setGender("gender")
+            .setAge(10L)
+            .setHeight(160L)
+            .setWeight(60L)
+            .setName("N")
+            .setLevel(UserLevel.Experienced)
+            .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L))));
     }
 
     @Test(expected = UnauthorizedException.class)
