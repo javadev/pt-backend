@@ -103,6 +103,7 @@ public class AdminExerciseServiceTest {
         savedExercise.setExerciseBodypart(existedExerciseBodypart);
         savedExercise.setExerciseFiles(Arrays.asList(new ExerciseFilePreview()));
         when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
+        when(exerciseFileRepository.save(any(ExerciseFile.class))).thenAnswer(i -> i.getArguments()[0]);
         tokenService.create(exerciseRequestDTO);
         verify(exerciseRepository).save(any(Exercise.class));
     }
@@ -166,6 +167,7 @@ public class AdminExerciseServiceTest {
         savedExercise.setExerciseBodypart(existedExerciseBodypart);
         savedExercise.setExerciseFiles(Arrays.asList(new ExerciseFilePreview()));
         when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
+        when(exerciseFileRepository.save(any(ExerciseFile.class))).thenAnswer(i -> i.getArguments()[0]);
         tokenService.update(1L, exerciseRequestDTO);
         verify(exerciseRepository).save(any(Exercise.class));
     }
