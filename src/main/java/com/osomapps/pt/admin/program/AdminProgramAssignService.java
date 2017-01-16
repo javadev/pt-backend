@@ -198,7 +198,7 @@ public class AdminProgramAssignService {
         }
         final String exerciseBasis = parseExercise.isPresent()
                 ? parseExercise.get().getBasis_for_calculations() : "";
-        final Integer exerciseWeightPercent = Arrays.asList("Weight", "Time", "Speed").contains(exerciseBasis)
+        final Integer exerciseWeightPercent = Arrays.asList("Weight", "Time").contains(exerciseBasis)
                 ? exercise_percent : null;
         final Integer exerciseRepetitionsPercent = "Reps".equals(exerciseBasis) ? exercise_percent : null;
         final Integer exerciseTimePercent = "Time".equals(exerciseBasis) ? exercise_percent : null;
