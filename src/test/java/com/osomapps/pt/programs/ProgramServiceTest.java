@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +26,11 @@ public class ProgramServiceTest {
 
     @InjectMocks
     private ProgramService programService;
+
+    @Test
+    public void getPredefinedPrograms_empty_token() {
+        assertThat(programService.getPredefinedPrograms(""), notNullValue());
+    }
 
     @Test
     public void getPredefinedPrograms() {

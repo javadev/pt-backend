@@ -19,6 +19,16 @@ public class InWorkoutItemSetTest {
         inWorkoutItemSet.setId(null);
         inWorkoutItemSet.setCreated(LocalDateTime.MAX);
         inWorkoutItemSet.setInWorkoutItem(null);
+        inWorkoutItemSet.setExercise_weight_percent(null);
+        inWorkoutItemSet.setExercise_weight_in_kg(null);
+        inWorkoutItemSet.setGoal_weight_coef(null);
+        inWorkoutItemSet.setExercise_repetitions_percent(null);
+        inWorkoutItemSet.setGoal_repetitions(null);
+        inWorkoutItemSet.setExercise_time_percent(null);
+        inWorkoutItemSet.setGoal_time_in_sec(null);
+        inWorkoutItemSet.setExercise_speed_percent(null);
+        inWorkoutItemSet.setGoal_speed(null);
+        inWorkoutItemSet.setExercise_basis(null);
         assertThat(inWorkoutItemSet, notNullValue());
     }
 
@@ -28,6 +38,16 @@ public class InWorkoutItemSetTest {
         inWorkoutItemSet.getId();
         inWorkoutItemSet.getCreated();
         inWorkoutItemSet.getInWorkoutItem();
+        inWorkoutItemSet.getExercise_weight_percent();
+        inWorkoutItemSet.getExercise_weight_in_kg();
+        inWorkoutItemSet.getGoal_weight_coef();
+        inWorkoutItemSet.getExercise_repetitions_percent();
+        inWorkoutItemSet.getGoal_repetitions();
+        inWorkoutItemSet.getExercise_time_percent();
+        inWorkoutItemSet.getGoal_time_in_sec();
+        inWorkoutItemSet.getExercise_speed_percent();
+        inWorkoutItemSet.getGoal_speed();
+        inWorkoutItemSet.getExercise_basis();
         assertThat(inWorkoutItemSet, notNullValue());
     }
 }
