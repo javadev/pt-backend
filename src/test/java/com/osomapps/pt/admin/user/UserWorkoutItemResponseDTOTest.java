@@ -15,6 +15,7 @@ public class UserWorkoutItemResponseDTOTest {
     @Test
     public void setters() {
         UserWorkoutItemResponseDTO userWorkoutItemResponseDTO = new UserWorkoutItemResponseDTO();
+        userWorkoutItemResponseDTO.setId(null);
         userWorkoutItemResponseDTO.setExercise_id(null);
         userWorkoutItemResponseDTO.setExercise_name(null);
         userWorkoutItemResponseDTO.setSets(null);
@@ -39,6 +40,7 @@ public class UserWorkoutItemResponseDTOTest {
     @Test
     public void getters() {
         UserWorkoutItemResponseDTO userWorkoutItemResponseDTO = new UserWorkoutItemResponseDTO();
+        userWorkoutItemResponseDTO.getId();
         userWorkoutItemResponseDTO.getExercise_id();
         userWorkoutItemResponseDTO.getExercise_name();
         userWorkoutItemResponseDTO.getSets();
