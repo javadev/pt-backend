@@ -11,14 +11,14 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,9 +30,16 @@ import org.hibernate.annotations.DynamicInsert;
 @DynamicInsert
 public class ExerciseType {
     @Id
-    @SequenceGenerator(name = "ExerciseTypeIdSequence", sequenceName = "ptcore.exercise_type_id_seq",
-            allocationSize = 1, initialValue = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ExerciseTypeIdSequence")
+    @GenericGenerator(
+        name = "ExerciseTypeIdSequence",
+        strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+        parameters = {
+                @Parameter(name = "sequence_name", value = "ptcore.exercise_type_id_seq"),
+                @Parameter(name = "initial_value", value = "1"),
+                @Parameter(name = "increment_size", value = "1")
+        }
+    )
+    @GeneratedValue(generator = "ExerciseTypeIdSequence")
     Long id;
     LocalDateTime created;
     String name;
