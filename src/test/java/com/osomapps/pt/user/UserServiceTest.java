@@ -159,7 +159,7 @@ public class UserServiceTest {
         when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
         when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
-        userService.updateUser("1", new UserRequestDTO());
+        userService.updateUser("1", new UserRequestDTO().setName("New name"));
         verify(inUserRepository).save(any(InUser.class));
     }
 
@@ -168,12 +168,12 @@ public class UserServiceTest {
         InUserLogin inUserLogin = new InUserLogin();
         inUserLogin.setInUser(new InUser()
                 .setId(1L).setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F).setInUserEmails(
-                        Arrays.asList(new InUserEmail().setUser_name("User").setLogin("user"))));
+                        Arrays.asList(new InUserEmail().setLogin("user"))));
         when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
         when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
         when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
-        userService.updateUser("1", new UserRequestDTO());
+        userService.updateUser("1", new UserRequestDTO().setName("New name"));
         verify(inUserRepository).save(any(InUser.class));
     }
 

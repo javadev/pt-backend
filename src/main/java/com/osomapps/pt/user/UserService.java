@@ -40,7 +40,6 @@ public class UserService {
     private final SendEmailService sendEmailService;
     private final AdminProgramAssignService adminProgramAssignService;
 
-    @Autowired
     UserService(InUserRepository inUserRepository,
             InUserLoginRepository inUserLoginRepository,
             InUserLogoutRepository inUserLogoutRepository,
