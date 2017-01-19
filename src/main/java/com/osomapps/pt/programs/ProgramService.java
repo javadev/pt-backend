@@ -1,5 +1,6 @@
 package com.osomapps.pt.programs;
 
+import com.osomapps.pt.estimation.CurveEstimation;
 import com.osomapps.pt.token.InUserLogin;
 import com.osomapps.pt.user.UserService;
 import java.util.ArrayList;
@@ -7,11 +8,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 class ProgramService {
     private final UserService userService;
@@ -163,7 +167,7 @@ class ProgramService {
                 .orElse(Collections.emptyList());
     }
 
-    private static ProgramResponseDTO createProgramResponseDTO(InProgram inProgram) {
+    private ProgramResponseDTO createProgramResponseDTO(InProgram inProgram) {
         ProgramResponseDTO program = new ProgramResponseDTO();
         program.setId(inProgram.getId());
         program.setName(inProgram.getName());
@@ -200,18 +204,62 @@ class ProgramService {
                 workoutItem.setExercise_type(inWorkoutItem.getD_exercise_type() == null ? "OnRepetitions"
                         : inWorkoutItem.getD_exercise_type());
                 workoutItem.setSets(inWorkoutItem.getInWorkoutItemSets().stream().map(set ->
-                        new WorkoutItemSetResponseDTO()
-                        .setRepetitions(set.getRepetitions())
-                        .setWeight(set.getWeight())
-                        .setBodyweight(BooleanUtils.isTrue(set.getBodyweight()))
-                        .setTime_in_sec(set.getTime_in_sec())
-                        .setSpeed(set.getSpeed())
-                        .setIncline(set.getIncline())
-                        .setResistance(set.getResistance())
+                        generateWorkoutItemSetResponse(set)
                 ).collect(Collectors.toList()));
                 workout.getItems().add(workoutItem);
             }
         }
         return program;
+    }
+
+    private WorkoutItemSetResponseDTO generateWorkoutItemSetResponse(InWorkoutItemSet set) {
+        if ("Weight".equalsIgnoreCase(set.getExercise_basis())) {
+            final Optional<List<InWorkoutItemSetReport>> previousSetReport = getPreviousInWorkoutItemSets(set);
+            Optional<Integer> diffPercent = calculateDiffInPercent(previousSetReport, set);
+            if (diffPercent.isPresent()) {
+                float newPercent = CurveEstimation.of(1, 0, 2.5F, 2, 50).calc(diffPercent.get());
+                return new WorkoutItemSetResponseDTO()
+                .setRepetitions(set.getRepetitions())
+                .setWeight(roundToEven(set.getWeight() * ( 1 + newPercent / 100)))
+                .setBodyweight(BooleanUtils.isTrue(set.getBodyweight()))
+                .setTime_in_sec(set.getTime_in_sec())
+                .setSpeed(set.getSpeed())
+                .setIncline(set.getIncline())
+                .setResistance(set.getResistance());
+            }
+        }
+        return new WorkoutItemSetResponseDTO()
+                .setRepetitions(set.getRepetitions())
+                .setWeight(set.getWeight())
+                .setBodyweight(BooleanUtils.isTrue(set.getBodyweight()))
+                .setTime_in_sec(set.getTime_in_sec())
+                .setSpeed(set.getSpeed())
+                .setIncline(set.getIncline())
+                .setResistance(set.getResistance());
+    }
+
+    float roundToEven(Float floatValue) {
+        return floatValue.intValue() - floatValue.intValue() % 2;
+    }
+
+    private Optional<List<InWorkoutItemSetReport>> getPreviousInWorkoutItemSets(InWorkoutItemSet set) {
+        if (set.getInWorkoutItem().getInWorkoutItemReports().isEmpty()) {
+            log.info("Previous report was not found");
+            return Optional.empty();
+        }
+        return Optional.of(set.getInWorkoutItem().getInWorkoutItemReports().get(
+                set.getInWorkoutItem().getInWorkoutItemReports().size() - 1).getInWorkoutItemSetReports());
+    }
+
+    Optional<Integer> calculateDiffInPercent(Optional<List<InWorkoutItemSetReport>> previousSetReport,
+            InWorkoutItemSet set) {
+        if (!previousSetReport.isPresent()) {
+            return Optional.empty();
+        }
+        long prevRepetitions = previousSetReport.get().stream()
+                .collect(Collectors.summarizingInt(InWorkoutItemSetReport::getRepetitions)).getSum();
+        long curRepetitions = set.getInWorkoutItem().getInWorkoutItemSets().stream()
+                .collect(Collectors.summarizingInt(InWorkoutItemSet::getRepetitions)).getSum();
+        return Optional.of(Float.valueOf((prevRepetitions - curRepetitions) / (float) curRepetitions * 100).intValue());
     }
 }

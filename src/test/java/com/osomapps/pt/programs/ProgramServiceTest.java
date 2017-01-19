@@ -6,6 +6,7 @@ import com.osomapps.pt.user.UserService;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -135,5 +136,44 @@ public class ProgramServiceTest {
         when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
         programService.getExamples("1");
         verify(userService).checkUserToken(eq("1"));
+    }
+
+    @Test
+    public void calculateDiffInPercent_20_to_23() {
+        Optional<Integer> diff = programService.calculateDiffInPercent(Optional.of(Arrays.asList(
+                new InWorkoutItemSetReport().setRepetitions(11),
+                new InWorkoutItemSetReport().setRepetitions(12))), new InWorkoutItemSet().setInWorkoutItem(
+                        new InWorkoutItem().setInWorkoutItemSets(Arrays.asList(
+                                new InWorkoutItemSet().setRepetitions(10),
+                                new InWorkoutItemSet().setRepetitions(10)))));
+        assertThat(diff.isPresent(), equalTo(true));
+        assertThat(diff.get(), equalTo(15));
+    }
+
+    @Test
+    public void calculateDiffInPercent_20_to_18() {
+        Optional<Integer> diff = programService.calculateDiffInPercent(Optional.of(Arrays.asList(
+                new InWorkoutItemSetReport().setRepetitions(9),
+                new InWorkoutItemSetReport().setRepetitions(9))), new InWorkoutItemSet().setInWorkoutItem(
+                        new InWorkoutItem().setInWorkoutItemSets(Arrays.asList(
+                                new InWorkoutItemSet().setRepetitions(10),
+                                new InWorkoutItemSet().setRepetitions(10)))));
+        assertThat(diff.isPresent(), equalTo(true));
+        assertThat(diff.get(), equalTo(-10));
+    }
+
+    @Test
+    public void roundToEven_11() {
+        assertThat(programService.roundToEven(11F), equalTo(10F));
+    }
+
+    @Test
+    public void roundToEven_12() {
+        assertThat(programService.roundToEven(12F), equalTo(12F));
+    }
+
+    @Test
+    public void roundToEven_2_1() {
+        assertThat(programService.roundToEven(2.1F), equalTo(2F));
     }
 }
