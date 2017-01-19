@@ -220,7 +220,7 @@ class ProgramService {
                 float newPercent = CurveEstimation.of(1, 0, 2.5F, 2, 50).calc(diffPercent.get());
                 return new WorkoutItemSetResponseDTO()
                 .setRepetitions(set.getRepetitions())
-                .setWeight(roundToEven(set.getWeight() * ( 1 + newPercent / 100)))
+                .setWeight(roundToEven(set.getWeight() * ( 1 + newPercent / 100f)))
                 .setBodyweight(BooleanUtils.isTrue(set.getBodyweight()))
                 .setTime_in_sec(set.getTime_in_sec())
                 .setSpeed(set.getSpeed())
