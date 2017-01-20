@@ -214,13 +214,16 @@ class ProgramService {
 
     private WorkoutItemSetResponseDTO generateWorkoutItemSetResponse(InWorkoutItemSet set) {
         if ("Weight".equalsIgnoreCase(set.getExercise_basis())) {
-            final Optional<List<InWorkoutItemSetReport>> previousSetReport = getPreviousInWorkoutItemSets(set);
-            Optional<Integer> diffPercent = calculateDiffInPercent(previousSetReport, set);
+            final List<InWorkoutItemSetReport> previousSetReports = getPreviousInWorkoutItemSets(set);
+            Optional<Integer> diffPercent = calculateDiffInPercent(previousSetReports, set);
             if (diffPercent.isPresent()) {
                 float newPercent = CurveEstimation.of(1, 0, 2.5F, 2, 50).calc(diffPercent.get());
+                float newWeight = roundToEven(set.getWeight() * ( 1 + newPercent / 100f));
+                log.info("New weigh was calculated, base weight - {}, new weight - {}, diff - {}",
+                        set.getWeight(), newWeight, newWeight - set.getWeight());
                 return new WorkoutItemSetResponseDTO()
                 .setRepetitions(set.getRepetitions())
-                .setWeight(roundToEven(set.getWeight() * ( 1 + newPercent / 100f)))
+                .setWeight(newWeight)
                 .setBodyweight(BooleanUtils.isTrue(set.getBodyweight()))
                 .setTime_in_sec(set.getTime_in_sec())
                 .setSpeed(set.getSpeed())
@@ -242,24 +245,26 @@ class ProgramService {
         return floatValue.intValue() - floatValue.intValue() % 2;
     }
 
-    private Optional<List<InWorkoutItemSetReport>> getPreviousInWorkoutItemSets(InWorkoutItemSet set) {
+    private List<InWorkoutItemSetReport> getPreviousInWorkoutItemSets(InWorkoutItemSet set) {
         if (set.getInWorkoutItem().getInWorkoutItemReports().isEmpty()) {
-            log.info("Previous report was not found");
-            return Optional.empty();
+            return Collections.emptyList();
         }
-        return Optional.of(set.getInWorkoutItem().getInWorkoutItemReports().get(
-                set.getInWorkoutItem().getInWorkoutItemReports().size() - 1).getInWorkoutItemSetReports());
+        return set.getInWorkoutItem().getInWorkoutItemReports().get(
+                set.getInWorkoutItem().getInWorkoutItemReports().size() - 1).getInWorkoutItemSetReports();
     }
 
-    Optional<Integer> calculateDiffInPercent(Optional<List<InWorkoutItemSetReport>> previousSetReport,
+    Optional<Integer> calculateDiffInPercent(List<InWorkoutItemSetReport> previousSetReport,
             InWorkoutItemSet set) {
-        if (!previousSetReport.isPresent()) {
+        if (previousSetReport.isEmpty()) {
             return Optional.empty();
         }
-        long prevRepetitions = previousSetReport.get().stream()
+        long prevRepetitions = previousSetReport.stream()
                 .collect(Collectors.summarizingInt(InWorkoutItemSetReport::getRepetitions)).getSum();
         long curRepetitions = set.getInWorkoutItem().getInWorkoutItemSets().stream()
                 .collect(Collectors.summarizingInt(InWorkoutItemSet::getRepetitions)).getSum();
-        return Optional.of(Float.valueOf((prevRepetitions - curRepetitions) / (float) curRepetitions * 100).intValue());
+        Integer result = Float.valueOf((prevRepetitions - curRepetitions) / (float) curRepetitions * 100).intValue();
+        log.info("New reps diff was calculated, previous reps - {}, current reps - {}, diff - {}",
+                prevRepetitions, curRepetitions, result);
+        return Optional.of(result);
     }
 }

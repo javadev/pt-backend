@@ -140,9 +140,9 @@ public class ProgramServiceTest {
 
     @Test
     public void calculateDiffInPercent_20_to_23() {
-        Optional<Integer> diff = programService.calculateDiffInPercent(Optional.of(Arrays.asList(
+        Optional<Integer> diff = programService.calculateDiffInPercent(Arrays.asList(
                 new InWorkoutItemSetReport().setRepetitions(11),
-                new InWorkoutItemSetReport().setRepetitions(12))), new InWorkoutItemSet().setInWorkoutItem(
+                new InWorkoutItemSetReport().setRepetitions(12)), new InWorkoutItemSet().setInWorkoutItem(
                         new InWorkoutItem().setInWorkoutItemSets(Arrays.asList(
                                 new InWorkoutItemSet().setRepetitions(10),
                                 new InWorkoutItemSet().setRepetitions(10)))));
@@ -152,9 +152,9 @@ public class ProgramServiceTest {
 
     @Test
     public void calculateDiffInPercent_20_to_18() {
-        Optional<Integer> diff = programService.calculateDiffInPercent(Optional.of(Arrays.asList(
+        Optional<Integer> diff = programService.calculateDiffInPercent(Arrays.asList(
                 new InWorkoutItemSetReport().setRepetitions(9),
-                new InWorkoutItemSetReport().setRepetitions(9))), new InWorkoutItemSet().setInWorkoutItem(
+                new InWorkoutItemSetReport().setRepetitions(9)), new InWorkoutItemSet().setInWorkoutItem(
                         new InWorkoutItem().setInWorkoutItemSets(Arrays.asList(
                                 new InWorkoutItemSet().setRepetitions(10),
                                 new InWorkoutItemSet().setRepetitions(10)))));
