@@ -1,7 +1,3 @@
-env:
-  global:
-    - CODECOV_TOKEN=41c2d384-6582-455f-84dc-8644d52f5872
-
 language: java
 sudo: required
 cache:
