@@ -4,15 +4,15 @@ import com.osomapps.pt.exercises.ExerciseType;
 import java.util.Arrays;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class AdminExerciseTypeServiceTest {
 
     @Mock

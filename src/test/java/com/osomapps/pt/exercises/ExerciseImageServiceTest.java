@@ -2,17 +2,18 @@ package com.osomapps.pt.exercises;
 
 import com.osomapps.pt.ResourceNotFoundException;
 import java.io.ByteArrayOutputStream;
-import org.junit.Test;
-import static org.junit.Assert.assertThat;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ExerciseImageServiceTest {
 
     @Mock
@@ -21,9 +22,9 @@ public class ExerciseImageServiceTest {
     @InjectMocks
     private ExerciseImageService exerciseImageService;
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void findOne_not_found() throws Exception {
-        exerciseImageService.findOne(1L, "", new ByteArrayOutputStream());
+        assertThrows(ResourceNotFoundException.class, () -> {exerciseImageService.findOne(1L, "", new ByteArrayOutputStream());});
     }
 
     @Test

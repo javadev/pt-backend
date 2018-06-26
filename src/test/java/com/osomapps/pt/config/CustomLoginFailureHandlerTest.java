@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

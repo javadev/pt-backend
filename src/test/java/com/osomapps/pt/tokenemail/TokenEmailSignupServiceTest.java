@@ -8,9 +8,10 @@ import java.util.Arrays;
 import java.util.Optional;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
@@ -20,12 +21,12 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class TokenEmailSignupServiceTest {
 
     @Mock
@@ -51,33 +52,33 @@ public class TokenEmailSignupServiceTest {
                 new UserSignupRequestDTO().setEmail("test@mail.com")));
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void createInUserEmail_wrong_email() {
         doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
             Object[] args = invocation.getArguments();
             ((Errors) args[1]).reject("emailValidator", "emailValidator");
             return null;
         }).when(emailValidator).validate(anyObject(), any(Errors.class));
-        tokenEmailSignupService.createInUserEmail(new TokenEmailSignupRequestDTO().setUser(
-                new UserSignupRequestDTO().setEmail("test@mail.com")));
+        assertThrows(UnauthorizedException.class, () -> {tokenEmailSignupService.createInUserEmail(new TokenEmailSignupRequestDTO().setUser(
+                new UserSignupRequestDTO().setEmail("test@mail.com")));});
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void createInUserEmail_wrong_dataurl() {
         doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
             Object[] args = invocation.getArguments();
             ((Errors) args[1]).reject("dataurlValidator", "dataurlValidator");
             return null;
         }).when(dataurlValidator).validate(anyObject(), any(Errors.class));
-        tokenEmailSignupService.createInUserEmail(new TokenEmailSignupRequestDTO().setUser(
-                new UserSignupRequestDTO().setEmail("test@mail.com")));
+        assertThrows(UnauthorizedException.class, () -> {tokenEmailSignupService.createInUserEmail(new TokenEmailSignupRequestDTO().setUser(
+                new UserSignupRequestDTO().setEmail("test@mail.com")));});
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void createInUserEmail_already_registered() {
         when(inUserEmailRepository.findByLogin(anyString())).thenReturn(Arrays.asList(new InUserEmail()));
-        tokenEmailSignupService.createInUserEmail(new TokenEmailSignupRequestDTO().setUser(
-                new UserSignupRequestDTO().setEmail("test@mail.com")));
+        assertThrows(UnauthorizedException.class, () -> {tokenEmailSignupService.createInUserEmail(new TokenEmailSignupRequestDTO().setUser(
+                new UserSignupRequestDTO().setEmail("test@mail.com")));});
     }
 
     @Test
@@ -107,9 +108,9 @@ public class TokenEmailSignupServiceTest {
         assertThat(tokenEmailSignupService.confirmToken(""), equalTo(true));
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void forgotPassword() {
-        tokenEmailSignupService.forgotPassword(new ForgotPasswordRequestDTO().setEmail("test@mail.com"), "");
+        assertThrows(UnauthorizedException.class, () -> {tokenEmailSignupService.forgotPassword(new ForgotPasswordRequestDTO().setEmail("test@mail.com"), "");});
     }
 
     @Test

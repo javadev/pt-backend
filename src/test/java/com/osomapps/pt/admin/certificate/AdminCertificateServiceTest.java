@@ -2,8 +2,9 @@ package com.osomapps.pt.admin.certificate;
 
 import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.UnauthorizedException;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
@@ -13,11 +14,14 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
 import org.springframework.validation.Errors;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class AdminCertificateServiceTest {
     @Mock
     private CertificateRepository certificateRepository;
@@ -42,30 +46,30 @@ public class AdminCertificateServiceTest {
         verify(certificateRepository).findOne(eq(1L));
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void findOne_token_not_found() {
         when(certificateRepository.findOne(eq(2L))).thenReturn(new Certificate());
-        adminCertificateService.findOne(1L);
+        assertThrows(ResourceNotFoundException.class, () -> {adminCertificateService.findOne(1L);});
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void create_certificateValidator() {
         doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
             Object[] args = invocation.getArguments();
             ((Errors) args[1]).reject("certificate", "Invalid empty certificate");
             return null;
         }).when(certificateValidator).validate(anyObject(), any(Errors.class));
-        adminCertificateService.create(new CertificateRequestDTO());
+        assertThrows(UnauthorizedException.class, () -> {adminCertificateService.create(new CertificateRequestDTO());});
     }
     
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void create_amountOfDaysValidator() {
         doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
             Object[] args = invocation.getArguments();
             ((Errors) args[1]).reject("amountOfDays", "Invalid empty amountOfDays");
             return null;
         }).when(amountOfDaysValidator).validate(anyObject(), any(Errors.class));
-        adminCertificateService.create(new CertificateRequestDTO());
+        assertThrows(UnauthorizedException.class, () -> {adminCertificateService.create(new CertificateRequestDTO());});
     }
 
     @Test
@@ -75,9 +79,9 @@ public class AdminCertificateServiceTest {
         verify(certificateRepository).save(any(Certificate.class));
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void update_not_found() {
-        adminCertificateService.update(1L, new CertificateRequestDTO());
+        assertThrows(ResourceNotFoundException.class, () -> {adminCertificateService.update(1L, new CertificateRequestDTO());});
     }
 
     @Test
@@ -88,7 +92,7 @@ public class AdminCertificateServiceTest {
         verify(certificateRepository).save(any(Certificate.class));
     }
     
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void update_certificateValidator() {
         when(certificateRepository.findOne(eq(1L))).thenReturn(new Certificate());
         doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
@@ -96,10 +100,10 @@ public class AdminCertificateServiceTest {
             ((Errors) args[1]).reject("certificate", "Invalid empty certificate");
             return null;
         }).when(certificateValidator).validate(anyObject(), any(Errors.class));
-        adminCertificateService.update(1L, new CertificateRequestDTO());
+        assertThrows(UnauthorizedException.class, () -> {adminCertificateService.update(1L, new CertificateRequestDTO());});
     }
     
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void update_amountOfDaysValidator() {
         when(certificateRepository.findOne(eq(1L))).thenReturn(new Certificate());
         doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
@@ -107,12 +111,12 @@ public class AdminCertificateServiceTest {
             ((Errors) args[1]).reject("amountOfDays", "Invalid empty amountOfDays");
             return null;
         }).when(amountOfDaysValidator).validate(anyObject(), any(Errors.class));
-        adminCertificateService.update(1L, new CertificateRequestDTO());
+        assertThrows(UnauthorizedException.class, () -> {adminCertificateService.update(1L, new CertificateRequestDTO());});
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void delete_not_found() {
-        adminCertificateService.delete(1L);
+        assertThrows(ResourceNotFoundException.class, () -> {adminCertificateService.delete(1L);});
     }
 
     @Test

@@ -1,16 +1,16 @@
 package com.osomapps.pt.tokenemail;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ForgotPasswordResourceTest {
 
     @Mock

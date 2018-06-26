@@ -1,21 +1,22 @@
 package com.osomapps.pt.tokenemail;
 
 import com.osomapps.pt.UnauthorizedException;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.hamcrest.MatcherAssert.assertThat;
-import org.junit.Before;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @TestPropertySource("/application-test.properties")
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class TokenEmailResourceIntTest {
     
@@ -24,20 +25,19 @@ public class TokenEmailResourceIntTest {
     @Autowired
     InUserEmailRepository inUserEmailRepository;
 
-    @Before
+    @BeforeEach
     public void before() {
         inUserEmailRepository.deleteAll();
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void create() {
-        TokenEmailResponseDTO user = tokenEmailResource.create(new TokenEmailRequestDTO("name", "test@mail.com", "test"),
-                new MockHttpServletRequest());
-        assertThat(user, notNullValue());
+        assertThrows(UnauthorizedException.class, () -> {tokenEmailResource.create(new TokenEmailRequestDTO("name", "test@mail.com", "test"),
+                new MockHttpServletRequest());});
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void delete() {
-        tokenEmailResource.delete("", new MockHttpServletRequest());
+        assertThrows(UnauthorizedException.class, () -> {tokenEmailResource.delete("", new MockHttpServletRequest());});
     }
 }

@@ -10,17 +10,21 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import static org.hamcrest.CoreMatchers.equalTo;
-import org.junit.Test;
-import static org.junit.Assert.assertThat;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class ActiveCertificateServiceTest {
     @Mock
     private InUserCertificateRepository inUserCertificateRepository;
@@ -78,7 +82,7 @@ public class ActiveCertificateServiceTest {
             equalTo(new ActiveCertificateResponseDTO().getCode()));
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void create_with_token_code_not_found() {
         InUserCertificate inUserCertificate = new InUserCertificate();
         inUserCertificate.setId(1L);
@@ -92,10 +96,10 @@ public class ActiveCertificateServiceTest {
         when(certificateRepository.findByCode(eq("123"))).thenReturn(
             Collections.emptyList());
         ActiveCertificateRequestDTO activeCertificateRequestDTO = new ActiveCertificateRequestDTO().setCode("123");
-        activeCertificateService.create("1", activeCertificateRequestDTO);
+        assertThrows(ResourceNotFoundException.class, () -> {activeCertificateService.create("1", activeCertificateRequestDTO);});
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void create_with_token_no_active_certificates() {
         InUserCertificate inUserCertificate = new InUserCertificate();
         inUserCertificate.setId(1L);
@@ -110,8 +114,7 @@ public class ActiveCertificateServiceTest {
             Arrays.asList(new Certificate().setActivated(Boolean.TRUE).setAmount_of_days(1)));
         when(inUserCertificateRepository.save(any(InUserCertificate.class))).thenAnswer(i -> i.getArguments()[0]);
         ActiveCertificateRequestDTO activeCertificateRequestDTO = new ActiveCertificateRequestDTO().setCode("123");
-        assertThat(activeCertificateService.create("1", activeCertificateRequestDTO).getCode(),
-            equalTo(new ActiveCertificateResponseDTO().getCode()));
+        assertThrows(ResourceNotFoundException.class, () -> {activeCertificateService.create("1", activeCertificateRequestDTO).getCode();});
     }
 
 }

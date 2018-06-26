@@ -2,8 +2,8 @@ package com.osomapps.pt.tokenemail;
 
 import java.util.HashMap;
 import static org.hamcrest.CoreMatchers.equalTo;
-import org.junit.Test;
-import static org.junit.Assert.assertThat;
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TemplateEngineTest {
 

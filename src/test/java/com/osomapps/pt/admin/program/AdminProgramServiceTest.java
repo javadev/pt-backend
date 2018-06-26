@@ -15,15 +15,18 @@ import com.osomapps.pt.reportworkout.InWorkoutItemRepository;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.data.domain.Sort;
 import com.osomapps.pt.programs.ParseGoalRepository;
 import com.osomapps.pt.programs.ParsePart;
@@ -40,7 +43,8 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class AdminProgramServiceTest {
 
     @Mock
@@ -77,9 +81,9 @@ public class AdminProgramServiceTest {
         verify(programRepository).findAll(any(Sort.class));
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void findOne_not_found() {
-        adminProgramService.findOne(1L);
+        assertThrows(ResourceNotFoundException.class, () -> {adminProgramService.findOne(1L);});
     }
 
     @Test
@@ -120,9 +124,9 @@ public class AdminProgramServiceTest {
         verify(programRepository).save(any(ParseProgram.class));
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void update_not_found() {
-        adminProgramService.update(1L, new ProgramRequestDTO());
+        assertThrows(ResourceNotFoundException.class, () -> {adminProgramService.update(1L, new ProgramRequestDTO());});
     }
 
     @Test
@@ -154,9 +158,9 @@ public class AdminProgramServiceTest {
         verify(programRepository).save(any(ParseProgram.class));
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void delete_not_found() {
-        adminProgramService.delete(1L);
+        assertThrows(ResourceNotFoundException.class, () -> {adminProgramService.delete(1L);});
     }
 
     @Test

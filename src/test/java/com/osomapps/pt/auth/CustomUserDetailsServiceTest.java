@@ -4,18 +4,19 @@ import com.osomapps.pt.admin.ptuser.PtUser;
 import com.osomapps.pt.admin.ptuser.PtUserRepository;
 import java.util.Arrays;
 import static org.hamcrest.CoreMatchers.equalTo;
-import org.junit.Test;
-import static org.junit.Assert.assertThat;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.anyString;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CustomUserDetailsServiceTest {
 
     @Mock
@@ -23,9 +24,9 @@ public class CustomUserDetailsServiceTest {
     @InjectMocks
     private CustomUserDetailsService customUserDetailsService;
     
-    @Test(expected = UsernameNotFoundException.class)
+    @Test
     public void loadUserByUsername_not_found() {
-        customUserDetailsService.loadUserByUsername("username");
+        assertThrows(UsernameNotFoundException.class, () -> {customUserDetailsService.loadUserByUsername("username");});
     }
 
     @Test

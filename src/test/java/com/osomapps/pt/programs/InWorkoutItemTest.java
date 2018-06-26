@@ -3,9 +3,8 @@ package com.osomapps.pt.programs;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
-import static org.junit.Assert.assertThat;
-import org.mockito.internal.listeners.CollectCreatedMocks;
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class InWorkoutItemTest {
     @Test

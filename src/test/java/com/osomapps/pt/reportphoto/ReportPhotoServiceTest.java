@@ -7,8 +7,9 @@ import com.osomapps.pt.token.InUserGoal;
 import com.osomapps.pt.token.InUserLogin;
 import com.osomapps.pt.user.UserService;
 import java.util.Arrays;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -16,13 +17,13 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import com.osomapps.pt.goals.InUserPhotoRepository;
 import com.osomapps.pt.token.InUserPhoto;
 import com.osomapps.pt.tokenemail.DataurlValidator;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doAnswer;
@@ -30,7 +31,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.validation.Errors;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ReportPhotoServiceTest {
 
     @Mock
@@ -77,7 +78,7 @@ public class ReportPhotoServiceTest {
         verify(userService).checkUserToken(eq("1"));
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void create_invalid_dataurl() {
         InUserLogin inUserLogin = new InUserLogin();
         InUser inUserForLogin = new InUser().setInUserGoals(Arrays.asList(new InUserGoal().setGoalId(1L)));
@@ -89,11 +90,11 @@ public class ReportPhotoServiceTest {
             ((Errors) args[1]).reject("dataurlValidator", "dataurlValidator");
             return null;
         }).when(dataurlValidator).validate(anyObject(), any(Errors.class));
-        reportPhotoService.create("1", new PhotoRequestDTO().setGoal_id(1L).setDataurl(
+        assertThrows(UnauthorizedException.class, () -> {reportPhotoService.create("1", new PhotoRequestDTO().setGoal_id(1L).setDataurl(
                 "data:image/gif;base64,R0lGODlhEAAOALMAAOazToeHh0tLS/7LZv/0j"
                 + "vb29t/f3//Ub//ge8WSLf/rhf/3kdbW1mxsbP//mf///yH5BAAAAAAALAAAAAAQAA4AAA"
                 + "Re8L1Ekyky67QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjgaORCMxIC6e0Cc"
-                + "guWw6aFjsVMkkIr7g77ZKPJjPZqIyd7sJAgVGoEGv2xsBxqNgYPj/gAwXEQA7"));
+                + "guWw6aFjsVMkkIr7g77ZKPJjPZqIyd7sJAgVGoEGv2xsBxqNgYPj/gAwXEQA7"));});
     }
 
     @Test

@@ -12,19 +12,20 @@ import java.util.Arrays;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
-import static org.junit.Assert.assertThat;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Sort;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class AdminGoalServiceTest {
 
     @Mock
@@ -47,10 +48,10 @@ public class AdminGoalServiceTest {
         assertThat(goalResponseDTOs.size(), equalTo(1));
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void findOne_not_found() {
         when(goalRepository.findOne(eq(1L))).thenReturn(null);
-        adminGoalService.findOne(1L);
+        assertThrows(ResourceNotFoundException.class, () -> {adminGoalService.findOne(1L);});
     }
 
     @Test
@@ -80,10 +81,10 @@ public class AdminGoalServiceTest {
         assertThat(goalResponseDTO, notNullValue());
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void update_not_found() {
-        adminGoalService.update(1L,
-            new GoalRequestDTO().setParameters(Arrays.asList(new GoalParameterRequestDTO())));
+        assertThrows(ResourceNotFoundException.class, () -> {adminGoalService.update(1L,
+            new GoalRequestDTO().setParameters(Arrays.asList(new GoalParameterRequestDTO())));});
     }
 
     @Test
@@ -108,9 +109,9 @@ public class AdminGoalServiceTest {
         assertThat(goalResponseDTO, notNullValue());
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void delete_not_found() {
-        adminGoalService.delete(1L);
+        assertThrows(ResourceNotFoundException.class, () -> {adminGoalService.delete(1L);});
     }
 
     @Test

@@ -4,17 +4,17 @@ import com.osomapps.pt.exercises.ExerciseOutput;
 import java.util.Arrays;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Sort;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class AdminExerciseOutputServiceTest {
 
     @Mock

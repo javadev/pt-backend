@@ -3,7 +3,7 @@ package com.osomapps.pt.reportphoto;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import java.time.LocalDateTime;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

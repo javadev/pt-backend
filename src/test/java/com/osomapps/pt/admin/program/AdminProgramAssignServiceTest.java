@@ -18,14 +18,16 @@ import com.osomapps.pt.programs.ParseProgram;
 import com.osomapps.pt.reportworkout.InWorkoutItemRepository;
 import com.osomapps.pt.token.InUser;
 import java.util.Arrays;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import com.osomapps.pt.programs.ParseProgramRepository;
 import com.osomapps.pt.programs.ParseRound;
 import com.osomapps.pt.programs.ParseUserGroup;
@@ -38,14 +40,16 @@ import com.osomapps.pt.token.InUserGoal;
 import java.util.Collections;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import org.springframework.data.domain.Sort;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class AdminProgramAssignServiceTest {
 
     @Mock
@@ -399,7 +403,7 @@ public class AdminProgramAssignServiceTest {
 
     @Test
     public void getExerciseType_size_1() {
-        when(exerciseRepository.findByExerciseId(anyInt()))
+        when(exerciseRepository.findByExerciseId(anyObject()))
                 .thenReturn(Arrays.asList(new Exercise().setExerciseTypes(
                         Arrays.asList(new ExerciseType().setName("test")))));
         assertThat(adminProgramAssignService.getExerciseType(new ParseWorkoutItem()), equalTo("test"));
@@ -407,7 +411,7 @@ public class AdminProgramAssignServiceTest {
 
     @Test
     public void getExerciseType_size_2() {
-        when(exerciseRepository.findByExerciseId(anyInt()))
+        when(exerciseRepository.findByExerciseId(anyObject()))
                 .thenReturn(Arrays.asList(new Exercise().setExerciseTypes(
                         Arrays.asList(new ExerciseType().setName("test1"), new ExerciseType().setName("test2")))));
         assertThat(adminProgramAssignService.getExerciseType(new ParseWorkoutItem()

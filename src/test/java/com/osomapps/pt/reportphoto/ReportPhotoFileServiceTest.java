@@ -7,18 +7,19 @@ import com.osomapps.pt.token.InUserPhoto;
 import com.osomapps.pt.user.UserService;
 import java.io.ByteArrayOutputStream;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ReportPhotoFileServiceTest {
 
     @Mock
@@ -29,10 +30,10 @@ public class ReportPhotoFileServiceTest {
     @InjectMocks
     private ReportPhotoFileService reportPhotoFileService;
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void findOne_not_found() throws Exception {
         when(userService.checkUserToken(anyString())).thenReturn(new InUserLogin());
-        reportPhotoFileService.findOne("1", 1L, "", new ByteArrayOutputStream());
+        assertThrows(ResourceNotFoundException.class, () -> {reportPhotoFileService.findOne("1", 1L, "", new ByteArrayOutputStream());});
     }
 
     @Test

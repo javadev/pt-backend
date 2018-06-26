@@ -10,19 +10,20 @@ import java.util.Arrays;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Sort;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class AdminEmailMessageTemplateServiceTest {
 
     @Mock
@@ -42,10 +43,10 @@ public class AdminEmailMessageTemplateServiceTest {
         assertThat(responseDTOs.size(), equalTo(1));
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void findOne_not_found() {
         when(emailMessageTemplateRepository.findOne(eq(1L))).thenReturn(null);
-        adminEmailMessageTemplateService.findOne(1L);
+        assertThrows(ResourceNotFoundException.class, () -> {adminEmailMessageTemplateService.findOne(1L);});
     }
 
     @Test
@@ -72,10 +73,10 @@ public class AdminEmailMessageTemplateServiceTest {
         assertThat(emailMessageTemplateResponseDTO, notNullValue());
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void update_not_found() {
-        adminEmailMessageTemplateService.update(1L,
-            new EmailMessageTemplateRequestDTO().setType(new EmailMessageTypeRequestDTO()));
+        assertThrows(ResourceNotFoundException.class, () -> {adminEmailMessageTemplateService.update(1L,
+            new EmailMessageTemplateRequestDTO().setType(new EmailMessageTypeRequestDTO()));});
     }
 
     @Test
@@ -98,9 +99,9 @@ public class AdminEmailMessageTemplateServiceTest {
         assertThat(emailMessageTemplateResponseDTO, notNullValue());
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void delete_not_found() {
-        adminEmailMessageTemplateService.delete(1L);
+        assertThrows(ResourceNotFoundException.class, () -> {adminEmailMessageTemplateService.delete(1L);});
     }
 
     @Test

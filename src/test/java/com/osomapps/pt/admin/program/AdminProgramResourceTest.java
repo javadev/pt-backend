@@ -1,17 +1,17 @@
 package com.osomapps.pt.admin.program;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class AdminProgramResourceTest {
 
     @Mock

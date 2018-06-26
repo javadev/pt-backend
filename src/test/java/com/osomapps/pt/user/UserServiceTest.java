@@ -20,19 +20,23 @@ import com.osomapps.pt.tokenemail.SendEmailService;
 import java.util.Arrays;
 import java.util.Collections;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class UserServiceTest {
 
     @Mock
@@ -57,9 +61,9 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void findOne() {
-        userService.findOne("1");
+        assertThrows(UnauthorizedException.class, () -> {userService.findOne("1");});
     }
 
     @Test
@@ -110,13 +114,13 @@ public class UserServiceTest {
         assertThat(userResponseDTO.level, equalTo(UserLevel.Unexperienced));
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void findOne_token_with_logout() {
         InUserLogin inUserLogin = new InUserLogin();
         inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
         when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
         when(inUserLogoutRepository.findByToken("1")).thenReturn(Arrays.asList(new InUserLogout()));
-        userService.findOne("1");
+        assertThrows(UnauthorizedException.class, () -> {userService.findOne("1");});
     }
 
     @Test
@@ -132,9 +136,9 @@ public class UserServiceTest {
         assertThat(userResponseDTO.level, equalTo(null));
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void updateUser() {
-        userService.updateUser("1", new UserRequestDTO());
+        assertThrows(UnauthorizedException.class, () -> {userService.updateUser("1", new UserRequestDTO());});
     }
 
     @Test
@@ -201,29 +205,29 @@ public class UserServiceTest {
         verify(inUserRepository).save(any(InUser.class));
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void updateUser_token_found_with_wrong_name() {
         InUserLogin inUserLogin = new InUserLogin();
         inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
         when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
         when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
-        userService.updateUser("1", new UserRequestDTO()
+        assertThrows(UnauthorizedException.class, () -> {userService.updateUser("1", new UserRequestDTO()
             .setGender("gender")
             .setAge(10L)
             .setHeight(160L)
             .setWeight(60L)
             .setName("N")
             .setLevel(UserLevel.Experienced)
-            .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L))));
+            .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L))));});
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void updateUser_token_found_with_data_wrong_data_url() {
         InUserLogin inUserLogin = new InUserLogin();
         inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
         when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
         when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
-        userService.updateUser("1", new UserRequestDTO()
+        assertThrows(UnauthorizedException.class, () -> {userService.updateUser("1", new UserRequestDTO()
             .setGender("gender")
             .setAge(10L)
             .setHeight(160L)
@@ -231,49 +235,49 @@ public class UserServiceTest {
             .setName("Name")
             .setAvatar_dataurl("data")
             .setLevel(UserLevel.Experienced)
-            .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L))));
+            .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L))));});
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void updateUser_token_found_with_data_wrong_name() {
         InUserLogin inUserLogin = new InUserLogin();
         inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
         when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
         when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
-        userService.updateUser("1", new UserRequestDTO()
+        assertThrows(UnauthorizedException.class, () -> {userService.updateUser("1", new UserRequestDTO()
             .setGender("gender")
             .setAge(10L)
             .setHeight(160L)
             .setWeight(60L)
             .setName("N")
             .setLevel(UserLevel.Experienced)
-            .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L))));
+            .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L))));});
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void updateUser_token_found_with_data_goal_not_found() {
         InUserLogin inUserLogin = new InUserLogin();
         inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
         when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
         when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
-        userService.updateUser("1", new UserRequestDTO()
+        assertThrows(UnauthorizedException.class, () -> {userService.updateUser("1", new UserRequestDTO()
             .setGender("gender")
             .setAge(10L)
             .setHeight(160L)
             .setWeight(60L)
             .setName("Name")
             .setLevel(UserLevel.Experienced)
-            .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L))));
+            .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L))));});
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void updateUser_token_found_with_data_more_than_two_goals() {
         InUserLogin inUserLogin = new InUserLogin();
         inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
         when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
         when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
         when(goalRepository.findOne(eq(1L))).thenReturn(new Goal());
-        userService.updateUser("1", new UserRequestDTO()
+        assertThrows(UnauthorizedException.class, () -> {userService.updateUser("1", new UserRequestDTO()
             .setGender("gender")
             .setAge(10L)
             .setHeight(160L)
@@ -282,6 +286,6 @@ public class UserServiceTest {
             .setLevel(UserLevel.Experienced)
             .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L),
             new UserGoalRequestDTO().setId(2L),
-            new UserGoalRequestDTO().setId(3L))));
+            new UserGoalRequestDTO().setId(3L))));});
     }
 }
