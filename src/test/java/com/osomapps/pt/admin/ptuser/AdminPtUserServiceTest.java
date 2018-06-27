@@ -7,17 +7,21 @@ import java.util.Collections;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
-import static org.junit.Assert.assertThat;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class AdminPtUserServiceTest {
 
     @Mock
@@ -34,9 +38,9 @@ public class AdminPtUserServiceTest {
         assertThat(responseDTOs.size(), equalTo(1));
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void findOne_not_found() {
-        adminPtUserService.findOne(1L);
+        assertThrows(ResourceNotFoundException.class, () -> {adminPtUserService.findOne(1L);});
     }
 
     @Test
@@ -55,16 +59,16 @@ public class AdminPtUserServiceTest {
         assertThat(responseDTO, notNullValue());
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void update_not_found() {
-        adminPtUserService.update(1L, new PtUserRequestDTO());
+        assertThrows(ResourceNotFoundException.class, () -> {adminPtUserService.update(1L, new PtUserRequestDTO());});
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void update_not_allowed_for_1() {
         when(ptUserRepository.findOne(eq(1L))).thenReturn(new PtUser());
         when(ptUserRepository.save((PtUser) anyObject())).thenAnswer(i -> i.getArguments()[0]);
-        adminPtUserService.update(1L, new PtUserRequestDTO().setRoles(Collections.emptyList()));
+        assertThrows(UnauthorizedException.class, () -> {adminPtUserService.update(1L, new PtUserRequestDTO().setRoles(Collections.emptyList()));});
     }
 
     @Test
@@ -76,15 +80,15 @@ public class AdminPtUserServiceTest {
         assertThat(responseDTO, notNullValue());
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void delete_not_found() {
-        adminPtUserService.delete(1L);
+        assertThrows(ResourceNotFoundException.class, () -> {adminPtUserService.delete(1L);});
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void delete_not_allowed() {
         when(ptUserRepository.findOne(eq(1L))).thenReturn(new PtUser());
-        adminPtUserService.delete(1L);
+        assertThrows(UnauthorizedException.class, () -> {adminPtUserService.delete(1L);});
     }
 
     @Test

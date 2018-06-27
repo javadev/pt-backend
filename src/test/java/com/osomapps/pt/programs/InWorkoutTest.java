@@ -2,8 +2,8 @@ package com.osomapps.pt.programs;
 
 import java.time.LocalDateTime;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
-import static org.junit.Assert.assertThat;
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class InWorkoutTest {
     @Test

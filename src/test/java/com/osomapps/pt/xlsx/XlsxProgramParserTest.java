@@ -3,8 +3,8 @@ package com.osomapps.pt.xlsx;
 import java.io.InputStream;
 import java.util.List;
 import static org.hamcrest.Matchers.equalTo;
-import org.junit.Test;
-import static org.junit.Assert.assertThat;
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class XlsxProgramParserTest {
     @Test

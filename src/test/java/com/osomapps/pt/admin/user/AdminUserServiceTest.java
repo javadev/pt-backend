@@ -25,12 +25,13 @@ import com.osomapps.pt.tokenemail.InUserEmailRepository;
 import java.util.Arrays;
 import java.util.Collections;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyObject;
@@ -39,13 +40,16 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class AdminUserServiceTest {
 
     @Mock
@@ -81,9 +85,9 @@ public class AdminUserServiceTest {
         verify(inUserRepository).findAll(any(Sort.class));
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void findOne_not_found() {
-        adminUserService.findOne(1L);
+        assertThrows(ResourceNotFoundException.class, () -> {adminUserService.findOne(1L);});
     }
 
     private InProgram getInProgram() {
@@ -118,33 +122,33 @@ public class AdminUserServiceTest {
     public void create() {
         when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(goalRepository.findOne(anyLong())).thenReturn(new Goal().setId(1L));
+        when(goalRepository.findOne(eq(1L))).thenReturn(new Goal().setId(1L));
         when(inUserGoalRepository.save(any(InUserGoal.class))).thenAnswer(i -> i.getArguments()[0]);
         UserResponseDTO userResponseDTO = adminUserService.create(
                 new UserRequestDTO()
                 .setType(new UserTypeRequestDTO())
                 .setLevel(1)
-                .setGoals(Arrays.asList(new UserGoalRequestDTO()))
+                .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L)))
         );
         assertThat(userResponseDTO.getName(), equalTo(null));
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void create_emailValidator() {
         doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
             Object[] args = invocation.getArguments();
             ((Errors) args[1]).reject("email", "Invalid empty email");
             return null;
         }).when(emailValidator).validate(anyObject(), any(Errors.class));
-        adminUserService.create(
+        assertThrows(UnauthorizedException.class, () -> {adminUserService.create(
                 new UserRequestDTO()
                 .setType(new UserTypeRequestDTO())
-        );
+        );});
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void update_not_found() {
-        adminUserService.update(1L,new UserRequestDTO().setType(new UserTypeRequestDTO()));
+        assertThrows(ResourceNotFoundException.class, () -> {adminUserService.update(1L,new UserRequestDTO().setType(new UserTypeRequestDTO()));});
     }
 
     @Test
@@ -155,13 +159,13 @@ public class AdminUserServiceTest {
             .setInUserFacebooks(Arrays.asList(new InUserFacebook())));
         when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(goalRepository.findOne(anyLong())).thenReturn(new Goal().setId(1L));
+        when(goalRepository.findOne(eq(1L))).thenReturn(new Goal().setId(1L));
         when(inUserGoalRepository.save(any(InUserGoal.class))).thenAnswer(i -> i.getArguments()[0]);
         UserResponseDTO userResponseDTO = adminUserService.update(1L,
                 new UserRequestDTO()
                 .setType(new UserTypeRequestDTO())
                 .setLevel(2)
-                .setGoals(Arrays.asList(new UserGoalRequestDTO()))
+                .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L)))
         );
         assertThat(userResponseDTO.getName(), equalTo(null));
     }
@@ -181,7 +185,7 @@ public class AdminUserServiceTest {
         assertThat(userResponseDTO.getName(), equalTo(null));
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void update_with_invalid_eamil() {
         doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
             Object[] args = invocation.getArguments();
@@ -193,15 +197,15 @@ public class AdminUserServiceTest {
             .setInUserEmails(Arrays.asList(new InUserEmail()))
             .setInUserFacebooks(Arrays.asList(new InUserFacebook())));
         when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
-        adminUserService.update(1L,
+        assertThrows(UnauthorizedException.class, () -> {adminUserService.update(1L,
                 new UserRequestDTO()
                 .setType(new UserTypeRequestDTO())
-        );
+        );});
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void delete_not_found() {
-        adminUserService.delete(1L);
+        assertThrows(ResourceNotFoundException.class, () -> {adminUserService.delete(1L);});
     }
 
     @Test

@@ -2,18 +2,19 @@ package com.osomapps.pt.reportphoto;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ReportPhotoFileResourceTest {
 
     @Mock
@@ -30,10 +31,10 @@ public class ReportPhotoFileResourceTest {
         verify(reportPhotoFileService).findOne(eq("1"), eq(1L), eq(""), any(OutputStream.class));
     }
 
-    @Test(expected = IOException.class)
+    @Test
     public void findOne_with_error() throws Exception {
         when(reportPhotoFileService.findOne(eq("1"), eq(1L), eq(""), any(OutputStream.class)))
                 .thenThrow(new IOException());
-        reportPhotoFileResource.findOne("1", 1L, "", new MockHttpServletResponse());
+        assertThrows(IOException.class, () -> {reportPhotoFileResource.findOne("1", 1L, "", new MockHttpServletResponse());});
     }
 }

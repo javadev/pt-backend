@@ -1,8 +1,8 @@
 package com.osomapps.pt.dictionary;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
-import static org.junit.Assert.assertThat;
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class DictionaryDataTest {
     

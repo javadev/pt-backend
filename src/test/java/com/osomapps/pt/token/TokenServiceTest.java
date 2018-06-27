@@ -6,8 +6,9 @@ import java.util.Arrays;
 import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
@@ -16,9 +17,12 @@ import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class TokenServiceTest {
     
     @Mock
@@ -178,9 +182,9 @@ public class TokenServiceTest {
         verify(inUserFacebookRepository, times(2)).save(any(InUserFacebook.class));
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void deleteToken_not_found() {
-        tokenService.deleteToken("", "");
+        assertThrows(UnauthorizedException.class, () -> {tokenService.deleteToken("", "");});
     }
 
     @Test
@@ -191,12 +195,11 @@ public class TokenServiceTest {
         verify(inUserLogoutRepository).saveAndFlush(any(InUserLogout.class));
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void deleteToken_invalid_token() {
         when(inUserLoginRepository.findByToken(anyString())).thenReturn(Arrays.asList(new InUserLogin()));
         when(inUserLogoutRepository.saveAndFlush(any(InUserLogout.class))).thenReturn(null);
         when(inUserLogoutRepository.findByToken(anyString())).thenReturn(Arrays.asList(new InUserLogout()));
-        tokenService.deleteToken("", "");
-        verify(inUserLogoutRepository).saveAndFlush(any(InUserLogout.class));
+        assertThrows(UnauthorizedException.class, () -> {tokenService.deleteToken("", "");});
     }
 }

@@ -11,17 +11,18 @@ import com.osomapps.pt.token.InUser;
 import com.osomapps.pt.token.InUserRepository;
 import java.util.Arrays;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
-import static org.junit.Assert.assertThat;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.FastByteArrayOutputStream;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class AdminUserProgramFileServiceTest {
 
     @Mock
@@ -31,9 +32,9 @@ public class AdminUserProgramFileServiceTest {
     @InjectMocks
     private AdminUserProgramFileService adminUserProgramFileService;
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void createXlsx_not_found() {
-        adminUserProgramFileService.createXlsx(1L, new FastByteArrayOutputStream());
+        assertThrows(ResourceNotFoundException.class, () -> {adminUserProgramFileService.createXlsx(1L, new FastByteArrayOutputStream());});
     }
 
     @Test

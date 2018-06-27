@@ -7,22 +7,26 @@ import com.osomapps.pt.email.EmailMessageType;
 import com.osomapps.pt.email.EmailMessageTypeRepository;
 import com.osomapps.pt.token.InUser;
 import java.util.Arrays;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNull;
 import org.mockito.Mock;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class SendEmailServiceTest {
 
     @Mock
@@ -53,7 +57,7 @@ public class SendEmailServiceTest {
         when(emailMessageTypeRepository.findByNameOrderByIdDesc(eq("WelcomeMessage")))
                 .thenReturn(Arrays.asList(new EmailMessageType().setEmailMessageTemplates(
                         Arrays.asList(new EmailMessageTemplate()))));
-        when(dictionaryService.getEnValue(any(DictionaryName.class), anyString(), anyString())).thenReturn("test");
+        when(dictionaryService.getEnValue(any(DictionaryName.class), isNull(), anyString())).thenReturn("test");
         sendEmailService.send(new InUserEmail().setInUser(new InUser().setId(1L)));
         verify(mailSender).send(any(SimpleMailMessage.class));
     }
@@ -76,7 +80,7 @@ public class SendEmailServiceTest {
         when(emailMessageTypeRepository.findByNameOrderByIdDesc(eq("ForgetPasswordMessage")))
                 .thenReturn(Arrays.asList(new EmailMessageType().setEmailMessageTemplates(
                         Arrays.asList(new EmailMessageTemplate()))));
-        when(dictionaryService.getEnValue(any(DictionaryName.class), anyString(), anyString())).thenReturn("test");
+        when(dictionaryService.getEnValue(any(DictionaryName.class), isNull(), anyString())).thenReturn("test");
         sendEmailService.sendForgotPassword(new InUserEmail().setInUser(new InUser().setId(1L)));
         verify(mailSender).send(any(SimpleMailMessage.class));
     }

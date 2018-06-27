@@ -3,8 +3,8 @@ package com.osomapps.pt.tokenemail;
 import java.util.Base64;
 import java.util.HashMap;
 import static org.hamcrest.CoreMatchers.equalTo;
-import org.junit.Test;
-import static org.junit.Assert.assertThat;
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.springframework.validation.MapBindingResult;
 
 public class DataurlValidatorTest {

@@ -14,17 +14,21 @@ import java.util.Collections;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
-import static org.junit.Assert.assertThat;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class AdminUserProgramServiceTest {
 
     @Mock
@@ -57,9 +61,9 @@ public class AdminUserProgramServiceTest {
         assertThat(responseDTOs.size(), equalTo(1));
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void findOne_not_found() {
-        adminUserProgramService.findOne(1L);
+        assertThrows(ResourceNotFoundException.class, () -> {adminUserProgramService.findOne(1L);});
     }
 
     @Test
@@ -84,9 +88,9 @@ public class AdminUserProgramServiceTest {
         assertThat(responseDTO, notNullValue());
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void update_not_found() {
-        adminUserProgramService.update(1L, new UserProgramRequestDTO());
+        assertThrows(ResourceNotFoundException.class, () -> {adminUserProgramService.update(1L, new UserProgramRequestDTO());});
     }
 
     @Test
@@ -102,9 +106,9 @@ public class AdminUserProgramServiceTest {
         assertThat(responseDTO, notNullValue());
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void delete_not_found() {
-        adminUserProgramService.delete(1L);
+        assertThrows(ResourceNotFoundException.class, () -> {adminUserProgramService.delete(1L);});
     }
 
     @Test

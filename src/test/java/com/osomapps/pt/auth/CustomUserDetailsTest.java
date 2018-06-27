@@ -2,8 +2,8 @@ package com.osomapps.pt.auth;
 
 import com.osomapps.pt.admin.ptuser.PtUser;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
-import static org.junit.Assert.assertThat;
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class CustomUserDetailsTest {
 

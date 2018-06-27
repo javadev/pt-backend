@@ -13,8 +13,9 @@ import com.osomapps.pt.exercises.ExerciseRepository;
 import com.osomapps.pt.tokenemail.DataurlValidator;
 import java.util.Arrays;
 import java.util.Collections;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
@@ -24,12 +25,15 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
 import org.springframework.data.domain.Sort;
 import org.springframework.validation.Errors;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class AdminExerciseServiceTest {
 
     @Mock
@@ -60,9 +64,9 @@ public class AdminExerciseServiceTest {
         verify(exerciseRepository).findAll(any(Sort.class));
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void findOne_not_found() {
-        tokenService.findOne(1L);
+        assertThrows(ResourceNotFoundException.class, () -> {tokenService.findOne(1L);});
     }
 
     @Test
@@ -108,7 +112,7 @@ public class AdminExerciseServiceTest {
         verify(exerciseRepository).save(any(Exercise.class));
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void create_invalid_data_url() {
         ExerciseRequestDTO exerciseRequestDTO = new ExerciseRequestDTO();
         exerciseRequestDTO.setBodypart(new ExerciseBodypartRequestDTO(1L));
@@ -133,12 +137,12 @@ public class AdminExerciseServiceTest {
             ((Errors) args[1]).reject("dataurlValidator", "dataurlValidator");
             return null;
         }).when(dataurlValidator).validate(anyObject(), any(Errors.class));
-        tokenService.create(exerciseRequestDTO);
+        assertThrows(UnauthorizedException.class, () -> {tokenService.create(exerciseRequestDTO);});
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void update_not_found() {
-        tokenService.update(1L, new ExerciseRequestDTO());
+        assertThrows(ResourceNotFoundException.class, () -> {tokenService.update(1L, new ExerciseRequestDTO());});
     }
 
     @Test
@@ -172,7 +176,7 @@ public class AdminExerciseServiceTest {
         verify(exerciseRepository).save(any(Exercise.class));
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void update_invalid_data_url() {
         ExerciseRequestDTO exerciseRequestDTO = new ExerciseRequestDTO();
         exerciseRequestDTO.setBodypart(new ExerciseBodypartRequestDTO(1L));
@@ -199,12 +203,12 @@ public class AdminExerciseServiceTest {
             ((Errors) args[1]).reject("dataurlValidator", "dataurlValidator");
             return null;
         }).when(dataurlValidator).validate(anyObject(), any(Errors.class));
-        tokenService.update(1L, exerciseRequestDTO);
+        assertThrows(UnauthorizedException.class, () -> {tokenService.update(1L, exerciseRequestDTO);});
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void delete_not_found() {
-        tokenService.delete(1L);
+        assertThrows(ResourceNotFoundException.class, () -> {tokenService.delete(1L);});
     }
 
     @Test

@@ -13,8 +13,9 @@ import com.osomapps.pt.token.InUserLogin;
 import com.osomapps.pt.user.UserService;
 import java.util.Arrays;
 import java.util.Collections;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
@@ -23,9 +24,12 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class ReportWorkoutServiceTest {
 
     @Mock
@@ -126,7 +130,7 @@ public class ReportWorkoutServiceTest {
         verify(userService, never()).checkUserToken(anyString());
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void create_empty_workout_item() {
         InUserLogin inUserLogin = new InUserLogin();
         InUser inUserForLogin = new InUser();
@@ -148,10 +152,10 @@ public class ReportWorkoutServiceTest {
         when(inWorkoutItemReportRepository.save(any(InWorkoutItemReport.class))).thenAnswer(i -> i.getArguments()[0]);
         when(inWorkoutItemRepository.findById(eq(1L))).thenReturn(Collections.emptyList());
         when(inWorkoutRepository.findOne(eq(1L))).thenReturn(getInWorkout());
-        reportWorkoutService.create("1", workoutReportRequestDTO);
+        assertThrows(ResourceNotFoundException.class, () -> {reportWorkoutService.create("1", workoutReportRequestDTO);});
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void create_workout_not_found() {
         InUserLogin inUserLogin = new InUserLogin();
         InUser inUserForLogin = new InUser();
@@ -173,10 +177,10 @@ public class ReportWorkoutServiceTest {
         when(inWorkoutItemReportRepository.save(any(InWorkoutItemReport.class))).thenAnswer(i -> i.getArguments()[0]);
         when(inWorkoutItemRepository.findById(eq(1L))).thenReturn(Collections.emptyList());
         when(inWorkoutRepository.findOne(eq(1L))).thenReturn(null);
-        reportWorkoutService.create("1", workoutReportRequestDTO);
+        assertThrows(ResourceNotFoundException.class, () -> {reportWorkoutService.create("1", workoutReportRequestDTO);});
     }
 
-    @Test(expected = UnauthorizedException.class)
+    @Test
     public void create_different_user_id() {
         InUserLogin inUserLogin = new InUserLogin();
         InUser inUserForLogin = new InUser();
@@ -198,6 +202,6 @@ public class ReportWorkoutServiceTest {
         when(inWorkoutItemReportRepository.save(any(InWorkoutItemReport.class))).thenAnswer(i -> i.getArguments()[0]);
         when(inWorkoutItemRepository.findById(eq(1L))).thenReturn(Arrays.asList(inWorkoutItem));
         when(inWorkoutRepository.findOne(eq(1L))).thenReturn(getInWorkout());
-        reportWorkoutService.create("1", workoutReportRequestDTO);
+        assertThrows(UnauthorizedException.class, () -> {reportWorkoutService.create("1", workoutReportRequestDTO);});
     }
 }
