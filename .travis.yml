@@ -27,4 +27,5 @@ script:
 
 after_success:
   - codecov
+  - mvn sonar:sonar -Dsonar.projectKey=javadev_pt-backend -Dsonar.organization=javadev-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_LOGIN
 
