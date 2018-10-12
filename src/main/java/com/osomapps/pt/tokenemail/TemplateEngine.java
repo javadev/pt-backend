@@ -5,9 +5,11 @@ import java.util.Map;
 
 final class TemplateEngine {
     private static final String ALL_SYMBOLS = "([\\s\\S]+?)";
-    private static final Map<String, String> TEMPLATE_SETTINGS = new HashMap<String, String>() { {
-        put("evaluate", "\\{\\{" + ALL_SYMBOLS + "\\}\\}");
-    } };
+    private static final Map<String, String> TEMPLATE_SETTINGS = new HashMap<>();
+
+    static {
+        TEMPLATE_SETTINGS.put("evaluate", "\\{\\{" + ALL_SYMBOLS + "\\}\\}");
+    }
 
     interface Template<F> {
         String apply(F arg);
