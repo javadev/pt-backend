@@ -53,7 +53,7 @@ class ReportWorkoutService {
     }
 
     @Transactional
-    WorkoutReportResponseDTO create(String token, WorkoutReportRequestDTO workoutReportRequestDTO) {
+    public WorkoutReportResponseDTO create(String token, WorkoutReportRequestDTO workoutReportRequestDTO) {
         if (!token.isEmpty()) {
             final InUser inUser = userService.checkUserToken(token).getInUser();
             final InWorkout inWorkout = inWorkoutRepository.findOne(workoutReportRequestDTO.getId());
