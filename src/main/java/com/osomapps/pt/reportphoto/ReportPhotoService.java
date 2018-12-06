@@ -64,7 +64,7 @@ class ReportPhotoService {
     }
 
     private String extractFileType(String dataurl) {
-        return dataurl.substring(5, dataurl.indexOf(";"));
+        return dataurl.substring(5, Math.max(5, dataurl.indexOf(";")));
     }
 
     private String extractFileName(String fileType) {
