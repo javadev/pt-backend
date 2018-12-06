@@ -192,7 +192,7 @@ public class XlsxProgramParser {
         workoutItem.getInput().setExercise(exerciseName.orElse(null));
         if (repetitionsInp instanceof String || weightInp instanceof String) {
             workoutItem.getInput().setSets(new ArrayList<>());
-            for (int index = 0; index < ((Number) setsInp).intValue(); index += 1) {
+            for (int index = 0; index < setsInp.intValue(); index += 1) {
                 InputSet inputSet = new InputSet();
                 if (repetitionsInp instanceof String) {
                     String[] repetitionsInps = ((String) repetitionsInp).split("\\s*,\\s*");
@@ -227,7 +227,7 @@ public class XlsxProgramParser {
             }
             inputSet.setWeight(getFloatOrNull(weightInp));
             workoutItem.getInput().setSets(new ArrayList<>());
-            for (int index = 0; index < ((Number) setsInp).intValue(); index += 1) {
+            for (int index = 0; index < setsInp.intValue(); index += 1) {
                 workoutItem.getInput().getSets().add(inputSet);
             }
         }
