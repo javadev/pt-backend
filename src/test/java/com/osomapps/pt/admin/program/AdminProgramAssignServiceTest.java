@@ -192,6 +192,12 @@ public class AdminProgramAssignServiceTest {
     }
 
     @Test
+    public void getCurrentWorkoutIndex_empty_programs2() {
+        assertThat(adminProgramAssignService.getCurrentWorkoutIndex(
+                new InUser().setInPrograms(null), Collections.emptyList()), equalTo(0));
+    }
+
+    @Test
     public void getCurrentWorkoutIndex_same_names() {
         assertThat(adminProgramAssignService.getCurrentWorkoutIndex(
                 new InUser().setInPrograms(

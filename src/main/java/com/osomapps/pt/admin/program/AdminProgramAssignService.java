@@ -154,7 +154,7 @@ public class AdminProgramAssignService {
     }
 
     int getCurrentWorkoutIndex(InUser inUser, List<ParseWorkout> parseWorkouts) {
-        if (inUser.getInPrograms().isEmpty()) {
+        if (inUser.getInPrograms() == null || inUser.getInPrograms().isEmpty()) {
             return 0;
         }
         final InProgram inProgram = inUser.getInPrograms().get(inUser.getInPrograms().size() - 1);
