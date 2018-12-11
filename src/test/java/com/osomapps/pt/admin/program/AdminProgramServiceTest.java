@@ -23,7 +23,7 @@ import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Sort;
 import com.osomapps.pt.programs.ParseGoalRepository;
 import com.osomapps.pt.programs.ParsePart;
@@ -36,6 +36,7 @@ import com.osomapps.pt.programs.ParseWorkoutItemSet;
 import com.osomapps.pt.programs.ParseWorkoutItemSetRepository;
 import com.osomapps.pt.token.InUser;
 import java.io.OutputStream;
+import java.util.Optional;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -84,7 +85,7 @@ public class AdminProgramServiceTest {
 
     @Test
     public void findOne() {
-        when(programRepository.findOne(eq(1L))).thenReturn(new ParseProgram()
+        when(programRepository.findById(eq(1L))).thenReturn(Optional.of(new ParseProgram()
                 .setParseExercises(Arrays.asList(new ParseExercise()))
                 .setParseGoals(
                 Arrays.asList(new ParseGoal().setParseUserGroups(
@@ -94,9 +95,9 @@ public class AdminProgramServiceTest {
                                         Arrays.asList(
                                             new ParseWorkout().setParseWorkoutItems(
                                                 Arrays.asList(new ParseWorkoutItem()
-                                                        .setParseWorkoutItemSets(Arrays.asList(new ParseWorkoutItemSet())))))))))))))));
+                                                        .setParseWorkoutItemSets(Arrays.asList(new ParseWorkoutItemSet()))))))))))))))));
         adminProgramService.findOne(1L);
-        verify(programRepository).findOne(eq(1L));
+        verify(programRepository).findById(eq(1L));
     }
 
     @Test
@@ -112,10 +113,9 @@ public class AdminProgramServiceTest {
             }
         }
         programRequestDTO.setDataUrl(result.toString());
-        when(parseGoalRepository.save(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(parseWorkoutRepository.save(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(parseGoalRepository.saveAll(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(parseWorkoutRepository.saveAll(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
         when(programRepository.save(any(ParseProgram.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         adminProgramService.create(programRequestDTO);
         verify(programRepository).save(any(ParseProgram.class));
     }
@@ -138,18 +138,17 @@ public class AdminProgramServiceTest {
             }
         }
         programRequestDTO.setDataUrl(result.toString());
-        when(programRepository.findOne(eq(1L))).thenReturn(new ParseProgram().setParseGoals(
+        when(programRepository.findById(eq(1L))).thenReturn(Optional.of(new ParseProgram().setParseGoals(
                 Arrays.asList(new ParseGoal().setParseUserGroups(
                         Arrays.asList(new ParseUserGroup().setParseRounds(
                             Arrays.asList(new ParseRound().setParseParts(
                                 Arrays.asList(new ParsePart().setParseWorkouts(
                                         Arrays.asList(
                                             new ParseWorkout().setParseWorkoutItems(
-                                                Arrays.asList(new ParseWorkoutItem())))))))))))));
-        when(parseGoalRepository.save(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(parseWorkoutRepository.save(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
+                                                Arrays.asList(new ParseWorkoutItem()))))))))))))));
+        when(parseGoalRepository.saveAll(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(parseWorkoutRepository.saveAll(any(Iterable.class))).thenAnswer(i -> i.getArguments()[0]);
         when(programRepository.save(any(ParseProgram.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         adminProgramService.update(1L, programRequestDTO);
         verify(programRepository).save(any(ParseProgram.class));
     }
@@ -161,7 +160,7 @@ public class AdminProgramServiceTest {
 
     @Test
     public void delete() {
-        when(programRepository.findOne(eq(1L))).thenReturn(new ParseProgram()
+        when(programRepository.findById(eq(1L))).thenReturn(Optional.of(new ParseProgram()
                 .setParseExercises(Arrays.asList(new ParseExercise()))
                 .setParseGoals(
                 Arrays.asList(new ParseGoal().setParseUserGroups(
@@ -171,7 +170,7 @@ public class AdminProgramServiceTest {
                                         Arrays.asList(
                                             new ParseWorkout().setParseWorkoutItems(
                                                 Arrays.asList(new ParseWorkoutItem()
-                                                .setParseWorkoutItemSets(Arrays.asList(new ParseWorkoutItemSet())))))))))))))));
+                                                .setParseWorkoutItemSets(Arrays.asList(new ParseWorkoutItemSet()))))))))))))))));
         adminProgramService.delete(1L);
         verify(programRepository).delete(any(ParseProgram.class));
     }

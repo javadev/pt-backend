@@ -18,7 +18,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ActiveCertificateServiceTest {
@@ -108,7 +108,6 @@ public class ActiveCertificateServiceTest {
         when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
         when(certificateRepository.findByCode(eq("123"))).thenReturn(
             Arrays.asList(new Certificate().setActivated(Boolean.TRUE).setAmount_of_days(1)));
-        when(inUserCertificateRepository.save(any(InUserCertificate.class))).thenAnswer(i -> i.getArguments()[0]);
         ActiveCertificateRequestDTO activeCertificateRequestDTO = new ActiveCertificateRequestDTO().setCode("123");
         assertThat(activeCertificateService.create("1", activeCertificateRequestDTO).getCode(),
             equalTo(new ActiveCertificateResponseDTO().getCode()));

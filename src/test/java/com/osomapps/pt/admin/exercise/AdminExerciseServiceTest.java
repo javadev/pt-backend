@@ -13,6 +13,7 @@ import com.osomapps.pt.exercises.ExerciseRepository;
 import com.osomapps.pt.tokenemail.DataurlValidator;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -24,7 +25,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import org.springframework.data.domain.Sort;
 import org.springframework.validation.Errors;
@@ -74,9 +75,9 @@ public class AdminExerciseServiceTest {
         savedExercise.setId(1L);
         savedExercise.setDExerciseName("10");
         savedExercise.setExerciseBodypart(existedExerciseBodypart);
-        when(exerciseRepository.findOne(eq(1L))).thenReturn(savedExercise);
+        when(exerciseRepository.findById(eq(1L))).thenReturn(Optional.of(savedExercise));
         tokenService.findOne(1L);
-        verify(exerciseRepository).findOne(eq(1L));
+        verify(exerciseRepository).findById(eq(1L));
     }
 
     @Test
@@ -96,14 +97,13 @@ public class AdminExerciseServiceTest {
         ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();
         existedExerciseBodypart.setId(1L);
         existedExerciseBodypart.setDExerciseBodypartName("10");
-        when(exerciseBodypartRepository.findOne(eq(1L))).thenReturn(existedExerciseBodypart);
+        when(exerciseBodypartRepository.findById(eq(1L))).thenReturn(Optional.of(existedExerciseBodypart));
         Exercise savedExercise = new Exercise();
         savedExercise.setId(1L);
         savedExercise.setDExerciseName("10");
         savedExercise.setExerciseBodypart(existedExerciseBodypart);
         savedExercise.setExerciseFiles(Arrays.asList(new ExerciseFilePreview()));
         when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
-        when(exerciseFileRepository.save(any(ExerciseFile.class))).thenAnswer(i -> i.getArguments()[0]);
         tokenService.create(exerciseRequestDTO);
         verify(exerciseRepository).save(any(Exercise.class));
     }
@@ -121,18 +121,12 @@ public class AdminExerciseServiceTest {
         ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();
         existedExerciseBodypart.setId(1L);
         existedExerciseBodypart.setDExerciseBodypartName("10");
-        when(exerciseBodypartRepository.findOne(eq(1L))).thenReturn(existedExerciseBodypart);
+        when(exerciseBodypartRepository.findById(eq(1L))).thenReturn(Optional.of(existedExerciseBodypart));
         Exercise savedExercise = new Exercise();
         savedExercise.setId(1L);
         savedExercise.setDExerciseName("10");
         savedExercise.setExerciseBodypart(existedExerciseBodypart);
         savedExercise.setExerciseFiles(Arrays.asList(new ExerciseFilePreview()));
-        when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
-        doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
-            Object[] args = invocation.getArguments();
-            ((Errors) args[1]).reject("dataurlValidator", "dataurlValidator");
-            return null;
-        }).when(dataurlValidator).validate(anyObject(), any(Errors.class));
         tokenService.create(exerciseRequestDTO);
     }
 
@@ -156,18 +150,17 @@ public class AdminExerciseServiceTest {
                 + "yH5BAAAAAAALAAAAAAQAA4AAARe8L1Ekyky67QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjg"
                 + "aORCMxIC6e0CcguWw6aFjsVMkkIr7g77ZKPJjPZqIyd7sJAgVGoEGv2xsBxqNgYPj/gAwXEQA7")));
         Exercise existedExercise = new Exercise();
-        when(exerciseRepository.findOne(eq(1L))).thenReturn(existedExercise);
+        when(exerciseRepository.findById(eq(1L))).thenReturn(Optional.of(existedExercise));
         ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();
         existedExerciseBodypart.setId(1L);
         existedExerciseBodypart.setDExerciseBodypartName("10");
-        when(exerciseBodypartRepository.findOne(eq(1L))).thenReturn(existedExerciseBodypart);
+        when(exerciseBodypartRepository.findById(eq(1L))).thenReturn(Optional.of(existedExerciseBodypart));
         Exercise savedExercise = new Exercise();
         savedExercise.setId(1L);
         savedExercise.setDExerciseName("10");
         savedExercise.setExerciseBodypart(existedExerciseBodypart);
         savedExercise.setExerciseFiles(Arrays.asList(new ExerciseFilePreview()));
         when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
-        when(exerciseFileRepository.save(any(ExerciseFile.class))).thenAnswer(i -> i.getArguments()[0]);
         tokenService.update(1L, exerciseRequestDTO);
         verify(exerciseRepository).save(any(Exercise.class));
     }
@@ -183,22 +176,16 @@ public class AdminExerciseServiceTest {
         exerciseRequestDTO.setOutputs(Collections.emptyList());
         exerciseRequestDTO.setFiles(Arrays.asList(new ExerciseFileRequestDTO()));
         Exercise existedExercise = new Exercise();
-        when(exerciseRepository.findOne(eq(1L))).thenReturn(existedExercise);
+        when(exerciseRepository.findById(eq(1L))).thenReturn(Optional.of(existedExercise));
         ExerciseBodypart existedExerciseBodypart = new ExerciseBodypart();
         existedExerciseBodypart.setId(1L);
         existedExerciseBodypart.setDExerciseBodypartName("10");
-        when(exerciseBodypartRepository.findOne(eq(1L))).thenReturn(existedExerciseBodypart);
+        when(exerciseBodypartRepository.findById(eq(1L))).thenReturn(Optional.of(existedExerciseBodypart));
         Exercise savedExercise = new Exercise();
         savedExercise.setId(1L);
         savedExercise.setDExerciseName("10");
         savedExercise.setExerciseBodypart(existedExerciseBodypart);
         savedExercise.setExerciseFiles(Arrays.asList(new ExerciseFilePreview()));
-        when(exerciseRepository.save(any(Exercise.class))).thenReturn(savedExercise);
-        doAnswer((Answer<Void>) (InvocationOnMock invocation) -> {
-            Object[] args = invocation.getArguments();
-            ((Errors) args[1]).reject("dataurlValidator", "dataurlValidator");
-            return null;
-        }).when(dataurlValidator).validate(anyObject(), any(Errors.class));
         tokenService.update(1L, exerciseRequestDTO);
     }
 
@@ -216,9 +203,9 @@ public class AdminExerciseServiceTest {
         savedExercise.setId(1L);
         savedExercise.setDExerciseName("10");
         savedExercise.setExerciseBodypart(existedExerciseBodypart);
-        when(exerciseRepository.findOne(eq(1L))).thenReturn(savedExercise);
+        when(exerciseRepository.findById(eq(1L))).thenReturn(Optional.of(savedExercise));
         tokenService.delete(1L);
-        verify(exerciseRepository).delete(eq(1L));
+        verify(exerciseRepository).deleteById(eq(1L));
     }
 
 }

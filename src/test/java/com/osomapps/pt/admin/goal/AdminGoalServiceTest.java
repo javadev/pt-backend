@@ -10,6 +10,7 @@ import com.osomapps.pt.goals.GoalType;
 import com.osomapps.pt.goals.GoalTypeRepository;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import org.junit.Test;
@@ -21,7 +22,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Sort;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -49,15 +50,15 @@ public class AdminGoalServiceTest {
 
     @Test(expected = ResourceNotFoundException.class)
     public void findOne_not_found() {
-        when(goalRepository.findOne(eq(1L))).thenReturn(null);
+        when(goalRepository.findById(eq(1L))).thenReturn(Optional.empty());
         adminGoalService.findOne(1L);
     }
 
     @Test
     public void findOne() {
-        when(goalRepository.findOne(eq(1L))).thenReturn(
-                new Goal().setGoalParameters(Arrays.asList(new GoalParameter()))
-                    .setGoalType(new GoalType()));
+        when(goalRepository.findById(eq(1L))).thenReturn(
+                Optional.of(new Goal().setGoalParameters(Arrays.asList(new GoalParameter()))
+                    .setGoalType(new GoalType())));
         GoalResponseDTO goalResponseDTO = adminGoalService.findOne(1L);
         assertThat(goalResponseDTO, notNullValue());
     }
@@ -88,8 +89,8 @@ public class AdminGoalServiceTest {
 
     @Test
     public void update() {
-        when(goalRepository.findOne(eq(1L))).thenReturn(
-                new Goal().setGoalParameters(Arrays.asList(new GoalParameter())));
+        when(goalRepository.findById(eq(1L))).thenReturn(
+                Optional.of(new Goal().setGoalParameters(Arrays.asList(new GoalParameter()))));
         when(goalRepository.save((Goal) anyObject())).thenAnswer(i -> i.getArguments()[0]);
         GoalResponseDTO goalResponseDTO = adminGoalService.update(1L,
             new GoalRequestDTO().setParameters(Arrays.asList(new GoalParameterRequestDTO()))
@@ -99,8 +100,8 @@ public class AdminGoalServiceTest {
 
     @Test
     public void update_type_is_null() {
-        when(goalRepository.findOne(eq(1L))).thenReturn(
-                new Goal().setGoalParameters(Arrays.asList(new GoalParameter())));
+        when(goalRepository.findById(eq(1L))).thenReturn(
+                Optional.of(new Goal().setGoalParameters(Arrays.asList(new GoalParameter()))));
         when(goalRepository.save((Goal) anyObject())).thenAnswer(i -> i.getArguments()[0]);
         GoalResponseDTO goalResponseDTO = adminGoalService.update(1L,
             new GoalRequestDTO().setParameters(Arrays.asList(new GoalParameterRequestDTO()))
@@ -115,8 +116,8 @@ public class AdminGoalServiceTest {
 
     @Test
     public void delete() {
-        when(goalRepository.findOne(eq(1L))).thenReturn(
-                new Goal().setGoalParameters(Arrays.asList(new GoalParameter())));
+        when(goalRepository.findById(eq(1L))).thenReturn(
+                Optional.of(new Goal().setGoalParameters(Arrays.asList(new GoalParameter()))));
         GoalResponseDTO goalResponseDTO = adminGoalService.delete(1L);
         assertThat(goalResponseDTO, notNullValue());
     }

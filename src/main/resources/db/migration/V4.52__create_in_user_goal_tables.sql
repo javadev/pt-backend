@@ -12,6 +12,6 @@ CREATE TABLE ptcore.in_user_goal (
 );
 
 CREATE TABLE ptcore.in_user_has_in_user_goal (
-    in_user_id      BIGINT NOT NULL REFERENCES in_user(id),
-    in_user_goal_id BIGINT NOT NULL REFERENCES in_user_goal(id)
+    in_user_id      BIGINT NOT NULL REFERENCES ptcore.in_user(id),
+    in_user_goal_id BIGINT NOT NULL REFERENCES ptcore.in_user_goal(id)
 );

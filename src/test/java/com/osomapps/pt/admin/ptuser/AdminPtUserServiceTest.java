@@ -5,6 +5,7 @@ import com.osomapps.pt.UnauthorizedException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import org.junit.Test;
@@ -15,7 +16,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminPtUserServiceTest {
@@ -41,14 +42,13 @@ public class AdminPtUserServiceTest {
 
     @Test
     public void findOne() {
-        when(ptUserRepository.findOne(eq(1L))).thenReturn(new PtUser());
+        when(ptUserRepository.findById(eq(1L))).thenReturn(Optional.of(new PtUser()));
         PtUserResponseDTO responseDTO = adminPtUserService.findOne(1L);
         assertThat(responseDTO, notNullValue());
     }
 
     @Test
     public void create() {
-        when(ptUserRepository.findOne(eq(1L))).thenReturn(new PtUser());
         when(ptUserRepository.save((PtUser) anyObject())).thenAnswer(i -> i.getArguments()[0]);
         PtUserResponseDTO responseDTO = adminPtUserService.create(
                 new PtUserRequestDTO().setRoles(Collections.emptyList()));
@@ -62,14 +62,13 @@ public class AdminPtUserServiceTest {
 
     @Test(expected = UnauthorizedException.class)
     public void update_not_allowed_for_1() {
-        when(ptUserRepository.findOne(eq(1L))).thenReturn(new PtUser());
-        when(ptUserRepository.save((PtUser) anyObject())).thenAnswer(i -> i.getArguments()[0]);
+        when(ptUserRepository.findById(eq(1L))).thenReturn(Optional.of(new PtUser()));
         adminPtUserService.update(1L, new PtUserRequestDTO().setRoles(Collections.emptyList()));
     }
 
     @Test
     public void update() {
-        when(ptUserRepository.findOne(eq(2L))).thenReturn(new PtUser());
+        when(ptUserRepository.findById(eq(2L))).thenReturn(Optional.of(new PtUser()));
         when(ptUserRepository.save((PtUser) anyObject())).thenAnswer(i -> i.getArguments()[0]);
         PtUserResponseDTO responseDTO = adminPtUserService.update(2L,
                 new PtUserRequestDTO().setRoles(Collections.emptyList()));
@@ -83,13 +82,13 @@ public class AdminPtUserServiceTest {
 
     @Test(expected = UnauthorizedException.class)
     public void delete_not_allowed() {
-        when(ptUserRepository.findOne(eq(1L))).thenReturn(new PtUser());
+        when(ptUserRepository.findById(eq(1L))).thenReturn(Optional.of(new PtUser()));
         adminPtUserService.delete(1L);
     }
 
     @Test
     public void delete() {
-        when(ptUserRepository.findOne(eq(2L))).thenReturn(new PtUser());
+        when(ptUserRepository.findById(eq(2L))).thenReturn(Optional.of(new PtUser()));
         PtUserResponseDTO responseDTO = adminPtUserService.delete(2L);
         assertThat(responseDTO, notNullValue());
     }

@@ -12,11 +12,12 @@ import org.mockito.Mock;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TokenServiceTest {
@@ -63,7 +64,7 @@ public class TokenServiceTest {
         tokenRequest.setDevice_id("device_id");
         FacebookResponse facebookResponse = new FacebookResponse();
         facebookResponse.setAge(20L);
-        when(inUserFacebookRepository.findByUserId(anyString())).thenReturn(Arrays.asList(
+        when(inUserFacebookRepository.findByUserId(anyObject())).thenReturn(Arrays.asList(
                 new InUserFacebook().setInUser(new InUser()
                         .setD_level("1")
                         .setInUserGoals(Arrays.asList(new InUserGoal().setGoal_value("{\"key\":10}")))
@@ -194,7 +195,6 @@ public class TokenServiceTest {
     @Test(expected = UnauthorizedException.class)
     public void deleteToken_invalid_token() {
         when(inUserLoginRepository.findByToken(anyString())).thenReturn(Arrays.asList(new InUserLogin()));
-        when(inUserLogoutRepository.saveAndFlush(any(InUserLogout.class))).thenReturn(null);
         when(inUserLogoutRepository.findByToken(anyString())).thenReturn(Arrays.asList(new InUserLogout()));
         tokenService.deleteToken("", "");
         verify(inUserLogoutRepository).saveAndFlush(any(InUserLogout.class));

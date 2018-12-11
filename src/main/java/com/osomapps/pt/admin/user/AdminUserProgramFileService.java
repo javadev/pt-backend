@@ -26,7 +26,7 @@ class AdminUserProgramFileService {
     }
 
     ProgramResponseDTO createXlsx(Long id, FastByteArrayOutputStream outputStream) {
-        final InUser inUser = inUserRepository.findOne(id);
+        final InUser inUser = inUserRepository.findById(id).orElse(null);
         if (inUser == null) {
             throw new ResourceNotFoundException("User with id " + id + " not found.");
         }        

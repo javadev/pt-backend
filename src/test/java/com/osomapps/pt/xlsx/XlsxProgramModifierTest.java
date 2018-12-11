@@ -16,11 +16,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.util.FastByteArrayOutputStream;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -51,7 +51,7 @@ public class XlsxProgramModifierTest {
         XlsxProgramModifier xlsxProgramModifier = XlsxProgramModifier.of(
                 localOutputStream.getInputStream(), dictionaryService);
         when(dictionaryService.getEnValue(eq(DictionaryName.goal_title),
-                    anyString(), anyString())).thenReturn("Loose weight");
+                    anyObject(), anyObject())).thenReturn("Loose weight");
         xlsxProgramModifier.updateCellData(mock(OutputStream.class), getInUserWithProgram()
                 .setWeight(60F)
                 .setInUserGoals(Arrays.asList(new InUserGoal(), new InUserGoal())));
@@ -64,8 +64,6 @@ public class XlsxProgramModifierTest {
         DictionaryService dictionaryService = mock(DictionaryService.class);
         XlsxProgramModifier xlsxProgramModifier = XlsxProgramModifier.of(
                 localOutputStream.getInputStream(), dictionaryService);
-        when(dictionaryService.getEnValue(eq(DictionaryName.goal_title),
-                    anyString(), anyString())).thenReturn("Loose weight");
         xlsxProgramModifier.updateCellData(mock(OutputStream.class), getInUserWithProgram()
                 .setWeight(60F)
                 .setInUserGoals(Collections.emptyList()));

@@ -12,6 +12,6 @@ CREATE TABLE ptcore.in_user_photo (
 );
 
 CREATE TABLE ptcore.in_user_has_in_user_photo (
-    in_user_id BIGINT NOT NULL REFERENCES in_user(id),
-    in_user_photo_id BIGINT NOT NULL REFERENCES in_user_photo(id)
+    in_user_id BIGINT NOT NULL REFERENCES ptcore.in_user(id),
+    in_user_photo_id BIGINT NOT NULL REFERENCES ptcore.in_user_photo(id)
 );

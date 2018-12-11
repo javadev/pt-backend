@@ -10,6 +10,7 @@ import com.osomapps.pt.programs.InWorkoutItemSet;
 import com.osomapps.pt.token.InUser;
 import com.osomapps.pt.token.InUserRepository;
 import java.util.Arrays;
+import java.util.Optional;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import org.junit.Test;
 import static org.junit.Assert.assertThat;
@@ -18,7 +19,7 @@ import org.mockito.InjectMocks;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.util.FastByteArrayOutputStream;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -38,7 +39,7 @@ public class AdminUserProgramFileServiceTest {
 
     @Test
     public void createXlsx() {
-        when(inUserRepository.findOne(eq(1L))).thenReturn(new InUser().setInPrograms(
+        when(inUserRepository.findById(eq(1L))).thenReturn(Optional.of(new InUser().setInPrograms(
                 Arrays.asList(new InProgram().setInWorkouts(Arrays.asList(
                 new InWorkout()
                         .setWorkout_index(0)
@@ -49,7 +50,7 @@ public class AdminUserProgramFileServiceTest {
                                 new InWorkoutItem().setInWorkoutItemSets(Arrays.asList(
                                         new InWorkoutItemSet()
                                 ))))
-                )))));
+                ))))));
         ProgramResponseDTO programResponseDTO = adminUserProgramFileService.createXlsx(
                 1L, new FastByteArrayOutputStream());
         assertThat(programResponseDTO, notNullValue());

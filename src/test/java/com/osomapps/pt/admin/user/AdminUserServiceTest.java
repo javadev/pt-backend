@@ -24,6 +24,7 @@ import com.osomapps.pt.tokenemail.InUserEmail;
 import com.osomapps.pt.tokenemail.InUserEmailRepository;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import org.junit.Test;
@@ -39,7 +40,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -105,11 +106,11 @@ public class AdminUserServiceTest {
 
     @Test
     public void findOne() {
-        when(inUserRepository.findOne(eq(1L))).thenReturn(
-                new InUser()
+        when(inUserRepository.findById(eq(1L))).thenReturn(
+                Optional.of(new InUser()
         .setInUserEmails(Collections.emptyList())
         .setInUserType(new InUserType())
-        .setInPrograms(Arrays.asList(getInProgram())));
+        .setInPrograms(Arrays.asList(getInProgram()))));
         UserResponseDTO userResponseDTO = adminUserService.findOne(1L);
         assertThat(userResponseDTO.getName(), equalTo("?"));
     }
@@ -118,13 +119,13 @@ public class AdminUserServiceTest {
     public void create() {
         when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(goalRepository.findOne(anyLong())).thenReturn(new Goal().setId(1L));
+        when(goalRepository.findById(eq(1L))).thenReturn(Optional.of(new Goal().setId(1L)));
         when(inUserGoalRepository.save(any(InUserGoal.class))).thenAnswer(i -> i.getArguments()[0]);
         UserResponseDTO userResponseDTO = adminUserService.create(
                 new UserRequestDTO()
                 .setType(new UserTypeRequestDTO())
                 .setLevel(1)
-                .setGoals(Arrays.asList(new UserGoalRequestDTO()))
+                .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L)))
         );
         assertThat(userResponseDTO.getName(), equalTo(null));
     }
@@ -149,31 +150,29 @@ public class AdminUserServiceTest {
 
     @Test
     public void update() {
-        when(inUserRepository.findOne(eq(1L))).thenReturn(
-                new InUser()
+        when(inUserRepository.findById(eq(1L))).thenReturn(
+                Optional.of(new InUser()
             .setInUserEmails(Collections.emptyList())
-            .setInUserFacebooks(Arrays.asList(new InUserFacebook())));
+            .setInUserFacebooks(Arrays.asList(new InUserFacebook()))));
         when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(goalRepository.findOne(anyLong())).thenReturn(new Goal().setId(1L));
+        when(goalRepository.findById(eq(1L))).thenReturn(Optional.of(new Goal().setId(1L)));
         when(inUserGoalRepository.save(any(InUserGoal.class))).thenAnswer(i -> i.getArguments()[0]);
         UserResponseDTO userResponseDTO = adminUserService.update(1L,
                 new UserRequestDTO()
                 .setType(new UserTypeRequestDTO())
                 .setLevel(2)
-                .setGoals(Arrays.asList(new UserGoalRequestDTO()))
+                .setGoals(Arrays.asList(new UserGoalRequestDTO().setId(1L)))
         );
         assertThat(userResponseDTO.getName(), equalTo(null));
     }
 
     @Test
     public void update_with_eamil() {
-        when(inUserRepository.findOne(eq(1L))).thenReturn(
-                new InUser()
+        when(inUserRepository.findById(eq(1L))).thenReturn(
+                Optional.of(new InUser()
             .setInUserEmails(Arrays.asList(new InUserEmail()))
-            .setInUserFacebooks(Arrays.asList(new InUserFacebook())));
+            .setInUserFacebooks(Arrays.asList(new InUserFacebook()))));
         when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         UserResponseDTO userResponseDTO = adminUserService.update(1L,
                 new UserRequestDTO()
                 .setType(new UserTypeRequestDTO())
@@ -188,11 +187,10 @@ public class AdminUserServiceTest {
             ((Errors) args[1]).reject("emailValidator", "emailValidator");
             return null;
         }).when(emailValidator).validate(anyObject(), any(Errors.class));
-        when(inUserRepository.findOne(eq(1L))).thenReturn(
-                new InUser()
+        when(inUserRepository.findById(eq(1L))).thenReturn(
+                Optional.of(new InUser()
             .setInUserEmails(Arrays.asList(new InUserEmail()))
-            .setInUserFacebooks(Arrays.asList(new InUserFacebook())));
-        when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
+            .setInUserFacebooks(Arrays.asList(new InUserFacebook()))));
         adminUserService.update(1L,
                 new UserRequestDTO()
                 .setType(new UserTypeRequestDTO())
@@ -206,9 +204,9 @@ public class AdminUserServiceTest {
 
     @Test
     public void delete() {
-        when(inUserRepository.findOne(eq(1L))).thenReturn(
-                new InUser()
-            .setInUserEmails(Arrays.asList(new InUserEmail())));
+        when(inUserRepository.findById(eq(1L))).thenReturn(
+                Optional.of(new InUser()
+            .setInUserEmails(Arrays.asList(new InUserEmail()))));
         UserResponseDTO userResponseDTO = adminUserService.delete(1L);
         assertThat(userResponseDTO.getName(), equalTo(null));
     }

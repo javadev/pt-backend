@@ -6,7 +6,7 @@ import org.mockito.Mock;
 
 import org.junit.runner.RunWith;
 import static org.mockito.Mockito.verify;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminExerciseBodypartResourceTest {

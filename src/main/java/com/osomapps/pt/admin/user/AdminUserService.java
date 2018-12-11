@@ -124,7 +124,7 @@ class AdminUserService {
     }
 
     UserResponseDTO findOne(Long id) {
-        final InUser inUser = inUserRepository.findOne(id);
+        final InUser inUser = inUserRepository.findById(id).orElse(null);
         if (inUser == null) {
             throw new ResourceNotFoundException("User with id " + id + " not found.");
         }
@@ -133,7 +133,7 @@ class AdminUserService {
 
     UserResponseDTO create(UserRequestDTO userRequestDTO) {
         final InUserType inUserTypeDb = userRequestDTO.getType().getId() == null ? null
-                : inUserTypeRepository.findOne(userRequestDTO.getType().getId());
+                : inUserTypeRepository.findById(userRequestDTO.getType().getId()).orElse(null);
         final InUser inUser = new InUser();
         final InUserEmail inUserEmail = new InUserEmail();
         final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
@@ -162,10 +162,10 @@ class AdminUserService {
             if (userRequestDTO.getGoals().size() > 2) {
                 throw new UnauthorizedException("Amount of goals must be not more than 2");
             }
-            inUserGoalRepository.delete(inUser.getInUserGoals());
+            inUserGoalRepository.deleteAll(inUser.getInUserGoals());
             inUser.setInUserGoals(new ArrayList<>());
             userRequestDTO.getGoals().forEach((userGoalRequestDTO) -> {
-                Goal goal = goalRepository.findOne(userGoalRequestDTO.getId());
+                Goal goal = goalRepository.findById(userGoalRequestDTO.getId()).orElse(null);
                 if (goal == null) {
                     throw new UnauthorizedException("Goal with id " + userGoalRequestDTO.getId() + " not found");
                 }
@@ -184,13 +184,13 @@ class AdminUserService {
     }
 
     UserResponseDTO update(Long id, UserRequestDTO userRequestDTO) {
-        final InUser inUser = inUserRepository.findOne(id);
+        final InUser inUser = inUserRepository.findById(id).orElse(null);
         if (inUser == null) {
             throw new ResourceNotFoundException("User with id " + id + " not found.");
         }
         final InUserType inUserTypeDb = userRequestDTO.getType() == null
                 || userRequestDTO.getType().getId() == null ? null
-            : inUserTypeRepository.findOne(userRequestDTO.getType().getId());
+            : inUserTypeRepository.findById(userRequestDTO.getType().getId()).orElse(null);
         inUser.setInUserType(inUserTypeDb);
         inUser.setD_sex(userRequestDTO.getGender());
         inUser.setD_level(userRequestDTO.getLevel() == null ? null : "" + userRequestDTO.getLevel());
@@ -214,12 +214,12 @@ class AdminUserService {
     }
 
     UserResponseDTO delete(Long id) {
-        final InUser inUser = inUserRepository.findOne(id);
+        final InUser inUser = inUserRepository.findById(id).orElse(null);
         if (inUser == null) {
             throw new ResourceNotFoundException("User with id " + id + " not found.");
         }
         final UserResponseDTO userResponseDTO = inUserToDto(inUser);
-        inUserRepository.delete(id);
+        inUserRepository.deleteById(id);
         return userResponseDTO;
     }
 }

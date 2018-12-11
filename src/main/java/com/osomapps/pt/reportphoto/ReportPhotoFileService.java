@@ -26,7 +26,7 @@ class ReportPhotoFileService {
             throws IOException {
         if (!token.isEmpty()) {
             userService.checkUserToken(token);
-            final InUserPhoto inUserPhoto = inUserPhotoRepository.findOne(id);
+            final InUserPhoto inUserPhoto = inUserPhotoRepository.findById(id).orElse(null);
             if (inUserPhoto == null) {
                 throw new ResourceNotFoundException("File with id " + id + " not found");
             }

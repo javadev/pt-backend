@@ -5,7 +5,6 @@ import java.util.Collections;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import org.junit.Test;
 import static org.junit.Assert.assertThat;
-import org.mockito.internal.listeners.CollectCreatedMocks;
 
 public class InWorkoutItemTest {
     @Test

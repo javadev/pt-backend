@@ -8,6 +8,7 @@ SET search_path = ptcore;
 SET default_tablespace = '';
 SET default_with_oids = false;
 
+CREATE SCHEMA IF NOT EXISTS ptcore;
 CREATE TABLE ptcore.in_user (
     id BIGSERIAL PRIMARY KEY NOT NULL,
     created TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),

@@ -14,7 +14,7 @@ class AdminExerciseFileService {
     }
 
     List<ExerciseFileResponseDTO> findAll(List<Long> ids) {
-        return exerciseFileRepository.findAll(ids).stream()
+        return exerciseFileRepository.findAllById(ids).stream()
                     .map(file -> ExerciseFileResponseDTO.builder()
                         .id(file.getId())
                         .file_name(file.getFile_name())

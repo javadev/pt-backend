@@ -142,12 +142,12 @@ public class AdminProgramAssignService {
             });
         });
         inProgramRepository.save(inProgram);
-        inWorkoutRepository.save(inProgram.getInWorkouts());
+        inWorkoutRepository.saveAll(inProgram.getInWorkouts());
         inProgram.getInWorkouts().forEach(inWorkout -> {
-            inWarmupWorkoutItemRepository.save(inWorkout.getInWarmupWorkoutItems());
-            inWorkoutItemRepository.save(inWorkout.getInWorkoutItems());
+            inWarmupWorkoutItemRepository.saveAll(inWorkout.getInWarmupWorkoutItems());
+            inWorkoutItemRepository.saveAll(inWorkout.getInWorkoutItems());
             inWorkout.getInWorkoutItems().forEach(inWorkoutItem -> {
-                inWorkoutItemSetRepository.save(inWorkoutItem.getInWorkoutItemSets());
+                inWorkoutItemSetRepository.saveAll(inWorkoutItem.getInWorkoutItemSets());
             });
         });
         return inUser;
