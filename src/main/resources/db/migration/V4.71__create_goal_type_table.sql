@@ -14,5 +14,5 @@ ALTER TABLE ptcore.goal ADD COLUMN goal_type_id BIGINT;
 
 ALTER TABLE ptcore.goal
   ADD CONSTRAINT goal_type_id_fkey FOREIGN KEY (goal_type_id)
-      REFERENCES goal_type (id)
+      REFERENCES ptcore.goal_type (id)
       ON UPDATE CASCADE ON DELETE CASCADE;

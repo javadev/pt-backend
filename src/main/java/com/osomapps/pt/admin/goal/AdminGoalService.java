@@ -61,7 +61,7 @@ class AdminGoalService {
     }
 
     GoalResponseDTO findOne(Long id) {
-        final Goal goal = goalRepository.findOne(id);
+        final Goal goal = goalRepository.findById(id).orElse(null);
         if (goal == null) {
             throw new ResourceNotFoundException("Goal with id " + id + " not found.");
         }
@@ -70,7 +70,7 @@ class AdminGoalService {
 
     GoalResponseDTO create(GoalRequestDTO goalRequestDTO) {
         final GoalType goalTypeDb = goalRequestDTO.getType().getId() == null ? null
-                : goalTypeRepository.findOne(goalRequestDTO.getType().getId());
+                : goalTypeRepository.findById(goalRequestDTO.getType().getId()).orElse(null);
         final String dataKey = dictionaryService.getNewDictionaryDataKey(DictionaryName.goal_title);
         dictionaryService.createDictionaryDataKey(DictionaryName.goal_title, dataKey,
                 goalRequestDTO.getTitleEn(), goalRequestDTO.getTitleNo());
@@ -80,19 +80,19 @@ class AdminGoalService {
         final Goal goal = new Goal();
         goal.setDGoalTitle(dataKey);
         goal.setDGoalTitle2(data2Key);
-        goal.setGoalParameters(goalParameterRepository.findAll(
+        goal.setGoalParameters(goalParameterRepository.findAllById(
             goalRequestDTO.getParameters().stream().map(type -> type.getId()).collect(Collectors.toList())));
         goal.setGoalType(goalTypeDb);
         return goalToDto(goalRepository.save(goal));
     }
 
     GoalResponseDTO update(Long id, GoalRequestDTO goalRequestDTO) {
-        final Goal existedGoal = goalRepository.findOne(id);
+        final Goal existedGoal = goalRepository.findById(id).orElse(null);
         if (existedGoal == null) {
             throw new ResourceNotFoundException("Goal with id not found: " + id);
         }
         final GoalType goalTypeDb = goalRequestDTO.getType().getId() == null ? null
-                : goalTypeRepository.findOne(goalRequestDTO.getType().getId());
+                : goalTypeRepository.findById(goalRequestDTO.getType().getId()).orElse(null);
         final String dataKey = existedGoal.getDGoalTitle();
         dictionaryService.createDictionaryDataKey(DictionaryName.goal_title, dataKey,
                 goalRequestDTO.getTitleEn(), goalRequestDTO.getTitleNo());
@@ -101,7 +101,7 @@ class AdminGoalService {
                 goalRequestDTO.getTitle2En(), goalRequestDTO.getTitle2No());
         existedGoal.setDGoalTitle(dataKey);
         existedGoal.setDGoalTitle2(data2Key);
-        existedGoal.setGoalParameters(goalParameterRepository.findAll(
+        existedGoal.setGoalParameters(goalParameterRepository.findAllById(
                 goalRequestDTO.getParameters().stream().map(type -> type.getId()).collect(Collectors.toList())));
         existedGoal.setGoalType(goalTypeDb);
         final Goal savedGoal = goalRepository.save(existedGoal);
@@ -109,14 +109,14 @@ class AdminGoalService {
     }
 
     GoalResponseDTO delete(Long id) {
-        final Goal goal = goalRepository.findOne(id);
+        final Goal goal = goalRepository.findById(id).orElse(null);
         if (goal == null) {
             throw new ResourceNotFoundException("Goal with id " + id + " not found.");
         }
         dictionaryService.deleteDatas(DictionaryName.goal_title, goal.getDGoalTitle());
         dictionaryService.deleteDatas(DictionaryName.goal_title_2, goal.getDGoalTitle2());
         final GoalResponseDTO goalResponseDTO = goalToDto(goal);
-        goalRepository.delete(id);
+        goalRepository.deleteById(id);
         return goalResponseDTO;
     }
 }

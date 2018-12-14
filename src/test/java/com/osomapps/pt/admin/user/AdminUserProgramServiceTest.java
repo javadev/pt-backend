@@ -10,8 +10,8 @@ import com.osomapps.pt.programs.InWorkoutItemReport;
 import com.osomapps.pt.programs.InWorkoutItemSet;
 import com.osomapps.pt.programs.InWorkoutItemSetReport;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminUserProgramServiceTest {
@@ -64,7 +64,7 @@ public class AdminUserProgramServiceTest {
 
     @Test
     public void findOne() {
-        when(inProgramRepository.findOne(eq(1L))).thenReturn(getInProgram());
+        when(inProgramRepository.findById(eq(1L))).thenReturn(Optional.of(getInProgram()));
         UserProgramResponseDTO responseDTO = adminUserProgramService.findOne(1L);
         assertThat(responseDTO, notNullValue());
     }
@@ -91,8 +91,7 @@ public class AdminUserProgramServiceTest {
 
     @Test
     public void update() {
-        when(inProgramRepository.findOne(eq(1L))).thenReturn(getInProgram());
-        when(inProgramRepository.save(any(InProgram.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(inProgramRepository.findById(eq(1L))).thenReturn(Optional.of(getInProgram()));
         UserProgramResponseDTO responseDTO = adminUserProgramService.update(1L,
                 new UserProgramRequestDTO().setName("name")
                         .setWorkouts(Arrays.asList(
@@ -109,7 +108,7 @@ public class AdminUserProgramServiceTest {
 
     @Test
     public void delete() {
-        when(inProgramRepository.findOne(eq(1L))).thenReturn(getInProgram());
+        when(inProgramRepository.findById(eq(1L))).thenReturn(Optional.of(getInProgram()));
         UserProgramResponseDTO responseDTO = adminUserProgramService.delete(1L);
         assertThat(responseDTO, notNullValue());
     }

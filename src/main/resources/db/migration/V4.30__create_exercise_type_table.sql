@@ -1,3 +1,4 @@
+DROP TABLE ptcore.exercise_type CASCADE;
 CREATE TABLE ptcore.exercise_type (
     id BIGSERIAL PRIMARY KEY NOT NULL,
     created TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),

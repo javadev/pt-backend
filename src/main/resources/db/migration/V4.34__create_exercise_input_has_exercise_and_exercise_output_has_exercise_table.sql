@@ -14,8 +14,8 @@ INSERT INTO ptcore.exercise_input (name) VALUES
 ('Resistance');
 
 CREATE TABLE ptcore.exercise_input_has_exercise (
-    exercise_input_id BIGINT NOT NULL REFERENCES exercise_input(id),
-    exercise_id      BIGINT NOT NULL REFERENCES exercise(id)
+    exercise_input_id BIGINT NOT NULL REFERENCES ptcore.exercise_input(id),
+    exercise_id      BIGINT NOT NULL REFERENCES ptcore.exercise(id)
 );
 
 CREATE TABLE ptcore.exercise_output (
@@ -34,6 +34,6 @@ INSERT INTO ptcore.exercise_output (name) VALUES
 ('Resistance');
 
 CREATE TABLE ptcore.exercise_output_has_exercise (
-    exercise_output_id BIGINT NOT NULL REFERENCES exercise_output(id),
-    exercise_id      BIGINT NOT NULL REFERENCES exercise(id)
+    exercise_output_id BIGINT NOT NULL REFERENCES ptcore.exercise_output(id),
+    exercise_id      BIGINT NOT NULL REFERENCES ptcore.exercise(id)
 );

@@ -8,6 +8,7 @@ import com.osomapps.pt.email.EmailMessageType;
 import com.osomapps.pt.email.EmailMessageTypeRepository;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -19,7 +20,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Sort;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -44,14 +45,14 @@ public class AdminEmailMessageTemplateServiceTest {
 
     @Test(expected = ResourceNotFoundException.class)
     public void findOne_not_found() {
-        when(emailMessageTemplateRepository.findOne(eq(1L))).thenReturn(null);
+        when(emailMessageTemplateRepository.findById(eq(1L))).thenReturn(Optional.empty());
         adminEmailMessageTemplateService.findOne(1L);
     }
 
     @Test
     public void findOne() {
-        when(emailMessageTemplateRepository.findOne(eq(1L))).thenReturn(
-                new EmailMessageTemplate().setEmailMessageType(new EmailMessageType()));
+        when(emailMessageTemplateRepository.findById(eq(1L))).thenReturn(
+                Optional.of(new EmailMessageTemplate().setEmailMessageType(new EmailMessageType())));
         EmailMessageTemplateResponseDTO emailMessageTemplateResponseDTO = adminEmailMessageTemplateService.findOne(1L);
         assertThat(emailMessageTemplateResponseDTO, notNullValue());
     }
@@ -80,8 +81,8 @@ public class AdminEmailMessageTemplateServiceTest {
 
     @Test
     public void update() {
-        when(emailMessageTemplateRepository.findOne(eq(1L))).thenReturn(
-                new EmailMessageTemplate().setEmailMessageType(new EmailMessageType()));
+        when(emailMessageTemplateRepository.findById(eq(1L))).thenReturn(
+                Optional.of(new EmailMessageTemplate().setEmailMessageType(new EmailMessageType())));
         when(emailMessageTemplateRepository.save((EmailMessageTemplate) anyObject())).thenAnswer(i -> i.getArguments()[0]);
         EmailMessageTemplateResponseDTO emailMessageTemplateResponseDTO = adminEmailMessageTemplateService.update(1L,
             new EmailMessageTemplateRequestDTO().setType(new EmailMessageTypeRequestDTO()));
@@ -90,8 +91,8 @@ public class AdminEmailMessageTemplateServiceTest {
 
     @Test
     public void update_with_type_1() {
-        when(emailMessageTemplateRepository.findOne(eq(1L))).thenReturn(
-                new EmailMessageTemplate().setEmailMessageType(new EmailMessageType()));
+        when(emailMessageTemplateRepository.findById(eq(1L))).thenReturn(
+                Optional.of(new EmailMessageTemplate().setEmailMessageType(new EmailMessageType())));
         when(emailMessageTemplateRepository.save((EmailMessageTemplate) anyObject())).thenAnswer(i -> i.getArguments()[0]);
         EmailMessageTemplateResponseDTO emailMessageTemplateResponseDTO = adminEmailMessageTemplateService.update(1L,
             new EmailMessageTemplateRequestDTO().setType(new EmailMessageTypeRequestDTO().setId(1L)));
@@ -105,8 +106,8 @@ public class AdminEmailMessageTemplateServiceTest {
 
     @Test
     public void delete() {
-        when(emailMessageTemplateRepository.findOne(eq(1L))).thenReturn(
-                new EmailMessageTemplate().setEmailMessageType(new EmailMessageType()));
+        when(emailMessageTemplateRepository.findById(eq(1L))).thenReturn(
+                Optional.of(new EmailMessageTemplate().setEmailMessageType(new EmailMessageType())));
         EmailMessageTemplateResponseDTO emailMessageTemplateResponseDTO = adminEmailMessageTemplateService.delete(1L);
         assertThat(emailMessageTemplateResponseDTO, notNullValue());
     }

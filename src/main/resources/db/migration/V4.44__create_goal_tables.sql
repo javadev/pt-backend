@@ -13,8 +13,8 @@ CREATE TABLE ptcore.in_goal_parameter (
 );
 
 CREATE TABLE ptcore.in_goal_has_in_goal_parameter (
-    in_goal_id      BIGINT NOT NULL REFERENCES in_goal(id),
-    in_goal_parameter_id BIGINT NOT NULL REFERENCES in_goal_parameter(id)
+    in_goal_id      BIGINT NOT NULL REFERENCES ptcore.in_goal(id),
+    in_goal_parameter_id BIGINT NOT NULL REFERENCES ptcore.in_goal_parameter(id)
 );
 
 CREATE TABLE ptcore.goal (
@@ -31,13 +31,13 @@ CREATE TABLE ptcore.goal_parameter (
 );
 
 CREATE TABLE ptcore.goal_has_goal_parameter (
-    goal_id      BIGINT NOT NULL REFERENCES goal(id),
-    goal_parameter_id BIGINT NOT NULL REFERENCES goal_parameter(id)
+    goal_id      BIGINT NOT NULL REFERENCES ptcore.goal(id),
+    goal_parameter_id BIGINT NOT NULL REFERENCES ptcore.goal_parameter(id)
 );
 
 CREATE TABLE ptcore.in_user_has_in_goal (
-    in_user_id      BIGINT NOT NULL REFERENCES in_user(id),
-    in_goal_id      BIGINT NOT NULL REFERENCES in_goal(id)
+    in_user_id      BIGINT NOT NULL REFERENCES ptcore.in_user(id),
+    in_goal_id      BIGINT NOT NULL REFERENCES ptcore.in_goal(id)
 );
 
 INSERT INTO ptcore.dictionary_data (dname, dkey, dvalue) VALUES

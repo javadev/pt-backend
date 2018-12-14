@@ -5,4 +5,4 @@ INSERT INTO ptcore.goal_parameter(id, name) VALUES
 (2, 'goal-weight'),
 (3, 'distance');
 
-SELECT setval('goal_parameter_id_seq', (select max(id) from ptcore.goal_parameter) + 1, true);
+SELECT setval('ptcore.goal_parameter_id_seq', (select max(id) from ptcore.goal_parameter) + 1, true);

@@ -56,7 +56,7 @@ class ReportWorkoutService {
     public WorkoutReportResponseDTO create(String token, WorkoutReportRequestDTO workoutReportRequestDTO) {
         if (!token.isEmpty()) {
             final InUser inUser = userService.checkUserToken(token).getInUser();
-            final InWorkout inWorkout = inWorkoutRepository.findOne(workoutReportRequestDTO.getId());
+            final InWorkout inWorkout = inWorkoutRepository.findById(workoutReportRequestDTO.getId()).orElse(null);
             if (inWorkout == null) {
                 throw new ResourceNotFoundException("Workout with id (" + workoutReportRequestDTO.getId()
                     + ") not found");
@@ -73,19 +73,18 @@ class ReportWorkoutService {
                     log.warn("Id {} for inWorkoutItem not found", workoutItemReportRequestDTO.getId());
                     continue;
                 }
-                final List<InWorkoutItem> inWorkoutItems = inWorkoutItemRepository.findById(workoutItemReportRequestDTO.getId());
-                if (inWorkoutItems.isEmpty()) {
+                final InWorkoutItem inWorkoutItem = inWorkoutItemRepository.findById(workoutItemReportRequestDTO.getId()).orElse(null);
+                if (inWorkoutItem == null) {
                     throw new ResourceNotFoundException("Workout item with id (" + workoutItemReportRequestDTO.getId()
                             + ") not found");
                 }
-                final InWorkoutItem inWorkoutItem = inWorkoutItems.get(inWorkoutItems.size() - 1);
                 if (!inWorkoutItem.getInWorkout().getInProgram().getInUser().getId().equals(inUser.getId())) {
                     log.warn("User with id {} tries to update workout for user with id {}", inUser.getId(),
                         inWorkoutItem.getInWorkout().getInProgram().getInUser().getId());
                     throw new UnauthorizedException("This workout item with id " + inWorkoutItem.getId() + " belong to other user");
                 }
                 final InWorkoutItemReport inWorkoutItemReport = new InWorkoutItemReport();
-                inWorkoutItemReport.setInWorkoutItem(inWorkoutItems.get(inWorkoutItems.size() - 1));
+                inWorkoutItemReport.setInWorkoutItem(inWorkoutItem);
                 inWorkoutItemReport.setInWorkoutItemSetReports(new ArrayList<>());
                 InWorkoutItemReport savedInWorkoutItemReport = inWorkoutItemReportRepository.save(inWorkoutItemReport);
                 for (WorkoutItemSetReportRequestDTO workoutItemSetReportRequestDTO : workoutItemReportRequestDTO.getSets()) {

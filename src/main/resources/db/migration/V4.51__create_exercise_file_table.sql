@@ -8,6 +8,6 @@ CREATE TABLE ptcore.exercise_file (
 );
 
 CREATE TABLE ptcore.exercise_file_has_exercise (
-    exercise_file_id BIGINT NOT NULL REFERENCES exercise_file(id),
-    exercise_id      BIGINT NOT NULL REFERENCES exercise(id)
+    exercise_file_id BIGINT NOT NULL REFERENCES ptcore.exercise_file(id),
+    exercise_id      BIGINT NOT NULL REFERENCES ptcore.exercise(id)
 );

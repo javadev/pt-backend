@@ -53,7 +53,7 @@ class AdminPtUserService {
     }
 
     PtUserResponseDTO findOne(Long id) {
-        final PtUser ptUser = ptUserRepository.findOne(id);
+        final PtUser ptUser = ptUserRepository.findById(id).orElse(null);
         if (ptUser == null) {
             throw new ResourceNotFoundException("User with id " + id + " not found.");
         }
@@ -61,7 +61,7 @@ class AdminPtUserService {
     }
 
     PtUserResponseDTO delete(Long id) {
-        final PtUser ptUser = ptUserRepository.findOne(id);
+        final PtUser ptUser = ptUserRepository.findById(id).orElse(null);
         if (ptUser == null) {
             throw new ResourceNotFoundException("User with id " + id + " not found.");
         }
@@ -69,7 +69,7 @@ class AdminPtUserService {
             throw new UnauthorizedException("Cannot delete user with id 1.");
         }
         final PtUserResponseDTO ptUserResponseDTO = ptUserToDto(ptUser);
-        ptUserRepository.delete(id);
+        ptUserRepository.deleteById(id);
         return ptUserResponseDTO;
     }
 
@@ -80,7 +80,7 @@ class AdminPtUserService {
     }
 
     PtUserResponseDTO update(Long id, PtUserRequestDTO userRequestDTO) {
-        final PtUser ptUser = ptUserRepository.findOne(id);
+        final PtUser ptUser = ptUserRepository.findById(id).orElse(null);
         if (ptUser == null) {
             throw new ResourceNotFoundException("User with id " + id + " not found.");
         }
@@ -110,7 +110,7 @@ class AdminPtUserService {
                 .setDescription(userRequestDTO.getDescription())
                 .setPhone(userRequestDTO.getPhone())
                 .setPhone2(userRequestDTO.getPhone2())
-                .setPtRoles(ptRoleRepository.findAll(
+                .setPtRoles(ptRoleRepository.findAllById(
                     userRequestDTO.getRoles().stream().map(role -> role.getId())
                             .collect(Collectors.toList())));
     }

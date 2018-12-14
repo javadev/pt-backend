@@ -18,7 +18,7 @@ class ExerciseImageService {
 
     ExerciseImageDTO findOne(Long id, String fileName, OutputStream outputStream)
             throws IOException {
-        final ExerciseFile exerciseFile = exerciseFileRepository.findOne(id);
+        final ExerciseFile exerciseFile = exerciseFileRepository.findById(id).orElse(null);
         if (exerciseFile == null) {
             throw new ResourceNotFoundException("File with id " + id + " not found");
         }

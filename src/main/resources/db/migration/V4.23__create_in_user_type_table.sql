@@ -18,5 +18,5 @@ ALTER TABLE ptcore.in_user ADD COLUMN in_user_type_id BIGINT;
 
 ALTER TABLE ptcore.in_user
   ADD CONSTRAINT in_user_type_id_fkey FOREIGN KEY (in_user_type_id)
-      REFERENCES in_user_type (id)
+      REFERENCES ptcore.in_user_type (id)
       ON UPDATE CASCADE ON DELETE CASCADE;

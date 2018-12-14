@@ -19,6 +19,7 @@ import com.osomapps.pt.tokenemail.NameValidator;
 import com.osomapps.pt.tokenemail.SendEmailService;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import org.junit.Test;
@@ -30,7 +31,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
@@ -186,7 +187,7 @@ public class UserServiceTest {
                 .setInUserGoals(Collections.emptyList()));
         when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
         when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
-        when(goalRepository.findOne(eq(1L))).thenReturn(new Goal());
+        when(goalRepository.findById(eq(1L))).thenReturn(Optional.of(new Goal()));
         when(inUserGoalRepository.save(any(InUserGoal.class))).thenAnswer(i -> i.getArguments()[0]);
         when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         when(adminProgramAssignService.assign(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
@@ -272,7 +273,6 @@ public class UserServiceTest {
         inUserLogin.setInUser(new InUser().setD_sex("male").setAge(32F).setHeight(180F).setWeight(50F));
         when(inUserLoginRepository.findByToken("1")).thenReturn(Arrays.asList(inUserLogin));
         when(inUserLogoutRepository.findByToken("1")).thenReturn(Collections.emptyList());
-        when(goalRepository.findOne(eq(1L))).thenReturn(new Goal());
         userService.updateUser("1", new UserRequestDTO()
             .setGender("gender")
             .setAge(10L)

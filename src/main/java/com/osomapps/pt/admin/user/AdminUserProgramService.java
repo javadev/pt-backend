@@ -92,7 +92,7 @@ class AdminUserProgramService {
     }
 
     UserProgramResponseDTO findOne(Long id) {
-        final InProgram inProgram = inProgramRepository.findOne(id);
+        final InProgram inProgram = inProgramRepository.findById(id).orElse(null);
         if (inProgram == null) {
             throw new ResourceNotFoundException("Program with id " + id + " not found.");
         }
@@ -117,7 +117,7 @@ class AdminUserProgramService {
     }
 
     UserProgramResponseDTO update(Long id, UserProgramRequestDTO userProgramRequestDTO) {
-        final InProgram inProgram = inProgramRepository.findOne(id);
+        final InProgram inProgram = inProgramRepository.findById(id).orElse(null);
         if (inProgram == null) {
             throw new ResourceNotFoundException("Program with id " + id + " not found.");
         }
@@ -125,12 +125,12 @@ class AdminUserProgramService {
     }
 
     UserProgramResponseDTO delete(Long id) {
-        final InProgram inProgram = inProgramRepository.findOne(id);
+        final InProgram inProgram = inProgramRepository.findById(id).orElse(null);
         if (inProgram == null) {
             throw new ResourceNotFoundException("Program with id " + id + " not found.");
         }
         UserProgramResponseDTO userProgramResponseDTO = inProgramToDto(inProgram);
-        inProgramRepository.delete(id);
+        inProgramRepository.deleteById(id);
         return userProgramResponseDTO;
     }
 }

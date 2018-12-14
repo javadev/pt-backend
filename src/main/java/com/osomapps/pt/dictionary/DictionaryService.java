@@ -62,9 +62,9 @@ public class DictionaryService {
     }
 
     public void deleteDatas(DictionaryName dName, String dKey) {
-        dictionaryRepository.delete(dictionaryRepository.findDictionaryByKey(
+        dictionaryRepository.deleteAll(dictionaryRepository.findDictionaryByKey(
                 DictionaryRepository.ENG_LANGUAGE, dName.name(), dKey, LocalDateTime.now()));
-        dictionaryRepository.delete(dictionaryRepository.findDictionaryByKey(
+        dictionaryRepository.deleteAll(dictionaryRepository.findDictionaryByKey(
                 DictionaryRepository.NOR_LANGUAGE, dName.name(), dKey, LocalDateTime.now()));
     }
 

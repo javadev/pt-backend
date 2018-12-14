@@ -160,7 +160,7 @@ class AdminProgramService {
     }
 
     ProgramResponseDTO findOne(Long id) {
-        final ParseProgram program = programRepository.findOne(id);
+        final ParseProgram program = programRepository.findById(id).orElse(null);
         if (program == null) {
             throw new ResourceNotFoundException("Program with id " + id + " not found");
         }
@@ -183,8 +183,8 @@ class AdminProgramService {
 
     private ParseSheets parseDataUrlAndSaveGoals(ProgramRequestDTO programRequestDTO, final ParseProgram savedProgram) {
         final ParseSheets parseSheets = parseDataUrl(programRequestDTO, savedProgram);
-        parseExerciseRepository.save(parseSheets.getParseExercises());
-        final List<ParseGoal> savedParseGoals = parseGoalRepository.save(parseSheets.getParseGoals());
+        parseExerciseRepository.saveAll(parseSheets.getParseExercises());
+        final List<ParseGoal> savedParseGoals = parseGoalRepository.saveAll(parseSheets.getParseGoals());
         savedParseGoals.forEach((parseGoal) -> {
             parseGoal.getParseUserGroups().forEach((parseUserGroup) -> {
                 parseUserGroup.setParseGoal(parseGoal);
@@ -213,18 +213,18 @@ class AdminProgramService {
             });
         });
         savedParseGoals.forEach((parseGoal) -> {
-            parseUserGroupRepository.save(parseGoal.getParseUserGroups());
+            parseUserGroupRepository.saveAll(parseGoal.getParseUserGroups());
             parseGoal.getParseUserGroups().forEach((parseUserGroup) -> {
-                parseRoundRepository.save(parseUserGroup.getParseRounds());
+                parseRoundRepository.saveAll(parseUserGroup.getParseRounds());
                 parseUserGroup.getParseRounds().forEach((parseRound) -> {
-                    parsePartRepository.save(parseRound.getParseParts());
+                    parsePartRepository.saveAll(parseRound.getParseParts());
                     parseRound.getParseParts().forEach((parsePart) -> {
-                        parseWorkoutRepository.save(parsePart.getParseWorkouts());
+                        parseWorkoutRepository.saveAll(parsePart.getParseWorkouts());
                         parsePart.getParseWorkouts().forEach((parseWorkout) -> {
-                            parseWarmupWorkoutItemRepository.save(parseWorkout.getParseWarmupWorkoutItems());
-                            parseWorkoutItemRepository.save(parseWorkout.getParseWorkoutItems());
+                            parseWarmupWorkoutItemRepository.saveAll(parseWorkout.getParseWarmupWorkoutItems());
+                            parseWorkoutItemRepository.saveAll(parseWorkout.getParseWorkoutItems());
                             parseWorkout.getParseWorkoutItems().forEach(parseWorkoutItem -> {
-                                 parseWorkoutItemSetRepository.save(parseWorkoutItem.getParseWorkoutItemSets());
+                                 parseWorkoutItemSetRepository.saveAll(parseWorkoutItem.getParseWorkoutItemSets());
                             });
                         });
                     });
@@ -235,7 +235,7 @@ class AdminProgramService {
     }
 
     ProgramResponseDTO update(Long id, ProgramRequestDTO programRequestDTO) {
-        final ParseProgram program = programRepository.findOne(id);
+        final ParseProgram program = programRepository.findById(id).orElse(null);
         if (program == null) {
             throw new ResourceNotFoundException("Program with id " + id + " not found");
         }
@@ -245,8 +245,8 @@ class AdminProgramService {
         program.setFile_type(programRequestDTO.getFileType());
         program.setData_url(programRequestDTO.getDataUrl());
         program.setUpdated(LocalDateTime.now());
-        parseExerciseRepository.delete(program.getParseExercises());
-        parseGoalRepository.delete(program.getParseGoals());
+        parseExerciseRepository.deleteAll(program.getParseExercises());
+        parseGoalRepository.deleteAll(program.getParseGoals());
         final ParseSheets parseSheets = parseDataUrlAndSaveGoals(programRequestDTO, program);
         program.setParseExercises(parseSheets.getParseExercises());
         program.setParseGoals(parseSheets.getParseGoals());
@@ -338,7 +338,7 @@ class AdminProgramService {
     }
 
     ProgramResponseDTO delete(Long id) {
-        final ParseProgram program = programRepository.findOne(id);
+        final ParseProgram program = programRepository.findById(id).orElse(null);
         if (program == null) {
             throw new ResourceNotFoundException("Program with id " + id + " not found");
         }

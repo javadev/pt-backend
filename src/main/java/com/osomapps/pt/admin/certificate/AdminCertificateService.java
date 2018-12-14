@@ -38,7 +38,7 @@ class AdminCertificateService {
     }
 
     CertificateResponseDTO findOne(Long id) {
-        final Certificate certificate = certificateRepository.findOne(id);
+        final Certificate certificate = certificateRepository.findById(id).orElse(null);
         if (certificate == null) {
             throw new ResourceNotFoundException("Certificate not found in database: "
                     + id);
@@ -67,7 +67,7 @@ class AdminCertificateService {
     }
 
     CertificateResponseDTO update(Long id, CertificateRequestDTO certificateRequestDTO) {
-        final Certificate certificate = certificateRepository.findOne(id);
+        final Certificate certificate = certificateRepository.findById(id).orElse(null);
         if (certificate == null) {
             throw new ResourceNotFoundException("Certificate not found in database: "
                     + id);
@@ -90,7 +90,7 @@ class AdminCertificateService {
     }
 
     CertificateResponseDTO delete(Long id) {
-        final Certificate certificate = certificateRepository.findOne(id);
+        final Certificate certificate = certificateRepository.findById(id).orElse(null);
         if (certificate == null) {
             throw new ResourceNotFoundException("Certificate not found in database: "
                     + id);

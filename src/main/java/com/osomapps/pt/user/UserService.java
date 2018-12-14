@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.MapBindingResult;
 
@@ -193,10 +192,10 @@ public class UserService {
             if (userRequest.getGoals().size() > 2) {
                 throw new UnauthorizedException("Amount of goals must be not more than 2");
             }
-            inUserGoalRepository.delete(inUser.getInUserGoals());
+            inUserGoalRepository.deleteAll(inUser.getInUserGoals());
             inUser.setInUserGoals(new ArrayList<>());
             userRequest.getGoals().forEach((userGoalRequestDTO) -> {
-                Goal goal = goalRepository.findOne(userGoalRequestDTO.getId());
+                Goal goal = goalRepository.findById(userGoalRequestDTO.getId()).orElse(null);
                 if (goal == null) {
                     throw new UnauthorizedException("Goal with id " + userGoalRequestDTO.getId() + " not found");
                 }

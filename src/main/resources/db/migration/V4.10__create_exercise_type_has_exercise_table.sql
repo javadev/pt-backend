@@ -20,8 +20,8 @@ INSERT INTO ptcore.dictionary_data (dlanguage, dname, dkey, dvalue) VALUES
 ('nb', 'exercise_type_name', '30', 'Weight Loss');
 
 CREATE TABLE ptcore.exercise_type_has_exercise (
-    exercise_type_id BIGINT NOT NULL REFERENCES exercise_type(id),
-    exercise_id      BIGINT NOT NULL REFERENCES exercise(id)
+    exercise_type_id BIGINT NOT NULL REFERENCES ptcore.exercise_type(id),
+    exercise_id      BIGINT NOT NULL REFERENCES ptcore.exercise(id)
 );
 
 INSERT INTO ptcore.exercise_type_has_exercise (exercise_type_id, exercise_id) VALUES

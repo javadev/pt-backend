@@ -12,10 +12,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import static java.time.temporal.ChronoUnit.YEARS;
+import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,32 +23,37 @@ class FacebookService {
     private static final String PICTURE_URL = "https://graph.facebook.com/me/picture?redirect=false&type=large";
     private static final String NAME_URL = "https://graph.facebook.com/me?fields=name,gender,birthday&locale=en_US";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-    private final OAuth20Service service;
+    private OAuth20Service service;
+    private OAuthRequest requestName;
+    private OAuthRequest requestPicture;
 
     FacebookService() {
-        this.service = new ServiceBuilder()
+        service = new ServiceBuilder()
                            .apiKey("your_api_key")
                            .apiSecret("your_api_secret")
                            .build(FacebookApi.instance());
+        requestName = new OAuthRequest(Verb.GET, NAME_URL, service);
+        requestPicture = new OAuthRequest(Verb.GET, PICTURE_URL, service);
     }
     
+    @SuppressWarnings("unchecked")
     Optional<FacebookResponse> getProfileNameAndId(String accessTokenString) {
         try {
             final OAuth2AccessToken accessToken = new OAuth2AccessToken(accessTokenString);
-            final OAuthRequest requestPicture = new OAuthRequest(Verb.GET, NAME_URL, service);
-            service.signRequest(accessToken, requestPicture);
-            final Response response = requestPicture.send();
+            service.signRequest(accessToken, requestName);
+            final Response response = requestName.send();
             if (!response.isSuccessful()) {
                 throw new UnauthorizedException("Error while requesting data from facebook: "
                         + response.getMessage());
             }
-            final String pictureBody = response.getBody();
-            final JSONObject object = (JSONObject) new JSONTokener(pictureBody).nextValue();
-            LocalDate birthday = LocalDate.parse(object.getString("birthday"), FORMATTER);
+            org.springframework.boot.json.JsonParser springParser =
+                org.springframework.boot.json.JsonParserFactory.getJsonParser();
+            Map<String, Object> object = springParser.parseMap(response.getBody());
+            LocalDate birthday = LocalDate.parse(String.valueOf(object.get("birthday")), FORMATTER);
             final FacebookResponse facebookResponse = new FacebookResponse(
-                object.getString("id"),
-                object.getString("name"),
-                object.getString("gender"),
+                String.valueOf(object.get("id")),
+                String.valueOf(object.get("name")),
+                String.valueOf(object.get("gender")),
                 birthday,
                 YEARS.between(birthday, LocalDate.now())
             );
@@ -60,18 +64,20 @@ class FacebookService {
         }
     }
 
+    @SuppressWarnings("unchecked")
     Optional<String> getProfilePictureUrl(String accessTokenString) {
         try {
             final OAuth2AccessToken accessToken = new OAuth2AccessToken(accessTokenString);
-            final OAuthRequest requestPicture = new OAuthRequest(Verb.GET, PICTURE_URL, service);
             service.signRequest(accessToken, requestPicture);
             final Response response = requestPicture.send();
             if (!response.isSuccessful()) {
                 throw new UnauthorizedException(response.getMessage());
             }
             final String pictureBody = response.getBody();
-            final JSONObject object = (JSONObject) new JSONTokener(pictureBody).nextValue();
-            return Optional.ofNullable(object.getJSONObject("data").getString("url"));
+            org.springframework.boot.json.JsonParser springParser =
+                org.springframework.boot.json.JsonParserFactory.getJsonParser();
+            Map<String, Object> object = springParser.parseMap(pictureBody);
+            return Optional.ofNullable(String.valueOf(((Map<String, Object>) object.get("data")).get("url")));
         } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
             return Optional.empty();

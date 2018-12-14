@@ -8,6 +8,6 @@ CREATE TABLE ptcore.in_user_goal_photo (
 );
 
 CREATE TABLE ptcore.in_user_goal_has_in_user_goal_photo (
-    in_user_goal_id BIGINT NOT NULL REFERENCES in_user_goal(id),
-    in_user_goal_photo_id BIGINT NOT NULL REFERENCES in_user_goal_photo(id)
+    in_user_goal_id BIGINT NOT NULL REFERENCES ptcore.in_user_goal(id),
+    in_user_goal_photo_id BIGINT NOT NULL REFERENCES ptcore.in_user_goal_photo(id)
 );
