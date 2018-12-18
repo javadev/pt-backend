@@ -4,8 +4,8 @@ import java.util.Map;
 
 class ErrorDTO {
 
-    public int status;
-    public String error_description;
+    public final int status;
+    public final String error_description;
 
     ErrorDTO(int status, Map<String, Object> errorAttributes) {
         this.status = status;
