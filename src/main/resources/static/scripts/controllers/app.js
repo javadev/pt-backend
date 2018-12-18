@@ -366,7 +366,7 @@ define([
           App.vent.trigger('login:required');
           return;
         }
-        setupApplicationLayout('');
+        setupApplicationLayout();
       }
     });
   });
