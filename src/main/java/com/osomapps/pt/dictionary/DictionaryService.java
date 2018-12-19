@@ -27,7 +27,7 @@ public class DictionaryService {
                 .sorted((d1, d2) ->
                         Integer.compare(Integer.parseInt(d2.getDkey()), Integer.parseInt(d1.getDkey())))
                     .findFirst().orElse(new DictionaryData().setDkey("0")).getDkey();
-        return "" + (Integer.parseInt(biggestKey) + 10);
+        return Integer.toString(Integer.parseInt(biggestKey) + 10);
     }
 
     public String createDictionaryDataKey(DictionaryName dName, String dKey, String dataNameEn, String dataNameNo) {

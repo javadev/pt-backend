@@ -147,7 +147,7 @@ public class XlsxProgramModifier {
 
     private String round(Float value) {
         if (value.floatValue() == value.intValue()) {
-            return "" + value.intValue();
+            return Integer.toString(value.intValue());
         }
         return "" + value;
     }
