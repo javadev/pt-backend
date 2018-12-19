@@ -173,7 +173,7 @@ public class UserService {
             inUser.setWeight(userRequest.getWeight().floatValue());
         }
         if (userRequest.getLevel() != null) {
-            inUser.setD_level("" + userRequest.getLevel().getLevel());
+            inUser.setD_level(Integer.toString(userRequest.getLevel().getLevel()));
         }
         final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
         dataurlValidator.validate(userRequest.getAvatar_dataurl(), errors);
