@@ -20,7 +20,7 @@ class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
         httpServletResponse.setContentType("application/json;charset=UTF-8");
         final WebAuthenticationDetails webAuthenticationDetails =
                 (WebAuthenticationDetails) authentication.getDetails();
-        httpServletResponse.getWriter().format("{\"authenticated\": \"true\", \"password\":"
+        httpServletResponse.getWriter().write("{\"authenticated\": \"true\", \"password\":"
                 + " \"***\", \"sessionId\":\"" + webAuthenticationDetails.getSessionId() + "\"}");
         httpServletResponse.setStatus(HttpServletResponse.SC_OK);
     }

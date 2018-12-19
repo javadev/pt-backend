@@ -157,7 +157,7 @@ class AdminUserService {
         return inUserToDto(adminProgramAssignService.assign(savedInUser));
     }
 
-    private void setupGoals(UserRequestDTO userRequestDTO, final InUser inUser) throws UnauthorizedException {
+    private void setupGoals(UserRequestDTO userRequestDTO, final InUser inUser) {
         if (userRequestDTO.getGoals() != null) {
             if (userRequestDTO.getGoals().size() > 2) {
                 throw new UnauthorizedException("Amount of goals must be not more than 2");

@@ -186,7 +186,7 @@ public class XlsxProgramParser {
         } else {
             workoutItem.setExerciseId(excelExercise.get().getExercise_id());
         }
-        Number setsInp = getNumberOrNull(getCellData(sheet, 5 + 5 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+        Number setsInp = getNumberOrZerro(getCellData(sheet, 5 + 5 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
         Object repetitionsInp = getStringOrNumberOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
         Object weightInp = getStringOrNumberOrNull(getCellData(sheet, 5 + 7 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
         workoutItem.getInput().setExercise(exerciseName.orElse(null));
@@ -234,8 +234,8 @@ public class XlsxProgramParser {
         return Optional.of(workoutItem);
     }
 
-    private Number getNumberOrNull(Object object) {
-        return object instanceof Number ? (Number) object : null;
+    private Number getNumberOrZerro(Object object) {
+        return object instanceof Number ? (Number) object : 0;
     }
 
     private String getNumberOrNullAsString(Object object) {
@@ -264,10 +264,8 @@ public class XlsxProgramParser {
 
 
     private Object getStringOrNumberOrNull(Object object) {
-        if (object instanceof String) {
-            return (String) object;
-        } else if (object instanceof Number) {
-            return (Number) object;
+        if (object instanceof String || object instanceof Number) {
+            return object;
         }
         return null;
     }

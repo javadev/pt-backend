@@ -18,6 +18,6 @@ class CustomLoginFailureHandler implements AuthenticationFailureHandler {
             throws IOException, ServletException {
         httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         httpServletResponse.setContentType("application/json;charset=UTF-8");
-        httpServletResponse.getWriter().format("{\"authenticated\": \"false\"}");
+        httpServletResponse.getWriter().write("{\"authenticated\": \"false\"}");
     }
 }
