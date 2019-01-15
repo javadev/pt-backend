@@ -24,7 +24,7 @@ before_script:
   - pip install --user codecov
 
 script:
-  - mvn -T 1C clean package jacoco:report
+  - mvn -T 1C -B clean package jacoco:report
 
 after_success:
   - codecov
