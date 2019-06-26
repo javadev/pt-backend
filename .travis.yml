@@ -1,12 +1,12 @@
 language: java
-dist: trusty
+
 cache:
   directories:
   - $HOME/.m2
 
 jdk:
   - oraclejdk8
-  - oraclejdk11
+  - oraclejdk12
 
 services:
   - postgresql
