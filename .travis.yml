@@ -6,7 +6,7 @@ cache:
 
 jdk:
   - oraclejdk8
-  - openjdk12
+  - openjdk11
 
 services:
   - postgresql
