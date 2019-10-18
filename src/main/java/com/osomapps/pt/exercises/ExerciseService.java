@@ -21,7 +21,7 @@ class ExerciseService {
     }
 
     List<ExerciseDTO> findAll() {
-        List<ExerciseView> exercises = exerciseViewRepository.findAll(new Sort(Sort.Direction.ASC, "exerciseId"));
+        List<ExerciseView> exercises = exerciseViewRepository.findAll(Sort.by(Sort.Direction.ASC, "exerciseId"));
         return exercises.stream().map(exercise -> {
             ExerciseDTO exerciseDTO = new ExerciseDTO();
             exerciseDTO.setId(exercise.getExerciseId());

@@ -68,7 +68,7 @@ public class AdminProgramAssignService {
 
     public InUser assign(InUser inUser) {
 
-        List<ParseProgram> parsePrograms = parseProgramRepository.findAll(new Sort(Sort.Direction.DESC, "id"));
+        List<ParseProgram> parsePrograms = parseProgramRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
         if (parsePrograms.isEmpty()) {
             log.warn("There are no programs found.");
             return inUser;

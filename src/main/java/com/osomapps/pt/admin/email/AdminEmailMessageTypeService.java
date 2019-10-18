@@ -23,7 +23,7 @@ class AdminEmailMessageTypeService {
     }
 
     private Sort sortByIdAsc() {
-        return new Sort(Sort.Direction.ASC, "id");
+        return Sort.by(Sort.Direction.ASC, "id");
     }
 
     private static EmailMessageTypeResponseDTO emailMessageTypeDto(EmailMessageType input) {

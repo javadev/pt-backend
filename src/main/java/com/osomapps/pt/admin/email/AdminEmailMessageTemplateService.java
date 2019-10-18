@@ -35,7 +35,7 @@ class AdminEmailMessageTemplateService {
     }
     
     private Sort sortByIdAsc() {
-        return new Sort(Sort.Direction.ASC, "id");
+        return Sort.by(Sort.Direction.ASC, "id");
     }
 
     private EmailMessageTemplateResponseDTO templateToDto(EmailMessageTemplate template) {

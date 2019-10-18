@@ -62,7 +62,7 @@ class AdminExerciseService {
     }
 
     private Sort sortByIdAsc() {
-        return new Sort(Sort.Direction.ASC, "exerciseId");
+        return Sort.by(Sort.Direction.ASC, "exerciseId");
     }
 
     private ExerciseResponseDTO exerciseToDto(Exercise exercise) {
