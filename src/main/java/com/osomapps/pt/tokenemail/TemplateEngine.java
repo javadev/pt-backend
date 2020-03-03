@@ -29,8 +29,8 @@ final class TemplateEngine {
             String result = template;
             for (final Map.Entry<K, V> element : value.entrySet()) {
                 result = java.util.regex.Pattern.compile(evaluate.replace(ALL_SYMBOLS,
-                    "\\s*\\Q" + element.getKey()
-                    + "\\E\\s*")).matcher(result).replaceAll(String.valueOf(element.getValue()));
+                    "\\s*" + java.util.regex.Pattern.quote(String.valueOf(element.getKey()))
+                    + "\\s*")).matcher(result).replaceAll(String.valueOf(element.getValue()));
             }
             return result;
         }
