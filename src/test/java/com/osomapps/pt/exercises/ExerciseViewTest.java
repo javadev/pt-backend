@@ -2,13 +2,13 @@ package com.osomapps.pt.exercises;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class ExerciseViewTest {
     @Test
     public void allArgsConstructor() {
-        assertThat(new ExerciseView(1L, null, null, null, null, null, null, null
-                ), notNullValue());
+        assertThat(new ExerciseView(1L, null, null, null, null, null, null, null), notNullValue());
     }
 
     @Test
@@ -26,5 +26,4 @@ public class ExerciseViewTest {
         exerciseView.getCreated();
         assertThat(exerciseView, notNullValue());
     }
-
 }

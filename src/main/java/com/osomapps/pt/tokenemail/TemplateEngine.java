@@ -28,9 +28,16 @@ final class TemplateEngine {
             final String evaluate = TEMPLATE_SETTINGS.get("evaluate");
             String result = template;
             for (final Map.Entry<K, V> element : value.entrySet()) {
-                result = java.util.regex.Pattern.compile(evaluate.replace(ALL_SYMBOLS,
-                    "\\s*" + java.util.regex.Pattern.quote(String.valueOf(element.getKey()))
-                    + "\\s*")).matcher(result).replaceAll(String.valueOf(element.getValue()));
+                result =
+                        java.util.regex.Pattern.compile(
+                                        evaluate.replace(
+                                                ALL_SYMBOLS,
+                                                "\\s*"
+                                                        + java.util.regex.Pattern.quote(
+                                                                String.valueOf(element.getKey()))
+                                                        + "\\s*"))
+                                .matcher(result)
+                                .replaceAll(String.valueOf(element.getValue()));
             }
             return result;
         }
@@ -39,5 +46,4 @@ final class TemplateEngine {
     static <K, V> TemplateEngine.Template<Map<K, V>> template(final String template) {
         return new TemplateImpl<>(template);
     }
-
 }

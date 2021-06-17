@@ -1,33 +1,35 @@
 package com.osomapps.pt.reportworkout;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
 import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
 
 public class WorkoutItemSetReportResponseDTOTest {
     @Test
     public void createAllArgs() {
-        assertThat(new WorkoutItemSetReportResponseDTO(
-                1L, 1, 1, true, 1, 1, 1, 1), notNullValue());
+        assertThat(new WorkoutItemSetReportResponseDTO(1L, 1, 1, true, 1, 1, 1, 1), notNullValue());
     }
 
     @Test
     public void setters() {
-        WorkoutItemSetReportResponseDTO workoutItemSetResponseRequestDTO = new WorkoutItemSetReportResponseDTO()
-            .setId(1L)
-            .setRepetitions(1)
-            .setWeight(1)
-            .setBodyweight(true)
-            .setTime_in_sec(1)
-            .setSpeed(1)
-            .setIncline(1)
-            .setResistance(1);
+        WorkoutItemSetReportResponseDTO workoutItemSetResponseRequestDTO =
+                new WorkoutItemSetReportResponseDTO()
+                        .setId(1L)
+                        .setRepetitions(1)
+                        .setWeight(1)
+                        .setBodyweight(true)
+                        .setTime_in_sec(1)
+                        .setSpeed(1)
+                        .setIncline(1)
+                        .setResistance(1);
         assertThat(workoutItemSetResponseRequestDTO, notNullValue());
     }
 
     @Test
     public void getters() {
-        WorkoutItemSetReportResponseDTO workoutItemSetResponseRequestDTO = new WorkoutItemSetReportResponseDTO();
+        WorkoutItemSetReportResponseDTO workoutItemSetResponseRequestDTO =
+                new WorkoutItemSetReportResponseDTO();
         workoutItemSetResponseRequestDTO.getId();
         workoutItemSetResponseRequestDTO.getRepetitions();
         workoutItemSetResponseRequestDTO.getWeight();
@@ -38,5 +40,4 @@ public class WorkoutItemSetReportResponseDTOTest {
         workoutItemSetResponseRequestDTO.getResistance();
         assertThat(workoutItemSetResponseRequestDTO, notNullValue());
     }
-
 }

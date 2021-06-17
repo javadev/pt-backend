@@ -23,12 +23,14 @@ class UserResponseDTO {
     String avatar_dataurl;
     String gender;
     Long age;
+
     @JsonSerialize(using = LocalDateSerializer.class)
     LocalDate birthday;
+
     @JsonSerialize(using = UserLevelSerializer.class)
     UserLevel level;
+
     List<UserGoalResponseDTO> goals;
     Long height;
     Long weight;
-
 }

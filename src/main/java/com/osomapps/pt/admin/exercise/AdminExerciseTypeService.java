@@ -15,14 +15,12 @@ class AdminExerciseTypeService {
     }
 
     List<ExerciseTypeResponseDTO> findAll() {
-        return exerciseTypeRepository.findAll().stream().map(AdminExerciseTypeService::exerciseTypeToDto
-        ).collect(Collectors.toList());
+        return exerciseTypeRepository.findAll().stream()
+                .map(AdminExerciseTypeService::exerciseTypeToDto)
+                .collect(Collectors.toList());
     }
-    
+
     private static ExerciseTypeResponseDTO exerciseTypeToDto(ExerciseType type) {
-        return ExerciseTypeResponseDTO.builder()
-                .id(type.getId())
-                .name(type.getName())
-                .build();
+        return ExerciseTypeResponseDTO.builder().id(type.getId()).name(type.getName()).build();
     }
 }

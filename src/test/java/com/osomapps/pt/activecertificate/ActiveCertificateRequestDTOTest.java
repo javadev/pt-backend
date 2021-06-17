@@ -1,8 +1,9 @@
 package com.osomapps.pt.activecertificate;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
 import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
 
 public class ActiveCertificateRequestDTOTest {
     @Test
@@ -23,5 +24,4 @@ public class ActiveCertificateRequestDTOTest {
         activeCertificateRequestDTO.getCode();
         assertThat(activeCertificateRequestDTO, notNullValue());
     }
-
 }

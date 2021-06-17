@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 class AdminPtUserResource {
 
     private final AdminPtUserService ptUserService;
-    
+
     @Autowired
     AdminPtUserResource(AdminPtUserService ptUserService) {
         this.ptUserService = ptUserService;
@@ -38,7 +38,8 @@ class AdminPtUserResource {
     }
 
     @PutMapping("{id}")
-    PtUserResponseDTO update(@PathVariable Long id, @RequestBody PtUserRequestDTO ptUserRequestDTO) {
+    PtUserResponseDTO update(
+            @PathVariable Long id, @RequestBody PtUserRequestDTO ptUserRequestDTO) {
         return ptUserService.update(id, ptUserRequestDTO);
     }
 
@@ -46,5 +47,4 @@ class AdminPtUserResource {
     PtUserResponseDTO delete(@PathVariable Long id) {
         return ptUserService.delete(id);
     }
-
 }

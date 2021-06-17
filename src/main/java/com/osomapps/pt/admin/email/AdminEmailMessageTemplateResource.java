@@ -16,9 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 class AdminEmailMessageTemplateResource {
 
     private final AdminEmailMessageTemplateService adminEmailMessageTemplateService;
-    
+
     @Autowired
-    AdminEmailMessageTemplateResource(AdminEmailMessageTemplateService adminEmailMessageTemplateService) {
+    AdminEmailMessageTemplateResource(
+            AdminEmailMessageTemplateService adminEmailMessageTemplateService) {
         this.adminEmailMessageTemplateService = adminEmailMessageTemplateService;
     }
 
@@ -33,12 +34,14 @@ class AdminEmailMessageTemplateResource {
     }
 
     @PostMapping
-    EmailMessageTemplateResponseDTO create(@RequestBody EmailMessageTemplateRequestDTO templateRequestDTO) {
+    EmailMessageTemplateResponseDTO create(
+            @RequestBody EmailMessageTemplateRequestDTO templateRequestDTO) {
         return adminEmailMessageTemplateService.create(templateRequestDTO);
     }
 
     @PutMapping(value = "{id}")
-    EmailMessageTemplateResponseDTO update(@PathVariable Long id, @RequestBody EmailMessageTemplateRequestDTO templateRequestDTO) {
+    EmailMessageTemplateResponseDTO update(
+            @PathVariable Long id, @RequestBody EmailMessageTemplateRequestDTO templateRequestDTO) {
         return adminEmailMessageTemplateService.update(id, templateRequestDTO);
     }
 
@@ -46,5 +49,4 @@ class AdminEmailMessageTemplateResource {
     EmailMessageTemplateResponseDTO delete(@PathVariable Long id) {
         return adminEmailMessageTemplateService.delete(id);
     }
-
 }

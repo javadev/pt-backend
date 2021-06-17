@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 class AdminExerciseOutputResource {
 
     private final AdminExerciseOutputService exerciseOutputService;
-    
+
     @Autowired
     AdminExerciseOutputResource(AdminExerciseOutputService exerciseOutputService) {
         this.exerciseOutputService = exerciseOutputService;

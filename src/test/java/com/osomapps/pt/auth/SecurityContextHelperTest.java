@@ -1,15 +1,16 @@
 package com.osomapps.pt.auth;
 
-import com.osomapps.pt.admin.ptuser.PtUser;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
-import org.junit.Test;
 import static org.junit.Assert.assertThat;
-import org.junit.Before;
-import org.junit.runner.RunWith;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import com.osomapps.pt.admin.ptuser.PtUser;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,8 +24,10 @@ public class SecurityContextHelperTest {
     @Before
     public void init() {
         User user = new User("user", "notused", AuthorityUtils.createAuthorityList("ROLE_USER"));
-        Authentication auth = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(auth);        
+        Authentication auth =
+                new UsernamePasswordAuthenticationToken(
+                        user, user.getPassword(), user.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
     @Test
@@ -54,5 +57,4 @@ public class SecurityContextHelperTest {
     public void getAuthorities() {
         assertThat(new SecurityContextHelper().getAuthorities().toString(), equalTo("[ROLE_USER]"));
     }
-
 }

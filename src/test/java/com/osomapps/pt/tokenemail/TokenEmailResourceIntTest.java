@@ -1,13 +1,13 @@
 package com.osomapps.pt.tokenemail;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import com.osomapps.pt.UnauthorizedException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import org.junit.Before;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -18,11 +18,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class TokenEmailResourceIntTest {
-    
-    @Autowired
-    TokenEmailResource tokenEmailResource;
-    @Autowired
-    InUserEmailRepository inUserEmailRepository;
+
+    @Autowired TokenEmailResource tokenEmailResource;
+    @Autowired InUserEmailRepository inUserEmailRepository;
 
     @Before
     public void before() {
@@ -31,8 +29,10 @@ public class TokenEmailResourceIntTest {
 
     @Test(expected = UnauthorizedException.class)
     public void create() {
-        TokenEmailResponseDTO user = tokenEmailResource.create(new TokenEmailRequestDTO("name", "test@mail.com", "test"),
-                new MockHttpServletRequest());
+        TokenEmailResponseDTO user =
+                tokenEmailResource.create(
+                        new TokenEmailRequestDTO("name", "test@mail.com", "test"),
+                        new MockHttpServletRequest());
         assertThat(user, notNullValue());
     }
 

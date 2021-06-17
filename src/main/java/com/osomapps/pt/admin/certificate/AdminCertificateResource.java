@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 class AdminCertificateResource {
 
     private final AdminCertificateService certificateService;
-    
+
     @Autowired
     AdminCertificateResource(AdminCertificateService certificateService) {
         this.certificateService = certificateService;
@@ -38,7 +38,8 @@ class AdminCertificateResource {
     }
 
     @PutMapping(value = "{id}")
-    CertificateResponseDTO update(@PathVariable Long id, @RequestBody CertificateRequestDTO certificateRequestDTO) {
+    CertificateResponseDTO update(
+            @PathVariable Long id, @RequestBody CertificateRequestDTO certificateRequestDTO) {
         return certificateService.update(id, certificateRequestDTO);
     }
 
@@ -46,5 +47,4 @@ class AdminCertificateResource {
     CertificateResponseDTO delete(@PathVariable Long id) {
         return certificateService.delete(id);
     }
-
 }

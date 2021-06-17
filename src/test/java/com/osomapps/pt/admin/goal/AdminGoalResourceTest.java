@@ -1,24 +1,22 @@
 package com.osomapps.pt.admin.goal;
 
-import com.osomapps.pt.admin.certificate.*;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
-import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
+
+import com.osomapps.pt.admin.certificate.*;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminGoalResourceTest {
 
-    @Mock
-    private AdminGoalService adminGoalService;
+    @Mock private AdminGoalService adminGoalService;
 
-    @InjectMocks
-    private AdminGoalResource adminGoalResource;
+    @InjectMocks private AdminGoalResource adminGoalResource;
 
     @Test
     public void findOne() {

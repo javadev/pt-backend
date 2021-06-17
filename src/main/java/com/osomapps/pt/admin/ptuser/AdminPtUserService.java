@@ -12,8 +12,7 @@ class AdminPtUserService {
     private final PtUserRepository ptUserRepository;
     private final PtRoleRepository ptRoleRepository;
 
-    AdminPtUserService(PtUserRepository ptUserRepository,
-            PtRoleRepository ptRoleRepository) {
+    AdminPtUserService(PtUserRepository ptUserRepository, PtRoleRepository ptRoleRepository) {
         this.ptUserRepository = ptUserRepository;
         this.ptRoleRepository = ptRoleRepository;
     }
@@ -37,12 +36,15 @@ class AdminPtUserService {
                 .description(ptUser.getDescription())
                 .phone(ptUser.getPhone())
                 .phone2(ptUser.getPhone2())
-                .roles(ptUser.getPtRoles().stream()
-                    .map(role -> PtRoleResponseDTO.builder()
-                        .id(role.getId())
-                        .name(role.getName())
-                        .build())
-                        .collect(Collectors.toList()))
+                .roles(
+                        ptUser.getPtRoles().stream()
+                                .map(
+                                        role ->
+                                                PtRoleResponseDTO.builder()
+                                                        .id(role.getId())
+                                                        .name(role.getName())
+                                                        .build())
+                                .collect(Collectors.toList()))
                 .build();
     }
 
@@ -93,8 +95,7 @@ class AdminPtUserService {
     }
 
     private PtUser dtoToPtUser(PtUserRequestDTO userRequestDTO, PtUser ptUser) {
-        return ptUser
-                .setLogin(userRequestDTO.getLogin())
+        return ptUser.setLogin(userRequestDTO.getLogin())
                 .setPassword(userRequestDTO.getPassword())
                 .setName(userRequestDTO.getName())
                 .setActivated(userRequestDTO.getActivated())
@@ -110,9 +111,10 @@ class AdminPtUserService {
                 .setDescription(userRequestDTO.getDescription())
                 .setPhone(userRequestDTO.getPhone())
                 .setPhone2(userRequestDTO.getPhone2())
-                .setPtRoles(ptRoleRepository.findAllById(
-                    userRequestDTO.getRoles().stream().map(role -> role.getId())
-                            .collect(Collectors.toList())));
+                .setPtRoles(
+                        ptRoleRepository.findAllById(
+                                userRequestDTO.getRoles().stream()
+                                        .map(role -> role.getId())
+                                        .collect(Collectors.toList())));
     }
-
 }

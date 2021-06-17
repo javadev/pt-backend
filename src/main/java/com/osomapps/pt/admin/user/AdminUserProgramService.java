@@ -16,9 +16,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 class AdminUserProgramService {
-    
+
     private final InProgramRepository inProgramRepository;
-    
+
     AdminUserProgramService(InProgramRepository inProgramRepository) {
         this.inProgramRepository = inProgramRepository;
     }
@@ -36,9 +36,12 @@ class AdminUserProgramService {
             workout.setName(inWorkout.getD_workout_name());
             workout.setItems(new ArrayList<>());
             program.getWorkouts().add(workout);
-            if (inWorkout.getInWarmupWorkoutItems() != null && !inWorkout.getInWarmupWorkoutItems().isEmpty()) {
-                InWarmupWorkoutItem inWarmupWorkoutItem = inWorkout.getInWarmupWorkoutItems().get(0);
-                UserWarmupWorkoutItemResponseDTO warmupWorkoutItem = new UserWarmupWorkoutItemResponseDTO();
+            if (inWorkout.getInWarmupWorkoutItems() != null
+                    && !inWorkout.getInWarmupWorkoutItems().isEmpty()) {
+                InWarmupWorkoutItem inWarmupWorkoutItem =
+                        inWorkout.getInWarmupWorkoutItems().get(0);
+                UserWarmupWorkoutItemResponseDTO warmupWorkoutItem =
+                        new UserWarmupWorkoutItemResponseDTO();
                 warmupWorkoutItem.setId(inWarmupWorkoutItem.getId());
                 warmupWorkoutItem.setExercise_id(inWarmupWorkoutItem.getExercise_id());
                 warmupWorkoutItem.setExercise_name(inWarmupWorkoutItem.getD_exercise_name());
@@ -48,37 +51,88 @@ class AdminUserProgramService {
                 workout.setWarmup(warmupWorkoutItem);
             }
             for (InWorkoutItem inWorkoutItem : inWorkout.getInWorkoutItems()) {
-                UserWorkoutItemResponseDTO userWorkoutItemResponseDTO = new UserWorkoutItemResponseDTO()
-                        .setId(inWorkoutItem.getId())
-                        .setExercise_id(inWorkoutItem.getExercise_id())
-                        .setExercise_name(inWorkoutItem.getD_exercise_name())
-                        .setSets(inWorkoutItem.getInWorkoutItemSets().size())
-                        .setRepetitions(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> set.getRepetitions()).collect(Collectors.toList()))
-                        .setRepetitionsToFailure(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> BooleanUtils.isTrue(set.getRepetitions_to_failure())).collect(Collectors.toList()))
-                        .setWeight(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> set.getWeight()).collect(Collectors.toList()))
-                        .setBodyweight(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> BooleanUtils.isTrue(set.getBodyweight())).collect(Collectors.toList()))
-                        .setTimeInSec(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> set.getTime_in_sec()).collect(Collectors.toList()))
-                        .setSpeed(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> set.getSpeed()).collect(Collectors.toList()))
-                        .setIncline(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> set.getIncline()).collect(Collectors.toList()))
-                        .setResistance(inWorkoutItem.getInWorkoutItemSets().stream().map(set -> set.getResistance()).collect(Collectors.toList()));
-                InWorkoutItemReport inWorkoutItemReport = inWorkoutItem.getInWorkoutItemReports().isEmpty()
-                        ? null : inWorkoutItem.getInWorkoutItemReports().get(
-                                inWorkoutItem.getInWorkoutItemReports().size() - 1);
+                UserWorkoutItemResponseDTO userWorkoutItemResponseDTO =
+                        new UserWorkoutItemResponseDTO()
+                                .setId(inWorkoutItem.getId())
+                                .setExercise_id(inWorkoutItem.getExercise_id())
+                                .setExercise_name(inWorkoutItem.getD_exercise_name())
+                                .setSets(inWorkoutItem.getInWorkoutItemSets().size())
+                                .setRepetitions(
+                                        inWorkoutItem.getInWorkoutItemSets().stream()
+                                                .map(set -> set.getRepetitions())
+                                                .collect(Collectors.toList()))
+                                .setRepetitionsToFailure(
+                                        inWorkoutItem.getInWorkoutItemSets().stream()
+                                                .map(
+                                                        set ->
+                                                                BooleanUtils.isTrue(
+                                                                        set
+                                                                                .getRepetitions_to_failure()))
+                                                .collect(Collectors.toList()))
+                                .setWeight(
+                                        inWorkoutItem.getInWorkoutItemSets().stream()
+                                                .map(set -> set.getWeight())
+                                                .collect(Collectors.toList()))
+                                .setBodyweight(
+                                        inWorkoutItem.getInWorkoutItemSets().stream()
+                                                .map(
+                                                        set ->
+                                                                BooleanUtils.isTrue(
+                                                                        set.getBodyweight()))
+                                                .collect(Collectors.toList()))
+                                .setTimeInSec(
+                                        inWorkoutItem.getInWorkoutItemSets().stream()
+                                                .map(set -> set.getTime_in_sec())
+                                                .collect(Collectors.toList()))
+                                .setSpeed(
+                                        inWorkoutItem.getInWorkoutItemSets().stream()
+                                                .map(set -> set.getSpeed())
+                                                .collect(Collectors.toList()))
+                                .setIncline(
+                                        inWorkoutItem.getInWorkoutItemSets().stream()
+                                                .map(set -> set.getIncline())
+                                                .collect(Collectors.toList()))
+                                .setResistance(
+                                        inWorkoutItem.getInWorkoutItemSets().stream()
+                                                .map(set -> set.getResistance())
+                                                .collect(Collectors.toList()));
+                InWorkoutItemReport inWorkoutItemReport =
+                        inWorkoutItem.getInWorkoutItemReports().isEmpty()
+                                ? null
+                                : inWorkoutItem
+                                        .getInWorkoutItemReports()
+                                        .get(inWorkoutItem.getInWorkoutItemReports().size() - 1);
                 if (inWorkoutItemReport != null) {
                     userWorkoutItemResponseDTO
                             .setReportSets(inWorkoutItemReport.getInWorkoutItemSetReports().size())
-                            .setReportRepetitions(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
-                                    .map(set -> set.getRepetitions()).collect(Collectors.toList()))
-                            .setReportWeight(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
-                                    .map(set -> set.getWeight() == null ? null : set.getWeight().intValue()).collect(Collectors.toList()))
-                            .setReportTimeInMin(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
-                                    .map(set -> set.getTime_in_sec()).collect(Collectors.toList()))
-                            .setReportSpeed(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
-                                    .map(set -> set.getSpeed()).collect(Collectors.toList()))
-                            .setReportIncline(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
-                                    .map(set -> set.getIncline()).collect(Collectors.toList()))
-                            .setReportResistance(inWorkoutItemReport.getInWorkoutItemSetReports().stream()
-                                    .map(set -> set.getResistance()).collect(Collectors.toList()));
+                            .setReportRepetitions(
+                                    inWorkoutItemReport.getInWorkoutItemSetReports().stream()
+                                            .map(set -> set.getRepetitions())
+                                            .collect(Collectors.toList()))
+                            .setReportWeight(
+                                    inWorkoutItemReport.getInWorkoutItemSetReports().stream()
+                                            .map(
+                                                    set ->
+                                                            set.getWeight() == null
+                                                                    ? null
+                                                                    : set.getWeight().intValue())
+                                            .collect(Collectors.toList()))
+                            .setReportTimeInMin(
+                                    inWorkoutItemReport.getInWorkoutItemSetReports().stream()
+                                            .map(set -> set.getTime_in_sec())
+                                            .collect(Collectors.toList()))
+                            .setReportSpeed(
+                                    inWorkoutItemReport.getInWorkoutItemSetReports().stream()
+                                            .map(set -> set.getSpeed())
+                                            .collect(Collectors.toList()))
+                            .setReportIncline(
+                                    inWorkoutItemReport.getInWorkoutItemSetReports().stream()
+                                            .map(set -> set.getIncline())
+                                            .collect(Collectors.toList()))
+                            .setReportResistance(
+                                    inWorkoutItemReport.getInWorkoutItemSetReports().stream()
+                                            .map(set -> set.getResistance())
+                                            .collect(Collectors.toList()));
                 }
                 workout.getItems().add(userWorkoutItemResponseDTO);
             }
@@ -88,7 +142,8 @@ class AdminUserProgramService {
 
     List<UserProgramResponseDTO> findAll() {
         return inProgramRepository.findAll().stream()
-            .map(AdminUserProgramService::inProgramToDto).collect(Collectors.toList());
+                .map(AdminUserProgramService::inProgramToDto)
+                .collect(Collectors.toList());
     }
 
     UserProgramResponseDTO findOne(Long id) {
@@ -98,20 +153,33 @@ class AdminUserProgramService {
         }
         return inProgramToDto(inProgram);
     }
-    
+
     UserProgramResponseDTO create(UserProgramRequestDTO userProgramRequestDTO) {
-        final InProgram inProgram = new InProgram()
-                .setName(userProgramRequestDTO.getName())
-                .setInWorkouts(userProgramRequestDTO.getWorkouts().stream()
-                        .map(workout -> new InWorkout()
-                                .setD_workout_name(workout.getName())
-                                .setInWorkoutItems(workout.getItems().stream()
-                                        .map(item -> new InWorkoutItem()
-                                                .setInWorkoutItemSets(Collections.emptyList())
-                                                .setInWorkoutItemReports(Collections.emptyList()))
-                                        .collect(Collectors.toList()))
-                        )
-                        .collect(Collectors.toList()));
+        final InProgram inProgram =
+                new InProgram()
+                        .setName(userProgramRequestDTO.getName())
+                        .setInWorkouts(
+                                userProgramRequestDTO.getWorkouts().stream()
+                                        .map(
+                                                workout ->
+                                                        new InWorkout()
+                                                                .setD_workout_name(
+                                                                        workout.getName())
+                                                                .setInWorkoutItems(
+                                                                        workout.getItems().stream()
+                                                                                .map(
+                                                                                        item ->
+                                                                                                new InWorkoutItem()
+                                                                                                        .setInWorkoutItemSets(
+                                                                                                                Collections
+                                                                                                                        .emptyList())
+                                                                                                        .setInWorkoutItemReports(
+                                                                                                                Collections
+                                                                                                                        .emptyList()))
+                                                                                .collect(
+                                                                                        Collectors
+                                                                                                .toList())))
+                                        .collect(Collectors.toList()));
         final InProgram savedInProgram = inProgramRepository.save(inProgram);
         return inProgramToDto(savedInProgram);
     }

@@ -12,7 +12,7 @@ class CustomUserDetails implements UserDetails {
     private final PtUser ptUser;
 
     CustomUserDetails(PtUser ptUser) {
-       this.ptUser = ptUser; 
+        this.ptUser = ptUser;
     }
 
     public PtUser getPtUser() {
@@ -21,8 +21,10 @@ class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return AuthorityUtils.commaSeparatedStringToAuthorityList(ptUser.getPtRoles()
-                .stream().map(ptRole -> ptRole.getName()).collect(Collectors.joining(",")));
+        return AuthorityUtils.commaSeparatedStringToAuthorityList(
+                ptUser.getPtRoles().stream()
+                        .map(ptRole -> ptRole.getName())
+                        .collect(Collectors.joining(",")));
     }
 
     @Override
@@ -54,5 +56,4 @@ class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return !ptUser.getIs_deleted();
     }
-
 }

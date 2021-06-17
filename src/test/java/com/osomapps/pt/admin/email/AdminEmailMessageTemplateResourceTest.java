@@ -1,22 +1,21 @@
 package com.osomapps.pt.admin.email;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.verify;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
 import org.mockito.Mock;
-import static org.mockito.Mockito.verify;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminEmailMessageTemplateResourceTest {
 
-    @Mock
-    private AdminEmailMessageTemplateService adminEmailMessageTemplateService;
+    @Mock private AdminEmailMessageTemplateService adminEmailMessageTemplateService;
 
-    @InjectMocks
-    private AdminEmailMessageTemplateResource adminEmailMessageTemplateResource;
+    @InjectMocks private AdminEmailMessageTemplateResource adminEmailMessageTemplateResource;
 
     @Test
     public void findAll() {
@@ -39,7 +38,8 @@ public class AdminEmailMessageTemplateResourceTest {
     @Test
     public void update() {
         adminEmailMessageTemplateResource.update(1L, new EmailMessageTemplateRequestDTO());
-        verify(adminEmailMessageTemplateService).update(anyLong(), any(EmailMessageTemplateRequestDTO.class));
+        verify(adminEmailMessageTemplateService)
+                .update(anyLong(), any(EmailMessageTemplateRequestDTO.class));
     }
 
     @Test
@@ -47,5 +47,4 @@ public class AdminEmailMessageTemplateResourceTest {
         adminEmailMessageTemplateResource.delete(1L);
         verify(adminEmailMessageTemplateService).delete(anyLong());
     }
-
 }

@@ -16,15 +16,12 @@ class AdminGoalTypeService {
     }
 
     List<GoalTypeResponseDTO> findAll() {
-        return goalTypeRepository.findAll().stream().map(AdminGoalTypeService::goalTypeToDto
-        ).collect(Collectors.toList());
+        return goalTypeRepository.findAll().stream()
+                .map(AdminGoalTypeService::goalTypeToDto)
+                .collect(Collectors.toList());
     }
 
     private static GoalTypeResponseDTO goalTypeToDto(GoalType type) {
-        return GoalTypeResponseDTO.builder()
-                .id(type.getId())
-                .name(type.getName())
-                .build();
+        return GoalTypeResponseDTO.builder().id(type.getId()).name(type.getName()).build();
     }
-
 }

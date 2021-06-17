@@ -5,6 +5,7 @@ public enum UserLevel {
     Experienced(2);
 
     private final int level;
+
     private UserLevel(int level) {
         this.level = level;
     }

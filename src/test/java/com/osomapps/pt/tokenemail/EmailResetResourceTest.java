@@ -1,25 +1,24 @@
 package com.osomapps.pt.tokenemail;
 
-import java.util.Optional;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import static org.mockito.Matchers.anyString;
 import org.mockito.Mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EmailResetResourceTest {
 
-    @Mock
-    private TokenEmailSignupService tokenEmailSignupService;    
+    @Mock private TokenEmailSignupService tokenEmailSignupService;
 
-    @InjectMocks
-    private EmailResetResource emailResetResource;
+    @InjectMocks private EmailResetResource emailResetResource;
 
     @Test
     public void list() {

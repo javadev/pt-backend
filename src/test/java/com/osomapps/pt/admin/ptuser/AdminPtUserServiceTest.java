@@ -1,32 +1,30 @@
 package com.osomapps.pt.admin.ptuser;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+
 import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.UnauthorizedException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import org.junit.Test;
-import static org.junit.Assert.assertThat;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
-import static org.mockito.Mockito.when;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminPtUserServiceTest {
 
-    @Mock
-    private PtUserRepository ptUserRepository;
-    @Mock
-    private PtRoleRepository ptRoleRepository;
-    @InjectMocks
-    private AdminPtUserService adminPtUserService;
+    @Mock private PtUserRepository ptUserRepository;
+    @Mock private PtRoleRepository ptRoleRepository;
+    @InjectMocks private AdminPtUserService adminPtUserService;
 
     @Test
     public void findAll() {
@@ -50,8 +48,8 @@ public class AdminPtUserServiceTest {
     @Test
     public void create() {
         when(ptUserRepository.save((PtUser) anyObject())).thenAnswer(i -> i.getArguments()[0]);
-        PtUserResponseDTO responseDTO = adminPtUserService.create(
-                new PtUserRequestDTO().setRoles(Collections.emptyList()));
+        PtUserResponseDTO responseDTO =
+                adminPtUserService.create(new PtUserRequestDTO().setRoles(Collections.emptyList()));
         assertThat(responseDTO, notNullValue());
     }
 
@@ -70,8 +68,9 @@ public class AdminPtUserServiceTest {
     public void update() {
         when(ptUserRepository.findById(eq(2L))).thenReturn(Optional.of(new PtUser()));
         when(ptUserRepository.save((PtUser) anyObject())).thenAnswer(i -> i.getArguments()[0]);
-        PtUserResponseDTO responseDTO = adminPtUserService.update(2L,
-                new PtUserRequestDTO().setRoles(Collections.emptyList()));
+        PtUserResponseDTO responseDTO =
+                adminPtUserService.update(
+                        2L, new PtUserRequestDTO().setRoles(Collections.emptyList()));
         assertThat(responseDTO, notNullValue());
     }
 

@@ -1,15 +1,17 @@
 package com.osomapps.pt.auth;
 
-import com.osomapps.pt.admin.ptuser.PtUser;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
 import static org.junit.Assert.assertThat;
+
+import com.osomapps.pt.admin.ptuser.PtUser;
+import org.junit.Test;
 
 public class CustomUserDetailsTest {
 
     @Test
     public void getters() {
-        CustomUserDetails customUserDetails = new CustomUserDetails(new PtUser().setIs_deleted(Boolean.FALSE));
+        CustomUserDetails customUserDetails =
+                new CustomUserDetails(new PtUser().setIs_deleted(Boolean.FALSE));
         customUserDetails.getAuthorities();
         customUserDetails.getPassword();
         customUserDetails.getUsername();
@@ -20,5 +22,4 @@ public class CustomUserDetailsTest {
         assertThat(customUserDetails, notNullValue());
         new CustomUserDetails(new PtUser().setIs_deleted(Boolean.TRUE)).isEnabled();
     }
-
 }

@@ -10,8 +10,12 @@ import org.springframework.stereotype.Service;
 class AdminUserGenderService {
 
     List<UserGenderResponseDTO> findAll() {
-        return Stream.of(UserGender.values()).map(gender ->
-            new UserGenderResponseDTO().setId(gender.getGender()).setName(gender.name()))
+        return Stream.of(UserGender.values())
+                .map(
+                        gender ->
+                                new UserGenderResponseDTO()
+                                        .setId(gender.getGender())
+                                        .setName(gender.name()))
                 .collect(Collectors.toList());
     }
 }

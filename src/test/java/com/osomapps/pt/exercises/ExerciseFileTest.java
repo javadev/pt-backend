@@ -2,13 +2,13 @@ package com.osomapps.pt.exercises;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class ExerciseFileTest {
     @Test
     public void createAllArgs() {
-        assertThat(new ExerciseFile(1L, null, null, null, null, null,
-                null), notNullValue());
+        assertThat(new ExerciseFile(1L, null, null, null, null, null, null), notNullValue());
     }
 
     @Test

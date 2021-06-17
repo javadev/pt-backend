@@ -1,8 +1,9 @@
 package com.osomapps.pt.tokenemail;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
 import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
 
 public class TokenEmailSignupRequestDTOTest {
 
@@ -10,5 +11,4 @@ public class TokenEmailSignupRequestDTOTest {
     public void allArgsConstructor() {
         assertThat(new TokenEmailSignupRequestDTO(null, null, null), notNullValue());
     }
-
 }

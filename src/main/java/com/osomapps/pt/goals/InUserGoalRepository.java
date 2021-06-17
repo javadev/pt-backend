@@ -7,5 +7,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface InUserGoalRepository extends JpaRepository<InUserGoal, Long> {
 
     List<InUserGoal> findByGoalId(Long goalId);
-
 }

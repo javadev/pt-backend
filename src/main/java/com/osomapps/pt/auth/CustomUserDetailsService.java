@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final PtUserRepository ptUserRepository;
-    
+
     CustomUserDetailsService(PtUserRepository ptUserRepository) {
         this.ptUserRepository = ptUserRepository;
     }
@@ -25,5 +25,4 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
         return new CustomUserDetails(ptUsers.get(ptUsers.size() - 1));
     }
-
 }

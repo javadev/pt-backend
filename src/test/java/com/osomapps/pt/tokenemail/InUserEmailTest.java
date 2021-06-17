@@ -1,9 +1,10 @@
 package com.osomapps.pt.tokenemail;
 
-import java.time.LocalDateTime;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
 import static org.junit.Assert.assertThat;
+
+import java.time.LocalDateTime;
+import org.junit.Test;
 
 public class InUserEmailTest {
     @Test
@@ -13,20 +14,22 @@ public class InUserEmailTest {
 
     @Test
     public void createAllArgs() {
-        assertThat(new InUserEmail(
-                1L,
-                null,
-                LocalDateTime.now(),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null), notNullValue());
+        assertThat(
+                new InUserEmail(
+                        1L,
+                        null,
+                        LocalDateTime.now(),
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null),
+                notNullValue());
     }
 
     @Test

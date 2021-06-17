@@ -1,26 +1,25 @@
 package com.osomapps.pt.reportphoto;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import org.mockito.Mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReportPhotoFileResourceTest {
 
-    @Mock
-    private ReportPhotoFileService reportPhotoFileService;
+    @Mock private ReportPhotoFileService reportPhotoFileService;
 
-    @InjectMocks
-    private ReportPhotoFileResource reportPhotoFileResource;
+    @InjectMocks private ReportPhotoFileResource reportPhotoFileResource;
 
     @Test
     public void findOne() throws Exception {

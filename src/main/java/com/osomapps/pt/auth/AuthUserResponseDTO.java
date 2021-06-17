@@ -18,5 +18,4 @@ class AuthUserResponseDTO {
     String name;
     String login;
     List<String> permissions;
-
 }

@@ -16,19 +16,16 @@ class AdminExerciseInputService {
     }
 
     List<ExerciseInputResponseDTO> findAll() {
-        return exerciseInputRepository.findAll(sortByIdAsc()).stream().map(
-                AdminExerciseInputService::exerciseInputToDto
-        ).collect(Collectors.toList());
+        return exerciseInputRepository.findAll(sortByIdAsc()).stream()
+                .map(AdminExerciseInputService::exerciseInputToDto)
+                .collect(Collectors.toList());
     }
-    
+
     private Sort sortByIdAsc() {
         return Sort.by(Sort.Direction.ASC, "id");
     }
 
     private static ExerciseInputResponseDTO exerciseInputToDto(ExerciseInput input) {
-        return ExerciseInputResponseDTO.builder()
-                .id(input.getId())
-                .name(input.getName())
-                .build();
+        return ExerciseInputResponseDTO.builder().id(input.getId()).name(input.getName()).build();
     }
 }

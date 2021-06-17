@@ -1,10 +1,11 @@
 package com.osomapps.pt.token;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
 
 public class InUserTest {
@@ -15,17 +16,29 @@ public class InUserTest {
 
     @Test
     public void createAllArgs() {
-        assertThat(new InUser(
-                1L, LocalDateTime.now(), "d_sex", 20F,
-                LocalDate.now(), 2F, 3F, "d_level", null, LocalDateTime.now(),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                null, null, null), notNullValue());
+        assertThat(
+                new InUser(
+                        1L,
+                        LocalDateTime.now(),
+                        "d_sex",
+                        20F,
+                        LocalDate.now(),
+                        2F,
+                        3F,
+                        "d_level",
+                        null,
+                        LocalDateTime.now(),
+                        Collections.emptyList(),
+                        Collections.emptyList(),
+                        Collections.emptyList(),
+                        Collections.emptyList(),
+                        Collections.emptyList(),
+                        Collections.emptyList(),
+                        Collections.emptyList(),
+                        null,
+                        null,
+                        null),
+                notNullValue());
     }
 
     @Test

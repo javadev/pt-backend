@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 class AdminExerciseEquipmentTypeResource {
 
     private final AdminExerciseEquipmentTypeService exerciseEquipmentTypeService;
-    
+
     @Autowired
-    AdminExerciseEquipmentTypeResource(AdminExerciseEquipmentTypeService exerciseEquipmentTypeService) {
+    AdminExerciseEquipmentTypeResource(
+            AdminExerciseEquipmentTypeService exerciseEquipmentTypeService) {
         this.exerciseEquipmentTypeService = exerciseEquipmentTypeService;
     }
 

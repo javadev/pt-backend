@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 class AdminExerciseFileResource {
 
     private final AdminExerciseFileService exerciseFileService;
-    
+
     @Autowired
     AdminExerciseFileResource(AdminExerciseFileService exerciseFileService) {
         this.exerciseFileService = exerciseFileService;

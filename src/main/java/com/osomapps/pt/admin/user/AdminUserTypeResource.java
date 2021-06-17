@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 class AdminUserTypeResource {
 
     private final AdminUserTypeService userTypeService;
-    
+
     @Autowired
     AdminUserTypeResource(AdminUserTypeService userTypeService) {
         this.userTypeService = userTypeService;

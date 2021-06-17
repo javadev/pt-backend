@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 class AdminExerciseResource {
 
     private final AdminExerciseService exerciseService;
-    
+
     @Autowired
     AdminExerciseResource(AdminExerciseService exerciseService) {
         this.exerciseService = exerciseService;
@@ -38,7 +38,8 @@ class AdminExerciseResource {
     }
 
     @PutMapping(value = "{id}")
-    ExerciseResponseDTO update(@PathVariable Long id, @RequestBody ExerciseRequestDTO exerciseRequestDTO) {
+    ExerciseResponseDTO update(
+            @PathVariable Long id, @RequestBody ExerciseRequestDTO exerciseRequestDTO) {
         return exerciseService.update(id, exerciseRequestDTO);
     }
 
@@ -46,5 +47,4 @@ class AdminExerciseResource {
     ExerciseResponseDTO delete(@PathVariable Long id) {
         return exerciseService.delete(id);
     }
-
 }

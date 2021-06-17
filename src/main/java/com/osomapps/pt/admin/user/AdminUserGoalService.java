@@ -13,25 +13,31 @@ class AdminUserGoalService {
     private final GoalRepository goalRepository;
     private final DictionaryService dictionaryService;
 
-    AdminUserGoalService(GoalRepository goalRepository,
-            DictionaryService dictionaryService) {
+    AdminUserGoalService(GoalRepository goalRepository, DictionaryService dictionaryService) {
         this.goalRepository = goalRepository;
         this.dictionaryService = dictionaryService;
     }
 
     List<UserGoalResponseDTO> findAll() {
-        return goalRepository.findAll(sortByIdAsc()).stream().map(goal ->
-            new UserGoalResponseDTO()
-                    .setId(goal.getId())
-                    .setTitle(dictionaryService.getEnValue(
-                            DictionaryName.goal_title, goal.getDGoalTitle(), null))
-                    .setTitle2(dictionaryService.getEnValue(
-                            DictionaryName.goal_title_2, goal.getDGoalTitle2(), null))
-        ).collect(Collectors.toList());
+        return goalRepository.findAll(sortByIdAsc()).stream()
+                .map(
+                        goal ->
+                                new UserGoalResponseDTO()
+                                        .setId(goal.getId())
+                                        .setTitle(
+                                                dictionaryService.getEnValue(
+                                                        DictionaryName.goal_title,
+                                                        goal.getDGoalTitle(),
+                                                        null))
+                                        .setTitle2(
+                                                dictionaryService.getEnValue(
+                                                        DictionaryName.goal_title_2,
+                                                        goal.getDGoalTitle2(),
+                                                        null)))
+                .collect(Collectors.toList());
     }
 
     private Sort sortByIdAsc() {
         return Sort.by(Sort.Direction.ASC, "id");
     }
-
 }

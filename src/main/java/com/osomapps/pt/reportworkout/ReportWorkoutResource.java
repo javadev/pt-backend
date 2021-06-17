@@ -1,21 +1,20 @@
 package com.osomapps.pt.reportworkout;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1/report-workout")
 class ReportWorkoutResource {
 
     private final ReportWorkoutService reportWorkoutService;
-    
+
     @Autowired
     ReportWorkoutResource(ReportWorkoutService reportWorkoutService) {
         this.reportWorkoutService = reportWorkoutService;
@@ -27,7 +26,8 @@ class ReportWorkoutResource {
     }
 
     @PostMapping
-    WorkoutReportResponseDTO create(@RequestHeader(value = "X-Token") String token,
+    WorkoutReportResponseDTO create(
+            @RequestHeader(value = "X-Token") String token,
             @RequestBody WorkoutReportRequestDTO workoutReportRequestDTO) {
         return reportWorkoutService.create(token, workoutReportRequestDTO);
     }

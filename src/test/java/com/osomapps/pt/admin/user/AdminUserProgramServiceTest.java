@@ -1,5 +1,12 @@
 package com.osomapps.pt.admin.user;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+
 import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.programs.InProgram;
 import com.osomapps.pt.programs.InProgramRepository;
@@ -12,42 +19,39 @@ import com.osomapps.pt.programs.InWorkoutItemSetReport;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import org.junit.Test;
-import static org.junit.Assert.assertThat;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.InjectMocks;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminUserProgramServiceTest {
 
-    @Mock
-    private InProgramRepository inProgramRepository;
+    @Mock private InProgramRepository inProgramRepository;
 
-    @InjectMocks
-    private AdminUserProgramService adminUserProgramService;
+    @InjectMocks private AdminUserProgramService adminUserProgramService;
 
     private InProgram getInProgram() {
         return new InProgram()
-        .setInWorkouts(Arrays.asList(
-                new InWorkout()
-                    .setInWarmupWorkoutItems(Arrays.asList(new InWarmupWorkoutItem()
-                    ))
-                    .setInWorkoutItems(Arrays.asList(
-                            new InWorkoutItem()
-                    .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()))
-                    .setInWorkoutItemReports(Arrays.asList(
-                            new InWorkoutItemReport()
-                                    .setInWorkoutItemSetReports(Arrays.asList(
-                                            new InWorkoutItemSetReport()))
-                    ))))
-        ));
+                .setInWorkouts(
+                        Arrays.asList(
+                                new InWorkout()
+                                        .setInWarmupWorkoutItems(
+                                                Arrays.asList(new InWarmupWorkoutItem()))
+                                        .setInWorkoutItems(
+                                                Arrays.asList(
+                                                        new InWorkoutItem()
+                                                                .setInWorkoutItemSets(
+                                                                        Arrays.asList(
+                                                                                new InWorkoutItemSet()))
+                                                                .setInWorkoutItemReports(
+                                                                        Arrays.asList(
+                                                                                new InWorkoutItemReport()
+                                                                                        .setInWorkoutItemSetReports(
+                                                                                                Arrays
+                                                                                                        .asList(
+                                                                                                                new InWorkoutItemSetReport()))))))));
     }
 
     @Test
@@ -72,15 +76,20 @@ public class AdminUserProgramServiceTest {
     @Test
     public void create() {
         when(inProgramRepository.save(any(InProgram.class))).thenAnswer(i -> i.getArguments()[0]);
-        UserProgramResponseDTO responseDTO = adminUserProgramService.create(
-                new UserProgramRequestDTO().setName("name")
-                        .setWorkouts(Arrays.asList(
-                                new UserWorkoutRequestDTO()
-                                .setItems(Arrays.asList(
-                                        new UserWorkoutItemRequestDTO()
-                                .setSets(Arrays.asList(
-                                new UserWorkoutItemSetRequestDTO())))))
-                        ));
+        UserProgramResponseDTO responseDTO =
+                adminUserProgramService.create(
+                        new UserProgramRequestDTO()
+                                .setName("name")
+                                .setWorkouts(
+                                        Arrays.asList(
+                                                new UserWorkoutRequestDTO()
+                                                        .setItems(
+                                                                Arrays.asList(
+                                                                        new UserWorkoutItemRequestDTO()
+                                                                                .setSets(
+                                                                                        Arrays
+                                                                                                .asList(
+                                                                                                        new UserWorkoutItemSetRequestDTO())))))));
         assertThat(responseDTO, notNullValue());
     }
 
@@ -92,12 +101,17 @@ public class AdminUserProgramServiceTest {
     @Test
     public void update() {
         when(inProgramRepository.findById(eq(1L))).thenReturn(Optional.of(getInProgram()));
-        UserProgramResponseDTO responseDTO = adminUserProgramService.update(1L,
-                new UserProgramRequestDTO().setName("name")
-                        .setWorkouts(Arrays.asList(
-                                new UserWorkoutRequestDTO()
-                                .setItems(Arrays.asList(new UserWorkoutItemRequestDTO()))
-                        )));
+        UserProgramResponseDTO responseDTO =
+                adminUserProgramService.update(
+                        1L,
+                        new UserProgramRequestDTO()
+                                .setName("name")
+                                .setWorkouts(
+                                        Arrays.asList(
+                                                new UserWorkoutRequestDTO()
+                                                        .setItems(
+                                                                Arrays.asList(
+                                                                        new UserWorkoutItemRequestDTO())))));
         assertThat(responseDTO, notNullValue());
     }
 
@@ -112,5 +126,4 @@ public class AdminUserProgramServiceTest {
         UserProgramResponseDTO responseDTO = adminUserProgramService.delete(1L);
         assertThat(responseDTO, notNullValue());
     }
-
 }

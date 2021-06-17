@@ -46,5 +46,4 @@ class AdminGoalResource {
     GoalResponseDTO delete(@PathVariable Long id) {
         return adminGoalService.delete(id);
     }
-
 }

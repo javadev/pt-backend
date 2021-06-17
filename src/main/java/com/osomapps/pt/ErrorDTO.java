@@ -11,5 +11,4 @@ class ErrorDTO {
         this.status = status;
         this.error_description = String.valueOf(errorAttributes.get("message"));
     }
-
 }

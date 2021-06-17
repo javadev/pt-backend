@@ -1,5 +1,12 @@
 package com.osomapps.pt.programs;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.osomapps.pt.token.InUser;
 import com.osomapps.pt.token.InUserLogin;
 import com.osomapps.pt.user.UserService;
@@ -7,26 +14,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.InjectMocks;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProgramServiceTest {
 
-    @Mock
-    private UserService userService;
+    @Mock private UserService userService;
 
-    @InjectMocks
-    private ProgramService programService;
+    @InjectMocks private ProgramService programService;
 
     @Test
     public void getPredefinedPrograms_empty_token() {
@@ -38,14 +37,16 @@ public class ProgramServiceTest {
         InUserLogin inUserLogin = new InUserLogin();
         InUser inUserForLogin = new InUser();
         inUserForLogin.setId(10L);
-        InWorkout inWorkout = new InWorkout()
-                .setInWarmupWorkoutItems(null)
-                .setInWorkoutItems(Arrays.asList(new InWorkoutItem()
-                    .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()))));
-        InProgram inProgram = new InProgram()
-                .setId(1L)
-                .setName("name")
-                .setInWorkouts(Arrays.asList(inWorkout));
+        InWorkout inWorkout =
+                new InWorkout()
+                        .setInWarmupWorkoutItems(null)
+                        .setInWorkoutItems(
+                                Arrays.asList(
+                                        new InWorkoutItem()
+                                                .setInWorkoutItemSets(
+                                                        Arrays.asList(new InWorkoutItemSet()))));
+        InProgram inProgram =
+                new InProgram().setId(1L).setName("name").setInWorkouts(Arrays.asList(inWorkout));
         inUserForLogin.setInPrograms(Arrays.asList(inProgram));
         inUserLogin.setInUser(inUserForLogin);
         when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
@@ -58,14 +59,16 @@ public class ProgramServiceTest {
         InUserLogin inUserLogin = new InUserLogin();
         InUser inUserForLogin = new InUser();
         inUserForLogin.setId(10L);
-        InWorkout inWorkout = new InWorkout()
-                .setInWarmupWorkoutItems(null)
-                .setInWorkoutItems(Arrays.asList(new InWorkoutItem()
-                    .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()))));
-        InProgram inProgram = new InProgram()
-                .setId(1L)
-                .setName("name")
-                .setInWorkouts(Arrays.asList(inWorkout));
+        InWorkout inWorkout =
+                new InWorkout()
+                        .setInWarmupWorkoutItems(null)
+                        .setInWorkoutItems(
+                                Arrays.asList(
+                                        new InWorkoutItem()
+                                                .setInWorkoutItemSets(
+                                                        Arrays.asList(new InWorkoutItemSet()))));
+        InProgram inProgram =
+                new InProgram().setId(1L).setName("name").setInWorkouts(Arrays.asList(inWorkout));
         inUserForLogin.setInPrograms(Arrays.asList(inProgram));
         inUserLogin.setInUser(inUserForLogin);
         when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
@@ -78,18 +81,18 @@ public class ProgramServiceTest {
         InUserLogin inUserLogin = new InUserLogin();
         InUser inUserForLogin = new InUser();
         inUserForLogin.setId(10L);
-        InWorkout inWorkout = new InWorkout()
-                .setInWarmupWorkoutItems(Arrays.asList(new InWarmupWorkoutItem()))
-                .setInWorkoutItems(Arrays.asList(new InWorkoutItem()
-                    .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()))));
-        InProgram inProgram1 = new InProgram()
-                .setId(1L)
-                .setName("name")
-                .setInWorkouts(Arrays.asList(inWorkout));
-        InProgram inProgram2 = new InProgram()
-                .setId(2L)
-                .setName("name")
-                .setInWorkouts(Arrays.asList(inWorkout));
+        InWorkout inWorkout =
+                new InWorkout()
+                        .setInWarmupWorkoutItems(Arrays.asList(new InWarmupWorkoutItem()))
+                        .setInWorkoutItems(
+                                Arrays.asList(
+                                        new InWorkoutItem()
+                                                .setInWorkoutItemSets(
+                                                        Arrays.asList(new InWorkoutItemSet()))));
+        InProgram inProgram1 =
+                new InProgram().setId(1L).setName("name").setInWorkouts(Arrays.asList(inWorkout));
+        InProgram inProgram2 =
+                new InProgram().setId(2L).setName("name").setInWorkouts(Arrays.asList(inWorkout));
         inUserForLogin.setInPrograms(Arrays.asList(inProgram1, inProgram2));
         inUserLogin.setInUser(inUserForLogin);
         when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
@@ -110,15 +113,19 @@ public class ProgramServiceTest {
         InUserLogin inUserLogin = new InUserLogin();
         InUser inUserForLogin = new InUser();
         inUserForLogin.setId(10L);
-        InWorkout inWorkout = new InWorkout()
-                .setInWarmupWorkoutItems(Arrays.asList(new InWarmupWorkoutItem().setExercise_id(1)))
-                .setInWorkoutItems(Arrays.asList(new InWorkoutItem()
-                        .setExercise_id(1).setD_exercise_type("T")
-                        .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()))));
-        InProgram inProgram = new InProgram()
-                .setId(1L)
-                .setName("name")
-                .setInWorkouts(Arrays.asList(inWorkout));
+        InWorkout inWorkout =
+                new InWorkout()
+                        .setInWarmupWorkoutItems(
+                                Arrays.asList(new InWarmupWorkoutItem().setExercise_id(1)))
+                        .setInWorkoutItems(
+                                Arrays.asList(
+                                        new InWorkoutItem()
+                                                .setExercise_id(1)
+                                                .setD_exercise_type("T")
+                                                .setInWorkoutItemSets(
+                                                        Arrays.asList(new InWorkoutItemSet()))));
+        InProgram inProgram =
+                new InProgram().setId(1L).setName("name").setInWorkouts(Arrays.asList(inWorkout));
         inUserForLogin.setInPrograms(Arrays.asList(inProgram));
         inUserLogin.setInUser(inUserForLogin);
         when(userService.checkUserToken(eq("1"))).thenReturn(inUserLogin);
@@ -140,24 +147,40 @@ public class ProgramServiceTest {
 
     @Test
     public void calculateDiffInPercent_20_to_23() {
-        Optional<Integer> diff = programService.calculateDiffInPercent(Arrays.asList(
-                new InWorkoutItemSetReport().setRepetitions(11),
-                new InWorkoutItemSetReport().setRepetitions(12)), new InWorkoutItemSet().setInWorkoutItem(
-                        new InWorkoutItem().setInWorkoutItemSets(Arrays.asList(
-                                new InWorkoutItemSet().setRepetitions(10),
-                                new InWorkoutItemSet().setRepetitions(10)))));
+        Optional<Integer> diff =
+                programService.calculateDiffInPercent(
+                        Arrays.asList(
+                                new InWorkoutItemSetReport().setRepetitions(11),
+                                new InWorkoutItemSetReport().setRepetitions(12)),
+                        new InWorkoutItemSet()
+                                .setInWorkoutItem(
+                                        new InWorkoutItem()
+                                                .setInWorkoutItemSets(
+                                                        Arrays.asList(
+                                                                new InWorkoutItemSet()
+                                                                        .setRepetitions(10),
+                                                                new InWorkoutItemSet()
+                                                                        .setRepetitions(10)))));
         assertThat(diff.isPresent(), equalTo(true));
         assertThat(diff.get(), equalTo(15));
     }
 
     @Test
     public void calculateDiffInPercent_20_to_18() {
-        Optional<Integer> diff = programService.calculateDiffInPercent(Arrays.asList(
-                new InWorkoutItemSetReport().setRepetitions(9),
-                new InWorkoutItemSetReport().setRepetitions(9)), new InWorkoutItemSet().setInWorkoutItem(
-                        new InWorkoutItem().setInWorkoutItemSets(Arrays.asList(
-                                new InWorkoutItemSet().setRepetitions(10),
-                                new InWorkoutItemSet().setRepetitions(10)))));
+        Optional<Integer> diff =
+                programService.calculateDiffInPercent(
+                        Arrays.asList(
+                                new InWorkoutItemSetReport().setRepetitions(9),
+                                new InWorkoutItemSetReport().setRepetitions(9)),
+                        new InWorkoutItemSet()
+                                .setInWorkoutItem(
+                                        new InWorkoutItem()
+                                                .setInWorkoutItemSets(
+                                                        Arrays.asList(
+                                                                new InWorkoutItemSet()
+                                                                        .setRepetitions(10),
+                                                                new InWorkoutItemSet()
+                                                                        .setRepetitions(10)))));
         assertThat(diff.isPresent(), equalTo(true));
         assertThat(diff.get(), equalTo(-10));
     }

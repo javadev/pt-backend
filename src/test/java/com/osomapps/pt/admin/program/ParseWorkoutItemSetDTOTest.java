@@ -2,12 +2,15 @@ package com.osomapps.pt.admin.program;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class ParseWorkoutItemSetDTOTest {
     @Test
     public void allArgsConstructor() {
-        assertThat(new ParseWorkoutItemSetDTO(1, null, null, null, null, null, null, null), notNullValue());
+        assertThat(
+                new ParseWorkoutItemSetDTO(1, null, null, null, null, null, null, null),
+                notNullValue());
     }
 
     @Test
@@ -19,7 +22,7 @@ public class ParseWorkoutItemSetDTOTest {
     public void setters() {
         ParseWorkoutItemSetDTO parseWorkoutItemSetDTO = new ParseWorkoutItemSetDTO();
         parseWorkoutItemSetDTO.setRepetitions(null);
-        parseWorkoutItemSetDTO.setRepetitions_to_failure(null);        
+        parseWorkoutItemSetDTO.setRepetitions_to_failure(null);
         parseWorkoutItemSetDTO.setWeight(null);
         parseWorkoutItemSetDTO.setBodyweight(null);
         parseWorkoutItemSetDTO.setTime_in_min(null);
@@ -33,7 +36,7 @@ public class ParseWorkoutItemSetDTOTest {
     public void getters() {
         ParseWorkoutItemSetDTO parseWorkoutItemSetDTO = new ParseWorkoutItemSetDTO();
         parseWorkoutItemSetDTO.getRepetitions();
-        parseWorkoutItemSetDTO.getRepetitions_to_failure();        
+        parseWorkoutItemSetDTO.getRepetitions_to_failure();
         parseWorkoutItemSetDTO.getWeight();
         parseWorkoutItemSetDTO.getBodyweight();
         parseWorkoutItemSetDTO.getTime_in_min();
@@ -48,5 +51,4 @@ public class ParseWorkoutItemSetDTOTest {
         ParseWorkoutItemSetDTO parseWorkoutItemSetDTO = ParseWorkoutItemSetDTO.builder().build();
         assertThat(parseWorkoutItemSetDTO, notNullValue());
     }
-
 }

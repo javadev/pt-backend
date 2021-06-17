@@ -20,7 +20,7 @@ public class XlsxProgramParser {
     private final InputStream inputStream;
 
     private XlsxProgramParser(InputStream inputStream) {
-       this.inputStream = inputStream;
+        this.inputStream = inputStream;
     }
 
     public static XlsxProgramParser of(InputStream inputStream) {
@@ -48,16 +48,21 @@ public class XlsxProgramParser {
 
     private List<ExcelExercise> extractExercises(Sheet sheet) {
         List<ExcelExercise> excelExercises = new ArrayList<>();
-        for (int exerciseIndex = 2; exerciseIndex < sheet.getLastRowNum();
-                exerciseIndex += 1) {
-            ExcelExercise excelExercise = new ExcelExercise()
-                    .setExercise_id(getIntegerOrNull(getCellData(sheet, exerciseIndex, 0)))
-                    .setExercise_name(getStringOrNull(getCellData(sheet, exerciseIndex, 1)))
-                    .setUser_group_1_percent(getIntegerOrNull(getCellData(sheet, exerciseIndex, 3)))
-                    .setUser_group_2_percent(getIntegerOrNull(getCellData(sheet, exerciseIndex, 4)))
-                    .setUser_group_3_percent(getIntegerOrNull(getCellData(sheet, exerciseIndex, 5)))
-                    .setUser_group_4_percent(getIntegerOrNull(getCellData(sheet, exerciseIndex, 6)))
-                    .setBasis_for_calculations(getStringOrNull(getCellData(sheet, exerciseIndex, 12)));
+        for (int exerciseIndex = 2; exerciseIndex < sheet.getLastRowNum(); exerciseIndex += 1) {
+            ExcelExercise excelExercise =
+                    new ExcelExercise()
+                            .setExercise_id(getIntegerOrNull(getCellData(sheet, exerciseIndex, 0)))
+                            .setExercise_name(getStringOrNull(getCellData(sheet, exerciseIndex, 1)))
+                            .setUser_group_1_percent(
+                                    getIntegerOrNull(getCellData(sheet, exerciseIndex, 3)))
+                            .setUser_group_2_percent(
+                                    getIntegerOrNull(getCellData(sheet, exerciseIndex, 4)))
+                            .setUser_group_3_percent(
+                                    getIntegerOrNull(getCellData(sheet, exerciseIndex, 5)))
+                            .setUser_group_4_percent(
+                                    getIntegerOrNull(getCellData(sheet, exerciseIndex, 6)))
+                            .setBasis_for_calculations(
+                                    getStringOrNull(getCellData(sheet, exerciseIndex, 12)));
             if (excelExercise.getUser_group_1_percent() != null) {
                 excelExercises.add(excelExercise);
             }
@@ -65,25 +70,30 @@ public class XlsxProgramParser {
         return excelExercises;
     }
 
-    private ExcelGoal extractGoal(int index, final Sheet sheet, List<ExcelExercise> excelExercises) {
-        final ExcelGoal excelGoal = new ExcelGoal()
-                .setSheetIndex(index)
-                .setName(sheet.getSheetName())
-                .setLoops(getIntegerOrNull(getCellData(sheet, 0, 1)))
-                .setErrors(new ArrayList<>());
+    private ExcelGoal extractGoal(
+            int index, final Sheet sheet, List<ExcelExercise> excelExercises) {
+        final ExcelGoal excelGoal =
+                new ExcelGoal()
+                        .setSheetIndex(index)
+                        .setName(sheet.getSheetName())
+                        .setLoops(getIntegerOrNull(getCellData(sheet, 0, 1)))
+                        .setErrors(new ArrayList<>());
         String prevUserGroupName = "";
         String prevRoundName = "";
         String prevPartName = "";
         UserGroup userGroup = new UserGroup();
         Round round = new Round();
         Part part = new Part();
-        for (int workoutIndex = 0; workoutIndex < sheet.getRow(0).getPhysicalNumberOfCells();
+        for (int workoutIndex = 0;
+                workoutIndex < sheet.getRow(0).getPhysicalNumberOfCells();
                 workoutIndex += 1) {
             if (!(getCellData(sheet, 10, 2 + workoutIndex) instanceof Number)) {
                 break;
             }
-            final String userGroupName = getNumberOrNullAsString(getCellData(sheet, 2, 2 + workoutIndex));
-            final String roundName = getNumberOrNullAsString(getCellData(sheet, 3, 2 + workoutIndex));
+            final String userGroupName =
+                    getNumberOrNullAsString(getCellData(sheet, 2, 2 + workoutIndex));
+            final String roundName =
+                    getNumberOrNullAsString(getCellData(sheet, 3, 2 + workoutIndex));
             final String partName = (String) getCellData(sheet, 4, 2 + workoutIndex);
             final boolean userGroupNameWasCreated;
             if (userGroupName != null && !prevUserGroupName.equals(userGroupName)) {
@@ -95,38 +105,52 @@ public class XlsxProgramParser {
                 userGroupNameWasCreated = false;
             }
             final boolean roundNameWasCreated;
-            if (roundName != null && (userGroupNameWasCreated || !prevRoundName.equals(roundName))) {
-                round = new Round()
-                        .setName(roundName);
+            if (roundName != null
+                    && (userGroupNameWasCreated || !prevRoundName.equals(roundName))) {
+                round = new Round().setName(roundName);
                 prevRoundName = roundName;
                 userGroup.getRounds().add(round);
                 roundNameWasCreated = true;
             } else {
                 roundNameWasCreated = false;
             }
-            if (partName != null && (userGroupNameWasCreated || roundNameWasCreated || !prevPartName.equals(partName))) {
-                part = new Part()
-                        .setName(partName);
+            if (partName != null
+                    && (userGroupNameWasCreated
+                            || roundNameWasCreated
+                            || !prevPartName.equals(partName))) {
+                part = new Part().setName(partName);
                 prevPartName = partName;
                 round.getParts().add(part);
             }
-            final String workoutName = new StringJoiner("_").add(excelGoal.getName())
-                    .add(userGroup.getName()).add(round.getName()).add(part.getName()).toString();
+            final String workoutName =
+                    new StringJoiner("_")
+                            .add(excelGoal.getName())
+                            .add(userGroup.getName())
+                            .add(round.getName())
+                            .add(part.getName())
+                            .toString();
             final Workout workout = new Workout();
             workout.setRowIndex(4);
             workout.setColumnIndex(2 + workoutIndex);
             workout.setName(workoutName);
-            final Optional<WarmupWorkoutItem> warmupWorkoutItem = extractWarmupWorkoutItem(sheet,
-                    workoutIndex, excelGoal, workoutName, excelExercises);
+            final Optional<WarmupWorkoutItem> warmupWorkoutItem =
+                    extractWarmupWorkoutItem(
+                            sheet, workoutIndex, excelGoal, workoutName, excelExercises);
             workout.setWarmup(warmupWorkoutItem.orElse(null));
             for (int workoutItemIndex = 0; workoutItemIndex < 10; workoutItemIndex += 1) {
                 final int multiplyCoeff = 7;
-                if (!(getCellData(sheet, 10 + workoutItemIndex
-                        * multiplyCoeff, 2 + workoutIndex) instanceof Number)) {
+                if (!(getCellData(sheet, 10 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex)
+                        instanceof Number)) {
                     break;
                 }
-                final Optional<WorkoutItem> workoutItem = extractWorkoutItem(sheet, workoutItemIndex,
-                        workoutIndex, excelGoal, workoutName, excelExercises);
+                final Optional<WorkoutItem> workoutItem =
+                        extractWorkoutItem(
+                                sheet,
+                                workoutItemIndex,
+                                workoutIndex,
+                                excelGoal,
+                                workoutName,
+                                excelExercises);
                 if (workoutItem.isPresent()) {
                     workout.getWorkoutItems().add(workoutItem.get());
                 }
@@ -137,58 +161,127 @@ public class XlsxProgramParser {
     }
 
     private String getOnlySymbols(String value) {
-        return value.replace("(Weight loss)", "").replace("Leg Press strenght", "Legpress")
-                .replace("Chest Press", "Bench Press").replace("Bike, Steady Pace Walk or Jog", "Bike, Steady Pace")
+        return value.replace("(Weight loss)", "")
+                .replace("Leg Press strenght", "Legpress")
+                .replace("Chest Press", "Bench Press")
+                .replace("Bike, Steady Pace Walk or Jog", "Bike, Steady Pace")
                 .replaceAll("[\\s\\.\\,]+", "");
     }
 
-    private Optional<WarmupWorkoutItem> extractWarmupWorkoutItem(Sheet sheet, int workoutIndex,
-            ExcelGoal excelGoal, String workoutName, List<ExcelExercise> excelExercises) {
-        final Optional<String> warmupName = getStringOrEmpty(getCellData(sheet, 5, 2 + workoutIndex));
+    private Optional<WarmupWorkoutItem> extractWarmupWorkoutItem(
+            Sheet sheet,
+            int workoutIndex,
+            ExcelGoal excelGoal,
+            String workoutName,
+            List<ExcelExercise> excelExercises) {
+        final Optional<String> warmupName =
+                getStringOrEmpty(getCellData(sheet, 5, 2 + workoutIndex));
         if (!warmupName.isPresent()) {
-            excelGoal.getErrors().add("Warmup name not found. Goal " + excelGoal.getName() + ", workout " + workoutName + ".");
+            excelGoal
+                    .getErrors()
+                    .add(
+                            "Warmup name not found. Goal "
+                                    + excelGoal.getName()
+                                    + ", workout "
+                                    + workoutName
+                                    + ".");
             return Optional.empty();
         }
-        Optional<ExcelExercise> excelExercise = excelExercises.stream().filter(exercise ->
-            getOnlySymbols(exercise.getExercise_name()).equalsIgnoreCase(getOnlySymbols(warmupName.get()))
-        ).findFirst();
+        Optional<ExcelExercise> excelExercise =
+                excelExercises.stream()
+                        .filter(
+                                exercise ->
+                                        getOnlySymbols(exercise.getExercise_name())
+                                                .equalsIgnoreCase(getOnlySymbols(warmupName.get())))
+                        .findFirst();
         if (!excelExercise.isPresent()) {
-            excelGoal.getErrors().add("Exercise warmup name (" + warmupName.get() + ") not recognised. Goal "
-                    + excelGoal.getName() + ", workout " + workoutName + ".");
+            excelGoal
+                    .getErrors()
+                    .add(
+                            "Exercise warmup name ("
+                                    + warmupName.get()
+                                    + ") not recognised. Goal "
+                                    + excelGoal.getName()
+                                    + ", workout "
+                                    + workoutName
+                                    + ".");
         }
 
         Integer speedInp = extractNumbers(getCellData(sheet, 5 + 1, 2 + workoutIndex));
         Integer inclineInp = getIntegerOrNull(getCellData(sheet, 5 + 2, 2 + workoutIndex));
         Float timeInp = extractFloatNumbers(getCellData(sheet, 5 + 3, 2 + workoutIndex));
-        return Optional.of(new WarmupWorkoutItem().setExercise(warmupName.get())
-            .setExerciseId(excelExercise.orElse(new ExcelExercise().setExercise_id(0)).getExercise_id())
-            .setSpeed(speedInp).setIncline(inclineInp).setTimeInMin(timeInp));
+        return Optional.of(
+                new WarmupWorkoutItem()
+                        .setExercise(warmupName.get())
+                        .setExerciseId(
+                                excelExercise
+                                        .orElse(new ExcelExercise().setExercise_id(0))
+                                        .getExercise_id())
+                        .setSpeed(speedInp)
+                        .setIncline(inclineInp)
+                        .setTimeInMin(timeInp));
     }
 
-    private Optional<WorkoutItem> extractWorkoutItem(final Sheet sheet, int workoutItemIndex,
-            int workoutIndex, ExcelGoal excelGoal, String workoutName, List<ExcelExercise> excelExercises) {
+    private Optional<WorkoutItem> extractWorkoutItem(
+            final Sheet sheet,
+            int workoutItemIndex,
+            int workoutIndex,
+            ExcelGoal excelGoal,
+            String workoutName,
+            List<ExcelExercise> excelExercises) {
         final int multiplyCoeff = 7;
         WorkoutItem workoutItem = new WorkoutItem();
         workoutItem.setRowIndex(4 + 4 + workoutItemIndex * multiplyCoeff);
         workoutItem.setColumnIndex(2 + workoutIndex);
-        final Optional<String> exerciseName = getStringOrEmpty(getCellData(sheet, 5 + 4
-                + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+        final Optional<String> exerciseName =
+                getStringOrEmpty(
+                        getCellData(
+                                sheet, 5 + 4 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
         if (!exerciseName.isPresent()) {
-            excelGoal.getErrors().add("Exercise name not found. Goal " + excelGoal.getName() + ", workout " + workoutName + ".");
+            excelGoal
+                    .getErrors()
+                    .add(
+                            "Exercise name not found. Goal "
+                                    + excelGoal.getName()
+                                    + ", workout "
+                                    + workoutName
+                                    + ".");
             return Optional.empty();
         }
-        Optional<ExcelExercise> excelExercise = excelExercises.stream().filter(exercise ->
-            getOnlySymbols(exercise.getExercise_name()).equalsIgnoreCase(getOnlySymbols(exerciseName.get()))
-        ).findFirst();
+        Optional<ExcelExercise> excelExercise =
+                excelExercises.stream()
+                        .filter(
+                                exercise ->
+                                        getOnlySymbols(exercise.getExercise_name())
+                                                .equalsIgnoreCase(
+                                                        getOnlySymbols(exerciseName.get())))
+                        .findFirst();
         if (!excelExercise.isPresent()) {
-            excelGoal.getErrors().add("Exercise name (" + exerciseName.get() + ") not recognised. Goal "
-                    + excelGoal.getName() + ", workout " + workoutName + ".");
+            excelGoal
+                    .getErrors()
+                    .add(
+                            "Exercise name ("
+                                    + exerciseName.get()
+                                    + ") not recognised. Goal "
+                                    + excelGoal.getName()
+                                    + ", workout "
+                                    + workoutName
+                                    + ".");
         } else {
             workoutItem.setExerciseId(excelExercise.get().getExercise_id());
         }
-        Number setsInp = getNumberOrZerro(getCellData(sheet, 5 + 5 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
-        Object repetitionsInp = getStringOrNumberOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
-        Object weightInp = getStringOrNumberOrNull(getCellData(sheet, 5 + 7 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+        Number setsInp =
+                getNumberOrZerro(
+                        getCellData(
+                                sheet, 5 + 5 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+        Object repetitionsInp =
+                getStringOrNumberOrNull(
+                        getCellData(
+                                sheet, 5 + 6 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
+        Object weightInp =
+                getStringOrNumberOrNull(
+                        getCellData(
+                                sheet, 5 + 7 + workoutItemIndex * multiplyCoeff, 2 + workoutIndex));
         workoutItem.getInput().setExercise(exerciseName.orElse(null));
         if (repetitionsInp instanceof String || weightInp instanceof String) {
             workoutItem.getInput().setSets(new ArrayList<>());
@@ -198,21 +291,41 @@ public class XlsxProgramParser {
                     String[] repetitionsInps = ((String) repetitionsInp).split("\\s*,\\s*");
                     if (exerciseName.orElse("").contains("Plank")
                             || repetitionsInps[index].contains("min")
-                            || "Time".equalsIgnoreCase(getStringOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 1)))) {
-                        inputSet.setTimeInMin(getFloatOrNull(extractFloatNumbers(repetitionsInps[index])));
+                            || "Time"
+                                    .equalsIgnoreCase(
+                                            getStringOrNull(
+                                                    getCellData(
+                                                            sheet,
+                                                            5
+                                                                    + 6
+                                                                    + workoutItemIndex
+                                                                            * multiplyCoeff,
+                                                            1)))) {
+                        inputSet.setTimeInMin(
+                                getFloatOrNull(extractFloatNumbers(repetitionsInps[index])));
                     } else {
-                       inputSet.setRepetitions(getIntegerOrNull(extractNumbers(repetitionsInps[index])));
+                        inputSet.setRepetitions(
+                                getIntegerOrNull(extractNumbers(repetitionsInps[index])));
                     }
                 } else {
-                    if ("Time".equalsIgnoreCase(getStringOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 1)))) {
+                    if ("Time"
+                            .equalsIgnoreCase(
+                                    getStringOrNull(
+                                            getCellData(
+                                                    sheet,
+                                                    5 + 6 + workoutItemIndex * multiplyCoeff,
+                                                    1)))) {
                         inputSet.setTimeInMin(getFloatOrNull(repetitionsInp));
                     } else {
-                       inputSet.setRepetitions(getIntegerOrNull(repetitionsInp));
+                        inputSet.setRepetitions(getIntegerOrNull(repetitionsInp));
                     }
                 }
                 if (weightInp instanceof String) {
                     String[] weightInps = ((String) weightInp).split("\\s*,\\s*");
-                    inputSet.setWeight(getFloatOrNull(extractFloatNumbers(weightInps[Math.min(index, weightInps.length - 1)])));
+                    inputSet.setWeight(
+                            getFloatOrNull(
+                                    extractFloatNumbers(
+                                            weightInps[Math.min(index, weightInps.length - 1)])));
                 } else {
                     inputSet.setWeight(getFloatOrNull(weightInp));
                 }
@@ -220,10 +333,14 @@ public class XlsxProgramParser {
             }
         } else {
             InputSet inputSet = new InputSet();
-            if ("Time".equalsIgnoreCase(getStringOrNull(getCellData(sheet, 5 + 6  + workoutItemIndex * multiplyCoeff, 1)))) {
+            if ("Time"
+                    .equalsIgnoreCase(
+                            getStringOrNull(
+                                    getCellData(
+                                            sheet, 5 + 6 + workoutItemIndex * multiplyCoeff, 1)))) {
                 inputSet.setTimeInMin(getFloatOrNull(repetitionsInp));
             } else {
-               inputSet.setRepetitions(getIntegerOrNull(repetitionsInp));
+                inputSet.setRepetitions(getIntegerOrNull(repetitionsInp));
             }
             inputSet.setWeight(getFloatOrNull(weightInp));
             workoutItem.getInput().setSets(new ArrayList<>());
@@ -261,7 +378,6 @@ public class XlsxProgramParser {
     private String getStringOrNull(Object object) {
         return object instanceof String ? (String) object : null;
     }
-
 
     private Object getStringOrNumberOrNull(Object object) {
         if (object instanceof String || object instanceof Number) {
@@ -312,7 +428,7 @@ public class XlsxProgramParser {
         }
 
         if (type == Cell.CELL_TYPE_FORMULA) {
-            switch(cell.getCachedFormulaResultType()) {
+            switch (cell.getCachedFormulaResultType()) {
                 case Cell.CELL_TYPE_NUMERIC:
                     return numeric(cell);
                 case Cell.CELL_TYPE_STRING:
@@ -332,5 +448,4 @@ public class XlsxProgramParser {
         }
         return cell.getNumericCellValue();
     }
-
 }

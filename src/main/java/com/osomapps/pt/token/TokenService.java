@@ -26,7 +26,8 @@ class TokenService {
     private final FacebookService facebookService;
 
     @Autowired
-    TokenService(InUserRepository inUserRepository,
+    TokenService(
+            InUserRepository inUserRepository,
             InUserLoginRepository inUserLoginRepository,
             InUserLogoutRepository inUserLogoutRepository,
             InUserFacebookRepository inUserFacebookRepository,
@@ -41,18 +42,23 @@ class TokenService {
     Pair<Boolean, InUserFacebook> readOrCreateInUserFacebook(TokenRequestDTO tokenRequest) {
         final InUserFacebook inUserFacebook;
         final boolean isNewLogin;
-        final List<InUserFacebook> inUserFacebooks = inUserFacebookRepository.findByDeviceId(
-            tokenRequest.getDevice_id());
+        final List<InUserFacebook> inUserFacebooks =
+                inUserFacebookRepository.findByDeviceId(tokenRequest.getDevice_id());
         if (inUserFacebooks.isEmpty()) {
             inUserFacebook = new InUserFacebook();
             inUserFacebook.setToken(tokenRequest.getFacebook_token());
             inUserFacebook.setDeviceId(tokenRequest.getDevice_id());
             isNewLogin = true;
         } else {
-            final InUserFacebook inUserFacebookOld = inUserFacebooks.get(inUserFacebooks.size() - 1);
-            final List<InUserLogout> inUserLogouts = inUserLogoutRepository.findByToken(
-                    inUserFacebookOld.getInUser().getInUserLogins().get(
-                    inUserFacebookOld.getInUser().getInUserLogins().size() - 1).getToken());
+            final InUserFacebook inUserFacebookOld =
+                    inUserFacebooks.get(inUserFacebooks.size() - 1);
+            final List<InUserLogout> inUserLogouts =
+                    inUserLogoutRepository.findByToken(
+                            inUserFacebookOld
+                                    .getInUser()
+                                    .getInUserLogins()
+                                    .get(inUserFacebookOld.getInUser().getInUserLogins().size() - 1)
+                                    .getToken());
             inUserFacebook = inUserFacebookOld;
             isNewLogin = !inUserLogouts.isEmpty();
         }
@@ -61,33 +67,41 @@ class TokenService {
 
     TokenResponseDTO createOrReadNewToken(TokenRequestDTO tokenRequest, String remoteAddr) {
         final InUser inUser;
-        final Pair<Boolean, InUserFacebook> inUserFacebookData = readOrCreateInUserFacebook(tokenRequest);
+        final Pair<Boolean, InUserFacebook> inUserFacebookData =
+                readOrCreateInUserFacebook(tokenRequest);
         final boolean isNewLogin = inUserFacebookData.getFirst();
         InUserFacebook inUserFacebook = inUserFacebookData.getSecond();
         FacebookResponse facebookResponse =
-            facebookService.getProfileNameAndId(tokenRequest.getFacebook_token())
-                .orElseThrow(() -> new ResourceNotFoundException("Can't load data from facebook"));
-        Optional<String> pictureUrl = 
-            facebookService.getProfilePictureUrl(tokenRequest.getFacebook_token());
+                facebookService
+                        .getProfileNameAndId(tokenRequest.getFacebook_token())
+                        .orElseThrow(
+                                () ->
+                                        new ResourceNotFoundException(
+                                                "Can't load data from facebook"));
+        Optional<String> pictureUrl =
+                facebookService.getProfilePictureUrl(tokenRequest.getFacebook_token());
         inUserFacebook.setUserId(facebookResponse.getId());
         if (inUserFacebook.getUser_name() == null) {
             inUserFacebook.setUser_name(facebookResponse.getName());
         }
         inUserFacebook.setPicture_url(pictureUrl.orElse(null));
         inUserFacebook.setBirthday(facebookResponse.getBirthday());
-        final List<InUserFacebook> inUserFacebooksNew = inUserFacebookRepository.findByUserId(
-            facebookResponse.getId());
+        final List<InUserFacebook> inUserFacebooksNew =
+                inUserFacebookRepository.findByUserId(facebookResponse.getId());
         final InUserLogin inUserLogin;
         if (isNewLogin) {
             inUserLogin = new InUserLogin();
         } else {
-            inUserLogin = inUserFacebook.getInUser().getInUserLogins().get(
-                    inUserFacebook.getInUser().getInUserLogins().size() - 1);
+            inUserLogin =
+                    inUserFacebook
+                            .getInUser()
+                            .getInUserLogins()
+                            .get(inUserFacebook.getInUser().getInUserLogins().size() - 1);
         }
         if (inUserFacebooksNew.isEmpty()) {
             inUser = new InUser();
             inUser.setInUserFacebooks(Arrays.asList(inUserFacebook));
-            inUser.setInUserLogins(Arrays.asList(inUserLogin)); 
+            inUser.setInUserLogins(Arrays.asList(inUserLogin));
         } else {
             inUser = inUserFacebooksNew.get(inUserFacebooksNew.size() - 1).getInUser();
             inUser.getInUserFacebooks().add(inUserFacebook);
@@ -116,20 +130,33 @@ class TokenService {
         if (inUser.getD_level() != null) {
             user.setLevel(UserLevel.of(Integer.parseInt(inUser.getD_level())));
         }
-        user.setGoals(inUser.getInUserGoals().stream().map(inUserGoal -> {
-            Map<String, Integer> map = null;
-            try {
-                 map = inUserGoal.getGoal_value() == null ? null : new ObjectMapper()
-                         .readValue(inUserGoal.getGoal_value(),
-                        new TypeReference<Map<String, Integer>>(){});
-            } catch (IOException ex) {
-            }
-            return new UserGoalResponseDTO().setId(inUserGoal.getGoalId()).setValues(map);
-        }).collect(Collectors.toList()));
+        user.setGoals(
+                inUser.getInUserGoals().stream()
+                        .map(
+                                inUserGoal -> {
+                                    Map<String, Integer> map = null;
+                                    try {
+                                        map =
+                                                inUserGoal.getGoal_value() == null
+                                                        ? null
+                                                        : new ObjectMapper()
+                                                                .readValue(
+                                                                        inUserGoal.getGoal_value(),
+                                                                        new TypeReference<
+                                                                                Map<
+                                                                                        String,
+                                                                                        Integer>>() {});
+                                    } catch (IOException ex) {
+                                    }
+                                    return new UserGoalResponseDTO()
+                                            .setId(inUserGoal.getGoalId())
+                                            .setValues(map);
+                                })
+                        .collect(Collectors.toList()));
         user.setHeight(inUser.getHeight() == null ? null : inUser.getHeight().longValue());
         user.setWeight(inUser.getWeight() == null ? null : inUser.getWeight().longValue());
         tokenResponseDTO.setUser(user);
-        return tokenResponseDTO;        
+        return tokenResponseDTO;
     }
 
     void deleteToken(String token, String remoteAddr) {

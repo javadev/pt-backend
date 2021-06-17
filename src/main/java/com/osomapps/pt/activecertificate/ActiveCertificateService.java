@@ -17,7 +17,8 @@ class ActiveCertificateService {
     private final UserService userService;
 
     @Autowired
-    ActiveCertificateService(InUserCertificateRepository inUserCertificateRepository,
+    ActiveCertificateService(
+            InUserCertificateRepository inUserCertificateRepository,
             CertificateRepository certificateRepository,
             UserService userService) {
         this.inUserCertificateRepository = inUserCertificateRepository;
@@ -29,41 +30,65 @@ class ActiveCertificateService {
         if (!token.isEmpty()) {
             final InUserLogin inUserLogin = userService.checkUserToken(token);
             return inUserLogin.getInUser().getInUserCertificates().stream()
-                    .filter(inUserCertificate -> inUserCertificate.getCreated().toLocalDate()
-                            .plusDays(inUserCertificate.getAmount_of_days()).isAfter(LocalDate.now()))
-                    .map(inUserCertificate ->
-                ActiveCertificateResponseDTO.builder()
-                    .id(inUserCertificate.getId())
-                    .code(inUserCertificate.getCode())
-                    .expiration_date(inUserCertificate.getCreated().toLocalDate().plusDays(inUserCertificate.getAmount_of_days()))
-                    .build()
-            ).findFirst().orElse(new ActiveCertificateResponseDTO());
+                    .filter(
+                            inUserCertificate ->
+                                    inUserCertificate
+                                            .getCreated()
+                                            .toLocalDate()
+                                            .plusDays(inUserCertificate.getAmount_of_days())
+                                            .isAfter(LocalDate.now()))
+                    .map(
+                            inUserCertificate ->
+                                    ActiveCertificateResponseDTO.builder()
+                                            .id(inUserCertificate.getId())
+                                            .code(inUserCertificate.getCode())
+                                            .expiration_date(
+                                                    inUserCertificate
+                                                            .getCreated()
+                                                            .toLocalDate()
+                                                            .plusDays(
+                                                                    inUserCertificate
+                                                                            .getAmount_of_days()))
+                                            .build())
+                    .findFirst()
+                    .orElse(new ActiveCertificateResponseDTO());
         }
         return new ActiveCertificateResponseDTO();
     }
 
-    ActiveCertificateResponseDTO create(String token, ActiveCertificateRequestDTO certificateRequestDTO) {
+    ActiveCertificateResponseDTO create(
+            String token, ActiveCertificateRequestDTO certificateRequestDTO) {
         if (!token.isEmpty()) {
             final InUserLogin inUserLogin = userService.checkUserToken(token);
-            final List<Certificate> certificates = certificateRepository.findByCode(certificateRequestDTO.getCode());
+            final List<Certificate> certificates =
+                    certificateRepository.findByCode(certificateRequestDTO.getCode());
             if (certificates.isEmpty()) {
-                throw new ResourceNotFoundException("Certificate with code " + certificateRequestDTO.getCode() + " not found.");
+                throw new ResourceNotFoundException(
+                        "Certificate with code " + certificateRequestDTO.getCode() + " not found.");
             }
-            final Certificate notActiveCertificate = certificates.stream().filter(
-                    certificate -> !certificate.getActivated()).findAny().orElseThrow(() ->
-                        new ResourceNotFoundException("There is no active certificates with code " + certificateRequestDTO.getCode() + ".")
-                    );
+            final Certificate notActiveCertificate =
+                    certificates.stream()
+                            .filter(certificate -> !certificate.getActivated())
+                            .findAny()
+                            .orElseThrow(
+                                    () ->
+                                            new ResourceNotFoundException(
+                                                    "There is no active certificates with code "
+                                                            + certificateRequestDTO.getCode()
+                                                            + "."));
             notActiveCertificate.setActivated(Boolean.TRUE);
             InUserCertificate inUserCertificate = new InUserCertificate();
             inUserCertificate.setInUser(inUserLogin.getInUser());
             inUserCertificate.setCode(notActiveCertificate.getCode());
             inUserCertificate.setAmount_of_days(notActiveCertificate.getAmount_of_days());
-            InUserCertificate inUserCertificateSaved = inUserCertificateRepository.save(inUserCertificate);
+            InUserCertificate inUserCertificateSaved =
+                    inUserCertificateRepository.save(inUserCertificate);
             certificateRepository.save(notActiveCertificate);
             return ActiveCertificateResponseDTO.builder()
                     .id(inUserCertificateSaved.getId())
                     .code(inUserCertificateSaved.getCode())
-                    .expiration_date(LocalDate.now().plusDays(inUserCertificateSaved.getAmount_of_days()))
+                    .expiration_date(
+                            LocalDate.now().plusDays(inUserCertificateSaved.getAmount_of_days()))
                     .build();
         }
         return new ActiveCertificateResponseDTO();

@@ -23,12 +23,15 @@ class ExerciseImageService {
             throw new ResourceNotFoundException("File with id " + id + " not found");
         }
         dataUrlToOutputStream(exerciseFile.getData_url(), outputStream);
-        return new ExerciseImageDTO().setId(exerciseFile.getId())
-                .setFileName(exerciseFile.getFile_name()).setFileType(exerciseFile.getFile_type());
+        return new ExerciseImageDTO()
+                .setId(exerciseFile.getId())
+                .setFileName(exerciseFile.getFile_name())
+                .setFileType(exerciseFile.getFile_type());
     }
 
     void dataUrlToOutputStream(String dataUrl, OutputStream outputStream) throws IOException {
-        final String encodedString = dataUrl.substring(dataUrl.indexOf(BASE64_PREFIX) + BASE64_PREFIX_LENGTH);
+        final String encodedString =
+                dataUrl.substring(dataUrl.indexOf(BASE64_PREFIX) + BASE64_PREFIX_LENGTH);
         outputStream.write(Base64.getDecoder().decode(encodedString));
     }
 }

@@ -3,12 +3,6 @@ package com.osomapps.pt.programs;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.time.LocalDateTime;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +12,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 
 @AllArgsConstructor
@@ -26,19 +25,25 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 @Setter
 @Entity
-@Table (name = "in_workout_item_report", schema = "ptcore")
+@Table(name = "in_workout_item_report", schema = "ptcore")
 @DynamicInsert
 public class InWorkoutItemReport {
     @Id
-    @SequenceGenerator(name = "InWorkoutItemReportIdSequence", sequenceName = "ptcore.in_workout_item_report_id_seq",
-            allocationSize = 1, initialValue = 1)
+    @SequenceGenerator(
+            name = "InWorkoutItemReportIdSequence",
+            sequenceName = "ptcore.in_workout_item_report_id_seq",
+            allocationSize = 1,
+            initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "InWorkoutItemReportIdSequence")
     Long id;
+
     LocalDateTime created;
+
     @ManyToOne
-    @JoinColumn(name="in_workout_item_id")
+    @JoinColumn(name = "in_workout_item_id")
     @JsonBackReference
     InWorkoutItem inWorkoutItem;
-    @OneToMany(mappedBy="inWorkoutItemReport")
+
+    @OneToMany(mappedBy = "inWorkoutItemReport")
     List<InWorkoutItemSetReport> inWorkoutItemSetReports;
 }

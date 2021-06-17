@@ -2,12 +2,6 @@ package com.osomapps.pt.programs;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +9,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 
 @AllArgsConstructor
@@ -23,14 +22,18 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 @Setter
 @Entity
-@Table (name = "parse_program", schema = "ptcore")
+@Table(name = "parse_program", schema = "ptcore")
 @DynamicInsert
 public class ParseProgram {
     @Id
-    @SequenceGenerator(name = "ParseProgramIdSequence", sequenceName = "ptcore.parse_program_id_seq",
-            allocationSize = 1, initialValue = 1)
+    @SequenceGenerator(
+            name = "ParseProgramIdSequence",
+            sequenceName = "ptcore.parse_program_id_seq",
+            allocationSize = 1,
+            initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ParseProgramIdSequence")
     Long id;
+
     LocalDateTime created;
     String name;
     String file_name;
@@ -39,9 +42,10 @@ public class ParseProgram {
     String data_url;
     LocalDateTime updated;
     Boolean active;
-    @OneToMany(mappedBy="parseProgram")
-    List<ParseGoal> parseGoals;
-    @OneToMany(mappedBy="parseProgram")
-    List<ParseExercise> parseExercises;
 
+    @OneToMany(mappedBy = "parseProgram")
+    List<ParseGoal> parseGoals;
+
+    @OneToMany(mappedBy = "parseProgram")
+    List<ParseExercise> parseExercises;
 }

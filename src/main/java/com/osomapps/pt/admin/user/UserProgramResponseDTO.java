@@ -15,12 +15,12 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 class UserProgramResponseDTO {
-    
+
     Long id;
     String name;
     String type;
     List<UserWorkoutResponseDTO> workouts;
+
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     LocalDateTime created;
-    
 }

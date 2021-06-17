@@ -2,15 +2,18 @@ package com.osomapps.pt.admin.program;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class ProgramResponseDTOTest {
 
     @Test
     public void allArgsConstructor() {
-        assertThat(new ProgramResponseDTO(null, null, null, null, null, null, null, null, null), notNullValue());
+        assertThat(
+                new ProgramResponseDTO(null, null, null, null, null, null, null, null, null),
+                notNullValue());
     }
-    
+
     @Test
     public void setters() {
         ProgramResponseDTO programResponseDTO = new ProgramResponseDTO();

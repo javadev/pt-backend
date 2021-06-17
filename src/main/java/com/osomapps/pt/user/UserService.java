@@ -39,7 +39,8 @@ public class UserService {
     private final SendEmailService sendEmailService;
     private final AdminProgramAssignService adminProgramAssignService;
 
-    UserService(InUserRepository inUserRepository,
+    UserService(
+            InUserRepository inUserRepository,
             InUserLoginRepository inUserLoginRepository,
             InUserLogoutRepository inUserLogoutRepository,
             GoalRepository goalRepository,
@@ -77,10 +78,18 @@ public class UserService {
             if (inUser.getInUserEmails() == null || inUser.getInUserEmails().isEmpty()) {
                 userName = Optional.empty();
             } else {
-                userName = Optional.of(inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1).getUser_name());
+                userName =
+                        Optional.of(
+                                inUser.getInUserEmails()
+                                        .get(inUser.getInUserEmails().size() - 1)
+                                        .getUser_name());
             }
         } else {
-            userName = Optional.ofNullable(inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1).getUser_name());
+            userName =
+                    Optional.ofNullable(
+                            inUser.getInUserFacebooks()
+                                    .get(inUser.getInUserFacebooks().size() - 1)
+                                    .getUser_name());
         }
         return userName;
     }
@@ -88,38 +97,52 @@ public class UserService {
     private void setUserName(InUser inUser, String userName) {
         if (inUser.getInUserFacebooks() == null || inUser.getInUserFacebooks().isEmpty()) {
             if (inUser.getInUserEmails() != null && !inUser.getInUserEmails().isEmpty()) {
-                String prevUserName = inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1).getUser_name();
-                inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1).setUser_name(userName);
+                String prevUserName =
+                        inUser.getInUserEmails()
+                                .get(inUser.getInUserEmails().size() - 1)
+                                .getUser_name();
+                inUser.getInUserEmails()
+                        .get(inUser.getInUserEmails().size() - 1)
+                        .setUser_name(userName);
                 if (prevUserName == null) {
-                    new Thread(() -> {
-                        sendEmailService.send(inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1));
-                    }, "Send-email").start();
+                    new Thread(
+                                    () -> {
+                                        sendEmailService.send(
+                                                inUser.getInUserEmails()
+                                                        .get(inUser.getInUserEmails().size() - 1));
+                                    },
+                                    "Send-email")
+                            .start();
                 }
             }
         } else {
-            inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1).setUser_name(userName);
+            inUser.getInUserFacebooks()
+                    .get(inUser.getInUserFacebooks().size() - 1)
+                    .setUser_name(userName);
         }
     }
-    
+
     private Optional<String> getAvatar(InUser inUser) {
         if (inUser.getInUserFacebooks() == null || inUser.getInUserFacebooks().isEmpty()) {
             return Optional.empty();
         }
-        return Optional.ofNullable(inUser.getInUserFacebooks()
-                .get(inUser.getInUserFacebooks().size() - 1).getPicture_url());
+        return Optional.ofNullable(
+                inUser.getInUserFacebooks()
+                        .get(inUser.getInUserFacebooks().size() - 1)
+                        .getPicture_url());
     }
 
     private Optional<String> getEmail(InUser inUser) {
         if (inUser.getInUserEmails() == null || inUser.getInUserEmails().isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(inUser.getInUserEmails()
-                .get(inUser.getInUserEmails().size() - 1).getLogin());
+        return Optional.of(
+                inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1).getLogin());
     }
 
     UserResponseDTO findOne(String token) {
         final InUser inUser = checkUserToken(token).getInUser();
-        return userToDto(inUser);        
+        return userToDto(inUser);
     }
 
     private UserResponseDTO userToDto(final InUser inUser) {
@@ -138,23 +161,35 @@ public class UserService {
         if (inUser.getD_level() != null) {
             userResponse.setLevel(UserLevel.of(Integer.parseInt(inUser.getD_level())));
         }
-        userResponse.setGoals(inUser.getInUserGoals().stream().map(inUserGoal -> {
-            Map<String, Integer> map = null;
-            try {
-                 map = inUserGoal.getGoal_value() == null ? null : new ObjectMapper()
-                         .readValue(inUserGoal.getGoal_value(),
-                        new TypeReference<Map<String, Integer>>(){});
-            } catch (IOException ex) {
-            }
-            return new UserGoalResponseDTO().setId(inUserGoal.getGoalId()).setValues(map);
-        }
-        ).collect(Collectors.toList()));
+        userResponse.setGoals(
+                inUser.getInUserGoals().stream()
+                        .map(
+                                inUserGoal -> {
+                                    Map<String, Integer> map = null;
+                                    try {
+                                        map =
+                                                inUserGoal.getGoal_value() == null
+                                                        ? null
+                                                        : new ObjectMapper()
+                                                                .readValue(
+                                                                        inUserGoal.getGoal_value(),
+                                                                        new TypeReference<
+                                                                                Map<
+                                                                                        String,
+                                                                                        Integer>>() {});
+                                    } catch (IOException ex) {
+                                    }
+                                    return new UserGoalResponseDTO()
+                                            .setId(inUserGoal.getGoalId())
+                                            .setValues(map);
+                                })
+                        .collect(Collectors.toList()));
         userResponse.setAvatar_dataurl(inUser.getAvatar_dataurl());
         userResponse.setName(getUserName(inUser).orElse("?"));
         userResponse.setAvatar(getAvatar(inUser).orElse(null));
         userResponse.setEmail(getEmail(inUser).orElse(null));
         userResponse.setBirthday(inUser.getBirthday());
-        return userResponse;        
+        return userResponse;
     }
 
     UserResponseDTO updateUser(String token, UserRequestDTO userRequest) {
@@ -175,16 +210,19 @@ public class UserService {
         if (userRequest.getLevel() != null) {
             inUser.setD_level(Integer.toString(userRequest.getLevel().getLevel()));
         }
-        final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
+        final MapBindingResult errors =
+                new MapBindingResult(new HashMap<>(), String.class.getName());
         dataurlValidator.validate(userRequest.getAvatar_dataurl(), errors);
         if (errors.hasErrors()) {
             throw new UnauthorizedException(errors.getAllErrors().get(0).getDefaultMessage());
         }
         if (userRequest.getName() != null) {
-            final MapBindingResult errorsName = new MapBindingResult(new HashMap<>(), String.class.getName());
+            final MapBindingResult errorsName =
+                    new MapBindingResult(new HashMap<>(), String.class.getName());
             nameValidator.validate(userRequest.getName(), errorsName);
             if (errorsName.hasErrors()) {
-                throw new UnauthorizedException(errorsName.getAllErrors().get(0).getDefaultMessage());
+                throw new UnauthorizedException(
+                        errorsName.getAllErrors().get(0).getDefaultMessage());
             }
             setUserName(inUser, userRequest.getName());
         }
@@ -194,22 +232,40 @@ public class UserService {
             }
             inUserGoalRepository.deleteAll(inUser.getInUserGoals());
             inUser.setInUserGoals(new ArrayList<>());
-            userRequest.getGoals().forEach((userGoalRequestDTO) -> {
-                Goal goal = goalRepository.findById(userGoalRequestDTO.getId()).orElse(null);
-                if (goal == null) {
-                    throw new UnauthorizedException("Goal with id " + userGoalRequestDTO.getId() + " not found");
-                }
-                String value = null;
-                try {
-                    value = new ObjectMapper().writeValueAsString(userGoalRequestDTO.getValues());
-                } catch (IOException ex) {
-                }
-                inUser.getInUserGoals().add(inUserGoalRepository.save(new InUserGoal()
-                        .setGoalId(userGoalRequestDTO.getId())
-                        .setD_goal_title(goal.getDGoalTitle())
-                        .setD_goal_title_2(goal.getDGoalTitle2())
-                        .setGoal_value(value)));
-            });
+            userRequest
+                    .getGoals()
+                    .forEach(
+                            (userGoalRequestDTO) -> {
+                                Goal goal =
+                                        goalRepository
+                                                .findById(userGoalRequestDTO.getId())
+                                                .orElse(null);
+                                if (goal == null) {
+                                    throw new UnauthorizedException(
+                                            "Goal with id "
+                                                    + userGoalRequestDTO.getId()
+                                                    + " not found");
+                                }
+                                String value = null;
+                                try {
+                                    value =
+                                            new ObjectMapper()
+                                                    .writeValueAsString(
+                                                            userGoalRequestDTO.getValues());
+                                } catch (IOException ex) {
+                                }
+                                inUser.getInUserGoals()
+                                        .add(
+                                                inUserGoalRepository.save(
+                                                        new InUserGoal()
+                                                                .setGoalId(
+                                                                        userGoalRequestDTO.getId())
+                                                                .setD_goal_title(
+                                                                        goal.getDGoalTitle())
+                                                                .setD_goal_title_2(
+                                                                        goal.getDGoalTitle2())
+                                                                .setGoal_value(value)));
+                            });
         }
         inUser.setAvatar_dataurl(userRequest.getAvatar_dataurl());
         inUser.setUpdated(LocalDateTime.now());

@@ -2,6 +2,7 @@ package com.osomapps.pt.admin.user;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class UserWarmupWorkoutItemRequestDTOTest {
@@ -17,7 +18,8 @@ public class UserWarmupWorkoutItemRequestDTOTest {
 
     @Test
     public void setters() {
-        UserWarmupWorkoutItemRequestDTO userWarmupWorkoutItemRequestDTO = new UserWarmupWorkoutItemRequestDTO();
+        UserWarmupWorkoutItemRequestDTO userWarmupWorkoutItemRequestDTO =
+                new UserWarmupWorkoutItemRequestDTO();
         userWarmupWorkoutItemRequestDTO.setExercise_id(null);
         userWarmupWorkoutItemRequestDTO.setExercise_name(null);
         userWarmupWorkoutItemRequestDTO.setSpeed(null);
@@ -28,7 +30,8 @@ public class UserWarmupWorkoutItemRequestDTOTest {
 
     @Test
     public void getters() {
-        UserWarmupWorkoutItemRequestDTO userWarmupWorkoutItemRequestDTO = new UserWarmupWorkoutItemRequestDTO();
+        UserWarmupWorkoutItemRequestDTO userWarmupWorkoutItemRequestDTO =
+                new UserWarmupWorkoutItemRequestDTO();
         userWarmupWorkoutItemRequestDTO.getExercise_id();
         userWarmupWorkoutItemRequestDTO.getExercise_name();
         userWarmupWorkoutItemRequestDTO.getSpeed();

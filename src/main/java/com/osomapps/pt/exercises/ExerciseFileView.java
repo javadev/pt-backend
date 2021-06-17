@@ -3,12 +3,6 @@ package com.osomapps.pt.exercises;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +12,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,23 +24,27 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@Table (name = "exercise_file", schema = "ptcore")
+@Table(name = "exercise_file", schema = "ptcore")
 class ExerciseFileView {
     @Id
-    @SequenceGenerator(name = "ExerciseFileViewIdSequence", sequenceName = "ptcore.exercise_file_id_seq",
-            allocationSize = 1, initialValue = 1)
+    @SequenceGenerator(
+            name = "ExerciseFileViewIdSequence",
+            sequenceName = "ptcore.exercise_file_id_seq",
+            allocationSize = 1,
+            initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ExerciseFileViewIdSequence")
     Long id;
+
     LocalDateTime created;
     String file_name;
     Long file_size;
     String file_type;
+
     @ManyToMany
     @JoinTable(
             name = "exercise_file_has_exercise",
             schema = "ptcore",
-            joinColumns = { @JoinColumn(name = "exercise_file_id") },
-            inverseJoinColumns = { @JoinColumn(name = "exercise_id") }
-    )
+            joinColumns = {@JoinColumn(name = "exercise_file_id")},
+            inverseJoinColumns = {@JoinColumn(name = "exercise_id")})
     List<ExerciseView> exercises = new ArrayList<>(0);
 }

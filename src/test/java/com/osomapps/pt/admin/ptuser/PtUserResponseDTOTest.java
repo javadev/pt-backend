@@ -2,30 +2,17 @@ package com.osomapps.pt.admin.ptuser;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class PtUserResponseDTOTest {
     @Test
     public void allArgsConstructor() {
-        assertThat(new PtUserResponseDTO(
-                1L,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null), notNullValue());
+        assertThat(
+                new PtUserResponseDTO(
+                        1L, null, null, null, null, null, null, null, null, null, null, null, null,
+                        null, null, null, null, null),
+                notNullValue());
     }
 
     @Test
@@ -80,5 +67,4 @@ public class PtUserResponseDTOTest {
         ptUserResponseDTO.getRoles();
         assertThat(ptUserResponseDTO, notNullValue());
     }
-
 }

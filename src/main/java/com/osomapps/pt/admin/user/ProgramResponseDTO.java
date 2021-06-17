@@ -14,5 +14,4 @@ import lombok.experimental.Accessors;
 class ProgramResponseDTO {
     String fileType;
     String fileName;
-
 }

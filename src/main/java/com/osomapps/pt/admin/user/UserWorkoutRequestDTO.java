@@ -15,5 +15,5 @@ import lombok.experimental.Accessors;
 class UserWorkoutRequestDTO {
     String name;
     UserWarmupWorkoutItemRequestDTO warmup;
-    List<UserWorkoutItemRequestDTO> items;    
+    List<UserWorkoutItemRequestDTO> items;
 }

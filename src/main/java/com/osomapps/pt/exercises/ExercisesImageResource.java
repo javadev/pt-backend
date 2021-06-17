@@ -23,10 +23,12 @@ class ExercisesImageResource {
 
     @GetMapping("{id}/{fileName}")
     @ResponseBody
-    Object findOne(@PathVariable Long id, @PathVariable String fileName, HttpServletResponse response)
+    Object findOne(
+            @PathVariable Long id, @PathVariable String fileName, HttpServletResponse response)
             throws IOException {
         try (FastByteArrayOutputStream outputStream = new FastByteArrayOutputStream()) {
-            final ExerciseImageDTO exerciseImageDTO = exerciseImageService.findOne(id, fileName, outputStream);
+            final ExerciseImageDTO exerciseImageDTO =
+                    exerciseImageService.findOne(id, fileName, outputStream);
             response.setContentType(exerciseImageDTO.getFileType());
             outputStream.writeTo(response.getOutputStream());
             response.getOutputStream().close();

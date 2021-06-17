@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 class AdminUserResource {
 
     private final AdminUserService userService;
-    
+
     @Autowired
     AdminUserResource(AdminUserService userService) {
         this.userService = userService;
@@ -46,5 +46,4 @@ class AdminUserResource {
     UserResponseDTO delete(@PathVariable Long id) {
         return userService.delete(id);
     }
-
 }

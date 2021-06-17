@@ -1,30 +1,34 @@
 package com.osomapps.pt.token;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
 import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
 
 public class UserResponseDTOTest {
     @Test
     public void createAllArgs() {
-        assertThat(new UserResponseDTO(1L, "", "", "", "", "", 1L, null, null, null, null, null), notNullValue());
+        assertThat(
+                new UserResponseDTO(1L, "", "", "", "", "", 1L, null, null, null, null, null),
+                notNullValue());
     }
 
     @Test
     public void setters() {
-        UserResponseDTO userResponseDTO = new UserResponseDTO()
-            .setId(1L)
-            .setName("")
-            .setEmail("")
-            .setAvatar("")
-            .setAvatar_dataurl("")
-            .setGender("")
-            .setAge(1L)
-            .setBirthday(null)
-            .setLevel(null)
-            .setGoals(null)
-            .setHeight(null)
-            .setWeight(null);
+        UserResponseDTO userResponseDTO =
+                new UserResponseDTO()
+                        .setId(1L)
+                        .setName("")
+                        .setEmail("")
+                        .setAvatar("")
+                        .setAvatar_dataurl("")
+                        .setGender("")
+                        .setAge(1L)
+                        .setBirthday(null)
+                        .setLevel(null)
+                        .setGoals(null)
+                        .setHeight(null)
+                        .setWeight(null);
         assertThat(userResponseDTO, notNullValue());
     }
 
@@ -45,5 +49,4 @@ public class UserResponseDTOTest {
         userResponseDTO.getWeight();
         assertThat(userResponseDTO, notNullValue());
     }
-
 }

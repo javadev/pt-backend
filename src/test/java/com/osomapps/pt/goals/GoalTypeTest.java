@@ -2,6 +2,7 @@ package com.osomapps.pt.goals;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class GoalTypeTest {

@@ -18,12 +18,11 @@ class CustomErrorController implements ErrorController {
     @Value("${logging.level.org.springframework.web}")
     private String loggingLevel;
 
-    @Autowired
-    private ErrorAttributes errorAttributes;
+    @Autowired private ErrorAttributes errorAttributes;
 
     @RequestMapping(value = PATH)
     ErrorDTO error(WebRequest webRequest, HttpServletResponse response) {
-        // Appropriate HTTP response code (e.g. 404 or 500) is automatically set by Spring. 
+        // Appropriate HTTP response code (e.g. 404 or 500) is automatically set by Spring.
         // Here we just define response body.
         return new ErrorDTO(response.getStatus(), getErrorAttributes(webRequest, loggingLevel));
     }
@@ -36,5 +35,4 @@ class CustomErrorController implements ErrorController {
     private Map<String, Object> getErrorAttributes(WebRequest webRequest, String loggingLevel) {
         return errorAttributes.getErrorAttributes(webRequest, "DEBUG".equals(loggingLevel));
     }
-
 }

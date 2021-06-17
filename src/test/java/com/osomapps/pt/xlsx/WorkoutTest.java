@@ -2,6 +2,7 @@ package com.osomapps.pt.xlsx;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class WorkoutTest {
@@ -12,9 +13,7 @@ public class WorkoutTest {
 
     @Test
     public void setters() {
-        Workout workout = new Workout()
-            .setColumnIndex(0)
-            .setRowIndex(0);
+        Workout workout = new Workout().setColumnIndex(0).setRowIndex(0);
         assertThat(workout, notNullValue());
     }
 

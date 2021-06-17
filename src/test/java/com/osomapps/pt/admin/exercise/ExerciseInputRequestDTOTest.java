@@ -2,6 +2,7 @@ package com.osomapps.pt.admin.exercise;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class ExerciseInputRequestDTOTest {
@@ -17,9 +18,8 @@ public class ExerciseInputRequestDTOTest {
 
     @Test
     public void setters() {
-        ExerciseInputRequestDTO exerciseInputRequestDTO = new ExerciseInputRequestDTO()
-            .setId(null);
-        assertThat(exerciseInputRequestDTO, notNullValue());        
+        ExerciseInputRequestDTO exerciseInputRequestDTO = new ExerciseInputRequestDTO().setId(null);
+        assertThat(exerciseInputRequestDTO, notNullValue());
     }
 
     @Test
@@ -28,5 +28,4 @@ public class ExerciseInputRequestDTOTest {
         exerciseInputRequestDTO.getId();
         assertThat(exerciseInputRequestDTO, notNullValue());
     }
-
 }

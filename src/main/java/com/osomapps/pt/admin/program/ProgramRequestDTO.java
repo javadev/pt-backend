@@ -1,11 +1,11 @@
 package com.osomapps.pt.admin.program;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.Builder;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,5 +18,5 @@ class ProgramRequestDTO {
     String fileName;
     Long fileSize;
     String fileType;
-    String dataUrl;    
+    String dataUrl;
 }

@@ -28,7 +28,8 @@ class TokenEmailSignupService {
     private final InUserLoginRepository inUserLoginRepository;
     private final DataurlValidator dataurlValidator;
 
-    TokenEmailSignupService(SendEmailService sendEmailService,
+    TokenEmailSignupService(
+            SendEmailService sendEmailService,
             InUserEmailRepository inUserEmailRepository,
             EmailValidator emailValidator,
             PasswordEncoder passwordEncoder,
@@ -50,27 +51,33 @@ class TokenEmailSignupService {
         final List<InUserEmail> inUserEmails = inUserEmailRepository.findByLogin(email);
         if (inUserEmails.isEmpty()) {
             inUserEmail = new InUserEmail();
-            final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
+            final MapBindingResult errors =
+                    new MapBindingResult(new HashMap<>(), String.class.getName());
             emailValidator.validate(email, errors);
             if (errors.hasErrors()) {
                 throw new UnauthorizedException(errors.getAllErrors().get(0).getDefaultMessage());
             }
-            final MapBindingResult errorsDataurl = new MapBindingResult(new HashMap<>(), String.class.getName());
-            dataurlValidator.validate(tokenEmailSignupRequestDTO.getUser().getAvatar_dataurl(), errorsDataurl);
+            final MapBindingResult errorsDataurl =
+                    new MapBindingResult(new HashMap<>(), String.class.getName());
+            dataurlValidator.validate(
+                    tokenEmailSignupRequestDTO.getUser().getAvatar_dataurl(), errorsDataurl);
             if (errorsDataurl.hasErrors()) {
-                throw new UnauthorizedException(errorsDataurl.getAllErrors().get(0).getDefaultMessage());
+                throw new UnauthorizedException(
+                        errorsDataurl.getAllErrors().get(0).getDefaultMessage());
             }
             inUserEmail.setLogin(email);
             inUserEmail.setUser_name(tokenEmailSignupRequestDTO.getUser().getName());
             inUserEmail.setDevice_id(tokenEmailSignupRequestDTO.getDevice_id());
-            inUserEmail.setPassword(passwordEncoder.encode(tokenEmailSignupRequestDTO.getPassword()));
+            inUserEmail.setPassword(
+                    passwordEncoder.encode(tokenEmailSignupRequestDTO.getPassword()));
         } else {
             throw new UnauthorizedException("User already registered");
         }
         return inUserEmail;
     }
 
-    TokenEmailSignupResponseDTO createNewToken(TokenEmailSignupRequestDTO tokenEmailSignupRequestDTO, String remoteAddr) {
+    TokenEmailSignupResponseDTO createNewToken(
+            TokenEmailSignupRequestDTO tokenEmailSignupRequestDTO, String remoteAddr) {
         final InUserEmail inUserEmail = createInUserEmail(tokenEmailSignupRequestDTO);
         final InUserLogin inUserLogin = new InUserLogin();
         final InUser inUser = new InUser();
@@ -88,7 +95,10 @@ class TokenEmailSignupService {
         user.setName(inUserEmail.getUser_name());
         user.setEmail(inUserEmail.getLogin());
         user.setGender(inUserEmail.getInUser().getD_sex());
-        user.setAge(inUserEmail.getInUser().getAge() == null ? null : inUserEmail.getInUser().getAge().intValue());
+        user.setAge(
+                inUserEmail.getInUser().getAge() == null
+                        ? null
+                        : inUserEmail.getInUser().getAge().intValue());
         user.setBirthday(inUserEmail.getInUser().getBirthday());
         user.setAvatar_dataurl(inUserEmail.getInUser().getAvatar_dataurl());
         user.setGoals(Collections.emptyList());
@@ -96,7 +106,8 @@ class TokenEmailSignupService {
     }
 
     boolean confirmToken(String confirmToken) {
-        final List<InUserEmail> inUserEmails = inUserEmailRepository.findByConfirmToken(confirmToken);
+        final List<InUserEmail> inUserEmails =
+                inUserEmailRepository.findByConfirmToken(confirmToken);
         if (inUserEmails.isEmpty()) {
             return false;
         }
@@ -114,11 +125,16 @@ class TokenEmailSignupService {
         if (inUserEmails.isEmpty()) {
             throw new UnauthorizedException("Email not found: " + email);
         } else {
-            inUserEmails.get(0).setResetToken("re-" + UUID.randomUUID().toString().replace("-", ""));
+            inUserEmails
+                    .get(0)
+                    .setResetToken("re-" + UUID.randomUUID().toString().replace("-", ""));
             inUserEmailRepository.save(inUserEmails.get(0));
-            new Thread(() -> {
-                sendEmailService.sendForgotPassword(inUserEmails.get(0));
-            }, "Reset-email").start();
+            new Thread(
+                            () -> {
+                                sendEmailService.sendForgotPassword(inUserEmails.get(0));
+                            },
+                            "Reset-email")
+                    .start();
         }
     }
 
@@ -127,8 +143,9 @@ class TokenEmailSignupService {
         if (inUserEmails.isEmpty()) {
             return Optional.empty();
         }
-        String newPassword = RandomStringUtils.randomAlphabetic(3).toUpperCase()
-                + RandomStringUtils.randomNumeric(3);
+        String newPassword =
+                RandomStringUtils.randomAlphabetic(3).toUpperCase()
+                        + RandomStringUtils.randomNumeric(3);
         inUserEmails.get(0).setIs_reseted(Boolean.TRUE);
         inUserEmails.get(0).setReseted(LocalDateTime.now());
         inUserEmails.get(0).setPassword(passwordEncoder.encode(newPassword));

@@ -4,40 +4,40 @@ import com.osomapps.pt.ResourceNotFoundException;
 import com.osomapps.pt.programs.ParseExercise;
 import com.osomapps.pt.programs.ParseExerciseRepository;
 import com.osomapps.pt.programs.ParseGoal;
-import com.osomapps.pt.programs.ParseUserGroup;
-import com.osomapps.pt.programs.ParseProgram;
-import com.osomapps.pt.programs.ProgramRepository;
-import com.osomapps.pt.xlsx.Workout;
-import java.io.ByteArrayInputStream;
-import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-import com.osomapps.pt.programs.ParseWarmupWorkoutItem;
-import com.osomapps.pt.programs.ParseWorkout;
-import com.osomapps.pt.programs.ParseWorkoutItem;
-import com.osomapps.pt.programs.ParseWorkoutItemRepository;
-import com.osomapps.pt.programs.ParseWorkoutRepository;
-import com.osomapps.pt.xlsx.XlsxProgramParser;
-import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.Collections;
 import com.osomapps.pt.programs.ParseGoalRepository;
 import com.osomapps.pt.programs.ParsePart;
 import com.osomapps.pt.programs.ParsePartRepository;
+import com.osomapps.pt.programs.ParseProgram;
 import com.osomapps.pt.programs.ParseRound;
 import com.osomapps.pt.programs.ParseRoundRepository;
 import com.osomapps.pt.programs.ParseSheets;
+import com.osomapps.pt.programs.ParseUserGroup;
 import com.osomapps.pt.programs.ParseUserGroupRepository;
+import com.osomapps.pt.programs.ParseWarmupWorkoutItem;
 import com.osomapps.pt.programs.ParseWarmupWorkoutItemRepository;
+import com.osomapps.pt.programs.ParseWorkout;
+import com.osomapps.pt.programs.ParseWorkoutItem;
+import com.osomapps.pt.programs.ParseWorkoutItemRepository;
 import com.osomapps.pt.programs.ParseWorkoutItemSet;
 import com.osomapps.pt.programs.ParseWorkoutItemSetRepository;
+import com.osomapps.pt.programs.ParseWorkoutRepository;
+import com.osomapps.pt.programs.ProgramRepository;
 import com.osomapps.pt.xlsx.ExcelSheets;
+import com.osomapps.pt.xlsx.Workout;
+import com.osomapps.pt.xlsx.XlsxProgramParser;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 @Service
 class AdminProgramService {
@@ -55,7 +55,8 @@ class AdminProgramService {
     private final ParseWorkoutItemRepository parseWorkoutItemRepository;
     private final ParseWorkoutItemSetRepository parseWorkoutItemSetRepository;
 
-    AdminProgramService(ProgramRepository programRepository,
+    AdminProgramService(
+            ProgramRepository programRepository,
             ParseExerciseRepository parseExerciseRepository,
             ParseGoalRepository parseGoalRepository,
             ParseUserGroupRepository parseUserGroupRepository,
@@ -78,8 +79,9 @@ class AdminProgramService {
     }
 
     List<ProgramResponseDTO> findAll() {
-        return programRepository.findAll(sortByIdAsc()).stream().map(program -> programToDto(program))
-        .collect(Collectors.toList());
+        return programRepository.findAll(sortByIdAsc()).stream()
+                .map(program -> programToDto(program))
+                .collect(Collectors.toList());
     }
 
     private Sort sortByIdAsc() {
@@ -95,36 +97,104 @@ class AdminProgramService {
                 .fileType(program.getFile_type())
                 .dataUrl(program.getData_url())
                 .updated(program.getUpdated())
-                .parseExercises(program.getParseExercises().stream().map(exercise -> ParseExerciseDTO.builder()
-                        .exercise_id(exercise.getExercise_id())
-                        .exercise_name(exercise.getExercise_name())
-                        .user_group_1_percent(exercise.getUser_group_1_percent())
-                        .user_group_2_percent(exercise.getUser_group_2_percent())
-                        .user_group_3_percent(exercise.getUser_group_3_percent())
-                        .user_group_4_percent(exercise.getUser_group_4_percent())
-                        .basis_for_calculations(exercise.getBasis_for_calculations())
-                        .build()
-                ).collect(Collectors.toList()))
-                .parseGoals(program.getParseGoals().stream().map(result -> ParseGoalDTO.builder()
-                    .id(result.getId())
-                    .name(result.getName())
-                    .loops(result.getLoops())
-                    .errors(result.getErrors())
-                    .userGroups(result.getParseUserGroups().stream().map(userGroup -> ParseUserGroupDTO.builder()
-                        .id(userGroup.getId())
-                        .name(userGroup.getName())
-                        .rounds(userGroup.getParseRounds() == null ? null : userGroup.getParseRounds().stream().map(round -> ParseRoundDTO.builder()
-                                .id(round.getId())
-                                .name(round.getName())
-                                .parts(round.getParseParts().stream().map(part -> ParsePartDTO.builder()
-                                        .id(part.getId())
-                                        .name(part.getName())
-                                        .workouts(part.getParseWorkouts().stream().map(workout ->
-                                                createParseWorkoutDTO(workout)).collect(Collectors.toList()))
-                                        .build()).collect(Collectors.toList()))
-                                .build()).collect(Collectors.toList()))
-                            .build()).collect(Collectors.toList()))
-                        .build()).collect(Collectors.toList()))
+                .parseExercises(
+                        program.getParseExercises().stream()
+                                .map(
+                                        exercise ->
+                                                ParseExerciseDTO.builder()
+                                                        .exercise_id(exercise.getExercise_id())
+                                                        .exercise_name(exercise.getExercise_name())
+                                                        .user_group_1_percent(
+                                                                exercise.getUser_group_1_percent())
+                                                        .user_group_2_percent(
+                                                                exercise.getUser_group_2_percent())
+                                                        .user_group_3_percent(
+                                                                exercise.getUser_group_3_percent())
+                                                        .user_group_4_percent(
+                                                                exercise.getUser_group_4_percent())
+                                                        .basis_for_calculations(
+                                                                exercise
+                                                                        .getBasis_for_calculations())
+                                                        .build())
+                                .collect(Collectors.toList()))
+                .parseGoals(
+                        program.getParseGoals().stream()
+                                .map(
+                                        result ->
+                                                ParseGoalDTO.builder()
+                                                        .id(result.getId())
+                                                        .name(result.getName())
+                                                        .loops(result.getLoops())
+                                                        .errors(result.getErrors())
+                                                        .userGroups(
+                                                                result.getParseUserGroups().stream()
+                                                                        .map(
+                                                                                userGroup ->
+                                                                                        ParseUserGroupDTO
+                                                                                                .builder()
+                                                                                                .id(
+                                                                                                        userGroup
+                                                                                                                .getId())
+                                                                                                .name(
+                                                                                                        userGroup
+                                                                                                                .getName())
+                                                                                                .rounds(
+                                                                                                        userGroup
+                                                                                                                                .getParseRounds()
+                                                                                                                        == null
+                                                                                                                ? null
+                                                                                                                : userGroup
+                                                                                                                        .getParseRounds()
+                                                                                                                        .stream()
+                                                                                                                        .map(
+                                                                                                                                round ->
+                                                                                                                                        ParseRoundDTO
+                                                                                                                                                .builder()
+                                                                                                                                                .id(
+                                                                                                                                                        round
+                                                                                                                                                                .getId())
+                                                                                                                                                .name(
+                                                                                                                                                        round
+                                                                                                                                                                .getName())
+                                                                                                                                                .parts(
+                                                                                                                                                        round
+                                                                                                                                                                .getParseParts()
+                                                                                                                                                                .stream()
+                                                                                                                                                                .map(
+                                                                                                                                                                        part ->
+                                                                                                                                                                                ParsePartDTO
+                                                                                                                                                                                        .builder()
+                                                                                                                                                                                        .id(
+                                                                                                                                                                                                part
+                                                                                                                                                                                                        .getId())
+                                                                                                                                                                                        .name(
+                                                                                                                                                                                                part
+                                                                                                                                                                                                        .getName())
+                                                                                                                                                                                        .workouts(
+                                                                                                                                                                                                part
+                                                                                                                                                                                                        .getParseWorkouts()
+                                                                                                                                                                                                        .stream()
+                                                                                                                                                                                                        .map(
+                                                                                                                                                                                                                workout ->
+                                                                                                                                                                                                                        createParseWorkoutDTO(
+                                                                                                                                                                                                                                workout))
+                                                                                                                                                                                                        .collect(
+                                                                                                                                                                                                                Collectors
+                                                                                                                                                                                                                        .toList()))
+                                                                                                                                                                                        .build())
+                                                                                                                                                                .collect(
+                                                                                                                                                                        Collectors
+                                                                                                                                                                                .toList()))
+                                                                                                                                                .build())
+                                                                                                                        .collect(
+                                                                                                                                Collectors
+                                                                                                                                        .toList()))
+                                                                                                .build())
+                                                                        .collect(
+                                                                                Collectors
+                                                                                        .toList()))
+                                                        .build())
+                                .collect(Collectors.toList()))
                 .build();
     }
 
@@ -132,30 +202,70 @@ class AdminProgramService {
         return ParseWorkoutDTO.builder()
                 .id(workout.getId())
                 .name(workout.getName())
-                .warmupWorkoutItem(workout.getParseWarmupWorkoutItems() == null ? null
-                        : ParseWarmupWorkoutItemDTO.builder()
-                                .id(workout.getParseWarmupWorkoutItems().get(0).getId())
-                                .name(workout.getParseWarmupWorkoutItems().get(0).getName())
-                                .speed(workout.getParseWarmupWorkoutItems().get(0).getSpeed())
-                                .incline(workout.getParseWarmupWorkoutItems().get(0).getIncline())
-                                .time_in_min(workout.getParseWarmupWorkoutItems().get(0).getTime_in_min())
-                                .build())
-                .workoutItems(workout.getParseWorkoutItems() == null ? null : workout.getParseWorkoutItems().stream().map(workoutItem ->
-                        ParseWorkoutItemDTO.builder()
-                                .id(workoutItem.getId())
-                                .name(workoutItem.getName())
-                                .sets(workoutItem.getParseWorkoutItemSets().stream().map(set ->
-                                    new ParseWorkoutItemSetDTO()
-                                        .setRepetitions(set.getRepetitions())
-                                        .setRepetitions_to_failure(set.getRepetitions_to_failure())
-                                        .setWeight(set.getWeight())
-                                        .setBodyweight(set.getBodyweight())
-                                        .setTime_in_min(set.getTime_in_min())
-                                        .setSpeed(set.getSpeed())
-                                        .setIncline(set.getIncline())
-                                        .setResistance(set.getResistance())
-                                ).collect(Collectors.toList()))
-                                .build()).collect(Collectors.toList()))
+                .warmupWorkoutItem(
+                        workout.getParseWarmupWorkoutItems() == null
+                                ? null
+                                : ParseWarmupWorkoutItemDTO.builder()
+                                        .id(workout.getParseWarmupWorkoutItems().get(0).getId())
+                                        .name(workout.getParseWarmupWorkoutItems().get(0).getName())
+                                        .speed(
+                                                workout.getParseWarmupWorkoutItems()
+                                                        .get(0)
+                                                        .getSpeed())
+                                        .incline(
+                                                workout.getParseWarmupWorkoutItems()
+                                                        .get(0)
+                                                        .getIncline())
+                                        .time_in_min(
+                                                workout.getParseWarmupWorkoutItems()
+                                                        .get(0)
+                                                        .getTime_in_min())
+                                        .build())
+                .workoutItems(
+                        workout.getParseWorkoutItems() == null
+                                ? null
+                                : workout.getParseWorkoutItems().stream()
+                                        .map(
+                                                workoutItem ->
+                                                        ParseWorkoutItemDTO.builder()
+                                                                .id(workoutItem.getId())
+                                                                .name(workoutItem.getName())
+                                                                .sets(
+                                                                        workoutItem
+                                                                                .getParseWorkoutItemSets()
+                                                                                .stream()
+                                                                                .map(
+                                                                                        set ->
+                                                                                                new ParseWorkoutItemSetDTO()
+                                                                                                        .setRepetitions(
+                                                                                                                set
+                                                                                                                        .getRepetitions())
+                                                                                                        .setRepetitions_to_failure(
+                                                                                                                set
+                                                                                                                        .getRepetitions_to_failure())
+                                                                                                        .setWeight(
+                                                                                                                set
+                                                                                                                        .getWeight())
+                                                                                                        .setBodyweight(
+                                                                                                                set
+                                                                                                                        .getBodyweight())
+                                                                                                        .setTime_in_min(
+                                                                                                                set
+                                                                                                                        .getTime_in_min())
+                                                                                                        .setSpeed(
+                                                                                                                set
+                                                                                                                        .getSpeed())
+                                                                                                        .setIncline(
+                                                                                                                set
+                                                                                                                        .getIncline())
+                                                                                                        .setResistance(
+                                                                                                                set
+                                                                                                                        .getResistance()))
+                                                                                .collect(
+                                                                                        Collectors
+                                                                                                .toList()))
+                                                                .build())
+                                        .collect(Collectors.toList()))
                 .build();
     }
 
@@ -181,56 +291,125 @@ class AdminProgramService {
         return programToDto(program);
     }
 
-    private ParseSheets parseDataUrlAndSaveGoals(ProgramRequestDTO programRequestDTO, final ParseProgram savedProgram) {
+    private ParseSheets parseDataUrlAndSaveGoals(
+            ProgramRequestDTO programRequestDTO, final ParseProgram savedProgram) {
         final ParseSheets parseSheets = parseDataUrl(programRequestDTO, savedProgram);
         parseExerciseRepository.saveAll(parseSheets.getParseExercises());
-        final List<ParseGoal> savedParseGoals = parseGoalRepository.saveAll(parseSheets.getParseGoals());
-        savedParseGoals.forEach((parseGoal) -> {
-            parseGoal.getParseUserGroups().forEach((parseUserGroup) -> {
-                parseUserGroup.setParseGoal(parseGoal);
-                parseUserGroup.getParseRounds().forEach((parseRound) -> {
-                    parseRound.setParseUserGroup(parseUserGroup);
-                    parseRound.getParseParts().forEach((parsePart) -> {
-                        parsePart.setParseRound(parseRound);
-                        parsePart.getParseWorkouts().forEach((parseWorkout) -> {
-                            parseWorkout.setParsePart(parsePart);
-                            if (parseWorkout.getParseWarmupWorkoutItems() != null) {
-                                parseWorkout.getParseWarmupWorkoutItems().forEach((parseWarmupWorkoutItem) -> {
-                                    parseWarmupWorkoutItem.setParseWorkout(parseWorkout);
-                                });
-                            }
-                            if (parseWorkout.getParseWorkoutItems() != null) {
-                                parseWorkout.getParseWorkoutItems().forEach((parseWorkoutItem) -> {
-                                    parseWorkoutItem.setParseWorkout(parseWorkout);
-                                    parseWorkoutItem.getParseWorkoutItemSets().forEach((parseWorkoutItemSet) -> {
-                                        parseWorkoutItemSet.setParseWorkoutItem(parseWorkoutItem);
+        final List<ParseGoal> savedParseGoals =
+                parseGoalRepository.saveAll(parseSheets.getParseGoals());
+        savedParseGoals.forEach(
+                (parseGoal) -> {
+                    parseGoal
+                            .getParseUserGroups()
+                            .forEach(
+                                    (parseUserGroup) -> {
+                                        parseUserGroup.setParseGoal(parseGoal);
+                                        parseUserGroup
+                                                .getParseRounds()
+                                                .forEach(
+                                                        (parseRound) -> {
+                                                            parseRound.setParseUserGroup(
+                                                                    parseUserGroup);
+                                                            parseRound
+                                                                    .getParseParts()
+                                                                    .forEach(
+                                                                            (parsePart) -> {
+                                                                                parsePart
+                                                                                        .setParseRound(
+                                                                                                parseRound);
+                                                                                parsePart
+                                                                                        .getParseWorkouts()
+                                                                                        .forEach(
+                                                                                                (parseWorkout) -> {
+                                                                                                    parseWorkout
+                                                                                                            .setParsePart(
+                                                                                                                    parsePart);
+                                                                                                    if (parseWorkout
+                                                                                                                    .getParseWarmupWorkoutItems()
+                                                                                                            != null) {
+                                                                                                        parseWorkout
+                                                                                                                .getParseWarmupWorkoutItems()
+                                                                                                                .forEach(
+                                                                                                                        (parseWarmupWorkoutItem) -> {
+                                                                                                                            parseWarmupWorkoutItem
+                                                                                                                                    .setParseWorkout(
+                                                                                                                                            parseWorkout);
+                                                                                                                        });
+                                                                                                    }
+                                                                                                    if (parseWorkout
+                                                                                                                    .getParseWorkoutItems()
+                                                                                                            != null) {
+                                                                                                        parseWorkout
+                                                                                                                .getParseWorkoutItems()
+                                                                                                                .forEach(
+                                                                                                                        (parseWorkoutItem) -> {
+                                                                                                                            parseWorkoutItem
+                                                                                                                                    .setParseWorkout(
+                                                                                                                                            parseWorkout);
+                                                                                                                            parseWorkoutItem
+                                                                                                                                    .getParseWorkoutItemSets()
+                                                                                                                                    .forEach(
+                                                                                                                                            (parseWorkoutItemSet) -> {
+                                                                                                                                                parseWorkoutItemSet
+                                                                                                                                                        .setParseWorkoutItem(
+                                                                                                                                                                parseWorkoutItem);
+                                                                                                                                            });
+                                                                                                                        });
+                                                                                                    }
+                                                                                                });
+                                                                            });
+                                                        });
                                     });
-                                });
-                            }
-                        });
-                    });
                 });
-            });
-        });
-        savedParseGoals.forEach((parseGoal) -> {
-            parseUserGroupRepository.saveAll(parseGoal.getParseUserGroups());
-            parseGoal.getParseUserGroups().forEach((parseUserGroup) -> {
-                parseRoundRepository.saveAll(parseUserGroup.getParseRounds());
-                parseUserGroup.getParseRounds().forEach((parseRound) -> {
-                    parsePartRepository.saveAll(parseRound.getParseParts());
-                    parseRound.getParseParts().forEach((parsePart) -> {
-                        parseWorkoutRepository.saveAll(parsePart.getParseWorkouts());
-                        parsePart.getParseWorkouts().forEach((parseWorkout) -> {
-                            parseWarmupWorkoutItemRepository.saveAll(parseWorkout.getParseWarmupWorkoutItems());
-                            parseWorkoutItemRepository.saveAll(parseWorkout.getParseWorkoutItems());
-                            parseWorkout.getParseWorkoutItems().forEach(parseWorkoutItem -> {
-                                 parseWorkoutItemSetRepository.saveAll(parseWorkoutItem.getParseWorkoutItemSets());
-                            });
-                        });
-                    });
+        savedParseGoals.forEach(
+                (parseGoal) -> {
+                    parseUserGroupRepository.saveAll(parseGoal.getParseUserGroups());
+                    parseGoal
+                            .getParseUserGroups()
+                            .forEach(
+                                    (parseUserGroup) -> {
+                                        parseRoundRepository.saveAll(
+                                                parseUserGroup.getParseRounds());
+                                        parseUserGroup
+                                                .getParseRounds()
+                                                .forEach(
+                                                        (parseRound) -> {
+                                                            parsePartRepository.saveAll(
+                                                                    parseRound.getParseParts());
+                                                            parseRound
+                                                                    .getParseParts()
+                                                                    .forEach(
+                                                                            (parsePart) -> {
+                                                                                parseWorkoutRepository
+                                                                                        .saveAll(
+                                                                                                parsePart
+                                                                                                        .getParseWorkouts());
+                                                                                parsePart
+                                                                                        .getParseWorkouts()
+                                                                                        .forEach(
+                                                                                                (parseWorkout) -> {
+                                                                                                    parseWarmupWorkoutItemRepository
+                                                                                                            .saveAll(
+                                                                                                                    parseWorkout
+                                                                                                                            .getParseWarmupWorkoutItems());
+                                                                                                    parseWorkoutItemRepository
+                                                                                                            .saveAll(
+                                                                                                                    parseWorkout
+                                                                                                                            .getParseWorkoutItems());
+                                                                                                    parseWorkout
+                                                                                                            .getParseWorkoutItems()
+                                                                                                            .forEach(
+                                                                                                                    parseWorkoutItem -> {
+                                                                                                                        parseWorkoutItemSetRepository
+                                                                                                                                .saveAll(
+                                                                                                                                        parseWorkoutItem
+                                                                                                                                                .getParseWorkoutItemSets());
+                                                                                                                    });
+                                                                                                });
+                                                                            });
+                                                        });
+                                    });
                 });
-            });
-        });
         return parseSheets;
     }
 
@@ -253,84 +432,178 @@ class AdminProgramService {
         return programToDto(programRepository.save(program));
     }
 
-    private ParseSheets parseDataUrl(ProgramRequestDTO programRequestDTO, final ParseProgram program) {
-        final ByteArrayInputStream arrayInputStream = dataUrlToInputStream(programRequestDTO.getDataUrl());
+    private ParseSheets parseDataUrl(
+            ProgramRequestDTO programRequestDTO, final ParseProgram program) {
+        final ByteArrayInputStream arrayInputStream =
+                dataUrlToInputStream(programRequestDTO.getDataUrl());
         final XlsxProgramParser xlsxProgramParser = XlsxProgramParser.of(arrayInputStream);
         final ExcelSheets excelSheets = xlsxProgramParser.getExcelSheets();
         return new ParseSheets()
-                .setParseExercises(excelSheets.getExcelExercises().stream().map(exercise ->
-                  new ParseExercise()
-                        .setExercise_id(exercise.getExercise_id())
-                        .setExercise_name(exercise.getExercise_name())
-                        .setUser_group_1_percent(exercise.getUser_group_1_percent())
-                        .setUser_group_2_percent(exercise.getUser_group_2_percent())
-                        .setUser_group_3_percent(exercise.getUser_group_3_percent())
-                        .setUser_group_4_percent(exercise.getUser_group_4_percent())
-                        .setBasis_for_calculations(exercise.getBasis_for_calculations())
-                        .setParseProgram(program)
-                ).collect(Collectors.toList()))
-                .setParseGoals(excelSheets.getExcelGoals().stream().map(goal ->
-            new ParseGoal()
-                .setErrors(StringUtils.abbreviate(goal.getErrors().stream().collect(Collectors.joining(", ")), 1000))
-                .setName(goal.getName())
-                .setSheet_index(goal.getSheetIndex())
-                .setLoops(goal.getLoops())
-                .setParseProgram(program)
-                .setParseUserGroups(goal.getUserGroups().stream().map(userGroup ->
-                        new ParseUserGroup()
-                            .setName(userGroup.getName())
-                            .setParseRounds(userGroup.getRounds().stream().map(round ->
-                                new ParseRound()
-                                    .setName(round.getName())
-                                    .setParseParts(round.getParts().stream().map(part ->
-                                        new ParsePart()
-                                            .setName(part.getName())
-                                            .setParseWorkouts(part.getWorkouts().stream().map(workout ->
-                                                createParseWorkout(workout)
-                                            ).collect(Collectors.toList()))
-                                    ).collect(Collectors.toList()))
-                            ).collect(Collectors.toList()))
-                ).collect(Collectors.toList()))
-        ).collect(Collectors.toList()));
+                .setParseExercises(
+                        excelSheets.getExcelExercises().stream()
+                                .map(
+                                        exercise ->
+                                                new ParseExercise()
+                                                        .setExercise_id(exercise.getExercise_id())
+                                                        .setExercise_name(
+                                                                exercise.getExercise_name())
+                                                        .setUser_group_1_percent(
+                                                                exercise.getUser_group_1_percent())
+                                                        .setUser_group_2_percent(
+                                                                exercise.getUser_group_2_percent())
+                                                        .setUser_group_3_percent(
+                                                                exercise.getUser_group_3_percent())
+                                                        .setUser_group_4_percent(
+                                                                exercise.getUser_group_4_percent())
+                                                        .setBasis_for_calculations(
+                                                                exercise
+                                                                        .getBasis_for_calculations())
+                                                        .setParseProgram(program))
+                                .collect(Collectors.toList()))
+                .setParseGoals(
+                        excelSheets.getExcelGoals().stream()
+                                .map(
+                                        goal ->
+                                                new ParseGoal()
+                                                        .setErrors(
+                                                                StringUtils.abbreviate(
+                                                                        goal.getErrors().stream()
+                                                                                .collect(
+                                                                                        Collectors
+                                                                                                .joining(
+                                                                                                        ", ")),
+                                                                        1000))
+                                                        .setName(goal.getName())
+                                                        .setSheet_index(goal.getSheetIndex())
+                                                        .setLoops(goal.getLoops())
+                                                        .setParseProgram(program)
+                                                        .setParseUserGroups(
+                                                                goal.getUserGroups().stream()
+                                                                        .map(
+                                                                                userGroup ->
+                                                                                        new ParseUserGroup()
+                                                                                                .setName(
+                                                                                                        userGroup
+                                                                                                                .getName())
+                                                                                                .setParseRounds(
+                                                                                                        userGroup
+                                                                                                                .getRounds()
+                                                                                                                .stream()
+                                                                                                                .map(
+                                                                                                                        round ->
+                                                                                                                                new ParseRound()
+                                                                                                                                        .setName(
+                                                                                                                                                round
+                                                                                                                                                        .getName())
+                                                                                                                                        .setParseParts(
+                                                                                                                                                round
+                                                                                                                                                        .getParts()
+                                                                                                                                                        .stream()
+                                                                                                                                                        .map(
+                                                                                                                                                                part ->
+                                                                                                                                                                        new ParsePart()
+                                                                                                                                                                                .setName(
+                                                                                                                                                                                        part
+                                                                                                                                                                                                .getName())
+                                                                                                                                                                                .setParseWorkouts(
+                                                                                                                                                                                        part
+                                                                                                                                                                                                .getWorkouts()
+                                                                                                                                                                                                .stream()
+                                                                                                                                                                                                .map(
+                                                                                                                                                                                                        workout ->
+                                                                                                                                                                                                                createParseWorkout(
+                                                                                                                                                                                                                        workout))
+                                                                                                                                                                                                .collect(
+                                                                                                                                                                                                        Collectors
+                                                                                                                                                                                                                .toList())))
+                                                                                                                                                        .collect(
+                                                                                                                                                                Collectors
+                                                                                                                                                                        .toList())))
+                                                                                                                .collect(
+                                                                                                                        Collectors
+                                                                                                                                .toList())))
+                                                                        .collect(
+                                                                                Collectors
+                                                                                        .toList())))
+                                .collect(Collectors.toList()));
     }
 
     private ParseWorkout createParseWorkout(Workout workout) {
         return new ParseWorkout()
                 .setName(workout.getName())
-                .setParseWarmupWorkoutItems(workout.getWarmup() == null ? Collections.emptyList()
-                        : Arrays.asList(new ParseWarmupWorkoutItem()
-                                .setName(workout.getWarmup().getExercise())
-                                .setExercise_id(workout.getWarmup().getExerciseId())
-                                .setSpeed(workout.getWarmup().getSpeed())
-                                .setIncline(workout.getWarmup().getIncline())
-                                .setTime_in_min(workout.getWarmup().getTimeInMin())))
-                .setParseWorkoutItems(workout.getWorkoutItems().stream().map(workoutItem ->
-                        new ParseWorkoutItem()
-                                .setColumn_index(workoutItem.getColumnIndex())
-                                .setRow_index(workoutItem.getRowIndex())
-                                .setName(workoutItem.getInput().getExercise())
-                                .setExercise_id(workoutItem.getExerciseId())
-                                .setParseWorkoutItemSets(workoutItem.getInput().getSets().stream().map(set ->
-                                        new ParseWorkoutItemSet()
-                                            .setRepetitions(set.getRepetitions())
-                                            .setRepetitions_to_failure(BooleanUtils.isTrue(set.getRepetitionsToFailure()))
-                                            .setWeight(set.getWeight())
-                                            .setBodyweight(BooleanUtils.isTrue(set.getBodyweight()))
-                                            .setTime_in_min(set.getTimeInMin())
-                                            .setSpeed(set.getSpeed())
-                                            .setIncline(set.getIncline())
-                                            .setResistance(set.getResistance())
-                                ).collect(Collectors.toList()))
-                ).collect(Collectors.toList()));
+                .setParseWarmupWorkoutItems(
+                        workout.getWarmup() == null
+                                ? Collections.emptyList()
+                                : Arrays.asList(
+                                        new ParseWarmupWorkoutItem()
+                                                .setName(workout.getWarmup().getExercise())
+                                                .setExercise_id(workout.getWarmup().getExerciseId())
+                                                .setSpeed(workout.getWarmup().getSpeed())
+                                                .setIncline(workout.getWarmup().getIncline())
+                                                .setTime_in_min(
+                                                        workout.getWarmup().getTimeInMin())))
+                .setParseWorkoutItems(
+                        workout.getWorkoutItems().stream()
+                                .map(
+                                        workoutItem ->
+                                                new ParseWorkoutItem()
+                                                        .setColumn_index(
+                                                                workoutItem.getColumnIndex())
+                                                        .setRow_index(workoutItem.getRowIndex())
+                                                        .setName(
+                                                                workoutItem
+                                                                        .getInput()
+                                                                        .getExercise())
+                                                        .setExercise_id(workoutItem.getExerciseId())
+                                                        .setParseWorkoutItemSets(
+                                                                workoutItem.getInput().getSets()
+                                                                        .stream()
+                                                                        .map(
+                                                                                set ->
+                                                                                        new ParseWorkoutItemSet()
+                                                                                                .setRepetitions(
+                                                                                                        set
+                                                                                                                .getRepetitions())
+                                                                                                .setRepetitions_to_failure(
+                                                                                                        BooleanUtils
+                                                                                                                .isTrue(
+                                                                                                                        set
+                                                                                                                                .getRepetitionsToFailure()))
+                                                                                                .setWeight(
+                                                                                                        set
+                                                                                                                .getWeight())
+                                                                                                .setBodyweight(
+                                                                                                        BooleanUtils
+                                                                                                                .isTrue(
+                                                                                                                        set
+                                                                                                                                .getBodyweight()))
+                                                                                                .setTime_in_min(
+                                                                                                        set
+                                                                                                                .getTimeInMin())
+                                                                                                .setSpeed(
+                                                                                                        set
+                                                                                                                .getSpeed())
+                                                                                                .setIncline(
+                                                                                                        set
+                                                                                                                .getIncline())
+                                                                                                .setResistance(
+                                                                                                        set
+                                                                                                                .getResistance()))
+                                                                        .collect(
+                                                                                Collectors
+                                                                                        .toList())))
+                                .collect(Collectors.toList()));
     }
 
     ByteArrayInputStream dataUrlToInputStream(String dataUrl) {
-        final String encodedString = dataUrl.substring(dataUrl.indexOf(BASE64_PREFIX) + BASE64_PREFIX_LENGTH);
+        final String encodedString =
+                dataUrl.substring(dataUrl.indexOf(BASE64_PREFIX) + BASE64_PREFIX_LENGTH);
         return new ByteArrayInputStream(Base64.getDecoder().decode(encodedString));
     }
 
     void dataUrlToOutputStream(String dataUrl, OutputStream outputStream) {
-        final String encodedString = dataUrl.substring(dataUrl.indexOf(BASE64_PREFIX) + BASE64_PREFIX_LENGTH);
+        final String encodedString =
+                dataUrl.substring(dataUrl.indexOf(BASE64_PREFIX) + BASE64_PREFIX_LENGTH);
         try {
             outputStream.write(Base64.getDecoder().decode(encodedString));
         } catch (IOException | IllegalArgumentException ex) {

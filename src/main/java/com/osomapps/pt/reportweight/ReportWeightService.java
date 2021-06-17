@@ -14,8 +14,7 @@ class ReportWeightService {
     private final UserService userService;
 
     @Autowired
-    ReportWeightService(InUserWeightRepository inUserWeightRepository,
-            UserService userService) {
+    ReportWeightService(InUserWeightRepository inUserWeightRepository, UserService userService) {
         this.inUserWeightRepository = inUserWeightRepository;
         this.userService = userService;
     }
@@ -23,9 +22,13 @@ class ReportWeightService {
     List<WeightResponseDTO> findAll(String token) {
         if (!token.isEmpty()) {
             final InUserLogin inUserLogin = userService.checkUserToken(token);
-            return inUserLogin.getInUser().getInUserWeights().stream().map(inUserWeight ->
-                new WeightResponseDTO(inUserWeight.getId(), inUserWeight.getWeight().longValue())
-            ).collect(Collectors.toList());
+            return inUserLogin.getInUser().getInUserWeights().stream()
+                    .map(
+                            inUserWeight ->
+                                    new WeightResponseDTO(
+                                            inUserWeight.getId(),
+                                            inUserWeight.getWeight().longValue()))
+                    .collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
@@ -37,7 +40,8 @@ class ReportWeightService {
             inUserWeight.setInUser(inUserLogin.getInUser());
             inUserWeight.setWeight(weightRequestDTO.getWeight().floatValue());
             InUserWeight InUserWeightSaved = inUserWeightRepository.save(inUserWeight);
-            return new WeightResponseDTO(InUserWeightSaved.getId(), InUserWeightSaved.getWeight().longValue());
+            return new WeightResponseDTO(
+                    InUserWeightSaved.getId(), InUserWeightSaved.getWeight().longValue());
         }
         return new WeightResponseDTO();
     }

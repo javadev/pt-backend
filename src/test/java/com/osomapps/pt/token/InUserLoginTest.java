@@ -1,8 +1,9 @@
 package com.osomapps.pt.token;
 
-import java.time.LocalDateTime;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import java.time.LocalDateTime;
 import org.junit.Test;
 
 public class InUserLoginTest {
@@ -13,8 +14,9 @@ public class InUserLoginTest {
 
     @Test
     public void createAllArgs() {
-        assertThat(new InUserLogin(
-                1L, null, LocalDateTime.now(), "token", "ip_address"), notNullValue());
+        assertThat(
+                new InUserLogin(1L, null, LocalDateTime.now(), "token", "ip_address"),
+                notNullValue());
     }
 
     @Test

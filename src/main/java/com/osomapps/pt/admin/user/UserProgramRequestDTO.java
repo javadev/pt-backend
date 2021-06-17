@@ -15,5 +15,5 @@ import lombok.experimental.Accessors;
 class UserProgramRequestDTO {
     String name;
     String type;
-    List<UserWorkoutRequestDTO> workouts;    
+    List<UserWorkoutRequestDTO> workouts;
 }

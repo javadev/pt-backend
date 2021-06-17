@@ -16,5 +16,6 @@ import lombok.experimental.Accessors;
 class PhotoResponseDTO {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     LocalDateTime date;
+
     String photo;
 }

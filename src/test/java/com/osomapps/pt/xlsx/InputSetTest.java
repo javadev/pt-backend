@@ -2,6 +2,7 @@ package com.osomapps.pt.xlsx;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class InputSetTest {
@@ -15,5 +16,4 @@ public class InputSetTest {
         InputSet inputSet = new InputSet();
         assertThat(inputSet.toString(), notNullValue());
     }
-
 }

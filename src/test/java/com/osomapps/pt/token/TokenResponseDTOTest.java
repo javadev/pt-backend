@@ -1,8 +1,9 @@
 package com.osomapps.pt.token;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
 import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
 
 public class TokenResponseDTOTest {
     @Test
@@ -12,9 +13,7 @@ public class TokenResponseDTOTest {
 
     @Test
     public void setters() {
-        TokenResponseDTO tokenResponseDTO = new TokenResponseDTO()
-            .setToken("")
-            .setUser(null);
+        TokenResponseDTO tokenResponseDTO = new TokenResponseDTO().setToken("").setUser(null);
         assertThat(tokenResponseDTO, notNullValue());
     }
 
@@ -25,5 +24,4 @@ public class TokenResponseDTOTest {
         tokenResponseDTO.getUser();
         assertThat(tokenResponseDTO, notNullValue());
     }
-
 }

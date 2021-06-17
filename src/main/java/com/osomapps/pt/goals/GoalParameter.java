@@ -25,29 +25,29 @@ import org.hibernate.annotations.Parameter;
 @Getter
 @Setter
 @Entity
-@Table (name = "goal_parameter", schema = "ptcore")
+@Table(name = "goal_parameter", schema = "ptcore")
 @DynamicInsert
 public class GoalParameter {
     @Id
     @GenericGenerator(
-        name = "GoalParameterIdSequence",
-        strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-        parameters = {
+            name = "GoalParameterIdSequence",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {
                 @Parameter(name = "sequence_name", value = "ptcore.goal_parameter_id_seq"),
                 @Parameter(name = "initial_value", value = "1"),
                 @Parameter(name = "increment_size", value = "1")
-        }
-    )
+            })
     @GeneratedValue(generator = "GoalParameterIdSequence")
     Long id;
+
     LocalDateTime created;
     String name;
+
     @ManyToMany
     @JoinTable(
             name = "goal_has_goal_parameter",
             schema = "ptcore",
-            joinColumns = { @JoinColumn(name = "goal_parameter_id") },
-            inverseJoinColumns = { @JoinColumn(name = "goal_id") }
-    )
+            joinColumns = {@JoinColumn(name = "goal_parameter_id")},
+            inverseJoinColumns = {@JoinColumn(name = "goal_id")})
     List<Goal> goals = new ArrayList<>(0);
 }

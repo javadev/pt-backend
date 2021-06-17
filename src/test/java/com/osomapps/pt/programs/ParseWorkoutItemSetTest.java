@@ -1,15 +1,18 @@
 package com.osomapps.pt.programs;
 
-import java.time.LocalDateTime;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
+import java.time.LocalDateTime;
 import org.junit.Test;
 
 public class ParseWorkoutItemSetTest {
     @Test
     public void allArgsConstructor() {
-        assertThat(new ParseWorkoutItemSet(
-                1L, null, null, null, null, null, null, null, null, null, null), notNullValue());
+        assertThat(
+                new ParseWorkoutItemSet(
+                        1L, null, null, null, null, null, null, null, null, null, null),
+                notNullValue());
     }
 
     @Test

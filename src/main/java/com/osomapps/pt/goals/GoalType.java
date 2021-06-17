@@ -22,16 +22,21 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 @Setter
 @Entity
-@Table (name = "goal_type", schema = "ptcore")
+@Table(name = "goal_type", schema = "ptcore")
 @DynamicInsert
 public class GoalType {
     @Id
-    @SequenceGenerator(name = "GoalTypeIdSequence", sequenceName = "ptcore.goal_type_id_seq",
-            allocationSize = 1, initialValue = 1)
+    @SequenceGenerator(
+            name = "GoalTypeIdSequence",
+            sequenceName = "ptcore.goal_type_id_seq",
+            allocationSize = 1,
+            initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GoalTypeIdSequence")
     Long id;
+
     LocalDateTime created;
     String name;
+
     @OneToMany(mappedBy = "goalType")
     List<Goal> goals;
 }

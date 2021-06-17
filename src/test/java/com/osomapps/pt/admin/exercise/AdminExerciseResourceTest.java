@@ -1,24 +1,22 @@
 package com.osomapps.pt.admin.exercise;
 
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
-import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminExerciseResourceTest {
 
-    @Mock
-    private AdminExerciseService adminExerciseService;    
+    @Mock private AdminExerciseService adminExerciseService;
 
-    @InjectMocks
-    private AdminExerciseResource adminExerciseResource;
+    @InjectMocks private AdminExerciseResource adminExerciseResource;
 
     @Test
     public void findAll() {

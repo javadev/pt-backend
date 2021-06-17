@@ -21,7 +21,9 @@ class AuthUserService {
                 .setId(userDetails.getPtUser().getId())
                 .setName(userDetails.getUsername())
                 .setLogin(userDetails.getPtUser().getLogin())
-                .setPermissions(userDetails.getPtUser().getPtRoles().stream()
-                        .map(ptRole -> ptRole.getName()).collect(Collectors.toList()));
+                .setPermissions(
+                        userDetails.getPtUser().getPtRoles().stream()
+                                .map(ptRole -> ptRole.getName())
+                                .collect(Collectors.toList()));
     }
 }

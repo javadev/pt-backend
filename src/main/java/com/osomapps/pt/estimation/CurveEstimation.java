@@ -7,8 +7,12 @@ public class CurveEstimation {
     private float baseNumber = 2F;
     private float limit = 50F;
 
-    private CurveEstimation(float impact, float zeroAdjustmentBefore,
-            float zeroAdjustmentAfter, float baseNumber, float limit) {
+    private CurveEstimation(
+            float impact,
+            float zeroAdjustmentBefore,
+            float zeroAdjustmentAfter,
+            float baseNumber,
+            float limit) {
         this.impact = impact; // B1
         this.zeroAdjustmentBefore = zeroAdjustmentBefore; // B2
         this.zeroAdjustmentAfter = zeroAdjustmentAfter; // B3
@@ -16,18 +20,40 @@ public class CurveEstimation {
         this.limit = limit; // B5
     }
 
-    public static CurveEstimation of(float impact, float zeroAdjustmentBefore,
-            float zeroAdjustmentAfter, float baseNumber, float limit) {
-        return new CurveEstimation(impact, zeroAdjustmentBefore,
-            zeroAdjustmentAfter, baseNumber, limit);
+    public static CurveEstimation of(
+            float impact,
+            float zeroAdjustmentBefore,
+            float zeroAdjustmentAfter,
+            float baseNumber,
+            float limit) {
+        return new CurveEstimation(
+                impact, zeroAdjustmentBefore, zeroAdjustmentAfter, baseNumber, limit);
     }
 
     public float calc(float value) {
         if (value < 0) {
-            return (float) (Math.abs(Math.min(Math.max((Math.pow(value / 100, baseNumber) * 100 / impact), -limit), limit * 0.5F))
-                    * Math.signum(value) + zeroAdjustmentAfter);
+            return (float)
+                    (Math.abs(
+                                            Math.min(
+                                                    Math.max(
+                                                            (Math.pow(value / 100, baseNumber)
+                                                                    * 100
+                                                                    / impact),
+                                                            -limit),
+                                                    limit * 0.5F))
+                                    * Math.signum(value)
+                            + zeroAdjustmentAfter);
         }
-        return (float) (Math.abs(Math.min(Math.max((Math.pow(value / 100, baseNumber) * 100 / impact), -limit), limit))
-                * Math.signum(value) + zeroAdjustmentAfter);
+        return (float)
+                (Math.abs(
+                                        Math.min(
+                                                Math.max(
+                                                        (Math.pow(value / 100, baseNumber)
+                                                                * 100
+                                                                / impact),
+                                                        -limit),
+                                                limit))
+                                * Math.signum(value)
+                        + zeroAdjustmentAfter);
     }
 }

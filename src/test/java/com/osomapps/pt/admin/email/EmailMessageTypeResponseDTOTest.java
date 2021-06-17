@@ -2,6 +2,7 @@ package com.osomapps.pt.admin.email;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class EmailMessageTypeResponseDTOTest {
@@ -17,9 +18,8 @@ public class EmailMessageTypeResponseDTOTest {
 
     @Test
     public void setters() {
-        EmailMessageTypeResponseDTO emailMessageTypeResponseDTO = new EmailMessageTypeResponseDTO()
-            .setId(null)
-            .setName(null);
+        EmailMessageTypeResponseDTO emailMessageTypeResponseDTO =
+                new EmailMessageTypeResponseDTO().setId(null).setName(null);
         assertThat(emailMessageTypeResponseDTO, notNullValue());
     }
 
@@ -30,5 +30,4 @@ public class EmailMessageTypeResponseDTOTest {
         emailMessageTypeResponseDTO.getName();
         assertThat(emailMessageTypeResponseDTO, notNullValue());
     }
-
 }

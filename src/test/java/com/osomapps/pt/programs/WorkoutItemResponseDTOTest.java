@@ -2,6 +2,7 @@ package com.osomapps.pt.programs;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class WorkoutItemResponseDTOTest {
@@ -12,12 +13,13 @@ public class WorkoutItemResponseDTOTest {
 
     @Test
     public void setters() {
-        WorkoutItemResponseDTO workoutItemResponseDTO = new WorkoutItemResponseDTO()
-            .setId(null)
-            .setExercise_id(null)
-            .setExercise_name(null)
-            .setExercise_type(null)
-            .setSets(null);
+        WorkoutItemResponseDTO workoutItemResponseDTO =
+                new WorkoutItemResponseDTO()
+                        .setId(null)
+                        .setExercise_id(null)
+                        .setExercise_name(null)
+                        .setExercise_type(null)
+                        .setSets(null);
         assertThat(workoutItemResponseDTO, notNullValue());
     }
 

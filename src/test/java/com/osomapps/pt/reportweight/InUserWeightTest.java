@@ -1,16 +1,16 @@
 package com.osomapps.pt.reportweight;
 
-import java.time.LocalDateTime;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
 import static org.junit.Assert.assertThat;
 
+import java.time.LocalDateTime;
+import org.junit.Test;
+
 public class InUserWeightTest {
-    
+
     @Test
     public void createAllArgs() {
-        assertThat(new InUserWeight(
-                1L, LocalDateTime.now(), null, null), notNullValue());
+        assertThat(new InUserWeight(1L, LocalDateTime.now(), null, null), notNullValue());
     }
 
     @Test
@@ -31,5 +31,5 @@ public class InUserWeightTest {
         inUserWeight.getInUser();
         inUserWeight.getWeight();
         assertThat(inUserWeight, notNullValue());
-    }    
+    }
 }

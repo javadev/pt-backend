@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 class AdminExerciseBodypartResource {
 
     private final AdminExerciseBodypartService exerciseBodypartService;
-    
+
     @Autowired
     AdminExerciseBodypartResource(AdminExerciseBodypartService exerciseBodypart) {
         this.exerciseBodypartService = exerciseBodypart;

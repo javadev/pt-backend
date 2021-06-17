@@ -2,6 +2,7 @@ package com.osomapps.pt.exercises;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class ExerciseFilePreviewTest {
@@ -25,5 +26,4 @@ public class ExerciseFilePreviewTest {
         exerciseFilePreview.getExercises();
         assertThat(exerciseFilePreview, notNullValue());
     }
-
 }

@@ -16,8 +16,9 @@ class AdminGoalParameterService {
     }
 
     List<GoalParameterResponseDTO> findAll() {
-        return goalParameterRepository.findAll().stream().map(AdminGoalParameterService::goalParameterToDto
-        ).collect(Collectors.toList());
+        return goalParameterRepository.findAll().stream()
+                .map(AdminGoalParameterService::goalParameterToDto)
+                .collect(Collectors.toList());
     }
 
     private static GoalParameterResponseDTO goalParameterToDto(GoalParameter parameter) {
@@ -26,5 +27,4 @@ class AdminGoalParameterService {
                 .name(parameter.getName())
                 .build();
     }
-
 }

@@ -16,5 +16,5 @@ class UserWarmupWorkoutItemRequestDTO {
     String exercise_name;
     Integer speed;
     Integer incline;
-    Integer time_in_sec;    
+    Integer time_in_sec;
 }

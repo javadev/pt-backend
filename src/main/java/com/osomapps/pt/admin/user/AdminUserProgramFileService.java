@@ -19,8 +19,8 @@ class AdminUserProgramFileService {
     private final DictionaryService dictionaryService;
     private final InUserRepository inUserRepository;
 
-    AdminUserProgramFileService(DictionaryService dictionaryService,
-            InUserRepository inUserRepository) {
+    AdminUserProgramFileService(
+            DictionaryService dictionaryService, InUserRepository inUserRepository) {
         this.dictionaryService = dictionaryService;
         this.inUserRepository = inUserRepository;
     }
@@ -29,23 +29,25 @@ class AdminUserProgramFileService {
         final InUser inUser = inUserRepository.findById(id).orElse(null);
         if (inUser == null) {
             throw new ResourceNotFoundException("User with id " + id + " not found.");
-        }        
-        try (InputStream inputStream = XlsxProgramParser.class.getResourceAsStream("program01.xlsx");
-            FastByteArrayOutputStream localOutputStream = new FastByteArrayOutputStream()) {
+        }
+        try (InputStream inputStream =
+                        XlsxProgramParser.class.getResourceAsStream("program01.xlsx");
+                FastByteArrayOutputStream localOutputStream = new FastByteArrayOutputStream()) {
             final byte[] buffer = new byte[1024];
             int length;
             while ((length = inputStream.read(buffer)) != -1) {
                 localOutputStream.write(buffer, 0, length);
             }
-            final XlsxProgramModifier xlsxProgramModifier = XlsxProgramModifier.of(
-                    localOutputStream.getInputStream(), dictionaryService);
+            final XlsxProgramModifier xlsxProgramModifier =
+                    XlsxProgramModifier.of(localOutputStream.getInputStream(), dictionaryService);
             xlsxProgramModifier.updateCellData(outputStream, inUser);
-            return new ProgramResponseDTO().setFileName("program_for_user_" + id + ".xlsx")
-                    .setFileType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            return new ProgramResponseDTO()
+                    .setFileName("program_for_user_" + id + ".xlsx")
+                    .setFileType(
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
             throw new UnsupportedOperationException(ex);
         }
     }
-
 }

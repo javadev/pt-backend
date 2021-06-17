@@ -1,8 +1,9 @@
 package com.osomapps.pt.user;
 
-import java.util.Optional;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+
+import java.util.Optional;
 import org.junit.Test;
 
 public class UserGenderTest {
@@ -16,5 +17,4 @@ public class UserGenderTest {
     public void of_male() {
         assertThat(UserGender.of("male"), equalTo(Optional.of(UserGender.Male)));
     }
-
 }

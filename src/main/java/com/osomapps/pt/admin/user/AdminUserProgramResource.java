@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 class AdminUserProgramResource {
 
     private final AdminUserProgramService userProgramService;
-    
+
     @Autowired
     AdminUserProgramResource(AdminUserProgramService userProgramService) {
         this.userProgramService = userProgramService;
@@ -38,7 +38,8 @@ class AdminUserProgramResource {
     }
 
     @PutMapping("{id}")
-    UserProgramResponseDTO update(@PathVariable Long id, @RequestBody UserProgramRequestDTO userProgramRequestDTO) {
+    UserProgramResponseDTO update(
+            @PathVariable Long id, @RequestBody UserProgramRequestDTO userProgramRequestDTO) {
         return userProgramService.update(id, userProgramRequestDTO);
     }
 

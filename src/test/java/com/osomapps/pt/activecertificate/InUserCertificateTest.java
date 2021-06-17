@@ -1,14 +1,14 @@
 package com.osomapps.pt.activecertificate;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
 import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
 
 public class InUserCertificateTest {
     @Test
     public void createAllArgs() {
-        assertThat(new InUserCertificate(
-                1L, null, null, null, null), notNullValue());
+        assertThat(new InUserCertificate(1L, null, null, null, null), notNullValue());
     }
 
     @Test

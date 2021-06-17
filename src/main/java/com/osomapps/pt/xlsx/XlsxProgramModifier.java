@@ -1,5 +1,7 @@
 package com.osomapps.pt.xlsx;
 
+import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_NUMERIC;
+
 import com.osomapps.pt.dictionary.DictionaryName;
 import com.osomapps.pt.dictionary.DictionaryService;
 import com.osomapps.pt.programs.InProgram;
@@ -14,7 +16,6 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_NUMERIC;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -25,14 +26,13 @@ public class XlsxProgramModifier {
     private final InputStream inputStream;
     private final DictionaryService dictionaryService;
 
-    private XlsxProgramModifier(InputStream inputStream,
-            DictionaryService dictionaryService) {
-       this.inputStream = inputStream;
-       this.dictionaryService = dictionaryService;
+    private XlsxProgramModifier(InputStream inputStream, DictionaryService dictionaryService) {
+        this.inputStream = inputStream;
+        this.dictionaryService = dictionaryService;
     }
 
-    public static XlsxProgramModifier of(InputStream inputStream,
-            DictionaryService dictionaryService) {
+    public static XlsxProgramModifier of(
+            InputStream inputStream, DictionaryService dictionaryService) {
         return new XlsxProgramModifier(inputStream, dictionaryService);
     }
 
@@ -57,7 +57,9 @@ public class XlsxProgramModifier {
                 fillCell(inputSheet, 2, 8, "");
             }
             if (!inUser.getInPrograms().isEmpty()) {
-                fillProgram(book.getSheetAt(2), inUser.getInPrograms().get(inUser.getInPrograms().size() - 1));
+                fillProgram(
+                        book.getSheetAt(2),
+                        inUser.getInPrograms().get(inUser.getInPrograms().size() - 1));
             }
             book.write(outputStream);
         } catch (IOException ex) {
@@ -72,45 +74,86 @@ public class XlsxProgramModifier {
             fillCell(programSheet, 2 + index, 5, "");
         }
         for (int index = 0; index < inProgram.getInWorkouts().size(); index += 1) {
-            fillCell(programSheet, 2 + index, 3, "Goal "
-                    + (inProgram.getInWorkouts().get(index).getGoal_index() + 1));
-            fillCell(programSheet, 2 + index, 4, inProgram.getInWorkouts().get(index).getPart_name());
-            fillCell(programSheet, 2 + index, 5, "Workout "
-                    + (inProgram.getInWorkouts().get(index).getWorkout_index() + 1));
-            final InWarmupWorkoutItem inWarmupWorkoutItem = inProgram.getInWorkouts().get(index)
-                    .getInWarmupWorkoutItems().get(0);
+            fillCell(
+                    programSheet,
+                    2 + index,
+                    3,
+                    "Goal " + (inProgram.getInWorkouts().get(index).getGoal_index() + 1));
+            fillCell(
+                    programSheet,
+                    2 + index,
+                    4,
+                    inProgram.getInWorkouts().get(index).getPart_name());
+            fillCell(
+                    programSheet,
+                    2 + index,
+                    5,
+                    "Workout " + (inProgram.getInWorkouts().get(index).getWorkout_index() + 1));
+            final InWarmupWorkoutItem inWarmupWorkoutItem =
+                    inProgram.getInWorkouts().get(index).getInWarmupWorkoutItems().get(0);
             fillCell(programSheet, 2 + index, 7, inWarmupWorkoutItem.getD_exercise_name());
             fillCell(programSheet, 2 + index, 8, inWarmupWorkoutItem.getSpeed() + " km/h");
             fillCell(programSheet, 2 + index, 9, inWarmupWorkoutItem.getIncline() + "%");
-            fillCell(programSheet, 2 + index, 10, (inWarmupWorkoutItem.getTime_in_sec() / 60) + " min");
-            for (int index2 = 0; index2 < inProgram.getInWorkouts().get(index).getInWorkoutItems().size(); index2 += 1) {
-                final InWorkoutItem inWorkoutItem = inProgram.getInWorkouts().get(index).getInWorkoutItems().get(index2);
-                fillCell(programSheet, 2 + index, 11 + 7 * index2, inWorkoutItem.getD_exercise_name());
-                fillCell(programSheet, 2 + index, 12 + 7 * index2, inWorkoutItem.getInWorkoutItemSets().size());
+            fillCell(
+                    programSheet,
+                    2 + index,
+                    10,
+                    (inWarmupWorkoutItem.getTime_in_sec() / 60) + " min");
+            for (int index2 = 0;
+                    index2 < inProgram.getInWorkouts().get(index).getInWorkoutItems().size();
+                    index2 += 1) {
+                final InWorkoutItem inWorkoutItem =
+                        inProgram.getInWorkouts().get(index).getInWorkoutItems().get(index2);
+                fillCell(
+                        programSheet,
+                        2 + index,
+                        11 + 7 * index2,
+                        inWorkoutItem.getD_exercise_name());
+                fillCell(
+                        programSheet,
+                        2 + index,
+                        12 + 7 * index2,
+                        inWorkoutItem.getInWorkoutItemSets().size());
                 if (inWorkoutItem.getInWorkoutItemSets().get(0).getRepetitions() != null) {
-                    fillCell(programSheet, 2 + index, 13 + 7 * index2, inWorkoutItem.getInWorkoutItemSets()
-                            .stream().map(set -> "" + set.getRepetitions()
-                    ).collect(Collectors.joining(",")));
+                    fillCell(
+                            programSheet,
+                            2 + index,
+                            13 + 7 * index2,
+                            inWorkoutItem.getInWorkoutItemSets().stream()
+                                    .map(set -> "" + set.getRepetitions())
+                                    .collect(Collectors.joining(",")));
                 }
                 if (inWorkoutItem.getInWorkoutItemSets().get(0).getTime_in_sec() != null) {
-                    fillCell(programSheet, 2 + index, 13 + 7 * index2, inWorkoutItem.getInWorkoutItemSets()
-                            .stream().map(set -> round(set.getTime_in_sec() / 60F) + " min"
-                    ).collect(Collectors.joining(",")));
+                    fillCell(
+                            programSheet,
+                            2 + index,
+                            13 + 7 * index2,
+                            inWorkoutItem.getInWorkoutItemSets().stream()
+                                    .map(set -> round(set.getTime_in_sec() / 60F) + " min")
+                                    .collect(Collectors.joining(",")));
                 }
                 if (inWorkoutItem.getInWorkoutItemSets().get(0).getWeight() != null) {
-                    fillCell(programSheet, 2 + index, 14 + 7 * index2, inWorkoutItem.getInWorkoutItemSets()
-                            .stream().map(set -> round(set.getWeight())
-                    ).collect(Collectors.joining(",")));
+                    fillCell(
+                            programSheet,
+                            2 + index,
+                            14 + 7 * index2,
+                            inWorkoutItem.getInWorkoutItemSets().stream()
+                                    .map(set -> round(set.getWeight()))
+                                    .collect(Collectors.joining(",")));
                 }
             }
         }
     }
 
     private String getGoalName(InUserGoal inUserGoal) {
-        return Arrays.asList(dictionaryService.getEnValue(DictionaryName.goal_title,
-                    inUserGoal.getD_goal_title(), null),
-                dictionaryService.getEnValue(DictionaryName.goal_title_2,
-                    inUserGoal.getD_goal_title_2(), null)).stream().filter(Objects::nonNull).collect(Collectors.joining(", "));
+        return Arrays.asList(
+                        dictionaryService.getEnValue(
+                                DictionaryName.goal_title, inUserGoal.getD_goal_title(), null),
+                        dictionaryService.getEnValue(
+                                DictionaryName.goal_title_2, inUserGoal.getD_goal_title_2(), null))
+                .stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining(", "));
     }
 
     private Integer emptyOrInteger(Float value) {

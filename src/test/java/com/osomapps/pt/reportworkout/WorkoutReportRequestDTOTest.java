@@ -1,15 +1,15 @@
 package com.osomapps.pt.reportworkout;
 
-import java.util.Collections;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
 import static org.junit.Assert.assertThat;
+
+import java.util.Collections;
+import org.junit.Test;
 
 public class WorkoutReportRequestDTOTest {
     @Test
     public void createAllArgs() {
-        assertThat(new WorkoutReportRequestDTO(
-                1L, Collections.emptyList()), notNullValue());
+        assertThat(new WorkoutReportRequestDTO(1L, Collections.emptyList()), notNullValue());
     }
 
     @Test

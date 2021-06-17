@@ -12,5 +12,5 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 class UserTypeRequestDTO {
-    Long id;    
+    Long id;
 }

@@ -57,94 +57,103 @@ class ProgramService {
         inWorkoutItemSet111.setRepetitions(10);
         inWorkoutItemSet111.setWeight(75F);
         inWorkoutItem111.setInWorkoutItemSets(Arrays.asList(inWorkoutItemSet111));
-        InWorkoutItem inWorkoutItem112 = new InWorkoutItem()
-            .setId(2L)
-            .setExercise_id(260)
-            .setD_exercise_name("Bench Press")
-            .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()
-                    .setRepetitions(10)
-                    .setWeight(65F),
-                    new InWorkoutItemSet()
-                    .setRepetitions(10)
-                    .setWeight(65F),
-                    new InWorkoutItemSet()
-                    .setRepetitions(10)
-                    .setWeight(65F)));
+        InWorkoutItem inWorkoutItem112 =
+                new InWorkoutItem()
+                        .setId(2L)
+                        .setExercise_id(260)
+                        .setD_exercise_name("Bench Press")
+                        .setInWorkoutItemSets(
+                                Arrays.asList(
+                                        new InWorkoutItemSet().setRepetitions(10).setWeight(65F),
+                                        new InWorkoutItemSet().setRepetitions(10).setWeight(65F),
+                                        new InWorkoutItemSet().setRepetitions(10).setWeight(65F)));
 
-        InWorkoutItem inWorkoutItem113 = new InWorkoutItem()
-            .setId(3L)
-            .setExercise_id(150)
-            .setD_exercise_name("Pull Up")
-            .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()
-                    .setRepetitions(10)
-                    .setBodyweight(true)
-                    .setWeight(65F),
-                    new InWorkoutItemSet()
-                    .setRepetitions(10)
-                    .setBodyweight(true)
-                    .setWeight(65F),
-                    new InWorkoutItemSet()
-                    .setRepetitions(10)
-                    .setBodyweight(true)
-                    .setWeight(65F),
-                    new InWorkoutItemSet()
-                    .setRepetitions(10)
-                    .setBodyweight(true)
-                    .setWeight(65F)));
+        InWorkoutItem inWorkoutItem113 =
+                new InWorkoutItem()
+                        .setId(3L)
+                        .setExercise_id(150)
+                        .setD_exercise_name("Pull Up")
+                        .setInWorkoutItemSets(
+                                Arrays.asList(
+                                        new InWorkoutItemSet()
+                                                .setRepetitions(10)
+                                                .setBodyweight(true)
+                                                .setWeight(65F),
+                                        new InWorkoutItemSet()
+                                                .setRepetitions(10)
+                                                .setBodyweight(true)
+                                                .setWeight(65F),
+                                        new InWorkoutItemSet()
+                                                .setRepetitions(10)
+                                                .setBodyweight(true)
+                                                .setWeight(65F),
+                                        new InWorkoutItemSet()
+                                                .setRepetitions(10)
+                                                .setBodyweight(true)
+                                                .setWeight(65F)));
 
-        InWorkoutItem inWorkoutItem114 = new InWorkoutItem()
-            .setId(4L)
-            .setExercise_id(530)
-            .setD_exercise_name("Dips")
-           .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()
-                    .setRepetitions(10)
-                    .setBodyweight(true)
-                    .setWeight(65F),
-                    new InWorkoutItemSet()
-                    .setRepetitions(10)
-                    .setBodyweight(true)
-                    .setWeight(65F),
-                    new InWorkoutItemSet()
-                    .setRepetitions(10)
-                    .setBodyweight(true)
-                    .setWeight(65F)));
+        InWorkoutItem inWorkoutItem114 =
+                new InWorkoutItem()
+                        .setId(4L)
+                        .setExercise_id(530)
+                        .setD_exercise_name("Dips")
+                        .setInWorkoutItemSets(
+                                Arrays.asList(
+                                        new InWorkoutItemSet()
+                                                .setRepetitions(10)
+                                                .setBodyweight(true)
+                                                .setWeight(65F),
+                                        new InWorkoutItemSet()
+                                                .setRepetitions(10)
+                                                .setBodyweight(true)
+                                                .setWeight(65F),
+                                        new InWorkoutItemSet()
+                                                .setRepetitions(10)
+                                                .setBodyweight(true)
+                                                .setWeight(65F)));
 
-        InWorkoutItem inWorkoutItem115 = new InWorkoutItem()
-            .setId(5L)
-            .setExercise_id(440)
-            .setD_exercise_name("Plank")
-            .setD_exercise_type("OnTime")
-            .setInWorkoutItemSets(Arrays.asList(new InWorkoutItemSet()
-                .setTime_in_sec(120)
-                .setBodyweight(true)
-                .setWeight(65F)));
+        InWorkoutItem inWorkoutItem115 =
+                new InWorkoutItem()
+                        .setId(5L)
+                        .setExercise_id(440)
+                        .setD_exercise_name("Plank")
+                        .setD_exercise_type("OnTime")
+                        .setInWorkoutItemSets(
+                                Arrays.asList(
+                                        new InWorkoutItemSet()
+                                                .setTime_in_sec(120)
+                                                .setBodyweight(true)
+                                                .setWeight(65F)));
 
-        InWorkoutItemSet inWorkoutItemSet1 = new InWorkoutItemSet()
-                .setIncline(2)
-                .setSpeed(8)
-                .setTime_in_sec(4);
-        InWorkoutItemSet inWorkoutItemSet2 = new InWorkoutItemSet()
-                .setIncline(3)
-                .setSpeed(9)
-                .setTime_in_sec(4);
-        InWorkoutItemSet inWorkoutItemSet3 = new InWorkoutItemSet()
-                .setIncline(4)
-                .setSpeed(10)
-                .setTime_in_sec(4);
-        InWorkoutItemSet inWorkoutItemSet4 = new InWorkoutItemSet()
-                .setIncline(3)
-                .setSpeed(9)
-                .setTime_in_sec(4);
-        InWorkoutItem inWorkoutItem116 = new InWorkoutItem()
-            .setId(6L)
-            .setExercise_id(820)
-            .setD_exercise_name("Treadmill 4x4")
-            .setD_exercise_type("OnIntervals")
-            .setInWorkoutItemSets(Arrays.asList(inWorkoutItemSet1, inWorkoutItemSet2, inWorkoutItemSet3, inWorkoutItemSet4));
+        InWorkoutItemSet inWorkoutItemSet1 =
+                new InWorkoutItemSet().setIncline(2).setSpeed(8).setTime_in_sec(4);
+        InWorkoutItemSet inWorkoutItemSet2 =
+                new InWorkoutItemSet().setIncline(3).setSpeed(9).setTime_in_sec(4);
+        InWorkoutItemSet inWorkoutItemSet3 =
+                new InWorkoutItemSet().setIncline(4).setSpeed(10).setTime_in_sec(4);
+        InWorkoutItemSet inWorkoutItemSet4 =
+                new InWorkoutItemSet().setIncline(3).setSpeed(9).setTime_in_sec(4);
+        InWorkoutItem inWorkoutItem116 =
+                new InWorkoutItem()
+                        .setId(6L)
+                        .setExercise_id(820)
+                        .setD_exercise_name("Treadmill 4x4")
+                        .setD_exercise_type("OnIntervals")
+                        .setInWorkoutItemSets(
+                                Arrays.asList(
+                                        inWorkoutItemSet1,
+                                        inWorkoutItemSet2,
+                                        inWorkoutItemSet3,
+                                        inWorkoutItemSet4));
 
-        inWorkout11.setInWorkoutItems(Arrays.asList(inWorkoutItem111,
-                inWorkoutItem112, inWorkoutItem113, inWorkoutItem114, inWorkoutItem115,
-                inWorkoutItem116));
+        inWorkout11.setInWorkoutItems(
+                Arrays.asList(
+                        inWorkoutItem111,
+                        inWorkoutItem112,
+                        inWorkoutItem113,
+                        inWorkoutItem114,
+                        inWorkoutItem115,
+                        inWorkoutItem116));
         inProgram1.setInWorkouts(Arrays.asList(inWorkout11));
 
         ProgramResponseDTO program1 = createProgramResponseDTO(inProgram1);
@@ -171,10 +180,12 @@ class ProgramService {
         ProgramResponseDTO program = new ProgramResponseDTO();
         program.setId(inProgram.getId());
         program.setName(inProgram.getName());
-        program.setType(inProgram.getD_program_type() == null ? "personal" : inProgram.getD_program_type());
+        program.setType(
+                inProgram.getD_program_type() == null ? "personal" : inProgram.getD_program_type());
         program.setWorkouts(new ArrayList<>());
         for (InWorkout inWorkout : inProgram.getInWorkouts()) {
-            if (!Objects.equals(inProgram.getCurrent_workout_index(), inWorkout.getWorkout_index())) {
+            if (!Objects.equals(
+                    inProgram.getCurrent_workout_index(), inWorkout.getWorkout_index())) {
                 continue;
             }
             WorkoutResponseDTO workout = new WorkoutResponseDTO();
@@ -182,18 +193,21 @@ class ProgramService {
             workout.setName(inWorkout.getD_workout_name());
             workout.setItems(new ArrayList<>());
             program.getWorkouts().add(workout);
-            if (inWorkout.getInWarmupWorkoutItems() != null && !inWorkout.getInWarmupWorkoutItems().isEmpty()) {
-                InWarmupWorkoutItem inWarmupWorkoutItem = inWorkout.getInWarmupWorkoutItems().get(0);
+            if (inWorkout.getInWarmupWorkoutItems() != null
+                    && !inWorkout.getInWarmupWorkoutItems().isEmpty()) {
+                InWarmupWorkoutItem inWarmupWorkoutItem =
+                        inWorkout.getInWarmupWorkoutItems().get(0);
                 WarmupWorkoutItemResponseDTO warmupWorkoutItem = new WarmupWorkoutItemResponseDTO();
                 warmupWorkoutItem.setId(inWarmupWorkoutItem.getId());
                 warmupWorkoutItem.setExercise_id(inWarmupWorkoutItem.getExercise_id());
                 warmupWorkoutItem.setExercise_name(inWarmupWorkoutItem.getD_exercise_name());
                 warmupWorkoutItem.setExercise_type("OnTime");
-                warmupWorkoutItem.setSets(Arrays.asList(new WarmupWorkoutItemSetResponseDTO()
-                    .setSpeed(inWarmupWorkoutItem.getSpeed())
-                    .setIncline(inWarmupWorkoutItem.getIncline())
-                    .setTime_in_sec(inWarmupWorkoutItem.getTime_in_sec())
-                ));
+                warmupWorkoutItem.setSets(
+                        Arrays.asList(
+                                new WarmupWorkoutItemSetResponseDTO()
+                                        .setSpeed(inWarmupWorkoutItem.getSpeed())
+                                        .setIncline(inWarmupWorkoutItem.getIncline())
+                                        .setTime_in_sec(inWarmupWorkoutItem.getTime_in_sec())));
                 workout.setWarmup(warmupWorkoutItem);
             }
             for (InWorkoutItem inWorkoutItem : inWorkout.getInWorkoutItems()) {
@@ -201,11 +215,14 @@ class ProgramService {
                 workoutItem.setId(inWorkoutItem.getId());
                 workoutItem.setExercise_id(inWorkoutItem.getExercise_id());
                 workoutItem.setExercise_name(inWorkoutItem.getD_exercise_name());
-                workoutItem.setExercise_type(inWorkoutItem.getD_exercise_type() == null ? "OnRepetitions"
-                        : inWorkoutItem.getD_exercise_type());
-                workoutItem.setSets(inWorkoutItem.getInWorkoutItemSets().stream().map(set ->
-                        generateWorkoutItemSetResponse(set)
-                ).collect(Collectors.toList()));
+                workoutItem.setExercise_type(
+                        inWorkoutItem.getD_exercise_type() == null
+                                ? "OnRepetitions"
+                                : inWorkoutItem.getD_exercise_type());
+                workoutItem.setSets(
+                        inWorkoutItem.getInWorkoutItemSets().stream()
+                                .map(set -> generateWorkoutItemSetResponse(set))
+                                .collect(Collectors.toList()));
                 workout.getItems().add(workoutItem);
             }
         }
@@ -214,21 +231,25 @@ class ProgramService {
 
     private WorkoutItemSetResponseDTO generateWorkoutItemSetResponse(InWorkoutItemSet set) {
         if ("Weight".equalsIgnoreCase(set.getExercise_basis())) {
-            final List<InWorkoutItemSetReport> previousSetReports = getPreviousInWorkoutItemSets(set);
+            final List<InWorkoutItemSetReport> previousSetReports =
+                    getPreviousInWorkoutItemSets(set);
             Optional<Integer> diffPercent = calculateDiffInPercent(previousSetReports, set);
             if (diffPercent.isPresent()) {
                 float newPercent = CurveEstimation.of(1, 0, 2.5F, 2, 50).calc(diffPercent.get());
-                float newWeight = roundToEven(set.getWeight() * ( 1 + newPercent / 100f));
-                log.info("New weigh was calculated, base weight - {}, new weight - {}, diff - {}",
-                        set.getWeight(), newWeight, newWeight - set.getWeight());
+                float newWeight = roundToEven(set.getWeight() * (1 + newPercent / 100f));
+                log.info(
+                        "New weigh was calculated, base weight - {}, new weight - {}, diff - {}",
+                        set.getWeight(),
+                        newWeight,
+                        newWeight - set.getWeight());
                 return new WorkoutItemSetResponseDTO()
-                .setRepetitions(set.getRepetitions())
-                .setWeight(newWeight)
-                .setBodyweight(BooleanUtils.isTrue(set.getBodyweight()))
-                .setTime_in_sec(set.getTime_in_sec())
-                .setSpeed(set.getSpeed())
-                .setIncline(set.getIncline())
-                .setResistance(set.getResistance());
+                        .setRepetitions(set.getRepetitions())
+                        .setWeight(newWeight)
+                        .setBodyweight(BooleanUtils.isTrue(set.getBodyweight()))
+                        .setTime_in_sec(set.getTime_in_sec())
+                        .setSpeed(set.getSpeed())
+                        .setIncline(set.getIncline())
+                        .setResistance(set.getResistance());
             }
         }
         return new WorkoutItemSetResponseDTO()
@@ -249,22 +270,33 @@ class ProgramService {
         if (set.getInWorkoutItem().getInWorkoutItemReports().isEmpty()) {
             return Collections.emptyList();
         }
-        return set.getInWorkoutItem().getInWorkoutItemReports().get(
-                set.getInWorkoutItem().getInWorkoutItemReports().size() - 1).getInWorkoutItemSetReports();
+        return set.getInWorkoutItem()
+                .getInWorkoutItemReports()
+                .get(set.getInWorkoutItem().getInWorkoutItemReports().size() - 1)
+                .getInWorkoutItemSetReports();
     }
 
-    Optional<Integer> calculateDiffInPercent(List<InWorkoutItemSetReport> previousSetReport,
-            InWorkoutItemSet set) {
+    Optional<Integer> calculateDiffInPercent(
+            List<InWorkoutItemSetReport> previousSetReport, InWorkoutItemSet set) {
         if (previousSetReport.isEmpty()) {
             return Optional.empty();
         }
-        long prevRepetitions = previousSetReport.stream()
-                .collect(Collectors.summarizingInt(InWorkoutItemSetReport::getRepetitions)).getSum();
-        long curRepetitions = set.getInWorkoutItem().getInWorkoutItemSets().stream()
-                .collect(Collectors.summarizingInt(InWorkoutItemSet::getRepetitions)).getSum();
-        Integer result = Float.valueOf((prevRepetitions - curRepetitions) / (float) curRepetitions * 100).intValue();
-        log.info("New reps diff was calculated, previous reps - {}, current reps - {}, diff - {}",
-                prevRepetitions, curRepetitions, result);
+        long prevRepetitions =
+                previousSetReport.stream()
+                        .collect(Collectors.summarizingInt(InWorkoutItemSetReport::getRepetitions))
+                        .getSum();
+        long curRepetitions =
+                set.getInWorkoutItem().getInWorkoutItemSets().stream()
+                        .collect(Collectors.summarizingInt(InWorkoutItemSet::getRepetitions))
+                        .getSum();
+        Integer result =
+                Float.valueOf((prevRepetitions - curRepetitions) / (float) curRepetitions * 100)
+                        .intValue();
+        log.info(
+                "New reps diff was calculated, previous reps - {}, current reps - {}, diff - {}",
+                prevRepetitions,
+                curRepetitions,
+                result);
         return Optional.of(result);
     }
 }

@@ -2,6 +2,7 @@ package com.osomapps.pt.admin.user;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class UserWorkoutItemSetRequestDTOTest {
@@ -12,7 +13,8 @@ public class UserWorkoutItemSetRequestDTOTest {
 
     @Test
     public void setters() {
-        UserWorkoutItemSetRequestDTO userWorkoutItemSetRequestDTO = new UserWorkoutItemSetRequestDTO();
+        UserWorkoutItemSetRequestDTO userWorkoutItemSetRequestDTO =
+                new UserWorkoutItemSetRequestDTO();
         userWorkoutItemSetRequestDTO.setRepetitions(null);
         userWorkoutItemSetRequestDTO.setWeight(null);
         userWorkoutItemSetRequestDTO.setBodyweight(null);
@@ -21,7 +23,8 @@ public class UserWorkoutItemSetRequestDTOTest {
 
     @Test
     public void getters() {
-        UserWorkoutItemSetRequestDTO userWorkoutItemSetRequestDTO = new UserWorkoutItemSetRequestDTO();
+        UserWorkoutItemSetRequestDTO userWorkoutItemSetRequestDTO =
+                new UserWorkoutItemSetRequestDTO();
         userWorkoutItemSetRequestDTO.getRepetitions();
         userWorkoutItemSetRequestDTO.getWeight();
         userWorkoutItemSetRequestDTO.getBodyweight();

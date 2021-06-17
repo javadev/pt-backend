@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.data.util.Pair;
-import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 @Service
 class TokenEmailService {
@@ -28,12 +28,12 @@ class TokenEmailService {
     private final InUserLogoutRepository inUserLogoutRepository;
     private final PasswordEncoder passwordEncoder;
 
-    TokenEmailService(InUserRepository inUserRepository,
+    TokenEmailService(
+            InUserRepository inUserRepository,
             InUserEmailRepository inUserEmailRepository,
             InUserLoginRepository inUserLoginRepository,
             InUserLogoutRepository inUserLogoutRepository,
-            PasswordEncoder passwordEncoder
-            ) {
+            PasswordEncoder passwordEncoder) {
         this.inUserRepository = inUserRepository;
         this.inUserEmailRepository = inUserEmailRepository;
         this.inUserLoginRepository = inUserLoginRepository;
@@ -50,18 +50,24 @@ class TokenEmailService {
             throw new UnauthorizedException("E-mail is not registered");
         } else {
             inUserEmail = inUserEmails.get(inUserEmails.size() - 1);
-            if (!passwordEncoder.matches(tokenEmailRequest.getPassword(), inUserEmail.getPassword())) {
+            if (!passwordEncoder.matches(
+                    tokenEmailRequest.getPassword(), inUserEmail.getPassword())) {
                 throw new UnauthorizedException("Wrong password");
             }
-            final List<InUserLogout> inUserLogouts = inUserLogoutRepository.findByToken(
-                    inUserEmail.getInUser().getInUserLogins().get(
-                    inUserEmail.getInUser().getInUserLogins().size() - 1).getToken());
+            final List<InUserLogout> inUserLogouts =
+                    inUserLogoutRepository.findByToken(
+                            inUserEmail
+                                    .getInUser()
+                                    .getInUserLogins()
+                                    .get(inUserEmail.getInUser().getInUserLogins().size() - 1)
+                                    .getToken());
             isNewLogin = !inUserLogouts.isEmpty();
         }
         return Pair.of(isNewLogin, inUserEmail);
     }
 
-    TokenEmailResponseDTO createOrReadNewToken(TokenEmailRequestDTO tokenRequest, String remoteAddr) {
+    TokenEmailResponseDTO createOrReadNewToken(
+            TokenEmailRequestDTO tokenRequest, String remoteAddr) {
         final Pair<Boolean, InUserEmail> inUserEmailData = readOrCreateInUserEmail(tokenRequest);
         final boolean isNewLogin = inUserEmailData.getFirst();
         final InUserEmail inUserEmail = inUserEmailData.getSecond();
@@ -69,8 +75,11 @@ class TokenEmailService {
         if (isNewLogin) {
             inUserLogin = new InUserLogin();
         } else {
-            inUserLogin = inUserEmail.getInUser().getInUserLogins().get(
-                    inUserEmail.getInUser().getInUserLogins().size() - 1);
+            inUserLogin =
+                    inUserEmail
+                            .getInUser()
+                            .getInUserLogins()
+                            .get(inUserEmail.getInUser().getInUserLogins().size() - 1);
         }
         final InUser inUser = inUserEmail.getInUser();
         inUser.getInUserEmails().add(inUserEmail);
@@ -88,22 +97,38 @@ class TokenEmailService {
         user.setName(inUserEmail.getUser_name());
         user.setEmail(inUserEmail.getLogin());
         user.setGender(inUserEmail.getInUser().getD_sex());
-        user.setAge(inUserEmail.getInUser().getAge() == null ? null : inUserEmail.getInUser().getAge().intValue());
+        user.setAge(
+                inUserEmail.getInUser().getAge() == null
+                        ? null
+                        : inUserEmail.getInUser().getAge().intValue());
         user.setBirthday(inUserEmail.getInUser().getBirthday());
         user.setAvatar_dataurl(inUserEmail.getInUser().getAvatar_dataurl());
         if (inUser.getD_level() != null) {
             user.setLevel(UserLevel.of(Integer.parseInt(inUser.getD_level())));
         }
-        user.setGoals(inUser.getInUserGoals().stream().map(inUserGoal -> {
-            Map<String, Integer> map = null;
-            try {
-                 map = inUserGoal.getGoal_value() == null ? null : new ObjectMapper()
-                         .readValue(inUserGoal.getGoal_value(),
-                        new TypeReference<Map<String, Integer>>(){});
-            } catch (IOException ex) {
-            }
-            return new UserGoalResponseDTO().setId(inUserGoal.getGoalId()).setValues(map);
-        }).collect(Collectors.toList()));
+        user.setGoals(
+                inUser.getInUserGoals().stream()
+                        .map(
+                                inUserGoal -> {
+                                    Map<String, Integer> map = null;
+                                    try {
+                                        map =
+                                                inUserGoal.getGoal_value() == null
+                                                        ? null
+                                                        : new ObjectMapper()
+                                                                .readValue(
+                                                                        inUserGoal.getGoal_value(),
+                                                                        new TypeReference<
+                                                                                Map<
+                                                                                        String,
+                                                                                        Integer>>() {});
+                                    } catch (IOException ex) {
+                                    }
+                                    return new UserGoalResponseDTO()
+                                            .setId(inUserGoal.getGoalId())
+                                            .setValues(map);
+                                })
+                        .collect(Collectors.toList()));
         user.setHeight(inUser.getHeight() == null ? null : inUser.getHeight().longValue());
         user.setWeight(inUser.getWeight() == null ? null : inUser.getWeight().longValue());
         tokenEmailResponseDTO.setUser(user);
@@ -126,5 +151,4 @@ class TokenEmailService {
             throw new UnauthorizedException("Token not found");
         }
     }
-
 }

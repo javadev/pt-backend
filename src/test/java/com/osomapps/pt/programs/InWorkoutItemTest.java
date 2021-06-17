@@ -1,10 +1,11 @@
 package com.osomapps.pt.programs;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
 import java.time.LocalDateTime;
 import java.util.Collections;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import org.junit.Test;
-import static org.junit.Assert.assertThat;
 
 public class InWorkoutItemTest {
     @Test
@@ -14,14 +15,9 @@ public class InWorkoutItemTest {
 
     @Test
     public void createAllArgs() {
-        assertThat(new InWorkoutItem(
-                1L, LocalDateTime.now(),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null), notNullValue());
+        assertThat(
+                new InWorkoutItem(1L, LocalDateTime.now(), null, null, null, null, null, null),
+                notNullValue());
     }
 
     @Test
@@ -43,5 +39,4 @@ public class InWorkoutItemTest {
         inWorkoutItem.getInWorkoutItemSets();
         assertThat(inWorkoutItem, notNullValue());
     }
-
 }

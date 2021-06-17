@@ -23,13 +23,15 @@ class AdminProgramFileResource {
 
     @GetMapping(value = "{id}/{fileName}")
     @ResponseBody
-    Object findOne(@PathVariable Long id, @PathVariable String fileName, HttpServletResponse response)
+    Object findOne(
+            @PathVariable Long id, @PathVariable String fileName, HttpServletResponse response)
             throws IOException {
         try (FastByteArrayOutputStream outputStream = new FastByteArrayOutputStream()) {
             final ProgramResponseDTO programResponseDTO = programService.findOne(id);
             programService.dataUrlToOutputStream(programResponseDTO.dataUrl, outputStream);
             response.setContentType(programResponseDTO.getFileType());
-            response.setHeader("Content-disposition",
+            response.setHeader(
+                    "Content-disposition",
                     "attachment; filename=" + programResponseDTO.getFileName());
             outputStream.writeTo(response.getOutputStream());
             response.getOutputStream().close();

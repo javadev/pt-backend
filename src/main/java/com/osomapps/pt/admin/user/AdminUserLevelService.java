@@ -10,8 +10,12 @@ import org.springframework.stereotype.Service;
 class AdminUserLevelService {
 
     List<UserLevelResponseDTO> findAll() {
-        return Stream.of(UserLevel.values()).map(level ->
-            new UserLevelResponseDTO().setId(level.getLevel()).setName(level.name()))
+        return Stream.of(UserLevel.values())
+                .map(
+                        level ->
+                                new UserLevelResponseDTO()
+                                        .setId(level.getLevel())
+                                        .setName(level.name()))
                 .collect(Collectors.toList());
     }
 }

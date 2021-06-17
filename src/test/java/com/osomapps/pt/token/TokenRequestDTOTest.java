@@ -1,8 +1,9 @@
 package com.osomapps.pt.token;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Test;
 import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
 
 public class TokenRequestDTOTest {
     @Test

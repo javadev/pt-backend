@@ -14,16 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @Configuration
 class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private UserDetailsService userDetailsService;
-    @Autowired
-    private CustomLoginSuccessHandler loginSuccessHandler;
-    @Autowired
-    private CustomLoginFailureHandler loginFailureHandler;
-    @Autowired
-    private CustomLogoutSuccessHandler logoutSuccessHandler;
-    @Autowired
-    private CustomAuthenticationEntryPoint authenticationEntryPoint;
+    @Autowired private UserDetailsService userDetailsService;
+    @Autowired private CustomLoginSuccessHandler loginSuccessHandler;
+    @Autowired private CustomLoginFailureHandler loginFailureHandler;
+    @Autowired private CustomLogoutSuccessHandler logoutSuccessHandler;
+    @Autowired private CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     @Autowired
     public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
@@ -37,12 +32,13 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http.csrf()
+                .disable()
                 .authorizeRequests()
                 .antMatchers("/public/**")
-                    .permitAll()
+                .permitAll()
                 .antMatchers("/api/v1/admin/**", "/api/v1/auth/**")
-                    .fullyAuthenticated()
+                .fullyAuthenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")

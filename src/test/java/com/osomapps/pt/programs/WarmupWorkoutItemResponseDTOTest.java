@@ -2,6 +2,7 @@ package com.osomapps.pt.programs;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class WarmupWorkoutItemResponseDTOTest {
@@ -17,18 +18,20 @@ public class WarmupWorkoutItemResponseDTOTest {
 
     @Test
     public void setters() {
-        WarmupWorkoutItemResponseDTO warmupWorkoutItemResponseDTO = new WarmupWorkoutItemResponseDTO()
-            .setId(1L)
-            .setExercise_id(null)
-            .setExercise_name(null)
-            .setExercise_type(null)
-            .setSets(null);
+        WarmupWorkoutItemResponseDTO warmupWorkoutItemResponseDTO =
+                new WarmupWorkoutItemResponseDTO()
+                        .setId(1L)
+                        .setExercise_id(null)
+                        .setExercise_name(null)
+                        .setExercise_type(null)
+                        .setSets(null);
         assertThat(warmupWorkoutItemResponseDTO, notNullValue());
     }
 
     @Test
     public void getters() {
-        WarmupWorkoutItemResponseDTO warmupWorkoutItemResponseDTO = new WarmupWorkoutItemResponseDTO();
+        WarmupWorkoutItemResponseDTO warmupWorkoutItemResponseDTO =
+                new WarmupWorkoutItemResponseDTO();
         warmupWorkoutItemResponseDTO.getId();
         warmupWorkoutItemResponseDTO.getExercise_id();
         warmupWorkoutItemResponseDTO.getExercise_name();
@@ -36,5 +39,4 @@ public class WarmupWorkoutItemResponseDTOTest {
         warmupWorkoutItemResponseDTO.getSets();
         assertThat(warmupWorkoutItemResponseDTO, notNullValue());
     }
-
 }

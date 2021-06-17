@@ -16,8 +16,7 @@ class ReportPhotoFileService {
     private final InUserPhotoRepository inUserPhotoRepository;
     private final UserService userService;
 
-    ReportPhotoFileService(InUserPhotoRepository inUserPhotoRepository,
-            UserService userService) {
+    ReportPhotoFileService(InUserPhotoRepository inUserPhotoRepository, UserService userService) {
         this.inUserPhotoRepository = inUserPhotoRepository;
         this.userService = userService;
     }
@@ -31,14 +30,17 @@ class ReportPhotoFileService {
                 throw new ResourceNotFoundException("File with id " + id + " not found");
             }
             dataUrlToOutputStream(inUserPhoto.getData_url(), outputStream);
-            return new ReportPhotoFileDTO().setId(inUserPhoto.getId())
-                    .setFileName(inUserPhoto.getFile_name()).setFileType(inUserPhoto.getFile_type());
+            return new ReportPhotoFileDTO()
+                    .setId(inUserPhoto.getId())
+                    .setFileName(inUserPhoto.getFile_name())
+                    .setFileType(inUserPhoto.getFile_type());
         }
         return new ReportPhotoFileDTO();
     }
 
     void dataUrlToOutputStream(String dataUrl, OutputStream outputStream) throws IOException {
-        final String encodedString = dataUrl.substring(dataUrl.indexOf(BASE64_PREFIX) + BASE64_PREFIX_LENGTH);
+        final String encodedString =
+                dataUrl.substring(dataUrl.indexOf(BASE64_PREFIX) + BASE64_PREFIX_LENGTH);
         outputStream.write(Base64.getDecoder().decode(encodedString));
     }
 }

@@ -12,23 +12,25 @@ class AdminUserTypeService {
     private final InUserTypeRepository inUserTypeRepository;
     private final DictionaryService dictionaryService;
 
-    AdminUserTypeService(InUserTypeRepository inUserTypeRepository,
-            DictionaryService dictionaryService) {
+    AdminUserTypeService(
+            InUserTypeRepository inUserTypeRepository, DictionaryService dictionaryService) {
         this.inUserTypeRepository = inUserTypeRepository;
         this.dictionaryService = dictionaryService;
     }
 
     List<UserTypeResponseDTO> findAll() {
-        return inUserTypeRepository.findAll().stream().map(userType ->
-            userTypeToDto(userType)
-        ).collect(Collectors.toList());
+        return inUserTypeRepository.findAll().stream()
+                .map(userType -> userTypeToDto(userType))
+                .collect(Collectors.toList());
     }
-    
+
     private UserTypeResponseDTO userTypeToDto(InUserType inUserType) {
-        final String userTypeEnName = dictionaryService.getEnValue(DictionaryName.user_type,
-                        inUserType.getD_user_type(), "");
-        final String userTypeNoName = dictionaryService.getNoValue(DictionaryName.user_type,
-                        inUserType.getD_user_type(), "");
+        final String userTypeEnName =
+                dictionaryService.getEnValue(
+                        DictionaryName.user_type, inUserType.getD_user_type(), "");
+        final String userTypeNoName =
+                dictionaryService.getNoValue(
+                        DictionaryName.user_type, inUserType.getD_user_type(), "");
         return UserTypeResponseDTO.builder()
                 .id(inUserType.getId())
                 .nameEn(userTypeEnName)

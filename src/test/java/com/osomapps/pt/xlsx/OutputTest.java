@@ -2,6 +2,7 @@ package com.osomapps.pt.xlsx;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class OutputTest {
@@ -12,13 +13,14 @@ public class OutputTest {
 
     @Test
     public void setters() {
-        Output output = new Output()
-            .setRepetitions(null)
-            .setWeights(null)
-            .setTimeInMins(null)
-            .setSpeeds(null)
-            .setInclines(null)
-            .setResistances(null);
+        Output output =
+                new Output()
+                        .setRepetitions(null)
+                        .setWeights(null)
+                        .setTimeInMins(null)
+                        .setSpeeds(null)
+                        .setInclines(null)
+                        .setResistances(null);
         assertThat(output, notNullValue());
     }
 

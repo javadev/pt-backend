@@ -2,6 +2,7 @@ package com.osomapps.pt.auth;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class AuthUserResponseDTOTest {
@@ -34,5 +35,4 @@ public class AuthUserResponseDTOTest {
         authUserResponseDTO.getPermissions();
         assertThat(authUserResponseDTO, notNullValue());
     }
-
 }

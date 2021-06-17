@@ -16,10 +16,11 @@ class AdminExerciseOutputService {
     }
 
     List<ExerciseOutputResponseDTO> findAll() {
-        return exerciseOutputRepository.findAll(sortByIdAsc()).stream().map(AdminExerciseOutputService::exerciseOutputToDto
-        ).collect(Collectors.toList());
+        return exerciseOutputRepository.findAll(sortByIdAsc()).stream()
+                .map(AdminExerciseOutputService::exerciseOutputToDto)
+                .collect(Collectors.toList());
     }
-    
+
     private Sort sortByIdAsc() {
         return Sort.by(Sort.Direction.ASC, "id");
     }

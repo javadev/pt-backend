@@ -2,6 +2,7 @@ package com.osomapps.pt.admin.program;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class ParseExerciseDTOTest {
@@ -40,5 +41,4 @@ public class ParseExerciseDTOTest {
         parseExerciseDTO.getBasis_for_calculations();
         assertThat(parseExerciseDTO, notNullValue());
     }
-
 }

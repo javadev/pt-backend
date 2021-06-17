@@ -5,6 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-interface InWorkoutItemSetReportRepository extends JpaRepository<InWorkoutItemSetReport, Long> {
-
-}
+interface InWorkoutItemSetReportRepository extends JpaRepository<InWorkoutItemSetReport, Long> {}

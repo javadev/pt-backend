@@ -1,22 +1,21 @@
 package com.osomapps.pt.admin.user;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
-import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminUserProgramResourceTest {
 
-    @Mock
-    private AdminUserProgramService userProgramService;
-    @InjectMocks
-    private AdminUserProgramResource adminUserProgramResource;
+    @Mock private AdminUserProgramService userProgramService;
+    @InjectMocks private AdminUserProgramResource adminUserProgramResource;
 
     @Test
     public void findAll() {
@@ -47,5 +46,4 @@ public class AdminUserProgramResourceTest {
         adminUserProgramResource.delete(1L);
         verify(userProgramService).delete(anyLong());
     }
-
 }

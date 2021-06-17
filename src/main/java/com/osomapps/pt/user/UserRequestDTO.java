@@ -20,7 +20,9 @@ class UserRequestDTO {
     Long height;
     Long weight;
     String avatar_dataurl;
+
     @JsonDeserialize(using = UserLevelDeserializer.class)
     UserLevel level;
+
     List<UserGoalRequestDTO> goals;
 }

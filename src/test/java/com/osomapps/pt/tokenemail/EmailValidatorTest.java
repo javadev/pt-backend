@@ -1,9 +1,10 @@
 package com.osomapps.pt.tokenemail;
 
-import java.util.HashMap;
 import static org.hamcrest.CoreMatchers.equalTo;
-import org.junit.Test;
 import static org.junit.Assert.assertThat;
+
+import java.util.HashMap;
+import org.junit.Test;
 import org.springframework.validation.MapBindingResult;
 
 public class EmailValidatorTest {
@@ -15,30 +16,33 @@ public class EmailValidatorTest {
 
     @Test
     public void valid() {
-        final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
+        final MapBindingResult errors =
+                new MapBindingResult(new HashMap<>(), String.class.getName());
         new EmailValidator().validate("test@mail.com", errors);
         assertThat(errors.getAllErrors().size(), equalTo(0));
     }
 
     @Test
     public void not_valid_null() {
-        final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
+        final MapBindingResult errors =
+                new MapBindingResult(new HashMap<>(), String.class.getName());
         new EmailValidator().validate(null, errors);
         assertThat(errors.getAllErrors().size(), equalTo(1));
     }
 
     @Test
     public void not_valid_empty() {
-        final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
+        final MapBindingResult errors =
+                new MapBindingResult(new HashMap<>(), String.class.getName());
         new EmailValidator().validate("", errors);
         assertThat(errors.getAllErrors().size(), equalTo(1));
     }
 
     @Test
     public void not_valid() {
-        final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
+        final MapBindingResult errors =
+                new MapBindingResult(new HashMap<>(), String.class.getName());
         new EmailValidator().validate("test", errors);
         assertThat(errors.getAllErrors().size(), equalTo(1));
     }
-
 }

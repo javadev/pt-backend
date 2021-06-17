@@ -13,23 +13,31 @@ class AdminExerciseEquipmentTypeService {
     private final ExerciseEquipmentTypeRepository exerciseEquipmentTypeRepository;
     private final DictionaryService dictionaryService;
 
-    AdminExerciseEquipmentTypeService(ExerciseEquipmentTypeRepository exerciseEquipmentTypeRepository,
+    AdminExerciseEquipmentTypeService(
+            ExerciseEquipmentTypeRepository exerciseEquipmentTypeRepository,
             DictionaryService dictionaryService) {
         this.exerciseEquipmentTypeRepository = exerciseEquipmentTypeRepository;
         this.dictionaryService = dictionaryService;
     }
 
     List<ExerciseEquipmentTypeResponseDTO> findAll() {
-        return exerciseEquipmentTypeRepository.findAll().stream().map(equipmentType ->
-            exerciseEquipmentTypeToDto(equipmentType)
-        ).collect(Collectors.toList());
+        return exerciseEquipmentTypeRepository.findAll().stream()
+                .map(equipmentType -> exerciseEquipmentTypeToDto(equipmentType))
+                .collect(Collectors.toList());
     }
-    
-    private ExerciseEquipmentTypeResponseDTO exerciseEquipmentTypeToDto(ExerciseEquipmentType equipmentType) {
-        final String exerciseEquipmentTypeEnName = dictionaryService.getEnValue(DictionaryName.exercise_equipment_type_name,
-                        equipmentType.getDExerciseEquipmentTypeName(), "");
-        final String exerciseEquipmentTypeNoName = dictionaryService.getNoValue(DictionaryName.exercise_equipment_type_name,
-                        equipmentType.getDExerciseEquipmentTypeName(), exerciseEquipmentTypeEnName);
+
+    private ExerciseEquipmentTypeResponseDTO exerciseEquipmentTypeToDto(
+            ExerciseEquipmentType equipmentType) {
+        final String exerciseEquipmentTypeEnName =
+                dictionaryService.getEnValue(
+                        DictionaryName.exercise_equipment_type_name,
+                        equipmentType.getDExerciseEquipmentTypeName(),
+                        "");
+        final String exerciseEquipmentTypeNoName =
+                dictionaryService.getNoValue(
+                        DictionaryName.exercise_equipment_type_name,
+                        equipmentType.getDExerciseEquipmentTypeName(),
+                        exerciseEquipmentTypeEnName);
         return ExerciseEquipmentTypeResponseDTO.builder()
                 .id(equipmentType.getId())
                 .nameEn(exerciseEquipmentTypeEnName)

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 class AdminEmailMessageTypeResource {
 
     private final AdminEmailMessageTypeService adminEmailMessageTypeService;
-    
+
     @Autowired
     AdminEmailMessageTypeResource(AdminEmailMessageTypeService adminEmailMessageTypeService) {
         this.adminEmailMessageTypeService = adminEmailMessageTypeService;

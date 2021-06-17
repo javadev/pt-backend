@@ -1,8 +1,9 @@
 package com.osomapps.pt.reportphoto;
 
-import java.time.LocalDateTime;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+
+import java.time.LocalDateTime;
 import org.junit.Test;
 
 public class PhotoResponseDTOTest {

@@ -1,7 +1,7 @@
 package com.osomapps.pt.admin.email;
 
-import com.osomapps.pt.email.EmailMessageTypeRepository;
 import com.osomapps.pt.email.EmailMessageType;
+import com.osomapps.pt.email.EmailMessageTypeRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Sort;
@@ -17,9 +17,9 @@ class AdminEmailMessageTypeService {
     }
 
     List<EmailMessageTypeResponseDTO> findAll() {
-        return emailMessageTypeRepository.findAll(sortByIdAsc()).stream().map(
-                AdminEmailMessageTypeService::emailMessageTypeDto
-        ).collect(Collectors.toList());
+        return emailMessageTypeRepository.findAll(sortByIdAsc()).stream()
+                .map(AdminEmailMessageTypeService::emailMessageTypeDto)
+                .collect(Collectors.toList());
     }
 
     private Sort sortByIdAsc() {
@@ -32,5 +32,4 @@ class AdminEmailMessageTypeService {
                 .name(input.getName())
                 .build();
     }
-
 }

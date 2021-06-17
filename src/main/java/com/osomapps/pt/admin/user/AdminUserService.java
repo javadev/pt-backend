@@ -42,7 +42,8 @@ class AdminUserService {
     private final GoalRepository goalRepository;
     private final AdminProgramAssignService adminProgramAssignService;
 
-    AdminUserService(InUserRepository inUserRepository,
+    AdminUserService(
+            InUserRepository inUserRepository,
             InUserEmailRepository inUserEmailRepository,
             InUserFacebookRepository inUserFacebookRepository,
             InUserTypeRepository inUserTypeRepository,
@@ -65,9 +66,9 @@ class AdminUserService {
     }
 
     List<UserResponseDTO> findAll() {
-        return inUserRepository.findAll(sortByIdAsc()).stream().map(inUser ->
-                inUserToDto(inUser)
-        ).collect(Collectors.toList());
+        return inUserRepository.findAll(sortByIdAsc()).stream()
+                .map(inUser -> inUserToDto(inUser))
+                .collect(Collectors.toList());
     }
 
     private UserResponseDTO inUserToDto(InUser inUser) {
@@ -78,11 +79,20 @@ class AdminUserService {
                 userName = "?";
                 userEmail = "?";
             } else {
-                userName = inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1).getUser_name();
-                userEmail = inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1).getLogin();
+                userName =
+                        inUser.getInUserEmails()
+                                .get(inUser.getInUserEmails().size() - 1)
+                                .getUser_name();
+                userEmail =
+                        inUser.getInUserEmails()
+                                .get(inUser.getInUserEmails().size() - 1)
+                                .getLogin();
             }
         } else {
-            userName = inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1).getUser_name();
+            userName =
+                    inUser.getInUserFacebooks()
+                            .get(inUser.getInUserFacebooks().size() - 1)
+                            .getUser_name();
             userEmail = "Facebook user";
         }
 
@@ -91,8 +101,11 @@ class AdminUserService {
             programs = null;
         } else {
             final long inProgramsCount = inUser.getInPrograms().stream().count();
-            programs = inUser.getInPrograms().stream().skip(inProgramsCount < 3 ? 0 : inProgramsCount - 3)
-                .map(AdminUserProgramService::inProgramToDto).collect(Collectors.toList());
+            programs =
+                    inUser.getInPrograms().stream()
+                            .skip(inProgramsCount < 3 ? 0 : inProgramsCount - 3)
+                            .map(AdminUserProgramService::inProgramToDto)
+                            .collect(Collectors.toList());
         }
 
         return UserResponseDTO.builder()
@@ -101,19 +114,47 @@ class AdminUserService {
                 .name(userName)
                 .gender(inUser.getD_sex())
                 .level(inUser.getD_level() == null ? null : Integer.parseInt(inUser.getD_level()))
-                .goals(inUser.getInUserGoals() == null ? null : inUser.getInUserGoals().stream().map(goal ->
-                    new UserGoalResponseDTO()
-                            .setId(goal.getGoalId())
-                        .setTitle(dictionaryService.getEnValue(DictionaryName.goal_title, goal.getD_goal_title(), null))
-                        .setTitle2(dictionaryService.getEnValue(DictionaryName.goal_title_2, goal.getD_goal_title_2(), null))
-                ).collect(Collectors.toList()))
-                .type(inUser.getInUserType() == null ? null : UserTypeResponseDTO.builder()
-                    .id(inUser.getInUserType().getId())
-                    .nameEn(dictionaryService.getEnValue(DictionaryName.user_type,
-                            inUser.getInUserType().getD_user_type(), ""))
-                    .nameNo(dictionaryService.getNoValue(DictionaryName.user_type,
-                            inUser.getInUserType().getD_user_type(), ""))
-                    .build())
+                .goals(
+                        inUser.getInUserGoals() == null
+                                ? null
+                                : inUser.getInUserGoals().stream()
+                                        .map(
+                                                goal ->
+                                                        new UserGoalResponseDTO()
+                                                                .setId(goal.getGoalId())
+                                                                .setTitle(
+                                                                        dictionaryService
+                                                                                .getEnValue(
+                                                                                        DictionaryName
+                                                                                                .goal_title,
+                                                                                        goal
+                                                                                                .getD_goal_title(),
+                                                                                        null))
+                                                                .setTitle2(
+                                                                        dictionaryService
+                                                                                .getEnValue(
+                                                                                        DictionaryName
+                                                                                                .goal_title_2,
+                                                                                        goal
+                                                                                                .getD_goal_title_2(),
+                                                                                        null)))
+                                        .collect(Collectors.toList()))
+                .type(
+                        inUser.getInUserType() == null
+                                ? null
+                                : UserTypeResponseDTO.builder()
+                                        .id(inUser.getInUserType().getId())
+                                        .nameEn(
+                                                dictionaryService.getEnValue(
+                                                        DictionaryName.user_type,
+                                                        inUser.getInUserType().getD_user_type(),
+                                                        ""))
+                                        .nameNo(
+                                                dictionaryService.getNoValue(
+                                                        DictionaryName.user_type,
+                                                        inUser.getInUserType().getD_user_type(),
+                                                        ""))
+                                        .build())
                 .weight(inUser.getWeight() == null ? null : inUser.getWeight().intValue())
                 .programs(programs)
                 .build();
@@ -132,11 +173,16 @@ class AdminUserService {
     }
 
     UserResponseDTO create(UserRequestDTO userRequestDTO) {
-        final InUserType inUserTypeDb = userRequestDTO.getType().getId() == null ? null
-                : inUserTypeRepository.findById(userRequestDTO.getType().getId()).orElse(null);
+        final InUserType inUserTypeDb =
+                userRequestDTO.getType().getId() == null
+                        ? null
+                        : inUserTypeRepository
+                                .findById(userRequestDTO.getType().getId())
+                                .orElse(null);
         final InUser inUser = new InUser();
         final InUserEmail inUserEmail = new InUserEmail();
-        final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
+        final MapBindingResult errors =
+                new MapBindingResult(new HashMap<>(), String.class.getName());
         emailValidator.validate(userRequestDTO.getEmail(), errors);
         if (errors.hasErrors()) {
             throw new UnauthorizedException(errors.getAllErrors().get(0).getDefaultMessage());
@@ -147,8 +193,12 @@ class AdminUserService {
         inUser.setInUserType(inUserTypeDb);
         inUser.setInUserEmails(Arrays.asList(inUserEmail));
         inUser.setD_sex(userRequestDTO.getGender());
-        inUser.setD_level(userRequestDTO.getLevel() == null ? null : "" + userRequestDTO.getLevel());
-        inUser.setWeight(userRequestDTO.getWeight() == null ? null : userRequestDTO.getWeight().floatValue());
+        inUser.setD_level(
+                userRequestDTO.getLevel() == null ? null : "" + userRequestDTO.getLevel());
+        inUser.setWeight(
+                userRequestDTO.getWeight() == null
+                        ? null
+                        : userRequestDTO.getWeight().floatValue());
         setupGoals(userRequestDTO, inUser);
 
         final InUser savedInUser = inUserRepository.save(inUser);
@@ -164,22 +214,40 @@ class AdminUserService {
             }
             inUserGoalRepository.deleteAll(inUser.getInUserGoals());
             inUser.setInUserGoals(new ArrayList<>());
-            userRequestDTO.getGoals().forEach((userGoalRequestDTO) -> {
-                Goal goal = goalRepository.findById(userGoalRequestDTO.getId()).orElse(null);
-                if (goal == null) {
-                    throw new UnauthorizedException("Goal with id " + userGoalRequestDTO.getId() + " not found");
-                }
-                String value = null;
-                try {
-                    value = new ObjectMapper().writeValueAsString(userGoalRequestDTO.getValues());
-                } catch (IOException ex) {
-                }
-                inUser.getInUserGoals().add(inUserGoalRepository.save(new InUserGoal()
-                        .setGoalId(userGoalRequestDTO.getId())
-                        .setD_goal_title(goal.getDGoalTitle())
-                        .setD_goal_title_2(goal.getDGoalTitle2())
-                        .setGoal_value(value)));
-            });
+            userRequestDTO
+                    .getGoals()
+                    .forEach(
+                            (userGoalRequestDTO) -> {
+                                Goal goal =
+                                        goalRepository
+                                                .findById(userGoalRequestDTO.getId())
+                                                .orElse(null);
+                                if (goal == null) {
+                                    throw new UnauthorizedException(
+                                            "Goal with id "
+                                                    + userGoalRequestDTO.getId()
+                                                    + " not found");
+                                }
+                                String value = null;
+                                try {
+                                    value =
+                                            new ObjectMapper()
+                                                    .writeValueAsString(
+                                                            userGoalRequestDTO.getValues());
+                                } catch (IOException ex) {
+                                }
+                                inUser.getInUserGoals()
+                                        .add(
+                                                inUserGoalRepository.save(
+                                                        new InUserGoal()
+                                                                .setGoalId(
+                                                                        userGoalRequestDTO.getId())
+                                                                .setD_goal_title(
+                                                                        goal.getDGoalTitle())
+                                                                .setD_goal_title_2(
+                                                                        goal.getDGoalTitle2())
+                                                                .setGoal_value(value)));
+                            });
         }
     }
 
@@ -188,27 +256,41 @@ class AdminUserService {
         if (inUser == null) {
             throw new ResourceNotFoundException("User with id " + id + " not found.");
         }
-        final InUserType inUserTypeDb = userRequestDTO.getType() == null
-                || userRequestDTO.getType().getId() == null ? null
-            : inUserTypeRepository.findById(userRequestDTO.getType().getId()).orElse(null);
+        final InUserType inUserTypeDb =
+                userRequestDTO.getType() == null || userRequestDTO.getType().getId() == null
+                        ? null
+                        : inUserTypeRepository
+                                .findById(userRequestDTO.getType().getId())
+                                .orElse(null);
         inUser.setInUserType(inUserTypeDb);
         inUser.setD_sex(userRequestDTO.getGender());
-        inUser.setD_level(userRequestDTO.getLevel() == null ? null : "" + userRequestDTO.getLevel());
-        inUser.setWeight(userRequestDTO.getWeight() == null ? null : userRequestDTO.getWeight().floatValue());
+        inUser.setD_level(
+                userRequestDTO.getLevel() == null ? null : "" + userRequestDTO.getLevel());
+        inUser.setWeight(
+                userRequestDTO.getWeight() == null
+                        ? null
+                        : userRequestDTO.getWeight().floatValue());
         setupGoals(userRequestDTO, inUser);
         if (inUser.getInUserEmails().isEmpty()) {
-            final InUserFacebook inUserFacebook = inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1);
+            final InUserFacebook inUserFacebook =
+                    inUser.getInUserFacebooks().get(inUser.getInUserFacebooks().size() - 1);
             inUserFacebook.setUser_name(userRequestDTO.getName());
             inUserFacebookRepository.save(inUserFacebook);
         } else {
-            final MapBindingResult errors = new MapBindingResult(new HashMap<>(), String.class.getName());
+            final MapBindingResult errors =
+                    new MapBindingResult(new HashMap<>(), String.class.getName());
             emailValidator.validate(userRequestDTO.getEmail(), errors);
             if (errors.hasErrors()) {
                 throw new UnauthorizedException(errors.getAllErrors().get(0).getDefaultMessage());
             }
-            inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1).setUser_name(userRequestDTO.getName());
-            inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1).setLogin(userRequestDTO.getEmail());
-            inUserEmailRepository.save(inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1));
+            inUser.getInUserEmails()
+                    .get(inUser.getInUserEmails().size() - 1)
+                    .setUser_name(userRequestDTO.getName());
+            inUser.getInUserEmails()
+                    .get(inUser.getInUserEmails().size() - 1)
+                    .setLogin(userRequestDTO.getEmail());
+            inUserEmailRepository.save(
+                    inUser.getInUserEmails().get(inUser.getInUserEmails().size() - 1));
         }
         return inUserToDto(adminProgramAssignService.assign(inUser));
     }

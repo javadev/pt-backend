@@ -1,23 +1,21 @@
 package com.osomapps.pt.admin.certificate;
 
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
-import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminCertificateResourceTest {
 
-    @Mock
-    private AdminCertificateService adminCertificateService;
+    @Mock private AdminCertificateService adminCertificateService;
 
-    @InjectMocks
-    private AdminCertificateResource adminCertificateResource;
+    @InjectMocks private AdminCertificateResource adminCertificateResource;
 
     @Test
     public void findOne() {
