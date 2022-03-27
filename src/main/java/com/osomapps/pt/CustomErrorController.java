@@ -4,6 +4,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,12 +28,12 @@ class CustomErrorController implements ErrorController {
         return new ErrorDTO(response.getStatus(), getErrorAttributes(webRequest, loggingLevel));
     }
 
-    @Override
     public String getErrorPath() {
         return PATH;
     }
 
     private Map<String, Object> getErrorAttributes(WebRequest webRequest, String loggingLevel) {
-        return errorAttributes.getErrorAttributes(webRequest, "DEBUG".equals(loggingLevel));
+        return errorAttributes.getErrorAttributes(webRequest, "DEBUG".equals(loggingLevel)
+                ? ErrorAttributeOptions.of(ErrorAttributeOptions.Include.STACK_TRACE) : ErrorAttributeOptions.defaults());
     }
 }

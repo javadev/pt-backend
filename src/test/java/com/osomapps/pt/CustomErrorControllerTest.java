@@ -3,7 +3,6 @@ package com.osomapps.pt;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -26,7 +25,7 @@ public class CustomErrorControllerTest {
     @Test
     public void error() {
         customErrorController.error(mock(WebRequest.class), new MockHttpServletResponse());
-        verify(errorAttributes).getErrorAttributes(any(WebRequest.class), anyBoolean());
+        verify(errorAttributes).getErrorAttributes(any(WebRequest.class), any());
     }
 
     @Test
