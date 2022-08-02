@@ -12,6 +12,15 @@ on:
 jobs:
   build:
 
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_DB: ptcoretest
+          POSTGRES_USER: ptcoretest
+          POSTGRES_PASSWORD: ptCoreTest101
+        ports:
+          - 5432:5432
     runs-on: ubuntu-latest
 
     steps:
@@ -23,4 +32,4 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -T 1C -B clean package jacoco:report
