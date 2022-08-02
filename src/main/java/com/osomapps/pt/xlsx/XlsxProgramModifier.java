@@ -1,6 +1,6 @@
 package com.osomapps.pt.xlsx;
 
-import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_NUMERIC;
+import static org.apache.poi.ss.usermodel.CellType.NUMERIC;
 
 import com.osomapps.pt.dictionary.DictionaryName;
 import com.osomapps.pt.dictionary.DictionaryService;
@@ -178,7 +178,7 @@ public class XlsxProgramModifier {
         XSSFRow row = sheet.getRow(rowNumber);
         XSSFCell cell = row.getCell(columnNumber);
         if (cell == null) {
-            cell = row.createCell(columnNumber, CELL_TYPE_NUMERIC);
+            cell = row.createCell(columnNumber, NUMERIC);
         }
         if (value == null) {
             cell.setCellValue("");
