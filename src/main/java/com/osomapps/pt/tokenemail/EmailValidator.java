@@ -10,8 +10,7 @@ import org.springframework.validation.Validator;
 public class EmailValidator implements Validator {
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile(
-                    "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@"
-                            + "((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$");
+                    "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$");
 
     @Override
     public boolean supports(final Class<?> aClass) {
