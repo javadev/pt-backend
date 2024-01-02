@@ -1,7 +1,4 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
-name: Java CI with Maven
+name: Java CI
 
 on:
   push:
@@ -35,7 +32,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: d16fc939fed96c332c7414ad93947e37ed44f1cc
-      run: mvn -T 1C -B clean package jacoco:report org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.organization=javadev-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.projectKey=javadev_pt-backend
+      run: mvn -T 1C -B clean test jacoco:report org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.organization=javadev-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.projectKey=javadev_pt-backend
     - uses: codecov/codecov-action@v3
       with:
         file: target/site/jacoco/jacoco.xml
