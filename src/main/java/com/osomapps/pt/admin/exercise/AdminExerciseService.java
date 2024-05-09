@@ -58,7 +58,7 @@ class AdminExerciseService {
 
     List<ExerciseResponseDTO> findAll() {
         return exerciseRepository.findAll(sortByIdAsc()).stream()
-                .map(exercise -> exerciseToDto(exercise))
+                .map(this::exerciseToDto)
                 .collect(Collectors.toList());
     }
 
@@ -210,20 +210,20 @@ class AdminExerciseService {
         exercise.setExerciseTypes(
                 exerciseTypeRepository.findAllById(
                         exerciseRequestDTO.getTypes().stream()
-                                .map(type -> type.getId())
+                                .map(ExerciseTypeRequestDTO::getId)
                                 .collect(Collectors.toList())));
         if (exerciseRequestDTO.getInputs() != null) {
             exercise.setExerciseInputs(
                     exerciseInputRepository.findAllById(
                             exerciseRequestDTO.getInputs().stream()
-                                    .map(input -> input.getId())
+                                    .map(ExerciseInputRequestDTO::getId)
                                     .collect(Collectors.toList())));
         }
         if (exerciseRequestDTO.getOutputs() != null) {
             exercise.setExerciseOutputs(
                     exerciseOutputRepository.findAllById(
                             exerciseRequestDTO.getOutputs().stream()
-                                    .map(output -> output.getId())
+                                    .map(ExerciseOutputRequestDTO::getId)
                                     .collect(Collectors.toList())));
         }
         if (exerciseRequestDTO.getFiles() != null) {
@@ -311,20 +311,20 @@ class AdminExerciseService {
         existedExercise.setExerciseTypes(
                 exerciseTypeRepository.findAllById(
                         exerciseRequestDTO.getTypes().stream()
-                                .map(type -> type.getId())
+                                .map(ExerciseTypeRequestDTO::getId)
                                 .collect(Collectors.toList())));
         if (exerciseRequestDTO.getInputs() != null) {
             existedExercise.setExerciseInputs(
                     exerciseInputRepository.findAllById(
                             exerciseRequestDTO.getInputs().stream()
-                                    .map(input -> input.getId())
+                                    .map(ExerciseInputRequestDTO::getId)
                                     .collect(Collectors.toList())));
         }
         if (exerciseRequestDTO.getOutputs() != null) {
             existedExercise.setExerciseOutputs(
                     exerciseOutputRepository.findAllById(
                             exerciseRequestDTO.getOutputs().stream()
-                                    .map(output -> output.getId())
+                                    .map(ExerciseOutputRequestDTO::getId)
                                     .collect(Collectors.toList())));
         }
         if (exerciseRequestDTO.getFiles() != null) {

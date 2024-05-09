@@ -22,7 +22,7 @@ class AdminExerciseBodypartService {
 
     List<ExerciseBodypartResponseDTO> findAll() {
         return exerciseBodypartRepository.findAll().stream()
-                .map(bodypart -> exerciseBodypartToDto(bodypart))
+                .map(this::exerciseBodypartToDto)
                 .collect(Collectors.toList());
     }
 

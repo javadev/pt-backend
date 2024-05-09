@@ -30,7 +30,7 @@ class AdminEmailMessageTemplateService {
 
     List<EmailMessageTemplateResponseDTO> findAll() {
         return emailMessageTemplateRepository.findAll(sortByIdAsc()).stream()
-                .map(template -> templateToDto(template))
+                .map(this::templateToDto)
                 .collect(Collectors.toList());
     }
 

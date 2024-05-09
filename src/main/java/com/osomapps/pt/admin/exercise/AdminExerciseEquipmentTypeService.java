@@ -22,7 +22,7 @@ class AdminExerciseEquipmentTypeService {
 
     List<ExerciseEquipmentTypeResponseDTO> findAll() {
         return exerciseEquipmentTypeRepository.findAll().stream()
-                .map(equipmentType -> exerciseEquipmentTypeToDto(equipmentType))
+                .map(this::exerciseEquipmentTypeToDto)
                 .collect(Collectors.toList());
     }
 

@@ -482,9 +482,7 @@ public class AdminProgramAssignService {
             return exercises.get(0).getExerciseTypes().get(0).getName();
         }
         if (parseWorkoutItem.getParseWorkoutItemSets().stream()
-                .filter(set -> set.getTime_in_min() != null)
-                .findFirst()
-                .isPresent()) {
+                .anyMatch(set -> set.getTime_in_min() != null)) {
             return "OnTime";
         }
         return "OnRepetitions";
