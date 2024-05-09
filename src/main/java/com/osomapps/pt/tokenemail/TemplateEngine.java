@@ -23,7 +23,6 @@ final class TemplateEngine {
         }
 
         @Override
-        @SuppressWarnings("unchecked")
         public String apply(Map<K, V> value) {
             final String evaluate = TEMPLATE_SETTINGS.get("evaluate");
             String result = template;

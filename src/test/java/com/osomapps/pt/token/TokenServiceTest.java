@@ -2,10 +2,9 @@ package com.osomapps.pt.token;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.same;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -60,7 +59,7 @@ public class TokenServiceTest {
         tokenRequest.setDevice_id("device_id");
         FacebookResponse facebookResponse = new FacebookResponse();
         facebookResponse.setAge(20L);
-        when(inUserFacebookRepository.findByUserId(anyObject()))
+        when(inUserFacebookRepository.findByUserId(any()))
                 .thenReturn(
                         Arrays.asList(
                                 new InUserFacebook()

@@ -2,7 +2,7 @@ package com.osomapps.pt.admin.user;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import com.osomapps.pt.ResourceNotFoundException;

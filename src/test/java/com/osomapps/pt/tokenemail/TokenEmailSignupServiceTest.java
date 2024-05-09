@@ -3,9 +3,8 @@ package com.osomapps.pt.tokenemail;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -55,7 +54,7 @@ public class TokenEmailSignupServiceTest {
                                     return null;
                                 })
                 .when(emailValidator)
-                .validate(anyObject(), any(Errors.class));
+                .validate(any(), any(Errors.class));
         tokenEmailSignupService.createInUserEmail(
                 new TokenEmailSignupRequestDTO()
                         .setUser(new UserSignupRequestDTO().setEmail("test@mail.com")));
@@ -72,7 +71,7 @@ public class TokenEmailSignupServiceTest {
                                     return null;
                                 })
                 .when(dataurlValidator)
-                .validate(anyObject(), any(Errors.class));
+                .validate(any(), any(Errors.class));
         tokenEmailSignupService.createInUserEmail(
                 new TokenEmailSignupRequestDTO()
                         .setUser(new UserSignupRequestDTO().setEmail("test@mail.com")));
@@ -89,8 +88,8 @@ public class TokenEmailSignupServiceTest {
 
     @Test
     public void createNewToken() {
-        when(inUserRepository.save((InUser) anyObject())).thenAnswer(i -> i.getArguments()[0]);
-        when(inUserEmailRepository.save((InUserEmail) anyObject()))
+        when(inUserRepository.save((InUser) any())).thenAnswer(i -> i.getArguments()[0]);
+        when(inUserEmailRepository.save((InUserEmail) any()))
                 .thenAnswer(i -> i.getArguments()[0]);
         tokenEmailSignupService.createNewToken(
                 new TokenEmailSignupRequestDTO()

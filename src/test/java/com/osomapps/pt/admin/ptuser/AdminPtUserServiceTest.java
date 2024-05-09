@@ -3,8 +3,8 @@ package com.osomapps.pt.admin.ptuser;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import com.osomapps.pt.ResourceNotFoundException;
@@ -47,7 +47,7 @@ public class AdminPtUserServiceTest {
 
     @Test
     public void create() {
-        when(ptUserRepository.save((PtUser) anyObject())).thenAnswer(i -> i.getArguments()[0]);
+        when(ptUserRepository.save((PtUser) any())).thenAnswer(i -> i.getArguments()[0]);
         PtUserResponseDTO responseDTO =
                 adminPtUserService.create(new PtUserRequestDTO().setRoles(Collections.emptyList()));
         assertThat(responseDTO, notNullValue());
@@ -67,7 +67,7 @@ public class AdminPtUserServiceTest {
     @Test
     public void update() {
         when(ptUserRepository.findById(eq(2L))).thenReturn(Optional.of(new PtUser()));
-        when(ptUserRepository.save((PtUser) anyObject())).thenAnswer(i -> i.getArguments()[0]);
+        when(ptUserRepository.save((PtUser) any())).thenAnswer(i -> i.getArguments()[0]);
         PtUserResponseDTO responseDTO =
                 adminPtUserService.update(
                         2L, new PtUserRequestDTO().setRoles(Collections.emptyList()));

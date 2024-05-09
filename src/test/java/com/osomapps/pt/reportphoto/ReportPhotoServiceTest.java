@@ -2,10 +2,9 @@ package com.osomapps.pt.reportphoto;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -97,7 +96,7 @@ public class ReportPhotoServiceTest {
                                     return null;
                                 })
                 .when(dataurlValidator)
-                .validate(anyObject(), any(Errors.class));
+                .validate(any(), any(Errors.class));
         reportPhotoService.create(
                 "1",
                 new PhotoRequestDTO()

@@ -2,9 +2,8 @@ package com.osomapps.pt.admin.user;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -135,7 +134,7 @@ public class AdminUserServiceTest {
                                     return null;
                                 })
                 .when(emailValidator)
-                .validate(anyObject(), any(Errors.class));
+                .validate(any(), any(Errors.class));
         adminUserService.create(new UserRequestDTO().setType(new UserTypeRequestDTO()));
     }
 
@@ -191,7 +190,7 @@ public class AdminUserServiceTest {
                                     return null;
                                 })
                 .when(emailValidator)
-                .validate(anyObject(), any(Errors.class));
+                .validate(any(), any(Errors.class));
         when(inUserRepository.findById(eq(1L)))
                 .thenReturn(
                         Optional.of(

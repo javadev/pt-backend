@@ -3,9 +3,8 @@ package com.osomapps.pt.admin.email;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import com.osomapps.pt.ResourceNotFoundException;
@@ -61,7 +60,7 @@ public class AdminEmailMessageTemplateServiceTest {
 
     @Test
     public void create() {
-        when(emailMessageTemplateRepository.save((EmailMessageTemplate) anyObject()))
+        when(emailMessageTemplateRepository.save((EmailMessageTemplate) any()))
                 .thenAnswer(i -> i.getArguments()[0]);
         EmailMessageTemplateResponseDTO emailMessageTemplateResponseDTO =
                 adminEmailMessageTemplateService.create(
@@ -72,7 +71,7 @@ public class AdminEmailMessageTemplateServiceTest {
 
     @Test
     public void create_with_null_type() {
-        when(emailMessageTemplateRepository.save((EmailMessageTemplate) anyObject()))
+        when(emailMessageTemplateRepository.save((EmailMessageTemplate) any()))
                 .thenAnswer(i -> i.getArguments()[0]);
         EmailMessageTemplateResponseDTO emailMessageTemplateResponseDTO =
                 adminEmailMessageTemplateService.create(
@@ -93,7 +92,7 @@ public class AdminEmailMessageTemplateServiceTest {
                         Optional.of(
                                 new EmailMessageTemplate()
                                         .setEmailMessageType(new EmailMessageType())));
-        when(emailMessageTemplateRepository.save((EmailMessageTemplate) anyObject()))
+        when(emailMessageTemplateRepository.save((EmailMessageTemplate) any()))
                 .thenAnswer(i -> i.getArguments()[0]);
         EmailMessageTemplateResponseDTO emailMessageTemplateResponseDTO =
                 adminEmailMessageTemplateService.update(
@@ -110,7 +109,7 @@ public class AdminEmailMessageTemplateServiceTest {
                         Optional.of(
                                 new EmailMessageTemplate()
                                         .setEmailMessageType(new EmailMessageType())));
-        when(emailMessageTemplateRepository.save((EmailMessageTemplate) anyObject()))
+        when(emailMessageTemplateRepository.save((EmailMessageTemplate) any()))
                 .thenAnswer(i -> i.getArguments()[0]);
         EmailMessageTemplateResponseDTO emailMessageTemplateResponseDTO =
                 adminEmailMessageTemplateService.update(

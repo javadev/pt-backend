@@ -2,7 +2,7 @@ package com.osomapps.pt.admin.program;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 
 import javax.servlet.http.HttpServletResponse;
 import org.junit.Assert;

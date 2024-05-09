@@ -40,7 +40,6 @@ class FacebookService {
         requestPicture = new OAuthRequest(Verb.GET, PICTURE_URL, service);
     }
 
-    @SuppressWarnings("unchecked")
     Optional<FacebookResponse> getProfileNameAndId(String accessTokenString) {
         try {
             final OAuth2AccessToken accessToken = new OAuth2AccessToken(accessTokenString);
