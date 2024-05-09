@@ -3,10 +3,9 @@ package com.osomapps.pt.tokenemail;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -62,7 +61,7 @@ public class TokenEmailServiceTest {
                                                                 new ArrayList<>(
                                                                         Arrays.asList(
                                                                                 new InUserLogin()))))));
-        when(passwordEncoder.matches(anyObject(), anyObject())).thenReturn(Boolean.TRUE);
+        when(passwordEncoder.matches(any(), any())).thenReturn(Boolean.TRUE);
         when(inUserLogoutRepository.findByToken(anyString())).thenReturn(Collections.emptyList());
         when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
         TokenEmailResponseDTO tokenEmailResponseDTO =
@@ -92,7 +91,7 @@ public class TokenEmailServiceTest {
                                                                 new ArrayList<>(
                                                                         Arrays.asList(
                                                                                 new InUserLogin()))))));
-        when(passwordEncoder.matches(anyObject(), anyObject())).thenReturn(Boolean.TRUE);
+        when(passwordEncoder.matches(any(), any())).thenReturn(Boolean.TRUE);
         when(inUserLogoutRepository.findByToken(anyString()))
                 .thenReturn(Arrays.asList(new InUserLogout()));
         when(inUserRepository.save(any(InUser.class))).thenAnswer(i -> i.getArguments()[0]);
@@ -126,7 +125,7 @@ public class TokenEmailServiceTest {
                                                         .setInUserLogins(
                                                                 Arrays.asList(
                                                                         new InUserLogin())))));
-        when(passwordEncoder.matches(anyObject(), anyObject())).thenReturn(Boolean.TRUE);
+        when(passwordEncoder.matches(any(), any())).thenReturn(Boolean.TRUE);
         when(inUserLogoutRepository.findByToken(anyString()))
                 .thenReturn(Arrays.asList(new InUserLogout()));
         Pair<Boolean, InUserEmail> pair =
@@ -146,7 +145,7 @@ public class TokenEmailServiceTest {
                                                         .setInUserLogins(
                                                                 Arrays.asList(
                                                                         new InUserLogin())))));
-        when(passwordEncoder.matches(anyObject(), anyObject())).thenReturn(Boolean.TRUE);
+        when(passwordEncoder.matches(any(), any())).thenReturn(Boolean.TRUE);
         when(inUserLogoutRepository.findByToken(anyString())).thenReturn(Collections.emptyList());
         Pair<Boolean, InUserEmail> pair =
                 tokenEmailService.readOrCreateInUserEmail(

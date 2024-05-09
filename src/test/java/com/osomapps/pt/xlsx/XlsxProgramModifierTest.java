@@ -1,7 +1,7 @@
 package com.osomapps.pt.xlsx;
 
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -64,7 +64,7 @@ public class XlsxProgramModifierTest {
         DictionaryService dictionaryService = mock(DictionaryService.class);
         XlsxProgramModifier xlsxProgramModifier =
                 XlsxProgramModifier.of(localOutputStream.getInputStream(), dictionaryService);
-        when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), anyObject(), anyObject()))
+        when(dictionaryService.getEnValue(eq(DictionaryName.goal_title), any(), any()))
                 .thenReturn("Loose weight");
         xlsxProgramModifier.updateCellData(
                 mock(OutputStream.class),

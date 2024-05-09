@@ -1,8 +1,7 @@
 package com.osomapps.pt.admin.certificate;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -56,7 +55,7 @@ public class AdminCertificateServiceTest {
                                     return null;
                                 })
                 .when(certificateValidator)
-                .validate(anyObject(), any(Errors.class));
+                .validate(any(), any(Errors.class));
         adminCertificateService.create(new CertificateRequestDTO());
     }
 
@@ -71,7 +70,7 @@ public class AdminCertificateServiceTest {
                                     return null;
                                 })
                 .when(amountOfDaysValidator)
-                .validate(anyObject(), any(Errors.class));
+                .validate(any(), any(Errors.class));
         adminCertificateService.create(new CertificateRequestDTO());
     }
 
@@ -109,7 +108,7 @@ public class AdminCertificateServiceTest {
                                     return null;
                                 })
                 .when(certificateValidator)
-                .validate(anyObject(), any(Errors.class));
+                .validate(any(), any(Errors.class));
         adminCertificateService.update(1L, new CertificateRequestDTO());
     }
 
@@ -125,7 +124,7 @@ public class AdminCertificateServiceTest {
                                     return null;
                                 })
                 .when(amountOfDaysValidator)
-                .validate(anyObject(), any(Errors.class));
+                .validate(any(), any(Errors.class));
         adminCertificateService.update(1L, new CertificateRequestDTO());
     }
 

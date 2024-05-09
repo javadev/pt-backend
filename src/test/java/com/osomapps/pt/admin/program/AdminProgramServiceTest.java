@@ -1,8 +1,7 @@
 package com.osomapps.pt.admin.program;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -233,13 +232,13 @@ public class AdminProgramServiceTest {
                         + "Re8L1Ekyky67QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjgaORCMxIC6e0Cc"
                         + "guWw6aFjsVMkkIr7g77ZKPJjPZqIyd7sJAgVGoEGv2xsBxqNgYPj/gAwXEQA7",
                 outputStream);
-        verify(outputStream).write(anyObject());
+        verify(outputStream).write(any());
     }
 
     @Test
     public void dataUrlToOutputStream_wrong_data() throws IOException {
         OutputStream outputStream = mock(OutputStream.class);
         adminProgramService.dataUrlToOutputStream("data:image/gif;base64,!!!", outputStream);
-        verify(outputStream, never()).write(anyObject());
+        verify(outputStream, never()).write(any());
     }
 }

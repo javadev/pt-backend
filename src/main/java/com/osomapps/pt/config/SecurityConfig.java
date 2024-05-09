@@ -20,8 +20,8 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired private CustomLogoutSuccessHandler logoutSuccessHandler;
     @Autowired private CustomAuthenticationEntryPoint authenticationEntryPoint;
 
-    @Autowired
-    public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 

@@ -2,7 +2,7 @@ package com.osomapps.pt.auth;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import com.osomapps.pt.admin.ptuser.PtUser;

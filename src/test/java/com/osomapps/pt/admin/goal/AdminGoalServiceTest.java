@@ -3,9 +3,8 @@ package com.osomapps.pt.admin.goal;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import com.osomapps.pt.ResourceNotFoundException;
@@ -66,7 +65,7 @@ public class AdminGoalServiceTest {
 
     @Test
     public void create() {
-        when(goalRepository.save((Goal) anyObject())).thenAnswer(i -> i.getArguments()[0]);
+        when(goalRepository.save((Goal) any())).thenAnswer(i -> i.getArguments()[0]);
         GoalResponseDTO goalResponseDTO =
                 adminGoalService.create(
                         new GoalRequestDTO()
@@ -77,7 +76,7 @@ public class AdminGoalServiceTest {
 
     @Test
     public void create_type_is_null() {
-        when(goalRepository.save((Goal) anyObject())).thenAnswer(i -> i.getArguments()[0]);
+        when(goalRepository.save((Goal) any())).thenAnswer(i -> i.getArguments()[0]);
         GoalResponseDTO goalResponseDTO =
                 adminGoalService.create(
                         new GoalRequestDTO()
@@ -99,7 +98,7 @@ public class AdminGoalServiceTest {
                 .thenReturn(
                         Optional.of(
                                 new Goal().setGoalParameters(Arrays.asList(new GoalParameter()))));
-        when(goalRepository.save((Goal) anyObject())).thenAnswer(i -> i.getArguments()[0]);
+        when(goalRepository.save((Goal) any())).thenAnswer(i -> i.getArguments()[0]);
         GoalResponseDTO goalResponseDTO =
                 adminGoalService.update(
                         1L,
@@ -115,7 +114,7 @@ public class AdminGoalServiceTest {
                 .thenReturn(
                         Optional.of(
                                 new Goal().setGoalParameters(Arrays.asList(new GoalParameter()))));
-        when(goalRepository.save((Goal) anyObject())).thenAnswer(i -> i.getArguments()[0]);
+        when(goalRepository.save((Goal) any())).thenAnswer(i -> i.getArguments()[0]);
         GoalResponseDTO goalResponseDTO =
                 adminGoalService.update(
                         1L,

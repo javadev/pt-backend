@@ -2,10 +2,9 @@ package com.osomapps.pt.admin.program;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -489,7 +488,7 @@ public class AdminProgramAssignServiceTest {
 
     @Test
     public void getExerciseType_size_1() {
-        when(exerciseRepository.findByExerciseId(anyObject()))
+        when(exerciseRepository.findByExerciseId(any()))
                 .thenReturn(
                         Arrays.asList(
                                 new Exercise()
@@ -502,7 +501,7 @@ public class AdminProgramAssignServiceTest {
 
     @Test
     public void getExerciseType_size_2() {
-        when(exerciseRepository.findByExerciseId(anyObject()))
+        when(exerciseRepository.findByExerciseId(any()))
                 .thenReturn(
                         Arrays.asList(
                                 new Exercise()
@@ -521,7 +520,7 @@ public class AdminProgramAssignServiceTest {
 
     @Test
     public void getExerciseType_size_2_with_null_time() {
-        when(exerciseRepository.findByExerciseId(anyObject()))
+        when(exerciseRepository.findByExerciseId(any()))
                 .thenReturn(
                         Arrays.asList(
                                 new Exercise()
