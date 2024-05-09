@@ -35,7 +35,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: d16fc939fed96c332c7414ad93947e37ed44f1cc
       run: mvn -T 1C -B clean test jacoco:report org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.organization=javadev-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.projectKey=javadev_pt-backend
-    - uses: codecov/codecov-action@v4
+    - uses: codecov/codecov-action@v3
       with:
         file: target/site/jacoco/jacoco.xml
         name: codecov
