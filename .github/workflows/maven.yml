@@ -37,6 +37,7 @@ jobs:
       run: mvn -T 1C -B clean test jacoco:report org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.organization=javadev-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.projectKey=javadev_pt-backend
     - uses: codecov/codecov-action@v4.3.1
       with:
+        token: ${{ secrets.CODECOV_TOKEN }}
         file: target/site/jacoco/jacoco.xml
         name: codecov
         
