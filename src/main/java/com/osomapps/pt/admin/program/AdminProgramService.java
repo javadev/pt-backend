@@ -80,7 +80,7 @@ class AdminProgramService {
 
     List<ProgramResponseDTO> findAll() {
         return programRepository.findAll(sortByIdAsc()).stream()
-                .map(program -> programToDto(program))
+                .map(this::programToDto)
                 .collect(Collectors.toList());
     }
 
@@ -175,9 +175,7 @@ class AdminProgramService {
                                                                                                                                                                                                         .getParseWorkouts()
                                                                                                                                                                                                         .stream()
                                                                                                                                                                                                         .map(
-                                                                                                                                                                                                                workout ->
-                                                                                                                                                                                                                        createParseWorkoutDTO(
-                                                                                                                                                                                                                                workout))
+                                                                                                                                                                                                                this::createParseWorkoutDTO)
                                                                                                                                                                                                         .collect(
                                                                                                                                                                                                                 Collectors
                                                                                                                                                                                                                         .toList()))
@@ -298,69 +296,63 @@ class AdminProgramService {
         final List<ParseGoal> savedParseGoals =
                 parseGoalRepository.saveAll(parseSheets.getParseGoals());
         savedParseGoals.forEach(
-                (parseGoal) -> {
-                    parseGoal
-                            .getParseUserGroups()
-                            .forEach(
-                                    (parseUserGroup) -> {
-                                        parseUserGroup.setParseGoal(parseGoal);
-                                        parseUserGroup
-                                                .getParseRounds()
-                                                .forEach(
-                                                        (parseRound) -> {
-                                                            parseRound.setParseUserGroup(
-                                                                    parseUserGroup);
-                                                            parseRound
-                                                                    .getParseParts()
-                                                                    .forEach(
-                                                                            (parsePart) -> {
-                                                                                parsePart
-                                                                                        .setParseRound(
-                                                                                                parseRound);
-                                                                                parsePart
-                                                                                        .getParseWorkouts()
-                                                                                        .forEach(
-                                                                                                (parseWorkout) -> {
-                                                                                                    parseWorkout
-                                                                                                            .setParsePart(
-                                                                                                                    parsePart);
-                                                                                                    if (parseWorkout
-                                                                                                                    .getParseWarmupWorkoutItems()
-                                                                                                            != null) {
-                                                                                                        parseWorkout
+                (parseGoal) -> parseGoal
+                        .getParseUserGroups()
+                        .forEach(
+                                (parseUserGroup) -> {
+                                    parseUserGroup.setParseGoal(parseGoal);
+                                    parseUserGroup
+                                            .getParseRounds()
+                                            .forEach(
+                                                    (parseRound) -> {
+                                                        parseRound.setParseUserGroup(
+                                                                parseUserGroup);
+                                                        parseRound
+                                                                .getParseParts()
+                                                                .forEach(
+                                                                        (parsePart) -> {
+                                                                            parsePart
+                                                                                    .setParseRound(
+                                                                                            parseRound);
+                                                                            parsePart
+                                                                                    .getParseWorkouts()
+                                                                                    .forEach(
+                                                                                            (parseWorkout) -> {
+                                                                                                parseWorkout
+                                                                                                        .setParsePart(
+                                                                                                                parsePart);
+                                                                                                if (parseWorkout
                                                                                                                 .getParseWarmupWorkoutItems()
-                                                                                                                .forEach(
-                                                                                                                        (parseWarmupWorkoutItem) -> {
-                                                                                                                            parseWarmupWorkoutItem
-                                                                                                                                    .setParseWorkout(
-                                                                                                                                            parseWorkout);
-                                                                                                                        });
-                                                                                                    }
-                                                                                                    if (parseWorkout
-                                                                                                                    .getParseWorkoutItems()
-                                                                                                            != null) {
-                                                                                                        parseWorkout
+                                                                                                        != null) {
+                                                                                                    parseWorkout
+                                                                                                            .getParseWarmupWorkoutItems()
+                                                                                                            .forEach(
+                                                                                                                    (parseWarmupWorkoutItem) -> parseWarmupWorkoutItem
+                                                                                                                            .setParseWorkout(
+                                                                                                                                    parseWorkout));
+                                                                                                }
+                                                                                                if (parseWorkout
                                                                                                                 .getParseWorkoutItems()
-                                                                                                                .forEach(
-                                                                                                                        (parseWorkoutItem) -> {
-                                                                                                                            parseWorkoutItem
-                                                                                                                                    .setParseWorkout(
-                                                                                                                                            parseWorkout);
-                                                                                                                            parseWorkoutItem
-                                                                                                                                    .getParseWorkoutItemSets()
-                                                                                                                                    .forEach(
-                                                                                                                                            (parseWorkoutItemSet) -> {
-                                                                                                                                                parseWorkoutItemSet
-                                                                                                                                                        .setParseWorkoutItem(
-                                                                                                                                                                parseWorkoutItem);
-                                                                                                                                            });
-                                                                                                                        });
-                                                                                                    }
-                                                                                                });
-                                                                            });
-                                                        });
-                                    });
-                });
+                                                                                                        != null) {
+                                                                                                    parseWorkout
+                                                                                                            .getParseWorkoutItems()
+                                                                                                            .forEach(
+                                                                                                                    (parseWorkoutItem) -> {
+                                                                                                                        parseWorkoutItem
+                                                                                                                                .setParseWorkout(
+                                                                                                                                        parseWorkout);
+                                                                                                                        parseWorkoutItem
+                                                                                                                                .getParseWorkoutItemSets()
+                                                                                                                                .forEach(
+                                                                                                                                        (parseWorkoutItemSet) -> parseWorkoutItemSet
+                                                                                                                                                .setParseWorkoutItem(
+                                                                                                                                                        parseWorkoutItem));
+                                                                                                                    });
+                                                                                                }
+                                                                                            });
+                                                                        });
+                                                    });
+                                }));
         savedParseGoals.forEach(
                 (parseGoal) -> {
                     parseUserGroupRepository.saveAll(parseGoal.getParseUserGroups());
@@ -399,12 +391,10 @@ class AdminProgramService {
                                                                                                     parseWorkout
                                                                                                             .getParseWorkoutItems()
                                                                                                             .forEach(
-                                                                                                                    parseWorkoutItem -> {
-                                                                                                                        parseWorkoutItemSetRepository
-                                                                                                                                .saveAll(
-                                                                                                                                        parseWorkoutItem
-                                                                                                                                                .getParseWorkoutItemSets());
-                                                                                                                    });
+                                                                                                                    parseWorkoutItem -> parseWorkoutItemSetRepository
+                                                                                                                            .saveAll(
+                                                                                                                                    parseWorkoutItem
+                                                                                                                                            .getParseWorkoutItemSets()));
                                                                                                 });
                                                                             });
                                                         });
@@ -510,9 +500,7 @@ class AdminProgramService {
                                                                                                                                                                                                 .getWorkouts()
                                                                                                                                                                                                 .stream()
                                                                                                                                                                                                 .map(
-                                                                                                                                                                                                        workout ->
-                                                                                                                                                                                                                createParseWorkout(
-                                                                                                                                                                                                                        workout))
+                                                                                                                                                                                                        this::createParseWorkout)
                                                                                                                                                                                                 .collect(
                                                                                                                                                                                                         Collectors
                                                                                                                                                                                                                 .toList())))
