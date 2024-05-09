@@ -296,7 +296,7 @@ class AdminProgramService {
         final List<ParseGoal> savedParseGoals =
                 parseGoalRepository.saveAll(parseSheets.getParseGoals());
         savedParseGoals.forEach(
-                (parseGoal) -> parseGoal
+                parseGoal -> parseGoal
                         .getParseUserGroups()
                         .forEach(
                                 (parseUserGroup) -> {
@@ -327,7 +327,7 @@ class AdminProgramService {
                                                                                                     parseWorkout
                                                                                                             .getParseWarmupWorkoutItems()
                                                                                                             .forEach(
-                                                                                                                    (parseWarmupWorkoutItem) -> parseWarmupWorkoutItem
+                                                                                                                    parseWarmupWorkoutItem -> parseWarmupWorkoutItem
                                                                                                                             .setParseWorkout(
                                                                                                                                     parseWorkout));
                                                                                                 }
@@ -344,7 +344,7 @@ class AdminProgramService {
                                                                                                                         parseWorkoutItem
                                                                                                                                 .getParseWorkoutItemSets()
                                                                                                                                 .forEach(
-                                                                                                                                        (parseWorkoutItemSet) -> parseWorkoutItemSet
+                                                                                                                                        parseWorkoutItemSet -> parseWorkoutItemSet
                                                                                                                                                 .setParseWorkoutItem(
                                                                                                                                                         parseWorkoutItem));
                                                                                                                     });
